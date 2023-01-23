@@ -1,17 +1,29 @@
 import logging
-from MTSwitch import MikroTikSwitch
-import json
+import cherrypy
+import cherrypy_cors
+from helpers.docdb import docDB
+from helpers.config import get_config
+from helpers.elementendpoint import ElementEndpointBase
+from elements import VLAN
 
 logging.basicConfig(format='%(levelname)s:%(name)s:%(message)s', level='INFO')
 
-config = json.load(open('config.json', 'r'))
-mts = MikroTikSwitch(config['host'], config['user'], config['pw'])
-p = mts.ports[-1]
-print(p.name, p.type, p.vlan_default)
-print(mts._pending_commits)
-mts.portEdit(p, vdefault=1)
-mts.vlanEdit(2, memberRemove=27)
-print(p.name, p.type, p.vlan_default)
-print(mts._pending_commits)
-mts.commitNeeded()
-print(mts._pending_commits)
+
+class API():
+    def __init__(self):
+        self.vlan = VLANEndpoint()
+
+
+class VLANEndpoint(ElementEndpointBase):
+    _element = VLAN
+
+
+if __name__ == '__main__':
+    conf = {
+    }
+    config = get_config('server')
+    cherrypy_cors.install()
+    cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': config['port'], 'cors.expose.on': True})
+
+    docDB.wait_for_connection()
+    cherrypy.quickstart(API(), '/', conf)
