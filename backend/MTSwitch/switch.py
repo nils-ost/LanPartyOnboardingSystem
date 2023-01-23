@@ -1,6 +1,5 @@
 import requests
 from requests.auth import HTTPDigestAuth
-import json
 import logging
 from .helpers import responseToJson, asciiToStr, jsonToRequest, strToAscii
 from .parts import SwitchPort, SwitchVLAN
@@ -271,7 +270,8 @@ class MikroTikSwitch():
             else:
                 r['vlan'].append(vlan_mode_mapping_reverse[port.vlan_mode])
             if port.vlan_receive not in vlan_receive_mapping_reverse:
-                self.logger.error(f'commitPortsVlan: vlan_receive {port.vlan_receive} of Port {port.idx} not found in vlan_receive_mapping_reverse. Assumeing 0x02')
+                self.logger.error(
+                    f'commitPortsVlan: vlan_receive {port.vlan_receive} of Port {port.idx} not found in vlan_receive_mapping_reverse. Assumeing 0x02')
                 r['vlni'].append('0x02')
             else:
                 r['vlni'].append(vlan_receive_mapping_reverse[port.vlan_receive])

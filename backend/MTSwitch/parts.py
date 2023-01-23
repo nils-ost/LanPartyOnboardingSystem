@@ -60,7 +60,7 @@ class SwitchVLAN():
         if isinstance(port, SwitchPort):
             port = port.idx
         elif not isinstance(port, int):
-            self.logger.error(f'memberAdd: port is not an instance of int or SwitchPort')
+            self.logger.error('memberAdd: port is not an instance of int or SwitchPort')
             return False
 
         if port not in self._member:
@@ -72,7 +72,7 @@ class SwitchVLAN():
         if isinstance(port, SwitchPort):
             port = port.idx
         elif not isinstance(port, int):
-            self.logger.error(f'memberRemove: port is not an instance of int or SwitchPort')
+            self.logger.error('memberRemove: port is not an instance of int or SwitchPort')
             return False
 
         if port in self._member:
