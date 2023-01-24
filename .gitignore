@@ -2,6 +2,7 @@ venv/
 *.pyc
 .envrc
 __pycache__
+*.drawio.bkp
 backend/config.json
 backend/.coverage
 backend/coverage_html_report/
