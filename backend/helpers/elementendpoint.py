@@ -39,6 +39,9 @@ class ElementEndpointBase():
                 if not isinstance(attr, dict):
                     cherrypy.response.status = 400
                     return {'error': 'Submitted data need to be of type dict'}
+                elif len(attr) == 0:
+                    cherrypy.response.status = 400
+                    return {'error': 'data is needed to be submitted'}
                 attr.pop('_id', None)
                 el = self._element(attr)
                 result = el.save()

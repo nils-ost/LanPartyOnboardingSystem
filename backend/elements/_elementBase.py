@@ -58,7 +58,7 @@ class ElementBase(object):
                 if self[attr] is None:
                     errors[attr] = 'marked as not to be None'
                     continue
-            if opt['unique']:
+            if opt['unique'] and not (self[attr] is None and not opt['notnone']):
                 found = docDB.search_one(self.__class__.__name__, {attr: self[attr]})
                 if found is not None and not found['_id'] == self['_id']:
                     errors[attr] = f'marked as unique, but element with value "{self[attr]}" allready present'

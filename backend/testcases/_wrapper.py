@@ -112,7 +112,7 @@ class ApiTestBase(ApiBase):
         self.assertTrue(result.status.startswith('400'), msg=f'should start with 400 but is {result.status}')
         self.assertEqual(len(self._element.all()), 2)
         result = self.webapp_request(path=f'/{self._path}/', method='POST', data=self._post_valid)
-        self.assertTrue(result.status.startswith('201'), msg=f'should start with 201 but is {result.status}')
+        self.assertTrue(result.status.startswith('201'), msg=f'should start with 201 but is {result.status}.')
         self.assertEqual(len(self._element.all()), 3)
 
     def test_post_single(self):

@@ -1,21 +1,25 @@
-import logging
 import cherrypy
 import cherrypy_cors
 from helpers.docdb import docDB
 from helpers.config import get_config
 from helpers.elementendpoint import ElementEndpointBase
-from elements import VLAN
+from elements import VLAN, Switch
 
-logging.basicConfig(format='%(levelname)s:%(name)s:%(message)s', level='INFO')
+# logging.basicConfig(format='%(levelname)s:%(name)s:%(message)s', level='INFO')
 
 
 class API():
     def __init__(self):
         self.vlan = VLANEndpoint()
+        self.switch = SwitchEndpoint()
 
 
 class VLANEndpoint(ElementEndpointBase):
     _element = VLAN
+
+
+class SwitchEndpoint(ElementEndpointBase):
+    _element = Switch
 
 
 if __name__ == '__main__':

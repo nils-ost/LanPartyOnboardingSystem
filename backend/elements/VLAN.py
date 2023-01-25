@@ -1,19 +1,21 @@
-from elements._elementBase import ElementBase
+from elements._elementBase import ElementBase, docDB
 
 
 class VLAN(ElementBase):
     _attrdef = dict(
         number=ElementBase.addAttr(type=int, unique=True, notnone=True),
-        purpose=ElementBase.addAttr(type=int, default=0, notnone=True),
+        purpose=ElementBase.addAttr(type=int, default=3, notnone=True),
         desc=ElementBase.addAttr(default='', notnone=True)
     )
 
     def validate(self):
         errors = dict()
-        if self['number'] < 1:
-            errors['number'] = "can't be smaller than 1"
-        if self['number'] > 1024:
-            errors['number'] = "can't be bigger than 1024"
-        if self['purpose'] not in range(3):
-            errors['purpose'] = 'needs to be 0, 1 or 2'
+        if self['number'] not in range(1, 1025):
+            errors['number'] = 'needs to be a value from 1 to 1024'
+        if self['purpose'] not in range(4):
+            errors['purpose'] = 'needs to be 0, 1, 2 or 3'
+        if self['purpose'] in range(2):
+            found = docDB.search_one(self.__class__.__name__, {'purpose': self['purpose']})
+            if found is not None:
+                errors['purpose'] = f"values 0 and 1 need to be unique, but element with value {self['purpose']} allready present"
         return errors
