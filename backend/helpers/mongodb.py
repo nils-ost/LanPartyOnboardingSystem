@@ -39,9 +39,12 @@ class mongoDB(object):
         except Exception:
             return False
 
-    def clear(self):
-        for c in self.conn().list_collections():
-            self.conn().get_collection(c['name']).drop()
+    def clear(self, table=None):
+        if table is None:
+            for c in self.conn().list_collections():
+                self.conn().get_collection(c['name']).drop()
+        else:
+            self.conn().get_collection(table).drop()
 
     def conn(self):
         p = multiprocessing.current_process().name

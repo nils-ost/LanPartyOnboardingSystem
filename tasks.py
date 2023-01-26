@@ -6,7 +6,7 @@ def start_development(c):
     r = c.run('sudo docker ps -f name=dev-mongo', hide=True)
     if 'dev-mongo' not in r.stdout:
         print('Starting mongoDB')
-        c.run('sudo docker run --name dev-mongo --rm -p 27017:27017 -d mongo:5.0')
+        c.run('sudo docker run --name dev-mongo --rm -p 27017:27017 -d mongo:6.0')
 
 
 @task(name='dev-stop')

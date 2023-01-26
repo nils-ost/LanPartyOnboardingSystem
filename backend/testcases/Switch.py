@@ -158,7 +158,7 @@ teardown_module = tearDownModule
 class TestSwitchApi(ApiTestBase):
     _element = Switch
     _path = 'switch'
-    _patch_valid = {'addr': 'switch4'}
+    _patch_valid = {'user': 'auser'}
     _patch_invalid = {'purpose': -1}
 
     def setUp(self):

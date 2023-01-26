@@ -3,7 +3,7 @@ import cherrypy_cors
 from helpers.docdb import docDB
 from helpers.config import get_config
 from helpers.elementendpoint import ElementEndpointBase
-from elements import VLAN, Switch
+from elements import VLAN, Switch, IpPool
 
 # logging.basicConfig(format='%(levelname)s:%(name)s:%(message)s', level='INFO')
 
@@ -12,6 +12,7 @@ class API():
     def __init__(self):
         self.vlan = VLANEndpoint()
         self.switch = SwitchEndpoint()
+        self.ippool = IpPoolEndpoint()
 
 
 class VLANEndpoint(ElementEndpointBase):
@@ -20,6 +21,10 @@ class VLANEndpoint(ElementEndpointBase):
 
 class SwitchEndpoint(ElementEndpointBase):
     _element = Switch
+
+
+class IpPoolEndpoint(ElementEndpointBase):
+    _element = IpPool
 
 
 if __name__ == '__main__':
