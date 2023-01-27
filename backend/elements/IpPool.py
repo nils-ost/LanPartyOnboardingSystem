@@ -3,7 +3,6 @@ from elements._elementBase import ElementBase, docDB
 
 class IpPool(ElementBase):
     _attrdef = dict(
-        purpose=ElementBase.addAttr(type=int, default=0, notnone=True),
         desc=ElementBase.addAttr(default='', notnone=True),
         mask=ElementBase.addAttr(type=int, default=24, notnone=True),
         range_start=ElementBase.addAttr(type=int, notnone=True),
@@ -13,8 +12,6 @@ class IpPool(ElementBase):
 
     def validate(self):
         errors = dict()
-        if self['purpose'] not in range(4):
-            errors['purpose'] = 'needs to be 0, 1, 2 or 4'
         if self['mask'] not in range(8, 31):
             errors['mask'] = 'needs to be between 8 and 30'
         else:

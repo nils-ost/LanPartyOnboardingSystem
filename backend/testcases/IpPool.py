@@ -10,29 +10,6 @@ class TestIpPool(unittest.TestCase):
         v1 = VLAN({'number': 1})
         self.v1_id = v1.save().get('created')
 
-    def test_range_of_purpose(self):
-        self.assertEqual(len(IpPool.all()), 0)
-        # if purpose is lower than 0 it can't be saved
-        el = IpPool({'purpose': -1, 'range_start': int('0CA80002', 16), 'range_end': int('0CA80009', 16), 'vlan_id': self.v1_id})
-        result = el.save()
-        self.assertIn('purpose', result['errors'])
-        self.assertEqual(len(IpPool.all()), 0)
-        # but 0 works
-        el = IpPool({'purpose': 0, 'range_start': int('0CA80002', 16), 'range_end': int('0CA80009', 16), 'vlan_id': self.v1_id})
-        result = el.save()
-        self.assertNotIn('errors', result)
-        self.assertEqual(len(IpPool.all()), 1)
-        # if purpose is bigger than 3 it can't be saved
-        el = IpPool({'purpose': 4, 'range_start': int('C0A80002', 16), 'range_end': int('C0A80009', 16), 'vlan_id': self.v1_id})
-        result = el.save()
-        self.assertIn('purpose', result['errors'])
-        self.assertEqual(len(IpPool.all()), 1)
-        # but 3 works
-        el = IpPool({'purpose': 3, 'range_start': int('C0A80002', 16), 'range_end': int('C0A80009', 16), 'vlan_id': self.v1_id})
-        result = el.save()
-        self.assertNotIn('errors', result)
-        self.assertEqual(len(IpPool.all()), 2)
-
     def test_range_of_mask(self):
         self.assertEqual(len(IpPool.all()), 0)
         # if mask is lower than 8 it can't be saved
@@ -209,8 +186,8 @@ teardown_module = tearDownModule
 class TestIpPoolApi(ApiTestBase):
     _element = IpPool
     _path = 'ippool'
-    _patch_valid = {'purpose': 3}
-    _patch_invalid = {'purpose': -1}
+    _patch_valid = {'desc': 'hi'}
+    _patch_invalid = {'desc': None}
 
     def setUp(self):
         docDB.clear()
