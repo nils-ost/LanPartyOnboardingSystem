@@ -27,6 +27,22 @@ class TestTable(unittest.TestCase):
         self.p4_id = IpPool({'range_start': int('C0A80031', 16), 'range_end': int('C0A80040', 16), 'vlan_id': self.v4_id}).save().get('created')
         self.p5_id = IpPool({'range_start': int('C0A80041', 16), 'range_end': int('C0A80050', 16), 'vlan_id': self.v5_id}).save().get('created')
 
+    def test_number_range(self):
+        # number needs to be positive or zero
+        self.assertEqual(len(Table.all()), 0)
+        # negative number is not possible
+        el = Table({'number': -1, 'ip_pool_id': self.p1_id, 'switch_id': self.s2_id})
+        self.assertIn('number', el.save()['errors'])
+        self.assertEqual(len(Table.all()), 0)
+        # zero is possible
+        el = Table({'number': 0, 'ip_pool_id': self.p1_id, 'switch_id': self.s2_id})
+        self.assertNotIn('errors', el.save())
+        self.assertEqual(len(Table.all()), 1)
+        # positive is possible
+        el = Table({'number': 1, 'ip_pool_id': self.p2_id, 'switch_id': self.s2_id})
+        self.assertNotIn('errors', el.save())
+        self.assertEqual(len(Table.all()), 2)
+
     def test_switch_id_FK_and_notnone(self):
         self.assertEqual(len(Table.all()), 0)
         # switch_id can't be None

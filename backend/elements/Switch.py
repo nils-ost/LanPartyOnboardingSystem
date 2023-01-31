@@ -6,7 +6,7 @@ class Switch(ElementBase):
         addr=ElementBase.addAttr(unique=True, notnone=True),
         user=ElementBase.addAttr(default='', notnone=True),
         pw=ElementBase.addAttr(default='', notnone=True),
-        purpose=ElementBase.addAttr(type=int, default=1, notnone=True),
+        purpose=ElementBase.addAttr(type=int, default=0, notnone=True),
         onboarding_vlan_id=ElementBase.addAttr(default=None)
     )
 

@@ -12,6 +12,8 @@ class Table(ElementBase):
     def validate(self):
         errors = dict()
         switch = docDB.get('Switch', self['switch_id'])
+        if self['number'] < 0:
+            errors['number'] = 'needs to be bigger or equal to zero'
         if switch is None:
             errors['switch_id'] = f"There is no Switch with id '{self['switch_id']}'"
         elif switch['purpose'] not in range(1, 3):
