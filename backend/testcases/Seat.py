@@ -15,9 +15,10 @@ class TestSeat(unittest.TestCase):
         # IpPools
         self.p1_id = IpPool({'range_start': int('C0A80001', 16), 'range_end': int('C0A80010', 16), 'vlan_id': self.v1_id}).save().get('created')
         self.p2_id = IpPool({'range_start': int('C0A80011', 16), 'range_end': int('C0A80020', 16), 'vlan_id': self.v1_id}).save().get('created')
+        self.p3_id = IpPool({'range_start': int('C0A80021', 16), 'range_end': int('C0A80030', 16), 'vlan_id': self.v1_id}).save().get('created')
         # Tables
-        self.t1_id = Table({'number': 1, 'switch_id': self.s1_id, 'ip_pool_id': self.p1_id}).save().get('created')
-        self.t2_id = Table({'number': 2, 'switch_id': self.s1_id, 'ip_pool_id': self.p2_id}).save().get('created')
+        self.t1_id = Table({'number': 1, 'switch_id': self.s1_id, 'seat_ip_pool_id': self.p1_id, 'add_ip_pool_id': self.p3_id}).save().get('created')
+        self.t2_id = Table({'number': 2, 'switch_id': self.s1_id, 'seat_ip_pool_id': self.p2_id, 'add_ip_pool_id': self.p3_id}).save().get('created')
 
     def test_table_id_FK_and_notnone(self):
         self.assertEqual(len(Seat.all()), 0)
@@ -86,7 +87,8 @@ class TestSeatApi(ApiTestBase):
         self.v2_id = VLAN({'number': 2, 'purpose': 2}).save().get('created')
         self.s1_id = Switch({'addr': 'sw2', 'purpose': 1, 'onboarding_vlan_id': self.v2_id}).save().get('created')
         self.p1_id = IpPool({'range_start': int('C0A80001', 16), 'range_end': int('C0A80010', 16), 'vlan_id': self.v1_id}).save().get('created')
-        self.t1_id = Table({'number': 1, 'switch_id': self.s1_id, 'ip_pool_id': self.p1_id}).save().get('created')
+        self.p2_id = IpPool({'range_start': int('C0A80011', 16), 'range_end': int('C0A80020', 16), 'vlan_id': self.v1_id}).save().get('created')
+        self.t1_id = Table({'number': 1, 'switch_id': self.s1_id, 'seat_ip_pool_id': self.p1_id, 'add_ip_pool_id': self.p2_id}).save().get('created')
         self._setup_el1 = {'number': 1, 'table_id': self.t1_id}
         self._setup_el2 = {'number': 2, 'table_id': self.t1_id}
         self._post_valid = {'number': 3, 'table_id': self.t1_id}
