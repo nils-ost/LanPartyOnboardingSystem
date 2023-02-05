@@ -3,7 +3,7 @@ from elements._elementBase import ElementBase
 
 class Device(ElementBase):
     _attrdef = dict(
-        mac=ElementBase.addAttr(notnone=True),
+        mac=ElementBase.addAttr(unique=True, notnone=True),
         desc=ElementBase.addAttr(default='', notnone=True),
         seat_id=ElementBase.addAttr(),
         participant_id=ElementBase.addAttr(),
