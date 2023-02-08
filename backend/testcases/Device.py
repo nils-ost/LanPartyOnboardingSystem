@@ -72,7 +72,7 @@ class TestDevice(unittest.TestCase):
         self.assertIn('ip_pool_id', el.save()['errors'])
         self.assertEqual(len(Device.all()), 1)
         # but a valid ip_pool_id can be stored
-        el = Device({'mac': 'mac3', 'ip_pool_id': self.p1_id})
+        el = Device({'mac': 'mac3', 'ip_pool_id': self.p2_id})
         self.assertNotIn('errors', el.save())
         self.assertEqual(len(Device.all()), 2)
 
@@ -155,7 +155,7 @@ class TestDevice(unittest.TestCase):
         el['ip'] = int('C0A80055', 16)
         self.assertNotIn('errors', el.save())
         self.assertEqual(el['ip'], int('C0A80055', 16))
-        # but a IpPool can't be a set_IpPool
+        # but a IpPool can't be a seat_IpPool
         el['ip_pool_id'] = self.p1_id
         self.assertIn('ip_pool_id', el.save()['errors'])
 
@@ -168,25 +168,25 @@ class TestDevice(unittest.TestCase):
         self.assertIn('ip', el.save()['errors'])
         self.assertEqual(len(Device.all()), 0)
         # but with a matching IpPool it's fine
-        el = Device({'mac': 'mac2', 'ip_pool_id': self.p1_id, 'ip': int('C0A80005', 16)})
+        el = Device({'mac': 'mac2', 'ip_pool_id': self.p2_id, 'ip': int('C0A80015', 16)})
         self.assertNotIn('errors', el.save())
         self.assertEqual(len(Device.all()), 1)
         el.reload()
-        self.assertEqual(el['ip'], int('C0A80005', 16))  # IP still as set, after save and reload from DB
+        self.assertEqual(el['ip'], int('C0A80015', 16))  # IP still as set, after save and reload from DB
         # first IP of IpPool is fine to be used
-        el = Device({'mac': 'mac3', 'ip_pool_id': self.p1_id, 'ip': int('C0A80001', 16)})
+        el = Device({'mac': 'mac3', 'ip_pool_id': self.p2_id, 'ip': int('C0A80011', 16)})
         self.assertNotIn('errors', el.save())
         self.assertEqual(len(Device.all()), 2)
         # last IP of IpPool is fine to be used
-        el = Device({'mac': 'mac4', 'ip_pool_id': self.p1_id, 'ip': int('C0A80010', 16)})
+        el = Device({'mac': 'mac4', 'ip_pool_id': self.p2_id, 'ip': int('C0A80020', 16)})
         self.assertNotIn('errors', el.save())
         self.assertEqual(len(Device.all()), 3)
         # one IP in front of IpPool is not allowed
-        el = Device({'mac': 'mac5', 'ip_pool_id': self.p1_id, 'ip': int('C0A80000', 16)})
+        el = Device({'mac': 'mac5', 'ip_pool_id': self.p2_id, 'ip': int('C0A80010', 16)})
         self.assertIn('ip', el.save()['errors'])
         self.assertEqual(len(Device.all()), 3)
         # one IP after IpPool is not allowed
-        el = Device({'mac': 'mac6', 'ip_pool_id': self.p1_id, 'ip': int('C0A80011', 16)})
+        el = Device({'mac': 'mac6', 'ip_pool_id': self.p2_id, 'ip': int('C0A80021', 16)})
         self.assertIn('ip', el.save()['errors'])
         self.assertEqual(len(Device.all()), 3)
 
