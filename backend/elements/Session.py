@@ -1,11 +1,13 @@
 from elements._elementBase import ElementBase, docDB
 from datetime import datetime
+import cherrypy
 
 
 class Session(ElementBase):
     _attrdef = dict(
         till=ElementBase.addAttr(type=int, notnone=True),
         ip=ElementBase.addAttr(type=str, default=None, notnone=True),
+        complete=ElementBase.addAttr(type=bool, default=False),
         participant_id=ElementBase.addAttr(notnone=True)
     )
 
@@ -16,4 +18,8 @@ class Session(ElementBase):
         if self['till'] <= int(datetime.now().timestamp()):
             errors['till'] = 'needs to be in the future'
             self.delete()
+        if cherrypy.request:
+            if not self['ip'] == cherrypy.request.remote.ip:
+                errors['ip'] = 'does not match with the IP of request'
+                self.delete()
         return errors

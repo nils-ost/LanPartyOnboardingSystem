@@ -2,7 +2,8 @@ import cherrypy
 import cherrypy_cors
 from helpers.docdb import docDB
 from helpers.config import get_config
-from helpers.elementendpoint import ElementEndpointBase
+from endpoints.element import ElementEndpointBase
+from endpoints.login import LoginEndpoint
 from elements import VLAN, Switch, IpPool, Table, Seat, Participant, Device
 
 # logging.basicConfig(format='%(levelname)s:%(name)s:%(message)s', level='INFO')
@@ -17,6 +18,7 @@ class API():
         self.seat = SeatEndpoint()
         self.participant = ParticipantEndpoint()
         self.device = DeviceEndpoint()
+        self.login = LoginEndpoint()
 
 
 class VLANEndpoint(ElementEndpointBase):
@@ -49,6 +51,10 @@ class DeviceEndpoint(ElementEndpointBase):
 
 if __name__ == '__main__':
     conf = {
+        '/': {
+            'tools.sessions.on': True,
+            'tools.sessions.timeout': 60 * 24
+        },
     }
     config = get_config('server')
     cherrypy_cors.install()

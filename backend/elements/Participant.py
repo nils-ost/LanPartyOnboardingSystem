@@ -15,3 +15,12 @@ class Participant(ElementBase):
         if self['seat_id'] and not docDB.exists('Seat', self['seat_id']):
             errors['seat_id'] = f"There is no Seat with id '{self['seat_id']}'"
         return errors
+
+    @classmethod
+    def get_by_login(cls, login):
+        result = cls()
+        fromdb = docDB.search_one(cls.__name__, {'login': login})
+        if fromdb is not None:
+            result._attr = fromdb
+            return result
+        return None
