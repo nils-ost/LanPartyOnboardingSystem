@@ -23,3 +23,8 @@ class Session(ElementBase):
                 errors['ip'] = 'does not match with the IP of request'
                 self.delete()
         return errors
+
+    def delete_others(self):
+        for sd in docDB.search_many('Session', {'participant_id': self['participant_id'], '_id': {'$ne': self['_id']}}):
+            s = Session(sd)
+            s.delete()

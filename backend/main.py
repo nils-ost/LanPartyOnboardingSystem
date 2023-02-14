@@ -51,10 +51,6 @@ class DeviceEndpoint(ElementEndpointBase):
 
 if __name__ == '__main__':
     conf = {
-        '/': {
-            'tools.sessions.on': True,
-            'tools.sessions.timeout': 60 * 24
-        },
     }
     config = get_config('server')
     cherrypy_cors.install()
