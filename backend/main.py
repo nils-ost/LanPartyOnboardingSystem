@@ -2,8 +2,7 @@ import cherrypy
 import cherrypy_cors
 from helpers.docdb import docDB
 from helpers.config import get_config
-from endpoints.element import ElementEndpointBase
-from endpoints.login import LoginEndpoint
+from endpoints import ElementEndpointBase, LoginEndpoint
 from elements import VLAN, Switch, IpPool, Table, Seat, Participant, Device
 
 # logging.basicConfig(format='%(levelname)s:%(name)s:%(message)s', level='INFO')

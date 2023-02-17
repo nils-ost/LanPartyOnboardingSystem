@@ -28,3 +28,9 @@ class Session(ElementBase):
         for sd in docDB.search_many('Session', {'participant_id': self['participant_id'], '_id': {'$ne': self['_id']}}):
             s = Session(sd)
             s.delete()
+
+    def admin(self):
+        p = docDB.get('Participant', self['participant_id'])
+        if p is not None:
+            return p.get('admin', False)
+        return False

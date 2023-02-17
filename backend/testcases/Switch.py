@@ -160,6 +160,8 @@ class TestSwitchApi(ApiTestBase):
     _path = 'switch'
     _patch_valid = {'user': 'auser'}
     _patch_invalid = {'purpose': -1}
+    _restricted_read = True
+    _restricted_write = True
 
     def setUp(self):
         docDB.clear()

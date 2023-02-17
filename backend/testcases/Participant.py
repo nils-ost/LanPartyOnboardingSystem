@@ -84,6 +84,8 @@ class TestParticipantApi(ApiTestBase):
     _path = 'participant'
     _patch_valid = {'admin': True}
     _patch_invalid = {'name': None}
+    _restricted_read = True
+    _restricted_write = True
 
     def setUp(self):
         docDB.clear()

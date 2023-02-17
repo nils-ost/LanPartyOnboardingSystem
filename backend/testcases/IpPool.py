@@ -188,6 +188,8 @@ class TestIpPoolApi(ApiTestBase):
     _path = 'ippool'
     _patch_valid = {'desc': 'hi'}
     _patch_invalid = {'desc': None}
+    _restricted_read = True
+    _restricted_write = True
 
     def setUp(self):
         docDB.clear()

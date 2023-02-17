@@ -80,6 +80,8 @@ class TestSeatApi(ApiTestBase):
     _path = 'seat'
     _patch_valid = {'number': 4}
     _patch_invalid = {'number': -1}
+    _restricted_read = True
+    _restricted_write = True
 
     def setUp(self):
         docDB.clear()

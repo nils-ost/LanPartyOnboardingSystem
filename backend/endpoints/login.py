@@ -35,7 +35,7 @@ class LoginEndpoint():
                 if c:
                     s = Session.get(c.value)
                 else:
-                    s = Session.get()
+                    s = Session.get(None)
                 if len(s.validate_base()) == 0:
                     cherrypy.response.status = 201
                     return {'session_id': s['_id'], 'till': s['till'], 'complete': s['complete']}
@@ -57,7 +57,7 @@ class LoginEndpoint():
             if c:
                 s = Session.get(c.value)
             else:
-                s = Session.get()
+                s = Session.get(None)
             if not len(s.validate_base()) == 0:
                 cherrypy.response.status = 400
                 return {'error': 'invalid session'}

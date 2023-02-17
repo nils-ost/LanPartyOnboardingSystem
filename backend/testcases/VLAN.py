@@ -131,6 +131,8 @@ class TestVLANApi(ApiTestBase):
     _path = 'vlan'
     _patch_valid = {'purpose': 2}
     _patch_invalid = {'purpose': -1}
+    _restricted_read = True
+    _restricted_write = True
 
     def setUp(self):
         docDB.clear()

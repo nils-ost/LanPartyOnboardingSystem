@@ -1,13 +1,27 @@
 import cherrypy
 import cherrypy_cors
+from elements import Session
 
 
 @cherrypy.popargs('element_id')
 class ElementEndpointBase():
+    _element = None
+    _restrict_read = True  # if set to True only admin Participants are allowed to use reading methods
+    _restrict_write = True  # if set to True only admin Participants are allowed to use writing methods
+
     @cherrypy.expose()
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
     def index(self, element_id=None):
+        cookie = cherrypy.request.cookie.get('LPOSsession')
+        if cookie:
+            session = Session.get(cookie.value)
+        else:
+            session = Session.get(None)
+        if len(session.validate_base()) > 0:
+            cherrypy.response.status = 401
+            return {'error': 'not authorized'}
+
         if cherrypy.request.method == 'OPTIONS':
             if element_id is None:
                 cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST'
@@ -22,6 +36,9 @@ class ElementEndpointBase():
                 cherrypy_cors.preflight(allowed_methods=['GET', 'PATCH', 'DELETE'])
                 return
         elif cherrypy.request.method == 'GET':
+            if self._restrict_read and not session.admin():
+                cherrypy.response.status = 403
+                return {'error': 'access not allowed'}
             if element_id is not None:
                 el = self._element.get(element_id)
                 if el['_id'] is None:
@@ -34,6 +51,9 @@ class ElementEndpointBase():
                     result.append(el.json())
                 return result
         elif cherrypy.request.method == 'POST':
+            if self._restrict_write and not session.admin():
+                cherrypy.response.status = 403
+                return {'error': 'access not allowed'}
             if element_id is None:
                 attr = cherrypy.request.json
                 if not isinstance(attr, dict):
@@ -55,6 +75,9 @@ class ElementEndpointBase():
                 cherrypy.response.status = 405
                 return {'error': 'POST not allowed on existing objects'}
         elif cherrypy.request.method == 'PATCH':
+            if self._restrict_write and not session.admin():
+                cherrypy.response.status = 403
+                return {'error': 'access not allowed'}
             if element_id is None:
                 cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST'
                 cherrypy.response.status = 405
@@ -78,6 +101,9 @@ class ElementEndpointBase():
                     cherrypy.response.status = 201
                 return result
         elif cherrypy.request.method == 'DELETE':
+            if self._restrict_write and not session.admin():
+                cherrypy.response.status = 403
+                return {'error': 'access not allowed'}
             if element_id is None:
                 cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST'
                 cherrypy.response.status = 405
