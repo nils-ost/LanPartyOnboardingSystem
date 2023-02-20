@@ -1,0 +1,24 @@
+<div class="grid-base">
+    <div class="row-spacer"></div>
+
+    <div class="column-spacer"></div>
+
+    <p-card header="Login" subheader="with your Participant credentials" styleClass="p-card-shadow">
+        <div class="p-inputgroup">
+            <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+            <input type="text" pInputText [(ngModel)]="username" placeholder="Username" autofocus>
+        </div>
+        <div class="p-inputgroup">
+            <span class="p-inputgroup-addon"><i class="pi pi-unlock"></i></span>
+            <input type="password" pInputText [(ngModel)]="password"(keyup.enter)="sendLogin()" placeholder="Password" />
+        </div>
+
+        <ng-template pTemplate="footer">
+            <button pButton type="button" label="Submit" (click)="sendLogin()"></button>
+        </ng-template>
+    </p-card>
+
+    <div class="column-spacer"></div>
+
+    <div class="row-spacer"></div>
+</div>

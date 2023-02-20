@@ -63,7 +63,7 @@ class LoginEndpoint():
                 return {'error': 'invalid session'}
             else:
                 p = Participant.get(s['participant_id'])
-                m = hashlib.sha256()
+                m = hashlib.md5()
                 m.update(s['_id'].encode('utf-8'))
                 m.update(p['pw'].encode('utf-8'))
                 if not m.hexdigest().lower() == attr['pw'].lower():

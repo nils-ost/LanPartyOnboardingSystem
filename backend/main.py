@@ -53,7 +53,12 @@ if __name__ == '__main__':
     }
     config = get_config('server')
     cherrypy_cors.install()
-    cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': config['port'], 'cors.expose.on': True})
+    cherrypy.config.update({
+        'server.socket_host': '0.0.0.0',
+        'server.socket_port': config['port'],
+        'cors.expose.on': True,
+        'tools.response_headers.on': True,
+        'tools.response_headers.headers': [('Access-Control-Allow-Origin', 'http://localhost:4200/'), ('Access-Control-Allow-Credentials', 'true')]})
 
     docDB.wait_for_connection()
     cherrypy.quickstart(API(), '/', conf)
