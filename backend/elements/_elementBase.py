@@ -56,15 +56,15 @@ class ElementBase(object):
                 continue
             if opt['notnone']:
                 if self[attr] is None:
-                    errors[attr] = 'marked as not to be None'
+                    errors[attr] = {'code': 1, 'desc': 'marked as not to be None'}
                     continue
             if opt['unique'] and not (self[attr] is None and not opt['notnone']):
                 found = docDB.search_one(self.__class__.__name__, {attr: self[attr]})
                 if found is not None and not found['_id'] == self['_id']:
-                    errors[attr] = f'marked as unique, but element with value "{self[attr]}" allready present'
+                    errors[attr] = {'code': 2, 'desc': f'marked as unique, but element with value "{self[attr]}" allready present'}
                     continue
             if not isinstance(self[attr], opt['type']) and self[attr] is not None:
-                errors[attr] = f"needs to be of type {opt['type']}{' or None' if not opt['notnone'] else ''}"
+                errors[attr] = {'code': 3, 'desc': f"needs to be of type {opt['type']}{' or None' if not opt['notnone'] else ''}"}
         if len(errors) == 0:
             errors = self.validate()
         return errors

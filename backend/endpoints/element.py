@@ -13,15 +13,6 @@ class ElementEndpointBase():
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
     def index(self, element_id=None):
-        cookie = cherrypy.request.cookie.get('LPOSsession')
-        if cookie:
-            session = Session.get(cookie.value)
-        else:
-            session = Session.get(None)
-        if len(session.validate_base()) > 0:
-            cherrypy.response.status = 401
-            return {'error': 'not authorized'}
-
         if cherrypy.request.method == 'OPTIONS':
             if element_id is None:
                 cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST'
@@ -35,7 +26,17 @@ class ElementEndpointBase():
                 cherrypy.response.headers['Allow'] = 'OPTIONS, GET, PATCH, DELETE'
                 cherrypy_cors.preflight(allowed_methods=['GET', 'PATCH', 'DELETE'])
                 return
-        elif cherrypy.request.method == 'GET':
+
+        cookie = cherrypy.request.cookie.get('LPOSsession')
+        if cookie:
+            session = Session.get(cookie.value)
+        else:
+            session = Session.get(None)
+        if len(session.validate_base()) > 0:
+            cherrypy.response.status = 401
+            return {'error': 'not authorized'}
+
+        if cherrypy.request.method == 'GET':
             if self._restrict_read and not session.admin():
                 cherrypy.response.status = 403
                 return {'error': 'access not allowed'}
