@@ -37,3 +37,7 @@ class Table(ElementBase):
             errors['seat_ip_pool_id'] = "can't be the same as add_ip_pool_id"
             errors['add_ip_pool_id'] = "can't be the same as seat_ip_pool_id"
         return errors
+
+    def delete_pre(self):
+        if docDB.search_one('Seat', {'table_id': self['_id']}) is not None:
+            return {'error': {'code': 3, 'desc': 'at least one Seat is using this Table'}}

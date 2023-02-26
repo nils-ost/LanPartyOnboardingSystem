@@ -14,8 +14,10 @@ import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PanelModule } from 'primeng/panel';
+import { ToastModule } from 'primeng/toast';
 
 import { ConfirmationService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -52,10 +54,12 @@ import { VlanCreaditComponent } from './components/vlan-creadit/vlan-creadit.com
     TableModule,
     DialogModule,
     ConfirmDialogModule,
-    PanelModule
+    PanelModule,
+    ToastModule
   ],
   providers: [
-    ConfirmationService
+    ConfirmationService,
+    MessageService
   ],
   bootstrap: [AppComponent]
 })

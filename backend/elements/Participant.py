@@ -1,4 +1,5 @@
 from elements._elementBase import ElementBase, docDB
+from elements import Session, Device
 
 
 class Participant(ElementBase):
@@ -24,3 +25,12 @@ class Participant(ElementBase):
             result._attr = fromdb
             return result
         return None
+
+    def delete_post(self):
+        for s in [Session(s) for s in docDB.search_many('Session', {'participant_id': self['_id']})]:
+            s.delete()
+        for d in [Device(d) for d in docDB.search_many('Device', {'participant_id': self['_id']})]:
+            d['participant_id'] = None
+            d['ip_pool_id'] = None
+            d['ip'] = None
+            d.save()

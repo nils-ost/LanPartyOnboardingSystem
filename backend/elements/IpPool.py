@@ -1,4 +1,5 @@
 from elements._elementBase import ElementBase, docDB
+from elements import Device
 
 
 class IpPool(ElementBase):
@@ -9,6 +10,26 @@ class IpPool(ElementBase):
         range_end=ElementBase.addAttr(type=int, notnone=True),
         vlan_id=ElementBase.addAttr(notnone=True)
     )
+
+    def octetts_to_int(oct1, oct2, oct3, oct4):
+        r = list()
+        r.append(hex(oct1).replace('0x', ''))
+        r.append(hex(oct2).replace('0x', ''))
+        r.append(hex(oct3).replace('0x', ''))
+        r.append(hex(oct4).replace('0x', ''))
+        for idx in range(4):
+            if len(r[idx]) < 2:
+                r[idx] = '0' + r[idx]
+        return int(''.join(r), 16)
+
+    def int_to_octetts(input):
+        h = hex(input).replace('0x', '')
+        while len(h) < 8:
+            h = '0' + h
+        r = list()
+        for idx in range(4):
+            r.append(int(h[idx * 2:(idx + 1) * 2], 16))
+        return tuple(r)
 
     def validate(self):
         errors = dict()
@@ -35,3 +56,15 @@ class IpPool(ElementBase):
         if self['vlan_id'] and not docDB.exists('VLAN', self['vlan_id']):
             errors['vlan_id'] = f"There is no VLAN with id '{self['vlan_id']}'"
         return errors
+
+    def delete_pre(self):
+        if docDB.search_one('Table', {'seat_ip_pool_id': self['_id']}) is not None:
+            return {'error': {'code': 2, 'desc': 'at least one Table is using this IpPool'}}
+        if docDB.search_one('Table', {'add_ip_pool_id': self['_id']}) is not None:
+            return {'error': {'code': 2, 'desc': 'at least one Table is using this IpPool'}}
+
+    def delete_post(self):
+        for d in [Device(d) for d in docDB.search_many('Device', {'ip_pool_id': self['_id']})]:
+            d['ip_pool_id'] = None
+            d['ip'] = None
+            d.save()

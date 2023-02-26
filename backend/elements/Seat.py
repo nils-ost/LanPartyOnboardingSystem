@@ -1,4 +1,5 @@
 from elements._elementBase import ElementBase, docDB
+from elements import Participant, Device
 
 
 class Seat(ElementBase):
@@ -17,3 +18,14 @@ class Seat(ElementBase):
         elif docDB.search_one(self.__class__.__name__, {'table_id': self['table_id'], 'number': self['number'], '_id': {'$ne': self['_id']}}) is not None:
             errors['number'] = 'needs to be unique per Table'
         return errors
+
+    def delete_post(self):
+        for d in [Device(d) for d in docDB.search_many('Device', {'seat_id': self['_id']})]:
+            d['seat_id'] = None
+            d['participant_id'] = None
+            d['ip_pool_id'] = None
+            d['ip'] = None
+            d.save()
+        for p in [Participant(p) for p in docDB.search_many('Participant', {'seat_id': self['_id']})]:
+            p['seat_id'] = None
+            p.save()

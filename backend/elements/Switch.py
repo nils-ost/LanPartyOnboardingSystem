@@ -30,3 +30,7 @@ class Switch(ElementBase):
     def save_pre(self):
         if self['purpose'] == 0:
             self['onboarding_vlan_id'] = None
+
+    def delete_pre(self):
+        if docDB.search_one('Table', {'switch_id': self['_id']}) is not None:
+            return {'error': {'code': 2, 'desc': 'at least one Table is using this Switch'}}

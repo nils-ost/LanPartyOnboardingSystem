@@ -35,6 +35,9 @@ export class ErrorHandlerService {
       if (error.status === 400 && error.error.errors) {
         this.elementError = true;
         this.elementErrors = error.error.errors;
+      } else if (error.status === 400 && error.error.error) {
+        this.elementError = true;
+        this.elementErrors = error.error.error;
       } else this.elementError = false;
     } else {
       this.elementError = false;
