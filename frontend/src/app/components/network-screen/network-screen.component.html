@@ -3,7 +3,7 @@
 
 <p-panel header="VLANs">
     <ng-template pTemplate="icons">
-        <button pButton (click)="createvlan.toggle($event)">create</button>
+        <button pButton (click)="createvlan.toggle($event)" i18n="@@buttonCreate">Create</button>
     </ng-template>
 
     <app-vlans-list [vlans]="vlans" (editedVlanEvent)="creaditVlan()"></app-vlans-list>

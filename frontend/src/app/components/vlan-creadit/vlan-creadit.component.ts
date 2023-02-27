@@ -81,15 +81,15 @@ export class VlanCreaditComponent implements OnChanges {
 
   fillErrors(errors: any) {
     if (errors.number) {
-      if (errors.number.code === 1) this.number_error = "can't be empty";
-      if (errors.number.code === 2) this.number_error = "value allready in use, needs to be unique";
-      if (errors.number.code === 3) this.number_error = "invalid type";
-      if (errors.number.code === 10) this.number_error = "needs to be in range of 1 to 1024";
+      if (errors.number.code === 1) this.number_error = $localize `:@@ElementErrorCode1:can't be empty`;
+      if (errors.number.code === 2) this.number_error = $localize `:@@ElementErrorCode2:value allready in use, needs to be unique`;
+      if (errors.number.code === 3) this.number_error = $localize `:@@ElementErrorCode3:invalid type`;
+      if (errors.number.code === 10) this.number_error = $localize `:@@ElementErrorCode10:needs to be in range of 1 to 1024`;
     }
     if (errors.purpose) {
-      if (errors.purpose.code === 3) this.purpose_error = "invalid type";
-      if (errors.purpose.code === 11) this.purpose_error = "invalid selection";
-      if (errors.purpose.code === 12) this.purpose_error = "allready in use, can only be used once";
+      if (errors.purpose.code === 3) this.purpose_error = $localize `:@@ElementErrorCode3:invalid type`;
+      if (errors.purpose.code === 11) this.purpose_error = $localize `:@@ElementErrorCode11:invalid selection`;
+      if (errors.purpose.code === 12) this.purpose_error = $localize `:@@ElementErrorCode12:allready in use, can only be used once`;
     }
   }
 }

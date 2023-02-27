@@ -14,7 +14,7 @@ class Participant(ElementBase):
     def validate(self):
         errors = dict()
         if self['seat_id'] and not docDB.exists('Seat', self['seat_id']):
-            errors['seat_id'] = f"There is no Seat with id '{self['seat_id']}'"
+            errors['seat_id'] = {'code': 70, 'desc': f"There is no Seat with id '{self['seat_id']}'"}
         return errors
 
     @classmethod

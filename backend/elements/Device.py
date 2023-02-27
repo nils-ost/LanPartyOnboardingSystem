@@ -16,7 +16,7 @@ class Device(ElementBase):
         seat = docDB.get('Seat', self['seat_id'])
         if self['seat_id'] is not None:
             if seat is None:
-                errors['seat_id'] = f"There is no Seat with id '{self['seat_id']}'"
+                errors['seat_id'] = {'code': 60, 'desc': f"There is no Seat with id '{self['seat_id']}'"}
             else:
                 seat_participant = docDB.search_one('Participant', {'seat_id': seat['_id']})
                 self['participant_id'] = None
@@ -34,7 +34,7 @@ class Device(ElementBase):
         participant = docDB.get('Participant', self['participant_id'])
         if self['participant_id'] is not None:
             if participant is None:
-                errors['participant_id'] = f"There is no Participant with id '{self['participant_id']}'"
+                errors['participant_id'] = {'code': 60, 'desc': f"There is no Participant with id '{self['participant_id']}'"}
             elif self['seat_id'] is None and self['ip_pool_id'] is None and participant['seat_id'] is not None:
                 part_seat = docDB.get('Seat', participant['seat_id'])
                 part_table = docDB.get('Table', part_seat['table_id'])
@@ -47,11 +47,11 @@ class Device(ElementBase):
         ippool = docDB.get('IpPool', self['ip_pool_id'])
         if self['ip_pool_id'] is not None:
             if ippool is None:
-                errors['ip_pool_id'] = f"There is no IpPool with id '{self['ip_pool_id']}'"
+                errors['ip_pool_id'] = {'code': 60, 'desc': f"There is no IpPool with id '{self['ip_pool_id']}'"}
             elif participant is not None and not docDB.get('VLAN', ippool['vlan_id'])['purpose'] == 0:
-                errors['ip_pool_id'] = 'Because Participant is set, Purpose of IpPools VLAN needs to be 0 (play)'
+                errors['ip_pool_id'] = {'code': 61, 'desc': 'Because Participant is set, Purpose of IpPools VLAN needs to be 0 (play)'}
             elif self['seat_id'] is None and docDB.search_one('Table', {'seat_ip_pool_id': self['ip_pool_id']}) is not None:
-                errors['ip_pool_id'] = 'is used as seat_IpPool on Table and not allowed to be used directly by Device'
+                errors['ip_pool_id'] = {'code': 62, 'desc': 'is used as seat_IpPool on Table and not allowed to be used directly by Device'}
             elif fromdb is None and self['ip'] is None:
                 autoset_ip = True
             elif fromdb is not None and not self['ip_pool_id'] == fromdb['ip_pool_id'] and self['ip'] == fromdb['ip']:
@@ -69,7 +69,7 @@ class Device(ElementBase):
 
         if self['ip'] is not None:
             if ippool is None:
-                errors['ip'] = 'can only be set if IpPool is set'
+                errors['ip'] = {'code': 63, 'desc': 'can only be set if IpPool is set'}
             elif self['ip'] < ippool['range_start'] or self['ip'] > ippool['range_end']:
-                errors['ip'] = 'not in range of IpPool'
+                errors['ip'] = {'code': 64, 'desc': 'not in range of IpPool'}
         return errors

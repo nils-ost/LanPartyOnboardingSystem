@@ -12,11 +12,11 @@ class Seat(ElementBase):
     def validate(self):
         errors = dict()
         if not docDB.exists('Table', self['table_id']):
-            errors['table_id'] = f"There is no Table with id '{self['table_id']}'"
+            errors['table_id'] = {'code': 50, 'desc': f"There is no Table with id '{self['table_id']}'"}
         if self['number'] < 1:
-            errors['number'] = 'needs to be 1 or bigger'
+            errors['number'] = {'code': 51, 'desc': 'needs to be 1 or bigger'}
         elif docDB.search_one(self.__class__.__name__, {'table_id': self['table_id'], 'number': self['number'], '_id': {'$ne': self['_id']}}) is not None:
-            errors['number'] = 'needs to be unique per Table'
+            errors['number'] = {'code': 52, 'desc': 'needs to be unique per Table'}
         return errors
 
     def delete_post(self):

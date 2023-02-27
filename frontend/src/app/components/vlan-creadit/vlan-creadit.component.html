@@ -1,14 +1,14 @@
 <div class="field">
     <span class="p-float-label">
         <input type="text" id="vlandesc" pInputText [(ngModel)]="desc" autofocus>
-        <label for="vlandesc">Description</label>
+        <label for="vlandesc" i18n="@@elementFieldLabelVlanDesc">Description</label>
     </span>
 </div>
 
 <div class="field">
     <span class="p-float-label">
         <p-inputNumber inputId="vlannumber" [(ngModel)]="number" [min]="1" [max]="1024" [showButtons]="true" [ngClass]="{'ng-invalid ng-dirty': number_error}"></p-inputNumber>
-        <label for="vlannumber">Number</label>
+        <label for="vlannumber" i18n="@@elementFieldLabelVlanNumber">Number</label>
     </span>
     <small *ngIf="number_error" class="p-error block">{{ number_error }}</small>
 </div>
@@ -16,9 +16,9 @@
 <div class="field">
     <span class="p-float-label">
         <p-dropdown id="vlanpurpose" [options]="purposes" [(ngModel)]="purpose" optionLabel="name" optionValue="code" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': purpose_error}"></p-dropdown>
-        <label for="vlanpurpose">Purpose</label>
+        <label for="vlanpurpose" i18n="@@elementFieldLabelVlanPurpose">Purpose</label>
     </span>
     <small *ngIf="purpose_error" class="p-error block">{{ purpose_error }}</small>
 </div>
 
-<button pButton type="button" label="Save" (click)="commitVlan()"></button>
+<button pButton (click)="commitVlan()" i18n="@@buttonSave">Save</button>

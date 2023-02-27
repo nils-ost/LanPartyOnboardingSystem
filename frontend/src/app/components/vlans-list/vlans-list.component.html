@@ -1,9 +1,16 @@
 <p-table [value]="vlans" sortField="number">
     <ng-template pTemplate="header">
         <tr>
-            <th pSortableColumn="number">Number <p-sortIcon field="number"></p-sortIcon></th>
-            <th pSortableColumn="purpose">Purpose <p-sortIcon field="purpose"></p-sortIcon></th>
-            <th pSortableColumn="desc">Description <p-sortIcon field="desc"></p-sortIcon></th>
+            <th pSortableColumn="number">
+                <ng-container i18n="@@elementFieldLabelVlanNumber">Number</ng-container>
+                <p-sortIcon field="number"></p-sortIcon>
+            </th>
+            <th pSortableColumn="purpose">
+                <ng-container i18n="@@elementFieldLabelVlanPurpose">Purpose</ng-container>
+                <p-sortIcon field="purpose"></p-sortIcon></th>
+            <th pSortableColumn="desc">
+                <ng-container i18n="@@elementFieldLabelVlanDesc">Description</ng-container>
+                <p-sortIcon field="desc"></p-sortIcon></th>
             <th></th>
         </tr>
     </ng-template>

@@ -14,13 +14,13 @@ class Session(ElementBase):
     def validate(self):
         errors = dict()
         if not docDB.exists('Participant', self['participant_id']):
-            errors['participant_id'] = f"There is no Participant with id '{self['participant_id']}'"
+            errors['participant_id'] = {'code': 80, 'desc': f"There is no Participant with id '{self['participant_id']}'"}
         if self['till'] <= int(datetime.now().timestamp()):
-            errors['till'] = 'needs to be in the future'
+            errors['till'] = {'code': 81, 'desc': 'needs to be in the future'}
             self.delete()
         if cherrypy.request:
             if not self['ip'] == cherrypy.request.remote.ip:
-                errors['ip'] = 'does not match with the IP of request'
+                errors['ip'] = {'code': 82, 'desc': 'does not match with the IP of request'}
                 self.delete()
         return errors
 
