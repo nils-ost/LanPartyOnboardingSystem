@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
 import { Vlan } from 'src/app/interfaces/vlan';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { VlanService } from 'src/app/services/vlan.service';
@@ -30,7 +30,7 @@ export class VlanCreaditComponent implements OnChanges {
       {name: "other", code: 3}
     ]
   }
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     if (this.vlan) {
       this.number = this.vlan.number;
       this.purpose = this.vlan.purpose;
@@ -49,7 +49,7 @@ export class VlanCreaditComponent implements OnChanges {
     this.vlanService
       .createVlan(this.number, this.purpose, this.desc)
       .subscribe({
-        next: (vlan: Vlan) => {
+        next: (response: any) => {
           this.dialogEndEvent.emit(null);
         },
         error: (err: HttpErrorResponse) => {
@@ -64,7 +64,7 @@ export class VlanCreaditComponent implements OnChanges {
     this.vlanService
       .updateVlan(this.vlan!.id, this.number, this.purpose, this.desc)
       .subscribe({
-        next: (vlan: Vlan) => {
+        next: (response: any) => {
           this.dialogEndEvent.emit(null);
         },
         error: (err: HttpErrorResponse) => {

@@ -1,57 +1,55 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Vlan, VlanPurposeType } from 'src/app/interfaces/vlan';
+import { Switch, SwitchPurposeType } from 'src/app/interfaces/switch';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
-import { VlanService } from 'src/app/services/vlan.service';
+import { SwitchService } from 'src/app/services/switch.service';
 
 @Component({
-  selector: 'app-vlans-list',
-  templateUrl: './vlans-list.component.html',
-  styleUrls: ['./vlans-list.component.scss']
+  selector: 'app-switches-list',
+  templateUrl: './switches-list.component.html',
+  styleUrls: ['./switches-list.component.scss']
 })
-export class VlansListComponent {
-  vlanPurposeType = VlanPurposeType;
-  @Input() vlans!: Vlan[];
-  @Output() editedVlanEvent = new EventEmitter<null>();
+export class SwitchesListComponent {
+  switchPurposeType = SwitchPurposeType;
+  @Input() switches!: Switch[];
+  @Output() editedSwitchEvent = new EventEmitter<null>();
   editDialog: boolean = false;
-  selectedVlan!: Vlan;
+  selectedSwitch!: Switch;
 
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private errorHandler: ErrorHandlerService,
-    private vlanService: VlanService
+    private switchService: SwitchService
   ) {}
 
-  editVlan(vlan: Vlan) {
-    this.selectedVlan = vlan;
+  editSwitch(sw: Switch) {
+    this.selectedSwitch = sw;
     this.editDialog = true;
   }
 
-  editedVlan() {
+  editedSwitch() {
     this.editDialog = false;
-    this.editedVlanEvent.emit(null);
+    this.editedSwitchEvent.emit(null);
   }
 
-  confirmDelete(vlan: Vlan) {
+  confirmDelete(sw: Switch) {
     this.confirmationService.confirm({
-        message: 'Are you sure that you want to delete VLAN ' + vlan.number,
+        message: 'Are you sure that you want to delete Switch ' + sw.addr,
         accept: () => {
-          this.vlanService
-            .deleteVlan(vlan.id)
+          this.switchService
+            .deleteSwitch(sw.id)
             .subscribe({
               next: (response: any) => {
-                this.editedVlanEvent.emit(null);
+                this.editedSwitchEvent.emit(null);
               },
               error: (err: HttpErrorResponse) => {
                 this.errorHandler.handleError(err);
                 let detail: string = $localize `:@@DeleteErrorGeneric:Unknown error`;
                 if (this.errorHandler.elementError) {
-                  if (this.errorHandler.elementErrors.code == 1)
-                    detail = $localize `:@@DeleteErrorCode1OnVlan:Can't delete VLAN. There is at least one IpPool attached to VLAN ` + vlan.number;
-                  if (this.errorHandler.elementErrors.code == 4)
-                    detail = $localize `:@@DeleteErrorCode4OnVlan:Can't delete VLAN. There is at least one Switch attached to VLAN ` + vlan.number;
+                  if (this.errorHandler.elementErrors.code == 2)
+                    detail = $localize `:@@DeleteErrorCode2OnSwitch:Can't delete Switch. There is at least one Table attached to Switch ` + sw.addr;
                 }
                 this.messageService.add({
                   severity: 'error',

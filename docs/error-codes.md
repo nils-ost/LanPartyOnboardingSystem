@@ -67,3 +67,4 @@
   * **1**: at least one IpPool is using this <element_type\>
   * **2**: at least one Table is using this <element_type\>
   * **3**: at least one Seat is uning this <element_type\>
+  * **4**: at least one Switch is uning this <element_type\>

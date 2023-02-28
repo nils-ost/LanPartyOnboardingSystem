@@ -27,6 +27,8 @@ import { AutoFocusDirective } from './directives/auto-focus.directive';
 import { VlansListComponent } from './components/vlans-list/vlans-list.component';
 import { NetworkScreenComponent } from './components/network-screen/network-screen.component';
 import { VlanCreaditComponent } from './components/vlan-creadit/vlan-creadit.component';
+import { SwitchesListComponent } from './components/switches-list/switches-list.component';
+import { SwitchCreaditComponent } from './components/switch-creadit/switch-creadit.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { VlanCreaditComponent } from './components/vlan-creadit/vlan-creadit.com
     AutoFocusDirective,
     VlansListComponent,
     NetworkScreenComponent,
-    VlanCreaditComponent
+    VlanCreaditComponent,
+    SwitchesListComponent,
+    SwitchCreaditComponent
   ],
   imports: [
     BrowserModule,

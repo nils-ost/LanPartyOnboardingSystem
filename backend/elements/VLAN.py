@@ -23,6 +23,5 @@ class VLAN(ElementBase):
     def delete_pre(self):
         if docDB.search_one('IpPool', {'vlan_id': self['_id']}) is not None:
             return {'error': {'code': 1, 'desc': 'at least one IpPool is using this VLAN'}}
-
-    def delete_post(self):
-        docDB.update_many('Switch', {'onboarding_vlan_id': self['_id']}, {'$set': {'onboarding_vlan_id': None}})
+        if docDB.search_one('Switch', {'onboarding_vlan_id': self['_id']}) is not None:
+            return {'error': {'code': 4, 'desc': 'at least one Switch is using this VLAN'}}

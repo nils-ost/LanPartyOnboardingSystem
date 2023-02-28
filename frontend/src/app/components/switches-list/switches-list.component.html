@@ -1,0 +1,48 @@
+<p-table [value]="switches" sortField="number">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="addr">
+                <ng-container i18n="@@elementFieldLabelSwitchAddr">Address</ng-container>
+                <p-sortIcon field="number"></p-sortIcon>
+            </th>
+            <th pSortableColumn="user">
+                <ng-container i18n="@@elementFieldLabelSwitchUser">Username</ng-container>
+                <p-sortIcon field="purpose"></p-sortIcon>
+            </th>
+            <th pSortableColumn="pw">
+                <ng-container i18n="@@elementFieldLabelSwitchPw">Password</ng-container>
+                <p-sortIcon field="desc"></p-sortIcon>
+            </th>
+            <th pSortableColumn="purpose">
+                <ng-container i18n="@@elementFieldLabelSwitchPurpose">Purpose</ng-container>
+                <p-sortIcon field="desc"></p-sortIcon>
+            </th>
+            <th pSortableColumn="onboarding_vlan_id">
+                <ng-container i18n="@@elementFieldLabelSwitchOnboardingVlanId">Onboarding VLAN</ng-container>
+                <p-sortIcon field="desc"></p-sortIcon>
+            </th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-sw>
+        <tr>
+            <td>{{ sw.addr }}</td>
+            <td>{{ sw.user }}</td>
+            <td>{{ sw.pw }}</td>
+            <td>{{ switchPurposeType[sw.purpose] }}</td>
+            <td>{{ sw.onboarding_vlan_id }}</td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editSwitch(sw)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="confirmDelete(sw)"></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="editDialog" header="Edit Switch" [modal]="true" [dismissableMask]="true">
+    <app-switch-creadit [sw]="selectedSwitch" (dialogEndEvent)="editedSwitch()"></app-switch-creadit>
+</p-dialog>
+
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+<p-toast></p-toast>

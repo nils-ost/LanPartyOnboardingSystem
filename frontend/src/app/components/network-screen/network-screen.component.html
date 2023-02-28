@@ -1,12 +1,13 @@
-<p>network-screen works!</p>
-
-
 <p-panel header="VLANs">
     <ng-template pTemplate="icons">
         <button pButton (click)="createvlan.toggle($event)" i18n="@@buttonCreate">Create</button>
     </ng-template>
 
     <app-vlans-list [vlans]="vlans" (editedVlanEvent)="creaditVlan()"></app-vlans-list>
+</p-panel>
+
+<p-panel header="Switches">
+    <app-switches-list [switches]="switches" (editedSwitchEvent)="creaditSwitch()"></app-switches-list>
 </p-panel>
 
 <p-overlayPanel #createvlan [showCloseIcon]="true">
