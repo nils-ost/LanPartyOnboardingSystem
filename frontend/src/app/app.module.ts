@@ -29,6 +29,8 @@ import { NetworkScreenComponent } from './components/network-screen/network-scre
 import { VlanCreaditComponent } from './components/vlan-creadit/vlan-creadit.component';
 import { SwitchesListComponent } from './components/switches-list/switches-list.component';
 import { SwitchCreaditComponent } from './components/switch-creadit/switch-creadit.component';
+import { IpPoolsListComponent } from './components/ip-pools-list/ip-pools-list.component';
+import { IpPoolCreaditComponent } from './components/ip-pool-creadit/ip-pool-creadit.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import { SwitchCreaditComponent } from './components/switch-creadit/switch-cread
     NetworkScreenComponent,
     VlanCreaditComponent,
     SwitchesListComponent,
-    SwitchCreaditComponent
+    SwitchCreaditComponent,
+    IpPoolsListComponent,
+    IpPoolCreaditComponent
   ],
   imports: [
     BrowserModule,

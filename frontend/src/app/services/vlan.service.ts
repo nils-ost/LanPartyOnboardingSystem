@@ -25,12 +25,12 @@ export class VlanService {
 
   public createVlan(number: number, purpose: number, desc: string): Observable<any> {
     let vlan = {'number': number, 'purpose': purpose, 'desc': desc};
-    return this.http.post<Vlan>(this.vlanUrl, vlan, {withCredentials:true});
+    return this.http.post<any>(this.vlanUrl, vlan, {withCredentials:true});
   }
 
   public updateVlan(id: string, number: number, purpose: number, desc: string): Observable<any> {
     let vlan = {'id': id, 'number': number, 'purpose': purpose, 'desc': desc};
-    return this.http.patch<Vlan>(this.vlanUrl + id + '/', vlan, {withCredentials:true});
+    return this.http.patch<any>(this.vlanUrl + id + '/', vlan, {withCredentials:true});
   }
 
   public deleteVlan(id: string): Observable<any> {

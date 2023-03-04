@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output, OnChanges, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
 import { Switch } from 'src/app/interfaces/switch';
 import { Vlan, VlanPurposeType } from 'src/app/interfaces/vlan';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
@@ -10,7 +10,7 @@ import { SwitchService } from 'src/app/services/switch.service';
   templateUrl: './switch-creadit.component.html',
   styleUrls: ['./switch-creadit.component.scss']
 })
-export class SwitchCreaditComponent implements OnChanges, OnInit {
+export class SwitchCreaditComponent implements OnChanges {
   @Input() sw?: Switch;
   @Input() vlans: Vlan[] = [];
   @Output() dialogEndEvent = new EventEmitter<null>();
@@ -35,9 +35,6 @@ export class SwitchCreaditComponent implements OnChanges, OnInit {
       {name: "mixed", code: 2}
     ]
     this.vlansOptions = [{name: '', code: null}];
-  }
-
-  ngOnInit(): void {
   }
 
   ngOnChanges(): void {
