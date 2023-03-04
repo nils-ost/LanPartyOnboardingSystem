@@ -30,6 +30,7 @@ export class VlanCreaditComponent implements OnChanges {
       {name: "other", code: 3}
     ]
   }
+
   ngOnChanges(): void {
     if (this.vlan) {
       this.number = this.vlan.number;
@@ -87,6 +88,7 @@ export class VlanCreaditComponent implements OnChanges {
       if (errors.number.code === 10) this.number_error = $localize `:@@ElementErrorCode10:needs to be in range of 1 to 1024`;
     }
     if (errors.purpose) {
+      if (errors.number.code === 1) this.purpose_error = $localize `:@@ElementErrorCode1:can't be empty`;
       if (errors.purpose.code === 3) this.purpose_error = $localize `:@@ElementErrorCode3:invalid type`;
       if (errors.purpose.code === 11) this.purpose_error = $localize `:@@ElementErrorCode11:invalid selection`;
       if (errors.purpose.code === 12) this.purpose_error = $localize `:@@ElementErrorCode12:allready in use, can only be used once`;

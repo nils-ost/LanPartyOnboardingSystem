@@ -1,1 +1,39 @@
-<p>switch-creadit works!</p>
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="switchaddr" pInputText [(ngModel)]="addr" [ngClass]="{'ng-invalid ng-dirty': addr_error}" autofocus>
+        <label for="switchaddr" i18n="@@elementFieldLabelSwitchAddr">Address</label>
+    </span>
+    <small *ngIf="addr_error" class="p-error block">{{ addr_error }}</small>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="switchuser" pInputText [(ngModel)]="user">
+        <label for="switchuser" i18n="@@elementFieldLabelSwitchUser">User</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="switchpw" pInputText [(ngModel)]="pw">
+        <label for="switchpw" i18n="@@elementFieldLabelSwitchPw">Password</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-dropdown id="switchpurpose" [options]="purposes" [(ngModel)]="purpose" optionLabel="name" optionValue="code" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': purpose_error}"></p-dropdown>
+        <label for="switchpurpose" i18n="@@elementFieldLabelSwitchPurpose">Purpose</label>
+    </span>
+    <small *ngIf="purpose_error" class="p-error block">{{ purpose_error }}</small>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-dropdown id="switchonboardingvlanid" [options]="vlansOptions" [(ngModel)]="onboarding_vlan_id" [showClear]="true" optionLabel="name" optionValue="code" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': onboarding_vlan_id_error}"></p-dropdown>
+        <label for="switchonboardingvlanid" i18n="@@elementFieldLabelSwitchOnboardingVlanId">Onboarding VLAN</label>
+    </span>
+    <small *ngIf="onboarding_vlan_id_error" class="p-error block">{{ onboarding_vlan_id_error }}</small>
+</div>
+
+<button pButton (click)="commitSwitch()" i18n="@@buttonSave">Save</button>

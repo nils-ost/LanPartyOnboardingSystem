@@ -1,7 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Switch, SwitchPurposeType } from 'src/app/interfaces/switch';
+import { Vlan } from 'src/app/interfaces/vlan';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { SwitchService } from 'src/app/services/switch.service';
 
@@ -10,10 +11,12 @@ import { SwitchService } from 'src/app/services/switch.service';
   templateUrl: './switches-list.component.html',
   styleUrls: ['./switches-list.component.scss']
 })
-export class SwitchesListComponent {
+export class SwitchesListComponent implements OnChanges {
   switchPurposeType = SwitchPurposeType;
   @Input() switches!: Switch[];
+  @Input() vlans!: Vlan[];
   @Output() editedSwitchEvent = new EventEmitter<null>();
+  vlansNames: Map<string, string> = new Map<string, string>;
   editDialog: boolean = false;
   selectedSwitch!: Switch;
 
@@ -23,6 +26,13 @@ export class SwitchesListComponent {
     private errorHandler: ErrorHandlerService,
     private switchService: SwitchService
   ) {}
+
+  ngOnChanges(): void {
+    for (let i: number = 0; i < this.vlans.length; i++) {
+      let vlan = this.vlans[i];
+      this.vlansNames.set(vlan.id, vlan.number + ': ' + vlan.desc);
+    }
+  }
 
   editSwitch(sw: Switch) {
     this.selectedSwitch = sw;

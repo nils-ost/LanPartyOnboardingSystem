@@ -13,6 +13,7 @@ import { Switch } from 'src/app/interfaces/switch';
 })
 export class NetworkScreenComponent implements OnInit {
   @ViewChild('createvlan') createVlanDialog: any;
+  @ViewChild('createswitch') createSwitchDialog: any;
   vlans: Vlan[] = [];
   switches: Switch[] = [];
 
@@ -58,6 +59,9 @@ export class NetworkScreenComponent implements OnInit {
     this.refreshVlans();
   }
 
-  creaditSwitch() {}
+  creaditSwitch() {
+    this.createSwitchDialog.hide();
+    this.refreshSwitches();
+  }
 
 }

@@ -7,11 +7,25 @@
 </p-panel>
 
 <p-panel header="Switches">
-    <app-switches-list [switches]="switches" (editedSwitchEvent)="creaditSwitch()"></app-switches-list>
+    <ng-template pTemplate="icons">
+        <button pButton (click)="createswitch.toggle($event)" i18n="@@buttonCreate">Create</button>
+    </ng-template>
+
+    <app-switches-list [switches]="switches" [vlans]="vlans" (editedSwitchEvent)="creaditSwitch()"></app-switches-list>
 </p-panel>
+
+<p-overlayPanel #createswitch [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <app-switch-creadit [vlans]="vlans" (dialogEndEvent)="creaditSwitch()"></app-switch-creadit>
+    </ng-template>
+</p-overlayPanel>
 
 <p-overlayPanel #createvlan [showCloseIcon]="true">
     <ng-template pTemplate>
         <app-vlan-creadit (dialogEndEvent)="creaditVlan()"></app-vlan-creadit>
     </ng-template>
 </p-overlayPanel>
+
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+<p-toast></p-toast>

@@ -32,7 +32,3 @@
 <p-dialog [(visible)]="editDialog" header="Edit Vlan" [modal]="true" [dismissableMask]="true">
     <app-vlan-creadit [vlan]="selectedVlan" (dialogEndEvent)="editedVlan()"></app-vlan-creadit>
 </p-dialog>
-
-<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
-
-<p-toast></p-toast>

@@ -1,25 +1,22 @@
-<p-table [value]="switches" sortField="number">
+<p-table [value]="switches" sortField="purpose">
     <ng-template pTemplate="header">
         <tr>
             <th pSortableColumn="addr">
                 <ng-container i18n="@@elementFieldLabelSwitchAddr">Address</ng-container>
-                <p-sortIcon field="number"></p-sortIcon>
+                <p-sortIcon field="addr"></p-sortIcon>
             </th>
-            <th pSortableColumn="user">
+            <th>
                 <ng-container i18n="@@elementFieldLabelSwitchUser">Username</ng-container>
-                <p-sortIcon field="purpose"></p-sortIcon>
             </th>
-            <th pSortableColumn="pw">
+            <th>
                 <ng-container i18n="@@elementFieldLabelSwitchPw">Password</ng-container>
-                <p-sortIcon field="desc"></p-sortIcon>
             </th>
             <th pSortableColumn="purpose">
                 <ng-container i18n="@@elementFieldLabelSwitchPurpose">Purpose</ng-container>
-                <p-sortIcon field="desc"></p-sortIcon>
+                <p-sortIcon field="purpose"></p-sortIcon>
             </th>
-            <th pSortableColumn="onboarding_vlan_id">
+            <th>
                 <ng-container i18n="@@elementFieldLabelSwitchOnboardingVlanId">Onboarding VLAN</ng-container>
-                <p-sortIcon field="desc"></p-sortIcon>
             </th>
             <th></th>
         </tr>
@@ -30,7 +27,7 @@
             <td>{{ sw.user }}</td>
             <td>{{ sw.pw }}</td>
             <td>{{ switchPurposeType[sw.purpose] }}</td>
-            <td>{{ sw.onboarding_vlan_id }}</td>
+            <td>{{ vlansNames.get(sw.onboarding_vlan_id) }}</td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editSwitch(sw)"></button>
                 <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="confirmDelete(sw)"></button>
@@ -40,9 +37,5 @@
 </p-table>
 
 <p-dialog [(visible)]="editDialog" header="Edit Switch" [modal]="true" [dismissableMask]="true">
-    <app-switch-creadit [sw]="selectedSwitch" (dialogEndEvent)="editedSwitch()"></app-switch-creadit>
+    <app-switch-creadit [sw]="selectedSwitch" [vlans]="vlans" (dialogEndEvent)="editedSwitch()"></app-switch-creadit>
 </p-dialog>
-
-<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
-
-<p-toast></p-toast>
