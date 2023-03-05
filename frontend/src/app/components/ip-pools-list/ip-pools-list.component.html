@@ -1,1 +1,42 @@
-<p>ip-pools-list works!</p>
+<p-table [value]="ippools" sortField="range_start">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="desc">
+                <ng-container i18n="@@elementFieldLabelIpPoolDesc">Description</ng-container>
+                <p-sortIcon field="desc"></p-sortIcon>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelIpPoolMask">Mask</ng-container>
+            </th>
+            <th pSortableColumn="range_start">
+                <ng-container i18n="@@elementFieldLabelIpPoolRangeStart">Range Start</ng-container>
+                <p-sortIcon field="range_start"></p-sortIcon>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelIpPoolRangeEnd">Range End</ng-container>
+            </th>
+            <th pSortableColumn="vlan_id">
+                <ng-container i18n="@@elementFieldLabelIpPoolVlanId">VLAN</ng-container>
+                <p-sortIcon field="vlan_id"></p-sortIcon>
+            </th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-ippool>
+        <tr>
+            <td>{{ ippool.desc }}</td>
+            <td>{{ ippool.mask }}</td>
+            <td>{{ ip_int_to_str(ippool.range_start) }}</td>
+            <td>{{ ip_int_to_str(ippool.range_end) }}</td>
+            <td>{{ vlansNames.get(ippool.vlan_id) }}</td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editIpPool(ippool)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="confirmDelete(ippool)"></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="editDialog" header="Edit IpPool" [modal]="true" [dismissableMask]="true">
+    <app-ip-pool-creadit [ippool]="selectedIpPool" [vlans]="vlans" (dialogEndEvent)="editedIpPool()"></app-ip-pool-creadit>
+</p-dialog>

@@ -1,1 +1,46 @@
-<p>ip-pool-creadit works!</p>
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="ippooldesc" pInputText [(ngModel)]="desc" autofocus>
+        <label for="ippooldesc" i18n="@@elementFieldLabelIpPoolDesc">Description</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="ippoolmask" [(ngModel)]="mask" [min]="8" [max]="30" [showButtons]="true" [ngClass]="{'ng-invalid ng-dirty': mask_error}"></p-inputNumber>
+        <label for="ippoolmask" i18n="@@elementFieldLabelIpPoolMask">Mask</label>
+    </span>
+    <small *ngIf="mask_error" class="p-error block">{{ mask_error }}</small>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="ippoolrangestart" [(ngModel)]="range_start_oct1" [min]="1" [max]="255" [ngClass]="{'ng-invalid ng-dirty': range_start_error}"></p-inputNumber>
+        <p-inputNumber [(ngModel)]="range_start_oct2" [min]="0" [max]="255" [ngClass]="{'ng-invalid ng-dirty': range_start_error}"></p-inputNumber>
+        <p-inputNumber [(ngModel)]="range_start_oct3" [min]="0" [max]="255" [ngClass]="{'ng-invalid ng-dirty': range_start_error}"></p-inputNumber>
+        <p-inputNumber [(ngModel)]="range_start_oct4" [min]="0" [max]="255" [ngClass]="{'ng-invalid ng-dirty': range_start_error}"></p-inputNumber>
+        <label for="ippoolrangestart" i18n="@@elementFieldLabelIpPoolRangeStart">Range Start</label>
+    </span>
+    <small *ngIf="range_start_error" class="p-error block">{{ range_start_error }}</small>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="ippoolrangeend" [(ngModel)]="range_end_oct1" [min]="1" [max]="255" [ngClass]="{'ng-invalid ng-dirty': range_end_error}"></p-inputNumber>
+        <p-inputNumber [(ngModel)]="range_end_oct2" [min]="0" [max]="255" [ngClass]="{'ng-invalid ng-dirty': range_end_error}"></p-inputNumber>
+        <p-inputNumber [(ngModel)]="range_end_oct3" [min]="0" [max]="255" [ngClass]="{'ng-invalid ng-dirty': range_end_error}"></p-inputNumber>
+        <p-inputNumber [(ngModel)]="range_end_oct4" [min]="0" [max]="255" [ngClass]="{'ng-invalid ng-dirty': range_end_error}"></p-inputNumber>
+        <label for="ippoolrangeend" i18n="@@elementFieldLabelIpPoolRangeEnd">Range End</label>
+    </span>
+    <small *ngIf="range_end_error" class="p-error block">{{ range_end_error }}</small>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-dropdown id="switchvlanid" [options]="vlansOptions" [(ngModel)]="vlan_id" optionLabel="name" optionValue="code" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': vlan_id_error}"></p-dropdown>
+        <label for="switchvlanid" i18n="@@elementFieldLabelIpPoolVlanId">VLAN</label>
+    </span>
+    <small *ngIf="vlan_id_error" class="p-error block">{{ vlan_id_error }}</small>
+</div>
+
+<button pButton (click)="commitIpPool()" i18n="@@buttonSave">Save</button>

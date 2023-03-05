@@ -14,15 +14,29 @@
     <app-switches-list [switches]="switches" [vlans]="vlans" (editedSwitchEvent)="creaditSwitch()"></app-switches-list>
 </p-panel>
 
+<p-panel header="IpPools">
+    <ng-template pTemplate="icons">
+        <button pButton (click)="createippool.toggle($event)" i18n="@@buttonCreate">Create</button>
+    </ng-template>
+
+    <app-ip-pools-list [ippools]="ippools" [vlans]="vlans" (editedIpPoolEvent)="creaditIpPool()"></app-ip-pools-list>
+</p-panel>
+
+<p-overlayPanel #createvlan [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <app-vlan-creadit (dialogEndEvent)="creaditVlan()"></app-vlan-creadit>
+    </ng-template>
+</p-overlayPanel>
+
 <p-overlayPanel #createswitch [showCloseIcon]="true">
     <ng-template pTemplate>
         <app-switch-creadit [vlans]="vlans" (dialogEndEvent)="creaditSwitch()"></app-switch-creadit>
     </ng-template>
 </p-overlayPanel>
 
-<p-overlayPanel #createvlan [showCloseIcon]="true">
+<p-overlayPanel #createippool [showCloseIcon]="true">
     <ng-template pTemplate>
-        <app-vlan-creadit (dialogEndEvent)="creaditVlan()"></app-vlan-creadit>
+        <app-ip-pool-creadit [vlans]="vlans" (dialogEndEvent)="creaditIpPool()"></app-ip-pool-creadit>
     </ng-template>
 </p-overlayPanel>
 

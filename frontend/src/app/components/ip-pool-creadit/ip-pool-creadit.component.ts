@@ -30,6 +30,11 @@ export class IpPoolCreaditComponent implements OnChanges {
   range_end_oct3: number;
   range_end_oct4: number;
 
+  mask_error?: string;
+  range_start_error?: string;
+  range_end_error?: string;
+  vlan_id_error?: string;
+
   constructor(
     private errorHandler: ErrorHandlerService,
     private ippoolService: IpPoolService
@@ -104,6 +109,8 @@ export class IpPoolCreaditComponent implements OnChanges {
   }
 
   commitIpPool() {
+    this.range_start = this.octetts_to_int([this.range_start_oct1, this.range_start_oct2, this.range_start_oct3, this.range_start_oct4]);
+    this.range_end = this.octetts_to_int([this.range_end_oct1, this.range_end_oct2, this.range_end_oct3, this.range_end_oct4]);
     if (this.ippool) this.editIpPool();
     else this.createIpPool();
   }
@@ -138,8 +145,32 @@ export class IpPoolCreaditComponent implements OnChanges {
       })
   }
 
-  clearErrors() {}
+  clearErrors() {
+    this.mask_error = undefined;
+    this.range_start_error = undefined;
+    this.range_end_error = undefined;
+    this.vlan_id_error = undefined;
+  }
 
-  fillErrors(errors: any) {}
+  fillErrors(errors: any) {
+    if (errors.mask) {
+      if (errors.mask.code === 30) this.mask_error = $localize `:@@ElementErrorCode30:value needs to be between 8 and 30`;
+      if (errors.mask.code === 31) this.mask_error = $localize `:@@ElementErrorCode31:does not fit to the IP range`;
+    }
+    if (errors.range_start) {
+      if (errors.range_start.code === 32) this.range_start_error = $localize `:@@ElementErrorCode32:range_start needs to be smaller than range_end`;
+      if (errors.range_start.code === 33) this.range_start_error = $localize `:@@ElementErrorCode33:overlaps with existing IpPool`;
+      if (errors.range_start.code === 34) this.range_start_error = $localize `:@@ElementErrorCode34:not a valid IP`;
+    }
+    if (errors.range_end) {
+      if (errors.range_end.code === 32) this.range_end_error = $localize `:@@ElementErrorCode32:range_start needs to be smaller than range_end`;
+      if (errors.range_end.code === 33) this.range_end_error = $localize `:@@ElementErrorCode33:overlaps with existing IpPool`;
+      if (errors.range_end.code === 34) this.range_end_error = $localize `:@@ElementErrorCode34:not a valid IP`;
+    }
+    if (errors.vlan_id) {
+      if (errors.vlan_id.code === 1) this.vlan_id_error = $localize `:@@ElementErrorCode1:can't be empty`;
+      if (errors.vlan_id.code === 35) this.vlan_id_error = $localize `:@@ElementErrorCode35:there is no VLAN with this ID`;
+    }
+  }
 
 }

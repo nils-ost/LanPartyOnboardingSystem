@@ -3,8 +3,10 @@ import { ErrorHandlerService } from '../../services/error-handler.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Vlan } from '../../interfaces/vlan';
 import { VlanService } from '../../services/vlan.service';
-import { SwitchService } from 'src/app/services/switch.service';
 import { Switch } from 'src/app/interfaces/switch';
+import { SwitchService } from 'src/app/services/switch.service';
+import { IpPool } from 'src/app/interfaces/ip-pool';
+import { IpPoolService } from 'src/app/services/ip-pool.service';
 
 @Component({
   selector: 'app-network-screen',
@@ -14,18 +16,22 @@ import { Switch } from 'src/app/interfaces/switch';
 export class NetworkScreenComponent implements OnInit {
   @ViewChild('createvlan') createVlanDialog: any;
   @ViewChild('createswitch') createSwitchDialog: any;
+  @ViewChild('createippool') createIpPoolDialog: any;
   vlans: Vlan[] = [];
   switches: Switch[] = [];
+  ippools: IpPool[] = [];
 
   constructor(
     private errorHandler: ErrorHandlerService,
     private vlanService: VlanService,
-    private switchService: SwitchService
+    private switchService: SwitchService,
+    private ippoolService: IpPoolService
   ) { }
 
   ngOnInit(): void {
     this.refreshVlans();
     this.refreshSwitches();
+    this.refreshIpPools();
   }
 
   refreshVlans() {
@@ -54,6 +60,19 @@ export class NetworkScreenComponent implements OnInit {
       })
   }
 
+  refreshIpPools() {
+    this.ippoolService
+      .getIpPools()
+      .subscribe({
+        next: (ippools: IpPool[]) => {
+          this.ippools = ippools;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
   creaditVlan() {
     this.createVlanDialog.hide();
     this.refreshVlans();
@@ -62,6 +81,11 @@ export class NetworkScreenComponent implements OnInit {
   creaditSwitch() {
     this.createSwitchDialog.hide();
     this.refreshSwitches();
+  }
+
+  creaditIpPool() {
+    this.createIpPoolDialog.hide();
+    this.refreshIpPools();
   }
 
 }
