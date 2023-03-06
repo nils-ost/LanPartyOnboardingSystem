@@ -31,6 +31,7 @@ import { SwitchesListComponent } from './components/switches-list/switches-list.
 import { SwitchCreaditComponent } from './components/switch-creadit/switch-creadit.component';
 import { IpPoolsListComponent } from './components/ip-pools-list/ip-pools-list.component';
 import { IpPoolCreaditComponent } from './components/ip-pool-creadit/ip-pool-creadit.component';
+import { TableCreaditComponent } from './components/table-creadit/table-creadit.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { IpPoolCreaditComponent } from './components/ip-pool-creadit/ip-pool-cre
     SwitchesListComponent,
     SwitchCreaditComponent,
     IpPoolsListComponent,
-    IpPoolCreaditComponent
+    IpPoolCreaditComponent,
+    TableCreaditComponent
   ],
   imports: [
     BrowserModule,

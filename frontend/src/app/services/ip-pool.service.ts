@@ -16,7 +16,7 @@ export class IpPoolService {
   ) { }
 
   public getIpPool(id: string): Observable<IpPool> {
-    return this.http.get<IpPool>(this.ippoolUrl + '/', {withCredentials:true});
+    return this.http.get<IpPool>(this.ippoolUrl + id + '/', {withCredentials:true});
   }
 
   public getIpPools(): Observable<IpPool[]> {
