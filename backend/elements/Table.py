@@ -32,7 +32,7 @@ class Table(ElementBase):
         elif not docDB.get('VLAN', add_pool['vlan_id'])['purpose'] == 0:
             errors['add_ip_pool_id'] = {'code': 43, 'desc': 'VLAN of IpPool needs to be of purpose 0 (play/seats)'}
         elif docDB.search_one(self.__class__.__name__, {'seat_ip_pool_id': self['add_ip_pool_id']}) is not None:
-            errors['add_ip_pool_id'] = {'code': 44, 'desc': 'allready in use as seat_ip_pool_id on different Table'}
+            errors['add_ip_pool_id'] = {'code': 46, 'desc': 'allready in use as seat_ip_pool_id on different Table'}
         if self['seat_ip_pool_id'] == self['add_ip_pool_id']:
             errors['seat_ip_pool_id'] = {'code': 45, 'desc': "can't be the same as add_ip_pool_id"}
             errors['add_ip_pool_id'] = {'code': 45, 'desc': "can't be the same as seat_ip_pool_id"}

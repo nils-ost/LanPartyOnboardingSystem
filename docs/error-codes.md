@@ -35,8 +35,9 @@
   * **41***(switch_id|seat_ip_pool_id|add_ip_pool_id)*: There is no <Switch|IpPool\> with id '<switch_id|seat_ip_pool_id|add_ip_pool_id\>'
   * **42***(switch_id)*: Purpose of Switch needs to be 1 or 2
   * **43***(seat_ip_pool_id|add_ip_pool_id)*: VLAN of IpPool needs to be of purpose 0 (play/seats)
-  * **44***(seat_ip_pool_id|add_ip_pool_id)*: allready in use as <add_ip_pool_id|seat_ip_pool_id\> on different Table
+  * **44***(seat_ip_pool_id)*: allready in use as add_ip_pool_id on different Table
   * **45***(seat_ip_pool_id|add_ip_pool_id)*: can't be the same as <add_ip_pool_id|seat_ip_pool_id\>
+  * **46***(add_ip_pool_id)*: allready in use as seat_ip_pool_id on different Table
 
 ## seat
 

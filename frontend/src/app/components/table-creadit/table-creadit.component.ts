@@ -119,5 +119,32 @@ export class TableCreaditComponent implements OnChanges{
     this.add_ip_pool_id_error = undefined;
   }
 
-  fillErrors(errors: any) {}
+  fillErrors(errors: any) {
+    if (errors.number) {
+      if (errors.number.code === 1) this.number_error = $localize `:@@ElementErrorCode1:can't be empty`;
+      if (errors.number.code === 2) this.number_error = $localize `:@@ElementErrorCode2:value allready in use, needs to be unique`;
+      if (errors.number.code === 3) this.number_error = $localize `:@@ElementErrorCode3:invalid type`;
+      if (errors.number.code === 40) this.number_error = $localize `:@@ElementErrorCode40:needs to be bigger or equal to zero`;
+    }
+    if (errors.switch_id) {
+      if (errors.switch_id.code === 1) this.switch_id_error = $localize `:@@ElementErrorCode1:can't be empty`;
+      if (errors.switch_id.code === 41) this.switch_id_error = $localize `:@@ElementErrorCode41:there is no Element with this ID`;
+      if (errors.switch_id.code === 42) this.switch_id_error = $localize `:@@ElementErrorCode42:Purpose of Switch needs to be 1 (participants) or 2 (mixed)`;
+    }
+    if (errors.seat_ip_pool_id) {
+      if (errors.seat_ip_pool_id.code === 1) this.seat_ip_pool_id_error = $localize `:@@ElementErrorCode1:can't be empty`;
+      if (errors.seat_ip_pool_id.code === 2) this.seat_ip_pool_id_error = $localize `:@@ElementErrorCode2:value allready in use, needs to be unique`;
+      if (errors.seat_ip_pool_id.code === 41) this.seat_ip_pool_id_error = $localize `:@@ElementErrorCode41:there is no Element with this ID`;
+      if (errors.seat_ip_pool_id.code === 43) this.seat_ip_pool_id_error = $localize `:@@ElementErrorCode43:VLAN of IpPool needs to be of purpose 0 (play/seats)`;
+      if (errors.seat_ip_pool_id.code === 44) this.seat_ip_pool_id_error = $localize `:@@ElementErrorCode44:allready in use as add_ip_pool_id on different Table`;
+      if (errors.seat_ip_pool_id.code === 45) this.seat_ip_pool_id_error = $localize `:@@ElementErrorCode45:seat_ip_pool_id and add_ip_pool_id can't be the same`;
+    }
+    if (errors.add_ip_pool_id) {
+      if (errors.add_ip_pool_id.code === 1) this.add_ip_pool_id_error = $localize `:@@ElementErrorCode1:can't be empty`;
+      if (errors.add_ip_pool_id.code === 41) this.add_ip_pool_id_error = $localize `:@@ElementErrorCode41:there is no Element with this ID`;
+      if (errors.add_ip_pool_id.code === 43) this.add_ip_pool_id_error = $localize `:@@ElementErrorCode43:VLAN of IpPool needs to be of purpose 0 (play/seats)`;
+      if (errors.add_ip_pool_id.code === 45) this.add_ip_pool_id_error = $localize `:@@ElementErrorCode45:seat_ip_pool_id and add_ip_pool_id can't be the same`;
+      if (errors.add_ip_pool_id.code === 46) this.add_ip_pool_id_error = $localize `:@@ElementErrorCode46:allready in use as seat_ip_pool_id on different Table`;
+    }
+  }
 }

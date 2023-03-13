@@ -1,1 +1,40 @@
-<p>table-creadit works!</p>
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="tabledesc" pInputText [(ngModel)]="desc" autofocus>
+        <label for="tabledesc" i18n="@@elementFieldLabelTableDesc">Description</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="tablenumber" [(ngModel)]="number" [min]="0" [showButtons]="true" [ngClass]="{'ng-invalid ng-dirty': number_error}"></p-inputNumber>
+        <label for="tablenumber" i18n="@@elementFieldLabelTableNumber">Number</label>
+    </span>
+    <small *ngIf="number_error" class="p-error block">{{ number_error }}</small>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-dropdown id="tableswitchid" [options]="switchesOptions" [(ngModel)]="switch_id" optionLabel="name" optionValue="code" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': switch_id_error}"></p-dropdown>
+        <label for="tableswitchid" i18n="@@elementFieldLabelTableSwitchId">Switch</label>
+    </span>
+    <small *ngIf="switch_id_error" class="p-error block">{{ switch_id_error }}</small>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-dropdown id="tableseatippoolid" [options]="ippoolsOptions" [(ngModel)]="seat_ip_pool_id" optionLabel="name" optionValue="code" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': seat_ip_pool_id_error}"></p-dropdown>
+        <label for="tableseatippoolid" i18n="@@elementFieldLabelTableSeatIpPoolId">Seat IpPool</label>
+    </span>
+    <small *ngIf="seat_ip_pool_id_error" class="p-error block">{{ seat_ip_pool_id_error }}</small>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <p-dropdown id="tableaddippoolid" [options]="ippoolsOptions" [(ngModel)]="add_ip_pool_id" optionLabel="name" optionValue="code" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': add_ip_pool_id_error}"></p-dropdown>
+        <label for="tableaddippoolid" i18n="@@elementFieldLabelTableAddIpPoolId">Additional IpPool</label>
+    </span>
+    <small *ngIf="add_ip_pool_id_error" class="p-error block">{{ add_ip_pool_id_error }}</small>
+</div>
+
+<button pButton (click)="commitTable()" i18n="@@buttonSave">Save</button>

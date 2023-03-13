@@ -37,8 +37,8 @@
 
 <div class="field">
     <span class="p-float-label">
-        <p-dropdown id="switchvlanid" [options]="vlansOptions" [(ngModel)]="vlan_id" optionLabel="name" optionValue="code" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': vlan_id_error}"></p-dropdown>
-        <label for="switchvlanid" i18n="@@elementFieldLabelIpPoolVlanId">VLAN</label>
+        <p-dropdown id="ippoolvlanid" [options]="vlansOptions" [(ngModel)]="vlan_id" optionLabel="name" optionValue="code" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': vlan_id_error}"></p-dropdown>
+        <label for="ippoolvlanid" i18n="@@elementFieldLabelIpPoolVlanId">VLAN</label>
     </span>
     <small *ngIf="vlan_id_error" class="p-error block">{{ vlan_id_error }}</small>
 </div>
