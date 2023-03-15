@@ -24,7 +24,7 @@
 <div class="field">
     <span class="p-float-label">
         <p-dropdown id="tableseatippoolid" [options]="ippoolsOptions" [(ngModel)]="seat_ip_pool_id" optionLabel="name" optionValue="code" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': seat_ip_pool_id_error}"></p-dropdown>
-        <label for="tableseatippoolid" i18n="@@elementFieldLabelTableSeatIpPoolId">Seat IpPool</label>
+        <label for="tableseatippoolid" i18n="@@elementFieldLabelTableSeatIpPoolId">Seats IpPool</label>
     </span>
     <small *ngIf="seat_ip_pool_id_error" class="p-error block">{{ seat_ip_pool_id_error }}</small>
 </div>

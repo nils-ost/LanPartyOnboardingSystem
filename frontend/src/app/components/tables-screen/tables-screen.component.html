@@ -1,0 +1,17 @@
+<p-panel header="Tables">
+    <ng-template pTemplate="icons">
+        <button pButton (click)="createtable.toggle($event)" i18n="@@buttonCreate">Create</button>
+    </ng-template>
+
+    <app-tables-list [tables]="tables" [ippools]="ippools" [switches]="switches" [vlans]="vlans" (editedTableEvent)="creaditTable()"></app-tables-list>
+</p-panel>
+
+<p-overlayPanel #createtable [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <app-table-creadit [vlans]="vlans" [switches]="switches" [ippools]="ippools" (dialogEndEvent)="creaditTable()"></app-table-creadit>
+    </ng-template>
+</p-overlayPanel>
+
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+<p-toast></p-toast>

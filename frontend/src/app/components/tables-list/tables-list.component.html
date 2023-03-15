@@ -1,0 +1,41 @@
+<p-table [value]="tables" sortField="number">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="number">
+                <ng-container i18n="@@elementFieldLabelTableNumber">Number</ng-container>
+                <p-sortIcon field="number"></p-sortIcon>
+            </th>
+            <th pSortableColumn="desc">
+                <ng-container i18n="@@elementFieldLabelTableDesc">Description</ng-container>
+                <p-sortIcon field="desc"></p-sortIcon>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelTableSwitchId">Switch</ng-container>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelTableSeatIpPoolId">Seats IpPool</ng-container>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelTableAddIpPoolId">Additional IpPool</ng-container>
+            </th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-table>
+        <tr>
+            <td>{{ table.number }}</td>
+            <td>{{ table.desc }}</td>
+            <td>{{ switchesNames.get(table.switch_id) }}</td>
+            <td>{{ ippoolsNames.get(table.seat_ip_pool_id) }}</td>
+            <td>{{ ippoolsNames.get(table.add_ip_pool_id) }}</td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editTable(table)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="confirmDelete(table)"></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="editDialog" header="Edit Table" [modal]="true" [dismissableMask]="true">
+    <app-table-creadit [table]="selectedTable" [vlans]="vlans" [switches]="switches" [ippools]="ippools" (dialogEndEvent)="editedTable()"></app-table-creadit>
+</p-dialog>
