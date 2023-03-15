@@ -1,5 +1,4 @@
 from invoke import task
-from elements import Participant
 
 
 @task(name='coverage')
@@ -9,6 +8,7 @@ def coverage(c):
 
 @task(name='create-admin')
 def create_admin(c):
+    from elements import Participant
     p = Participant.get_by_login('admin')
     if p is None:
         p = Participant()
@@ -16,3 +16,43 @@ def create_admin(c):
     p['pw'] = 'password'
     p['admin'] = True
     p.save()
+
+
+@task(pre=[create_admin], name='create-testdata')
+def create_testdata(c):
+    from elements import VLAN, Switch, IpPool
+    VLAN({'number': 1, 'purpose': 3, 'desc': 'default'}).save()
+    v_mgmt = VLAN({'number': 2, 'purpose': 1, 'desc': 'mgmt'})
+    v_mgmt.save()
+    v_play = VLAN({'number': 3, 'purpose': 0, 'desc': 'play'})
+    v_play.save()
+    v_t1 = VLAN({'number': 4, 'purpose': 2, 'desc': 'table 1'})
+    v_t1.save()
+    v_t2 = VLAN({'number': 5, 'purpose': 2, 'desc': 'table 2'})
+    v_t2.save()
+    v_t3 = VLAN({'number': 6, 'purpose': 2, 'desc': 'table 3'})
+    v_t3.save()
+    s_core = Switch({'addr': '172.16.0.10', 'user': 'admin', 'pw': 'password1', 'purpose': 0})
+    s_core.save()
+    s_t1 = Switch({'addr': '172.16.0.11', 'user': 'admin', 'pw': 'password2', 'purpose': 2, 'onboarding_vlan_id': v_t1['_id']})
+    s_t1.save()
+    s_t2 = Switch({'addr': '172.16.0.12', 'user': 'admin', 'pw': 'password3', 'purpose': 1, 'onboarding_vlan_id': v_t2['_id']})
+    s_t2.save()
+    s_t3 = Switch({'addr': '172.16.0.13', 'user': 'admin', 'pw': 'password4', 'purpose': 1, 'onboarding_vlan_id': v_t3['_id']})
+    s_t3.save()
+    IpPool({'desc': 'switches', 'mask': 24, 'vlan_id': v_mgmt['_id'],
+            'range_start': IpPool.octetts_to_int(172, 16, 0, 10), 'range_end': IpPool.octetts_to_int(172, 16, 0, 19)}).save()
+    IpPool({'desc': 'onboarding table 1', 'mask': 24, 'vlan_id': v_t1['_id'],
+            'range_start': IpPool.octetts_to_int(172, 16, 1, 1), 'range_end': IpPool.octetts_to_int(172, 16, 1, 30)}).save()
+    IpPool({'desc': 'onboarding table 2', 'mask': 24, 'vlan_id': v_t2['_id'],
+            'range_start': IpPool.octetts_to_int(172, 16, 1, 31), 'range_end': IpPool.octetts_to_int(172, 16, 1, 60)}).save()
+    IpPool({'desc': 'onboarding table 3', 'mask': 24, 'vlan_id': v_t3['_id'],
+            'range_start': IpPool.octetts_to_int(172, 16, 1, 61), 'range_end': IpPool.octetts_to_int(172, 16, 1, 90)}).save()
+    IpPool({'desc': 'seats table 1', 'mask': 24, 'vlan_id': v_play['_id'],
+            'range_start': IpPool.octetts_to_int(192, 168, 0, 101), 'range_end': IpPool.octetts_to_int(192, 168, 0, 120)}).save()
+    IpPool({'desc': 'seats table 2', 'mask': 24, 'vlan_id': v_play['_id'],
+            'range_start': IpPool.octetts_to_int(192, 168, 0, 121), 'range_end': IpPool.octetts_to_int(192, 168, 0, 140)}).save()
+    IpPool({'desc': 'seats table 3', 'mask': 24, 'vlan_id': v_play['_id'],
+            'range_start': IpPool.octetts_to_int(192, 168, 0, 141), 'range_end': IpPool.octetts_to_int(192, 168, 0, 160)}).save()
+    IpPool({'desc': 'additional play', 'mask': 24, 'vlan_id': v_play['_id'],
+            'range_start': IpPool.octetts_to_int(192, 168, 0, 161), 'range_end': IpPool.octetts_to_int(192, 168, 0, 200)}).save()
