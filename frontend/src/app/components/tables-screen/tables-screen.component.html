@@ -3,7 +3,11 @@
         <button pButton (click)="createtable.toggle($event)" i18n="@@buttonCreate">Create</button>
     </ng-template>
 
-    <app-tables-list [tables]="tables" [ippools]="ippools" [switches]="switches" [vlans]="vlans" (editedTableEvent)="creaditTable()"></app-tables-list>
+    <app-tables-list [tables]="tables" [ippools]="ippools" [switches]="switches" [vlans]="vlans" [seats]="seats" (editedTableEvent)="creaditTable()" (editedSeatEvent)="creadelSeat()"></app-tables-list>
+</p-panel>
+
+<p-panel header="Seats">
+    <app-seats-list [seats]="seats" [tables]="tables"></app-seats-list>
 </p-panel>
 
 <p-overlayPanel #createtable [showCloseIcon]="true">

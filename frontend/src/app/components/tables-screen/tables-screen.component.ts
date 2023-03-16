@@ -9,6 +9,8 @@ import { IpPool } from 'src/app/interfaces/ip-pool';
 import { IpPoolService } from 'src/app/services/ip-pool.service';
 import { Table } from 'src/app/interfaces/table';
 import { TableService } from 'src/app/services/table.service';
+import { Seat } from 'src/app/interfaces/seat';
+import { SeatService } from 'src/app/services/seat.service';
 
 @Component({
   selector: 'app-tables-screen',
@@ -21,13 +23,15 @@ export class TablesScreenComponent implements OnInit {
   switches: Switch[] = [];
   ippools: IpPool[] = [];
   tables: Table[] = [];
+  seats: Seat[] = [];
 
   constructor(
     private errorHandler: ErrorHandlerService,
     private vlanService: VlanService,
     private switchService: SwitchService,
     private ippoolService: IpPoolService,
-    private tableService: TableService
+    private tableService: TableService,
+    private seatService: SeatService
   ) { }
 
   ngOnInit(): void {
@@ -35,6 +39,7 @@ export class TablesScreenComponent implements OnInit {
     this.refreshSwitches();
     this.refreshIpPools();
     this.refreshTables();
+    this.refreshSeats();
   }
 
   refreshVlans() {
@@ -89,9 +94,26 @@ export class TablesScreenComponent implements OnInit {
       })
   }
 
+  refreshSeats() {
+    this.seatService
+      .getSeats()
+      .subscribe({
+        next: (seats: Seat[]) => {
+          this.seats = seats;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
   creaditTable() {
     this.createTableDialog.hide();
     this.refreshTables();
+  }
+
+  creadelSeat() {
+    this.refreshSeats();
   }
 
 }

@@ -19,6 +19,9 @@
                 <ng-container i18n="@@elementFieldLabelTableAddIpPoolId">Additional IpPool</ng-container>
             </th>
             <th></th>
+            <th>
+                Seats
+            </th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-table>
@@ -31,6 +34,11 @@
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editTable(table)"></button>
                 <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="confirmDelete(table)"></button>
+            </td>
+            <td>
+                {{ seatCounts.get(table.id) || 0 }}
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-plus" (click)="addSeats(table)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-minus" (click)="delSeats(table)"></button>
             </td>
         </tr>
     </ng-template>

@@ -1,0 +1,24 @@
+<p-table [value]="displaySeats" sortField="table">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="table" *ngIf="!selectedTable">
+                <ng-container i18n="@@elementFieldLabelSeatTableId">Table</ng-container>
+                <p-sortIcon field="table"></p-sortIcon>
+            </th>
+            <th pSortableColumn="seatNumber">
+                <ng-container i18n="@@elementFieldLabelSeatNumber">Number</ng-container>
+                <p-sortIcon field="seatNumber"></p-sortIcon>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelSeatPw">Password</ng-container>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-element>
+        <tr>
+            <td *ngIf="!selectedTable">{{ element.table }}</td>
+            <td>{{ element.seatNumber }}</td>
+            <td>{{ element.seat.pw }}</td>
+        </tr>
+    </ng-template>
+</p-table>

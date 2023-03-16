@@ -34,6 +34,7 @@ import { IpPoolCreaditComponent } from './components/ip-pool-creadit/ip-pool-cre
 import { TableCreaditComponent } from './components/table-creadit/table-creadit.component';
 import { TablesListComponent } from './components/tables-list/tables-list.component';
 import { TablesScreenComponent } from './components/tables-screen/tables-screen.component';
+import { SeatsListComponent } from './components/seats-list/seats-list.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { TablesScreenComponent } from './components/tables-screen/tables-screen.
     IpPoolCreaditComponent,
     TableCreaditComponent,
     TablesListComponent,
-    TablesScreenComponent
+    TablesScreenComponent,
+    SeatsListComponent
   ],
   imports: [
     BrowserModule,
