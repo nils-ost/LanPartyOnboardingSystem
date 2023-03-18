@@ -25,6 +25,8 @@ export class TablesScreenComponent implements OnInit {
   tables: Table[] = [];
   seats: Seat[] = [];
 
+  selectedTable: Table | undefined;
+
   constructor(
     private errorHandler: ErrorHandlerService,
     private vlanService: VlanService,
@@ -114,6 +116,16 @@ export class TablesScreenComponent implements OnInit {
 
   creadelSeat() {
     this.refreshSeats();
+  }
+
+  selectTable(event: any) {
+    if (event) {
+      if (event.data) this.selectedTable = event.data;
+      else this.selectedTable = event;
+    }
+    else {
+      this.selectedTable = undefined;
+    }
   }
 
 }

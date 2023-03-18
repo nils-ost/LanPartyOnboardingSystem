@@ -1,4 +1,4 @@
-<p-table [value]="tables" sortField="number">
+<p-table [value]="tables" sortField="number" selectionMode="single" [(selection)]="selectedTable" (onRowSelect)="selectTable($event)" (onRowUnselect)="selectTable(undefined)">
     <ng-template pTemplate="header">
         <tr>
             <th pSortableColumn="number">
@@ -25,7 +25,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-table>
-        <tr>
+        <tr [pSelectableRow]="table">
             <td>{{ table.number }}</td>
             <td>{{ table.desc }}</td>
             <td>{{ switchesNames.get(table.switch_id) }}</td>
@@ -37,8 +37,8 @@
             </td>
             <td>
                 {{ seatCounts.get(table.id) || 0 }}
-                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-plus" (click)="addSeats(table)"></button>
-                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-minus" (click)="delSeats(table)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-plus" (click)="addSeatsStart(table)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-minus" (click)="delSeatsStart(table)" *ngIf="seatCounts.get(table.id) || 0 > 0"></button>
             </td>
         </tr>
     </ng-template>
@@ -46,4 +46,28 @@
 
 <p-dialog [(visible)]="editDialog" header="Edit Table" [modal]="true" [dismissableMask]="true">
     <app-table-creadit [table]="selectedTable" [vlans]="vlans" [switches]="switches" [ippools]="ippools" (dialogEndEvent)="editedTable()"></app-table-creadit>
+</p-dialog>
+
+<p-dialog [(visible)]="addSeatsDialog" header="Add Seats" [modal]="true" [dismissableMask]="true" *ngIf="selectedTable">
+    <p>
+        How many Seats do you like to add to Table {{ selectedTable.number }}
+    </p>
+    <div class="field">
+        <span class="p-float-label">
+            <p-inputNumber [(ngModel)]="adddelSeatsCount" [min]="0" [showButtons]="true"></p-inputNumber>
+        </span>
+    </div>
+    <button pButton (click)="addSeats()" i18n="@@buttonCommit">Commit</button>
+</p-dialog>
+
+<p-dialog [(visible)]="delSeatsDialog" header="Delete Seats" [modal]="true" [dismissableMask]="true" *ngIf="selectedTable">
+    <p>
+        How many Seats do you like to delete from Table {{ selectedTable.number }}
+    </p>
+    <div class="field">
+        <span class="p-float-label">
+            <p-inputNumber [(ngModel)]="adddelSeatsCount" [min]="0" [showButtons]="true"></p-inputNumber>
+        </span>
+    </div>
+    <button pButton (click)="delSeats()" i18n="@@buttonCommit">Commit</button>
 </p-dialog>

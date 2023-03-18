@@ -23,8 +23,12 @@ export class TablesListComponent implements OnChanges {
   @Input() seats!: Seat[];
   @Output() editedTableEvent = new EventEmitter<null>();
   @Output() editedSeatEvent = new EventEmitter<null>();
+  @Output() selectTableEvent = new EventEmitter<Table | undefined>();
 
   editDialog: boolean = false;
+  addSeatsDialog: boolean = false;
+  delSeatsDialog: boolean = false;
+  adddelSeatsCount: number = 0;
   selectedTable!: Table;
 
   ippoolsNames: Map<string, string> = new Map<string, string>;
@@ -60,8 +64,13 @@ export class TablesListComponent implements OnChanges {
     }
   }
 
+  selectTable(selection: Table | undefined) {
+    this.selectTableEvent.emit(selection);
+  }
+
   editTable(table: Table) {
     this.selectedTable = table;
+    this.selectTableEvent.emit(table);
     this.editDialog = true;
   }
 
@@ -99,36 +108,23 @@ export class TablesListComponent implements OnChanges {
     });
   }
 
-  addSeats(table: Table) {
+  addSeatsStart(table: Table) {
+    this.selectedTable = table;
+    this.selectTableEvent.emit(table);
+    this.adddelSeatsCount = 0;
+    this.addSeatsDialog = true;
+  }
+
+  addSeats() {
+    this.addSeatsDialog = false;
     let maxNumber: number = 0;
     for (let i = 0; i < this.seats.length; i++) {
       let seat: Seat = this.seats[i];
-      if (seat.table_id == table.id && seat.number > maxNumber) maxNumber = seat.number;
+      if (seat.table_id == this.selectedTable.id && seat.number > maxNumber) maxNumber = seat.number;
     }
-    this.seatService
-      .createSeat(maxNumber + 1, 'doRandom', table.id)
-      .subscribe({
-        next: (response: any) => {
-          this.editedSeatEvent.emit(null);
-        },
-        error: (err: HttpErrorResponse) => {
-          this.errorHandler.handleError(err);
-        }
-      })
-  }
-
-  delSeats(table: Table) {
-    let maxSeat: Seat | undefined;
-    for (let i = 0; i < this.seats.length; i++) {
-      let seat: Seat = this.seats[i];
-      if (seat.table_id == table.id) {
-        if (maxSeat && seat.number > maxSeat.number) maxSeat = seat;
-        else maxSeat = seat;
-      }
-    }
-    if (maxSeat) {
+    for (let i = 0; i < this.adddelSeatsCount; i++) {
       this.seatService
-        .deleteSeat(maxSeat.id)
+        .createSeat(maxNumber + 1 + i, 'doRandom', this.selectedTable.id)
         .subscribe({
           next: (response: any) => {
             this.editedSeatEvent.emit(null);
@@ -137,6 +133,42 @@ export class TablesListComponent implements OnChanges {
             this.errorHandler.handleError(err);
           }
         })
+    }
+  }
+
+  delSeatsStart(table: Table) {
+    this.selectedTable = table;
+    this.selectTableEvent.emit(table);
+    this.adddelSeatsCount = 0;
+    this.delSeatsDialog = true;
+  }
+
+  delSeats() {
+    this.delSeatsDialog = false;
+    let seatIds: Map<number, string> = new Map<number, string>;
+    let maxNumber: number = 0;
+    let maxSeat: Seat | undefined;
+    for (let i = 0; i < this.seats.length; i++) {
+      let seat: Seat = this.seats[i];
+      if (seat.table_id == this.selectedTable.id) {
+        seatIds.set(seat.number, seat.id);
+        if (seat.number > maxNumber) maxNumber = seat.number;
+      }
+    }
+    for (let i = 0; i < this.adddelSeatsCount; i++) {
+      let seatId: string | undefined = seatIds.get(maxNumber - i);
+      if (seatId) {
+        this.seatService
+        .deleteSeat(seatId)
+        .subscribe({
+          next: (response: any) => {
+            this.editedSeatEvent.emit(null);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+          }
+        })
+      }
     }
   }
 }
