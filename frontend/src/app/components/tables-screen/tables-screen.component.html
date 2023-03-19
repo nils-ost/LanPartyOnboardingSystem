@@ -7,7 +7,7 @@
 </p-panel>
 
 <p-panel header="Seats">
-    <app-seats-list [seats]="seats" [tables]="tables" [selectedTable]="selectedTable"></app-seats-list>
+    <app-seats-list [seats]="seats" [tables]="tables" [selectedTable]="selectedTable" (editedSeatEvent)="creadelSeat()"></app-seats-list>
 </p-panel>
 
 <p-overlayPanel #createtable [showCloseIcon]="true">

@@ -123,8 +123,9 @@ export class TablesListComponent implements OnChanges {
       if (seat.table_id == this.selectedTable.id && seat.number > maxNumber) maxNumber = seat.number;
     }
     for (let i = 0; i < this.adddelSeatsCount; i++) {
+      let pw: string = window.crypto.getRandomValues(new BigUint64Array(1))[0].toString(36).slice(0, 8);
       this.seatService
-        .createSeat(maxNumber + 1 + i, 'doRandom', this.selectedTable.id)
+        .createSeat(maxNumber + 1 + i, pw, this.selectedTable.id)
         .subscribe({
           next: (response: any) => {
             this.editedSeatEvent.emit(null);

@@ -18,7 +18,24 @@
         <tr>
             <td *ngIf="!selectedTable">{{ element.table }}</td>
             <td>{{ element.seatNumber }}</td>
-            <td>{{ element.seat.pw }}</td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="deletePw(element.seat)" *ngIf="element.seat.pw"></button>
+                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-question" (click)="generatePw(element.seat)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editPasswordStart(element.seat, $event)"></button>
+                {{ element.seat.pw || '---' }}
+            </td>
         </tr>
     </ng-template>
 </p-table>
+
+<p-overlayPanel #editpassword [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="field">
+            <span class="p-float-label">
+                <input type="text" id="pw" pInputText [(ngModel)]="newPassword" (keyup.enter)="editPassword()">
+                <label for="pw" i18n="@@elementFieldLabelSeatPw">Password</label>
+            </span>
+        </div>
+        <button pButton (click)="editPassword()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+</p-overlayPanel>

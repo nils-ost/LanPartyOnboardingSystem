@@ -54,7 +54,7 @@
     </p>
     <div class="field">
         <span class="p-float-label">
-            <p-inputNumber [(ngModel)]="adddelSeatsCount" [min]="0" [showButtons]="true"></p-inputNumber>
+            <p-inputNumber [(ngModel)]="adddelSeatsCount" [min]="0" (keyup.enter)="addSeats()" [showButtons]="true"></p-inputNumber>
         </span>
     </div>
     <button pButton (click)="addSeats()" i18n="@@buttonCommit">Commit</button>
@@ -66,7 +66,7 @@
     </p>
     <div class="field">
         <span class="p-float-label">
-            <p-inputNumber [(ngModel)]="adddelSeatsCount" [min]="0" [showButtons]="true"></p-inputNumber>
+            <p-inputNumber [(ngModel)]="adddelSeatsCount" [min]="0" (keyup.enter)="delSeats()" [showButtons]="true"></p-inputNumber>
         </span>
     </div>
     <button pButton (click)="delSeats()" i18n="@@buttonCommit">Commit</button>
