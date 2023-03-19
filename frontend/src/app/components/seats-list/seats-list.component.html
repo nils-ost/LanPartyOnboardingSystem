@@ -1,13 +1,11 @@
-<p-table [value]="displaySeats" sortField="table">
+<p-table [value]="displaySeats" sortMode="multiple" [multiSortMeta]="multiSortMeta">
     <ng-template pTemplate="header">
         <tr>
-            <th pSortableColumn="table" *ngIf="!selectedTable">
+            <th *ngIf="!selectedTable">
                 <ng-container i18n="@@elementFieldLabelSeatTableId">Table</ng-container>
-                <p-sortIcon field="table"></p-sortIcon>
             </th>
-            <th pSortableColumn="seatNumber">
+            <th>
                 <ng-container i18n="@@elementFieldLabelSeatNumber">Number</ng-container>
-                <p-sortIcon field="seatNumber"></p-sortIcon>
             </th>
             <th>
                 <ng-container i18n="@@elementFieldLabelSeatPw">Password</ng-container>

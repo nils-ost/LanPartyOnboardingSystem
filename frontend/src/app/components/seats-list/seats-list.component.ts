@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, ViewChild, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { Seat } from 'src/app/interfaces/seat';
@@ -11,13 +11,15 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './seats-list.component.html',
   styleUrls: ['./seats-list.component.scss']
 })
-export class SeatsListComponent implements OnChanges {
+export class SeatsListComponent implements OnChanges, OnInit {
   @Input() tables!: Table[];
   @Input() seats!: Seat[];
   @Input() selectedTable?: Table;
   @Output() editedSeatEvent = new EventEmitter<null>();
 
   @ViewChild('editpassword') editPasswordDialog: any;
+  multiSortMeta: any[] = [];
+
   displaySeats: any[] = [];
   selectedSeat: Seat | undefined;
   newPassword: string = "";
@@ -29,6 +31,11 @@ export class SeatsListComponent implements OnChanges {
     private errorHandler: ErrorHandlerService,
     private seatService: SeatService
   ) {}
+
+  ngOnInit(): void {
+    this.multiSortMeta.push({field: 'table', order: 1});
+    this.multiSortMeta.push({field: 'seatNumber', order: 1});
+  }
 
   ngOnChanges(): void {
     for (let i = 0; i < this.tables.length; i++) {
