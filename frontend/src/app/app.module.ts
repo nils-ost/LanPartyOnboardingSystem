@@ -35,6 +35,8 @@ import { TableCreaditComponent } from './components/table-creadit/table-creadit.
 import { TablesListComponent } from './components/tables-list/tables-list.component';
 import { TablesScreenComponent } from './components/tables-screen/tables-screen.component';
 import { SeatsListComponent } from './components/seats-list/seats-list.component';
+import { ParticipantsScreenComponent } from './components/participants-screen/participants-screen.component';
+import { ParticipantsListComponent } from './components/participants-list/participants-list.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import { SeatsListComponent } from './components/seats-list/seats-list.component
     TableCreaditComponent,
     TablesListComponent,
     TablesScreenComponent,
-    SeatsListComponent
+    SeatsListComponent,
+    ParticipantsScreenComponent,
+    ParticipantsListComponent
   ],
   imports: [
     BrowserModule,

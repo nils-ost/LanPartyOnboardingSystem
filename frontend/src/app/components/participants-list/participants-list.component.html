@@ -1,0 +1,33 @@
+<p-table [value]="participants" sortField="name">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="name">
+                <ng-container i18n="@@elementFieldLabelParticipantName">Name</ng-container>
+                <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="login">
+                <ng-container i18n="@@elementFieldLabelParticipantLogin">Login</ng-container>
+                <p-sortIcon field="login"></p-sortIcon>
+            </th>
+            <th pSortableColumn="admin">
+                <ng-container i18n="@@elementFieldLabelParticipantAdmin">Admin</ng-container>
+                <p-sortIcon field="admin"></p-sortIcon>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelParticipantPw">Password</ng-container>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelParticipantSeatId">Seat</ng-container>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-participant>
+        <tr>
+            <td>{{ participant.name }}</td>
+            <td>{{ participant.login || '---' }}</td>
+            <td>{{ participant.admin }}</td>
+            <td></td>
+            <td>{{ participant.seat_id || '---' }}</td>
+        </tr>
+    </ng-template>
+</p-table>

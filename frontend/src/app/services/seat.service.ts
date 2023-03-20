@@ -42,6 +42,13 @@ export class SeatService {
     return this.http.patch<any>(this.seatUrl + id + '/', seat, {withCredentials:true});
   }
 
+  public updatePw(id: string, pw: string | null): Observable<any> {
+    let seat = {
+      'pw': pw
+    }
+    return this.http.patch<any>(this.seatUrl + id + '/', seat, {withCredentials:true});
+  }
+
   public deleteSeat(id: string): Observable<any> {
     return this.http.delete<any>(this.seatUrl + id + '/', {withCredentials:true});
   }

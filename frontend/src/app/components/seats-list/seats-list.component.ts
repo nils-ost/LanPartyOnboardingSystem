@@ -76,7 +76,7 @@ export class SeatsListComponent implements OnChanges, OnInit {
       message: 'Are you sure that you want to delete Password for Seat ' + seat.number + ' on Table ' + this.tablesNumbers.get(seat.table_id),
       accept: () => {
         this.seatService
-          .updateSeat(seat.id, seat.number, null, seat.table_id)
+          .updatePw(seat.id, null)
           .subscribe({
             next: (response: any) => {
               this.editedSeatEvent.emit(null);
@@ -95,7 +95,7 @@ export class SeatsListComponent implements OnChanges, OnInit {
       accept: () => {
         let pw: string = window.crypto.getRandomValues(new BigUint64Array(1))[0].toString(36).slice(0, 8);
         this.seatService
-          .updateSeat(seat.id, seat.number, pw, seat.table_id)
+          .updatePw(seat.id, pw)
           .subscribe({
             next: (response: any) => {
               this.editedSeatEvent.emit(null);
@@ -118,7 +118,7 @@ export class SeatsListComponent implements OnChanges, OnInit {
   editPassword() {
     if (this.selectedSeat) {
       this.seatService
-        .updateSeat(this.selectedSeat.id, this.selectedSeat.number, this.newPassword, this.selectedSeat.table_id)
+        .updatePw(this.selectedSeat.id, this.newPassword)
         .subscribe({
           next: (response: any) => {
             this.editedSeatEvent.emit(null);

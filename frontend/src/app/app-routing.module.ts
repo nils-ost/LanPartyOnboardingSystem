@@ -4,11 +4,13 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { LoginComponent } from './components/login/login.component';
 import { NetworkScreenComponent } from './components/network-screen/network-screen.component';
 import { TablesScreenComponent } from './components/tables-screen/tables-screen.component';
+import { ParticipantsScreenComponent } from './components/participants-screen/participants-screen.component';
 
 const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent },
   { path: 'network', component: NetworkScreenComponent },
   { path: 'tables', component: TablesScreenComponent },
+  { path: 'participants', component: ParticipantsScreenComponent},
   { path: 'login', component: LoginComponent },
   { path: '**', component: WelcomeComponent },
 ];

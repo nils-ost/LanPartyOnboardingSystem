@@ -1,0 +1,31 @@
+<p-panel header="Participants">
+    <ng-template pTemplate="icons">
+        <button pButton (click)="addMultiParticipantsStart()" i18n="@@buttonCreateMultiple">Create Multiple</button>
+        <button pButton (click)="addSingleParticipant.toggle($event)" i18n="@@buttonCreateSingle">Create Single</button>
+    </ng-template>
+
+    <app-participants-list [participants]="participants"></app-participants-list>
+</p-panel>
+
+<p-dialog [(visible)]="addMultiParticipantsDialog" header="Add multiple Participants" [modal]="true" [dismissableMask]="true">
+    <p>
+        Just hit Enter after entering name and continue adding
+    </p>
+    <div class="field">
+        <span class="p-float-label">
+            <input type="text" pInputText [(ngModel)]="newParticipantName" (keyup.enter)="createParticipant()" autofocus>
+        </span>
+    </div>
+</p-dialog>
+
+<p-overlayPanel #addSingleParticipant [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="field">
+            <span class="p-float-label">
+                <input type="text" pInputText id="newParticipantName" [(ngModel)]="newParticipantName" (keyup.enter)="createParticipant()" autofocus>
+                <label for="newParticipantName" i18n="@@elementFieldLabelParticipantName">Name</label>
+            </span>
+        </div>
+        <button pButton (click)="createParticipant()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+</p-overlayPanel>
