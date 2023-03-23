@@ -4,7 +4,7 @@
         <button pButton (click)="addSingleParticipant.toggle($event)" i18n="@@buttonCreateSingle">Create Single</button>
     </ng-template>
 
-    <app-participants-list [participants]="participants"></app-participants-list>
+    <app-participants-list [participants]="participants" (editedParticipantEvent)="creaditParticipant()"></app-participants-list>
 </p-panel>
 
 <p-dialog [(visible)]="addMultiParticipantsDialog" header="Add multiple Participants" [modal]="true" [dismissableMask]="true">
@@ -29,3 +29,7 @@
         <button pButton (click)="createParticipant()" i18n="@@buttonSave">Save</button>
     </ng-template>
 </p-overlayPanel>
+
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+<p-toast></p-toast>

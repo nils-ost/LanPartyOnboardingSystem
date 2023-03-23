@@ -52,6 +52,38 @@ export class ParticipantService {
     return this.http.patch<any>(this.participantUrl + id + '/', participant, {withCredentials:true});
   }
 
+  public updateLogin(id: string, login: string | null): Observable<any> {
+    let participant = {
+      'id': id,
+      'login': login
+    }
+    return this.http.patch<any>(this.participantUrl + id + '/', participant, {withCredentials:true});
+  }
+
+  public updateAdmin(id: string, admin: boolean): Observable<any> {
+    let participant = {
+      'id': id,
+      'admin': admin
+    }
+    return this.http.patch<any>(this.participantUrl + id + '/', participant, {withCredentials:true});
+  }
+
+  public updatePw(id: string, pw: string | null): Observable<any> {
+    let participant = {
+      'id': id,
+      'pw': pw
+    }
+    return this.http.patch<any>(this.participantUrl + id + '/', participant, {withCredentials:true});
+  }
+
+  public updateName(id: string, name: string): Observable<any> {
+    let participant = {
+      'id': id,
+      'name': name
+    }
+    return this.http.patch<any>(this.participantUrl + id + '/', participant, {withCredentials:true});
+  }
+
   public deleteParticipant(id: string): Observable<any> {
     return this.http.delete<any>(this.participantUrl + id + '/', {withCredentials:true});
   }

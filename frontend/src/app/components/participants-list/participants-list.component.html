@@ -19,15 +19,68 @@
             <th>
                 <ng-container i18n="@@elementFieldLabelParticipantSeatId">Seat</ng-container>
             </th>
+            <th></th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-participant>
         <tr>
-            <td>{{ participant.name }}</td>
-            <td>{{ participant.login || '---' }}</td>
-            <td>{{ participant.admin }}</td>
-            <td></td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editNameStart(participant, $event)"></button>
+                {{ participant.name }}
+            </td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editLoginStart(participant, $event)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-trash" (click)="deleteLogin(participant)" *ngIf="participant.login"></button>
+                {{ participant.login || '---' }}
+            </td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-check" (click)="setAdmin(participant, true)" *ngIf="!participant.admin"></button>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="setAdmin(participant, false)" *ngIf="participant.admin"></button>
+            </td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-pencil" (click)="editPwStart(participant, $event)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-trash" (click)="deletePw(participant)"></button>
+            </td>
             <td>{{ participant.seat_id || '---' }}</td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="deleteParticipant(participant)"></button>
+            </td>
         </tr>
     </ng-template>
 </p-table>
+
+<p-overlayPanel #editname [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="field">
+            <span class="p-float-label">
+                <input type="text" id="newName" pInputText [(ngModel)]="newName" (keyup.enter)="editName()" autofocus>
+                <label for="newName" i18n="@@elementFieldLabelParticipantName">Name</label>
+            </span>
+        </div>
+        <button pButton (click)="editName()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #editlogin [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="field">
+            <span class="p-float-label">
+                <input type="text" id="newLogin" pInputText [(ngModel)]="newLogin" (keyup.enter)="editLogin()" autofocus>
+                <label for="newLogin" i18n="@@elementFieldLabelParticipantLogin">Login</label>
+            </span>
+        </div>
+        <button pButton (click)="editLogin()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #editpw [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="field">
+            <span class="p-float-label">
+                <input type="text" id="newPw" pInputText [(ngModel)]="newPw" (keyup.enter)="editPw()" autofocus>
+                <label for="newPw" i18n="@@elementFieldLabelParticipantPw">Password</label>
+            </span>
+        </div>
+        <button pButton (click)="editPw()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+</p-overlayPanel>
