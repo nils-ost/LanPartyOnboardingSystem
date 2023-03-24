@@ -4,7 +4,7 @@
         <button pButton (click)="addSingleParticipant.toggle($event)" i18n="@@buttonCreateSingle">Create Single</button>
     </ng-template>
 
-    <app-participants-list [participants]="participants" (editedParticipantEvent)="creaditParticipant()"></app-participants-list>
+    <app-participants-list [participants]="participants" [seats]="seats" [tables]="tables" (editedParticipantEvent)="creaditParticipant()"></app-participants-list>
 </p-panel>
 
 <p-dialog [(visible)]="addMultiParticipantsDialog" header="Add multiple Participants" [modal]="true" [dismissableMask]="true">

@@ -84,6 +84,14 @@ export class ParticipantService {
     return this.http.patch<any>(this.participantUrl + id + '/', participant, {withCredentials:true});
   }
 
+  public updateSeatId(id: string, seat_id: string | null): Observable<any> {
+    let participant = {
+      'id': id,
+      'seat_id': seat_id
+    }
+    return this.http.patch<any>(this.participantUrl + id + '/', participant, {withCredentials:true});
+  }
+
   public deleteParticipant(id: string): Observable<any> {
     return this.http.delete<any>(this.participantUrl + id + '/', {withCredentials:true});
   }

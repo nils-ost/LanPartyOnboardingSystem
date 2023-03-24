@@ -1,7 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Table } from 'src/app/interfaces/table';
 import { Participant } from 'src/app/interfaces/participant';
+import { Seat } from 'src/app/interfaces/seat';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { ParticipantService } from 'src/app/services/participant.service';
 
@@ -10,17 +12,25 @@ import { ParticipantService } from 'src/app/services/participant.service';
   templateUrl: './participants-list.component.html',
   styleUrls: ['./participants-list.component.scss']
 })
-export class ParticipantsListComponent {
+export class ParticipantsListComponent implements OnChanges {
   @Input() participants!: Participant[];
+  @Input() seats!: Seat[];
+  @Input() tables!: Table[];
   @Output() editedParticipantEvent = new EventEmitter<null>();
 
   @ViewChild('editname') editNameDialog: any;
   @ViewChild('editlogin') editLoginDialog: any;
   @ViewChild('editpw') editPwDialog: any;
+  @ViewChild('editseatid') editSeatIdDialog: any;
   selectedParticipant: Participant | undefined = undefined;
   newName: string = "";
   newLogin: string | null = "";
   newPw: string | null = "";
+  newSeatId: string | null = null;
+
+  seatsOptions: any[] = [];
+  tablesById: Map<string, Table> = new Map<string, Table>;
+  seatsNames: Map<string, string> = new Map<string, string>;
 
   constructor(
     private messageService: MessageService,
@@ -28,6 +38,38 @@ export class ParticipantsListComponent {
     private errorHandler: ErrorHandlerService,
     private participantService: ParticipantService
   ) {}
+
+  ngOnChanges(): void {
+    let maxTable: number = 0;
+    for (let i = 0; i < this.tables.length; i++) {
+      let table: Table = this.tables[i];
+      if (table.number > maxTable) maxTable = table.number;
+      this.tablesById.set(table.id, table);
+    }
+    let list: any[] = [];
+    for (let ti = 0; ti < maxTable + 1; ti++) {
+      let maxSeat = 0;
+      for (let i = 0; i < this.seats.length; i++) {
+        let seat: Seat = this.seats[i];
+        let table: Table | undefined = this.tablesById.get(seat.table_id);
+        if (table && table.number == ti) {
+          if (seat.number > maxSeat) maxSeat = seat.number;
+        }
+      }
+      for (let si = 1; si < maxSeat + 1; si++) {
+        for (let i = 0; i < this.seats.length; i++) {
+          let seat: Seat = this.seats[i];
+          let table: Table | undefined = this.tablesById.get(seat.table_id);
+          if (table && table.number == ti && seat.number == si) {
+            let desc: string = table.number + ' (' + table.desc + '): #' + seat.number;
+            list.push({name: desc, code: seat.id});
+            this.seatsNames.set(seat.id, desc);
+          }
+        }
+      }
+    }
+    this.seatsOptions = list;
+  }
 
   editLoginStart(participant: Participant, event: any) {
     this.selectedParticipant = participant;
@@ -155,6 +197,92 @@ export class ParticipantsListComponent {
               this.errorHandler.handleError(err);
             }
           })
+      }
+    });
+  }
+
+  editSeatIdStart(participant: Participant, event: any) {
+    this.selectedParticipant = participant;
+    if (participant.seat_id) this.newSeatId = participant.seat_id;
+    else this.newSeatId = null;
+    this.editSeatIdDialog.show(event);
+  }
+
+  editSeatIdCheck() {
+    if (this.selectedParticipant) {
+      let havingParticipant: Participant | null = null;
+      if (this.newSeatId) {
+        for (let i = 0; i < this.participants.length; i++) {
+          let participant: Participant = this.participants[i];
+          if (participant.seat_id == this.newSeatId) {
+            havingParticipant = participant;
+            break;
+          }
+        }
+      }
+      if (havingParticipant) {
+        this.confirmationService.confirm({
+          message: 'Seat is allready used by Participant ' + havingParticipant.name + ' do you want to reassign Seat to Participant ' + this.selectedParticipant!.name,
+          accept: () => {
+            this.participantService
+              .updateSeatId(havingParticipant!.id, null)
+              .subscribe({
+                next: (response: any) => {
+                  this.editSeatId();
+                },
+                error: (err: HttpErrorResponse) => {
+                  this.errorHandler.handleError(err);
+                }
+              })
+          }
+        });
+      }
+      else this.editSeatId();
+    }
+  }
+
+  editSeatId() {
+    this.editSeatIdDialog.hide();
+    if (this.selectedParticipant) {
+      this.participantService
+        .updateSeatId(this.selectedParticipant.id, this.newSeatId)
+        .subscribe({
+          next: (response: any) => {
+            this.editedParticipantEvent.emit(null);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+            if (this.errorHandler.elementError) {
+              if (this.errorHandler.elementErrors.seat_id) {
+                if (this.errorHandler.elementErrors.seat_id.code === 70)
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: $localize `:@@ElementErrorCode70Summary:not found`,
+                    detail: $localize `:@@ElementErrorCode70:there is no Seat with this ID`,
+                    life: 6000
+                  });
+                if (this.errorHandler.elementErrors.seat_id.code === 2)
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: $localize `:@@ElementErrorCode2SummaryOnParticipant:Seat not available`,
+                    detail: $localize `:@@ElementErrorCode2:value allready in use, needs to be unique`,
+                    life: 6000
+                  });
+              }
+            }
+          }
+        })
+    }
+    this.selectedParticipant = undefined;
+  }
+
+  deleteSeatId(participant: Participant) {
+    this.confirmationService.confirm({
+      message: 'Are you sure that you want to delete Seat for Participant ' + participant.name,
+      accept: () => {
+        this.selectedParticipant = participant;
+        this.newSeatId = null;
+        this.editSeatId();
       }
     });
   }

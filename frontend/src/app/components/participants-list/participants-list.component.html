@@ -41,7 +41,11 @@
                 <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-pencil" (click)="editPwStart(participant, $event)"></button>
                 <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-trash" (click)="deletePw(participant)"></button>
             </td>
-            <td>{{ participant.seat_id || '---' }}</td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editSeatIdStart(participant, $event)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-trash" (click)="deleteSeatId(participant)" *ngIf="participant.seat_id"></button>
+                {{ seatsNames.get(participant.seat_id) || '---' }}
+            </td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="deleteParticipant(participant)"></button>
             </td>
@@ -82,5 +86,17 @@
             </span>
         </div>
         <button pButton (click)="editPw()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #editseatid [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="field">
+            <span class="p-float-label">
+                <p-dropdown id="newSeatId" [options]="seatsOptions" [(ngModel)]="newSeatId" optionLabel="name" optionValue="code" [filter]="true" filterBy="name" appendTo="body"></p-dropdown>
+                <label for="newSeatId" i18n="@@elementFieldLabelParticipantSeatId">Seat</label>
+            </span>
+        </div>
+        <button pButton (click)="editSeatIdCheck()" i18n="@@buttonSave">Save</button>
     </ng-template>
 </p-overlayPanel>
