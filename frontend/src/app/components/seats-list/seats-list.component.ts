@@ -5,6 +5,8 @@ import { Seat } from 'src/app/interfaces/seat';
 import { SeatService } from 'src/app/services/seat.service';
 import { Table } from 'src/app/interfaces/table';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Participant } from 'src/app/interfaces/participant';
+import { ParticipantService } from 'src/app/services/participant.service';
 
 @Component({
   selector: 'app-seats-list',
@@ -14,22 +16,32 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class SeatsListComponent implements OnChanges, OnInit {
   @Input() tables!: Table[];
   @Input() seats!: Seat[];
+  @Input() participants!: Participant[];
   @Input() selectedTable?: Table;
   @Output() editedSeatEvent = new EventEmitter<null>();
+  @Output() editedParticipantEvent = new EventEmitter<null>();
 
   @ViewChild('editpassword') editPasswordDialog: any;
+  @ViewChild('editparticipant') editParticipantDialog: any;
   multiSortMeta: any[] = [];
 
+  participantsOptions: any[] = [];
   displaySeats: any[] = [];
   selectedSeat: Seat | undefined;
   newPassword: string = "";
+  newParticipantId: string | null = null;
   tablesNumbers: Map<string, number> = new Map<string, number>;
+  participantsNameBySeat: Map<string, string> = new Map<string, string>
+  participantsBySeat: Map<string, Participant> = new Map<string, Participant>
+  participantsById: Map<string, Participant> = new Map<string, Participant>
+  seatsById: Map<string, Seat> = new Map<string, Seat>
 
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private errorHandler: ErrorHandlerService,
-    private seatService: SeatService
+    private seatService: SeatService,
+    private participantService: ParticipantService
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +55,11 @@ export class SeatsListComponent implements OnChanges, OnInit {
       this.tablesNumbers.set(table.id, table.number);
     }
 
+    this.seatsById.clear();
+    for (let i = 0; i < this.seats.length; i++) {
+      let seat: Seat = this.seats[i];
+      this.seatsById.set(seat.id, seat);
+    }
     let newList: any[] = [];
     if (this.selectedTable) {
       for (let i = 0; i < this.seats.length; i++) {
@@ -69,6 +86,20 @@ export class SeatsListComponent implements OnChanges, OnInit {
       }
     }
     this.displaySeats = newList;
+    this.participantsNameBySeat.clear();
+    this.participantsBySeat.clear();
+    this.participantsById.clear();
+    let list: any[] = [];
+    for (let i = 0; i < this.participants.length; i++) {
+      let participant: Participant = this.participants[i];
+      this.participantsById.set(participant.id, participant);
+      if (participant.seat_id) {
+        this.participantsNameBySeat.set(participant.seat_id, participant.name);
+        this.participantsBySeat.set(participant.seat_id, participant);
+      }
+      list.push({name: participant.name, code: participant.id});
+    }
+    this.participantsOptions = list;
   }
 
   deletePw(seat: Seat) {
@@ -130,5 +161,72 @@ export class SeatsListComponent implements OnChanges, OnInit {
     }
     this.selectedSeat = undefined;
     this.editPasswordDialog.hide();
+  }
+
+  editParticipantStart(seat: Seat, participant: Participant | undefined, event: any) {
+    this.selectedSeat = seat;
+    if (participant) this.newParticipantId = participant.id;
+    else this.newParticipantId = null;
+    this.editParticipantDialog.show(event);
+  }
+
+  editParticipantCheck() {
+    if (this.selectedSeat && this.newParticipantId) {
+      let participant: Participant | undefined = this.participantsById.get(this.newParticipantId);
+      if (participant) {
+        if (participant.seat_id) {
+          let havingSeat: Seat | undefined = this.seatsById.get(participant.seat_id);
+          if (havingSeat) {
+            this.confirmationService.confirm({
+              message: 'Are you sure that you want to reseat ' + participant.name +  ' from Seat ' + havingSeat.number + ' on Table ' + this.tablesNumbers.get(havingSeat.table_id) + ' to Seat ' + this.selectedSeat.number + ' on Table ' + this.tablesNumbers.get(this.selectedSeat.table_id),
+              accept: () => {
+                this.editParticipant();
+              }
+            });
+          }
+        }
+        else this.editParticipant();
+      }
+    }
+  }
+
+  editParticipant() {
+    if (this.selectedSeat && this.newParticipantId) {
+      let participant: Participant | undefined = this.participantsById.get(this.newParticipantId);
+      if (participant) {
+        this.participantService
+          .updateSeatId(participant.id, this.selectedSeat.id)
+          .subscribe({
+            next: (response: any) => {
+              this.editedParticipantEvent.emit(null);
+            },
+            error: (err: HttpErrorResponse) => {
+              this.errorHandler.handleError(err);
+            }
+          })
+      }
+    }
+    this.selectedSeat = undefined;
+    this.editParticipantDialog.hide();
+  }
+
+  deleteParticipant(seat: Seat, participant: Participant | undefined) {
+    if (participant) {
+      this.confirmationService.confirm({
+        message: 'Are you sure that you want to delete Participant for Seat ' + seat.number + ' on Table ' + this.tablesNumbers.get(seat.table_id),
+        accept: () => {
+          this.participantService
+            .updateSeatId(participant.id, null)
+            .subscribe({
+              next: (response: any) => {
+                this.editedParticipantEvent.emit(null);
+              },
+              error: (err: HttpErrorResponse) => {
+                this.errorHandler.handleError(err);
+              }
+            })
+        }
+      });
+    }
   }
 }

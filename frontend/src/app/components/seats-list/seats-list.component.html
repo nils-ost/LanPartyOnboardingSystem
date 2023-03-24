@@ -10,6 +10,9 @@
             <th>
                 <ng-container i18n="@@elementFieldLabelSeatPw">Password</ng-container>
             </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelSeatParticipant">Participant</ng-container>
+            </th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-element>
@@ -21,6 +24,11 @@
                 <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-question" (click)="generatePw(element.seat)"></button>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editPasswordStart(element.seat, $event)"></button>
                 {{ element.seat.pw || '---' }}
+            </td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editParticipantStart(element.seat, participantsBySeat.get(element.seat.id), $event)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="deleteParticipant(element.seat, participantsBySeat.get(element.seat.id))" *ngIf="participantsBySeat.get(element.seat.id)"></button>
+                {{ participantsNameBySeat.get(element.seat.id) || '---' }}
             </td>
         </tr>
     </ng-template>
@@ -35,5 +43,17 @@
             </span>
         </div>
         <button pButton (click)="editPassword()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #editparticipant [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="field">
+            <span class="p-float-label">
+                <p-dropdown id="newParticipantId" [options]="participantsOptions" [(ngModel)]="newParticipantId" optionLabel="name" optionValue="code" [filter]="true" filterBy="name" appendTo="body"></p-dropdown>
+                <label for="newParticipantId" i18n="@@elementFieldLabelSeatParticipant">Participant</label>
+            </span>
+        </div>
+        <button pButton (click)="editParticipantCheck()" i18n="@@buttonSave">Save</button>
     </ng-template>
 </p-overlayPanel>

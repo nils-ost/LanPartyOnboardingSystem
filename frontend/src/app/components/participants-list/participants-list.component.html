@@ -30,7 +30,7 @@
             </td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editLoginStart(participant, $event)"></button>
-                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-trash" (click)="deleteLogin(participant)" *ngIf="participant.login"></button>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="deleteLogin(participant)" *ngIf="participant.login"></button>
                 {{ participant.login || '---' }}
             </td>
             <td>
@@ -39,11 +39,11 @@
             </td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-pencil" (click)="editPwStart(participant, $event)"></button>
-                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-trash" (click)="deletePw(participant)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="deletePw(participant)"></button>
             </td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editSeatIdStart(participant, $event)"></button>
-                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-trash" (click)="deleteSeatId(participant)" *ngIf="participant.seat_id"></button>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="deleteSeatId(participant)" *ngIf="participant.seat_id"></button>
                 {{ seatsNames.get(participant.seat_id) || '---' }}
             </td>
             <td>

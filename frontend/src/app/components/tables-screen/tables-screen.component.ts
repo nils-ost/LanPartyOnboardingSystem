@@ -11,6 +11,8 @@ import { Table } from 'src/app/interfaces/table';
 import { TableService } from 'src/app/services/table.service';
 import { Seat } from 'src/app/interfaces/seat';
 import { SeatService } from 'src/app/services/seat.service';
+import { Participant } from 'src/app/interfaces/participant';
+import { ParticipantService } from 'src/app/services/participant.service';
 
 @Component({
   selector: 'app-tables-screen',
@@ -24,6 +26,7 @@ export class TablesScreenComponent implements OnInit {
   ippools: IpPool[] = [];
   tables: Table[] = [];
   seats: Seat[] = [];
+  participants: Participant[] = [];
 
   selectedTable: Table | undefined;
 
@@ -33,7 +36,8 @@ export class TablesScreenComponent implements OnInit {
     private switchService: SwitchService,
     private ippoolService: IpPoolService,
     private tableService: TableService,
-    private seatService: SeatService
+    private seatService: SeatService,
+    private participantService: ParticipantService
   ) { }
 
   ngOnInit(): void {
@@ -42,6 +46,7 @@ export class TablesScreenComponent implements OnInit {
     this.refreshIpPools();
     this.refreshTables();
     this.refreshSeats();
+    this.refreshParticipants();
   }
 
   refreshVlans() {
@@ -109,13 +114,22 @@ export class TablesScreenComponent implements OnInit {
       })
   }
 
+  refreshParticipants() {
+    this.participantService
+      .getParticipants()
+      .subscribe({
+        next: (participants: Participant[]) => {
+          this.participants = participants;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
   creaditTable() {
     this.createTableDialog.hide();
     this.refreshTables();
-  }
-
-  creadelSeat() {
-    this.refreshSeats();
   }
 
   selectTable(event: any) {
