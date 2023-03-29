@@ -47,7 +47,7 @@
 
 ## device
 
-  * **60***(seat_id|participant_id|ip_pool_id)*: There is no <SeatParticipant|IpPool\> with id '<seat_id|participant_id|ip_pool_id\>'
+  * **60***(seat_id|participant_id|ip_pool_id|switch_id)*: There is no <Seat|Participant|IpPool|Switch\> with id '<seat_id|participant_id|ip_pool_id|switch_id\>'
   * **61***(ip_pool_id)*: Because Participant is set, Purpose of IpPools VLAN needs to be 0 (play)
   * **62***(ip_pool_id)*: is used as seat_IpPool on Table and not allowed to be used directly by Device
   * **63***(ip)*: can only be set if IpPool is set

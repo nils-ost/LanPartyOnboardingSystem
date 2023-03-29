@@ -1,4 +1,7 @@
 from elements._elementBase import ElementBase, docDB
+from MTSwitch import MikroTikSwitch
+
+switch_objects = dict()
 
 
 class Switch(ElementBase):
@@ -31,6 +34,55 @@ class Switch(ElementBase):
         if self['purpose'] == 0:
             self['onboarding_vlan_id'] = None
 
+    def save_post(self):
+        global switch_objects
+        switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
+
     def delete_pre(self):
         if docDB.search_one('Table', {'switch_id': self['_id']}) is not None:
             return {'error': {'code': 2, 'desc': 'at least one Table is using this Switch'}}
+
+    def connected(self):
+        global switch_objects
+        if not self['_id']:
+            return False
+        if self['_id'] not in switch_objects:
+            switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
+        if not switch_objects[self['_id']].connected:
+            switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
+        return switch_objects[self['_id']].connected
+
+    def mac_addr(self):
+        global switch_objects
+        if not self.connected():
+            return ''
+        return switch_objects[self['_id']].mac_addr
+
+    def scan_devices(self):
+        global switch_objects
+        from elements import Device
+        if not self.connected():
+            return 0
+        new_count = 0
+        swi = switch_objects[self['_id']]
+        swi.reloadHosts()
+        for port in swi.ports:
+            for host in port.hosts:
+                device = Device.get_by_mac(host)
+                if device is None:
+                    device = Device({'mac': host, 'switch_id': self['_id'], 'switch_port': port.idx})
+                    device.save()
+                    new_count += 1
+                elif not device['switch_id'] == self['_id'] or not device['switch_port'] == port.idx:
+                    sw = Switch.get(device['switch_id'])
+                    if sw.mac_addr() not in port.hosts:
+                        device['switch_id'] = self['_id']
+                        device['switch_port'] = port.idx
+                        device.save()
+        return new_count
+
+    def json(self):
+        result = super().json()
+        result['connected'] = self.connected()
+        result['mac'] = self.mac_addr()
+        return result

@@ -2,6 +2,8 @@ import cherrypy
 import cherrypy_cors
 from helpers.docdb import docDB
 from helpers.config import get_config
+from helpers.backgroundworker import device_scanner
+from multiprocessing import Process
 from endpoints import ElementEndpointBase, LoginEndpoint
 from elements import VLAN, Switch, IpPool, Table, Seat, Participant, Device
 
@@ -61,4 +63,6 @@ if __name__ == '__main__':
         'tools.response_headers.headers': [('Access-Control-Allow-Origin', 'http://localhost:4200/'), ('Access-Control-Allow-Credentials', 'true')]})
 
     docDB.wait_for_connection()
+    device_scanner_process = Process(target=device_scanner, daemon=True)
+    device_scanner_process.start()
     cherrypy.quickstart(API(), '/', conf)

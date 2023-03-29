@@ -39,6 +39,7 @@ class MikroTikSwitch():
         self._conn = requests.session()
         self._conn.auth = HTTPDigestAuth(user, password)
         self._pending_commits = list()
+        self.connected = False
         self.loadSystem()
 
     def _commitRegister(self, component):
@@ -50,21 +51,34 @@ class MikroTikSwitch():
             self._pending_commits.remove(component)
 
     def getData(self, doc, toJson=True):
-        url = f'http://{self._host}/{doc}'
-        self.logger.info(f'getData:{url}')
-        r = self._conn.get(url)
-        self.logger.debug(f'getData:{r.text}')
-        if toJson:
-            return responseToJson(r.text)
-        return r.text
+        self.connected = True
+        try:
+            url = f'http://{self._host}/{doc}'
+            self.logger.info(f'getData:{url}')
+            r = self._conn.get(url)
+            self.logger.debug(f'getData:{r.text}')
+            if toJson:
+                return responseToJson(r.text)
+            return r.text
+        except Exception as e:
+            self.logger.debug(f'getData:exception:{repr(e)}')
+            self.connected = False
+            if toJson:
+                return dict()
+            return ''
 
     def postData(self, doc, data):
-        url = f'http://{self._host}/{doc}'
-        data = jsonToRequest(data)
-        self.logger.info(f'postData:{url}')
-        self.logger.debug(f'postData:{data}')
-        r = self._conn.post(url, data=data)
-        self.logger.debug(f'postData:status_code:{r.status_code}')
+        self.connected = True
+        try:
+            url = f'http://{self._host}/{doc}'
+            data = jsonToRequest(data)
+            self.logger.info(f'postData:{url}')
+            self.logger.debug(f'postData:{data}')
+            r = self._conn.post(url, data=data)
+            self.logger.debug(f'postData:status_code:{r.status_code}')
+        except Exception as e:
+            self.logger.debug(f'postData:exception:{repr(e)}')
+            self.connected = False
 
     def loadSystem(self):
         r = self.getData('sys.b')
@@ -290,7 +304,7 @@ class MikroTikSwitch():
         self.commitPortsVlan()
 
     def commitNeeded(self):
-        while(len(self._pending_commits) > 0):
+        while len(self._pending_commits) > 0:
             pending = self._pending_commits[0]
             if pending == 'ports':
                 self.commitPorts()

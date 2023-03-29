@@ -8,11 +8,29 @@ class Device(ElementBase):
         seat_id=ElementBase.addAttr(),
         participant_id=ElementBase.addAttr(),
         ip_pool_id=ElementBase.addAttr(),
-        ip=ElementBase.addAttr(type=int, unique=True)
+        ip=ElementBase.addAttr(type=int, unique=True),
+        switch_id=ElementBase.addAttr(),
+        switch_port=ElementBase.addAttr(type=int, default=None)
     )
+
+    @classmethod
+    def get_by_mac(cls, mac):
+        result = cls()
+        fromdb = docDB.search_one(cls.__name__, {'mac': mac})
+        if fromdb is not None:
+            result._attr = fromdb
+            return result
+        return None
+
+    def save_pre(self):
+        if self['switch_id'] is None:
+            self['switch_port'] = None
 
     def validate(self):
         errors = dict()
+        if self['switch_id'] is not None and docDB.get('Switch', self['switch_id']) is None:
+            errors['switch_id'] = {'code': 60, 'desc': f"There is no Switch with id '{self['switch_id']}'"}
+
         seat = docDB.get('Seat', self['seat_id'])
         if self['seat_id'] is not None:
             if seat is None:
