@@ -8,6 +8,15 @@ class VLAN(ElementBase):
         desc=ElementBase.addAttr(default='', notnone=True)
     )
 
+    @classmethod
+    def get_by_number(cls, number):
+        result = cls()
+        fromdb = docDB.search_one(cls.__name__, {'number': number})
+        if fromdb is not None:
+            result._attr = fromdb
+            return result
+        return None
+
     def validate(self):
         errors = dict()
         if self['number'] not in range(1, 1025):

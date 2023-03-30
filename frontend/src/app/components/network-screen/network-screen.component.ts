@@ -81,6 +81,7 @@ export class NetworkScreenComponent implements OnInit {
   creaditSwitch() {
     this.createSwitchDialog.hide();
     this.refreshSwitches();
+    this.refreshVlans();
   }
 
   creaditIpPool() {

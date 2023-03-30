@@ -37,6 +37,7 @@ class Switch(ElementBase):
     def save_post(self):
         global switch_objects
         switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
+        self.scan_vlans()
 
     def delete_pre(self):
         if docDB.search_one('Table', {'switch_id': self['_id']}) is not None:
@@ -81,8 +82,37 @@ class Switch(ElementBase):
                         device.save()
         return new_count
 
+    def scan_vlans(self):
+        global switch_objects
+        from elements import VLAN
+        if not self.connected():
+            return 0
+        new_count = 0
+        swi = switch_objects[self['_id']]
+        swi.reloadVlans()
+        for vlan in swi.vlans:
+            v = VLAN.get_by_number(vlan.id)
+            if v is None:
+                v = VLAN({'number': vlan.id, 'purpose': 3})
+                v.save()
+                new_count += 1
+
+    def known_vlans(self):
+        global switch_objects
+        from elements import VLAN
+        result = list()
+        self.scan_vlans()
+        if not self.connected():
+            return result
+        swi = switch_objects[self['_id']]
+        for vlan in swi.vlans:
+            v = VLAN.get_by_number(vlan.id)
+            result.append(v['_id'])
+        return result
+
     def json(self):
         result = super().json()
         result['connected'] = self.connected()
         result['mac'] = self.mac_addr()
+        result['known_vlans'] = self.known_vlans()
         return result

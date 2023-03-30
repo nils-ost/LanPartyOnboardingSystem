@@ -5,6 +5,9 @@ export interface Switch {
     pw: string;
     purpose: SwitchPurposeType;
     onboarding_vlan_id: string| null;
+    connected: boolean;
+    mac: string;
+    known_vlans: string[];
 }
 
 export enum SwitchPurposeType {
