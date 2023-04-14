@@ -50,8 +50,8 @@ class SwitchVLAN():
 
     def __init__(self):
         self.id = None
-        self.isolation = False
-        self.learning = False
+        self.isolation = True
+        self.learning = True
         self.mirror = False
         self.igmp = False
         self._member = list()

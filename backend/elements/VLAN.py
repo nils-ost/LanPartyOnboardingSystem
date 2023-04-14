@@ -34,3 +34,6 @@ class VLAN(ElementBase):
             return {'error': {'code': 1, 'desc': 'at least one IpPool is using this VLAN'}}
         if docDB.search_one('Switch', {'onboarding_vlan_id': self['_id']}) is not None:
             return {'error': {'code': 4, 'desc': 'at least one Switch is using this VLAN'}}
+        from elements import Switch
+        for switch in Switch.all():
+            switch.remove_vlan(self['number'])

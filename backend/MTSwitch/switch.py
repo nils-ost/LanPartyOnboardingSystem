@@ -449,7 +449,7 @@ class MikroTikSwitch():
             self.logger.error('vlanRemove: vlan needs to be an instance of int or SwitchVLAN')
         for idx in range(len(self.vlans)):
             if self.vlans[idx].id == vlan:
-                self.vlans.removeIndex(idx)
+                self.vlans.pop(idx)
                 self._commitRegister('vlans')
                 break
         else:
@@ -468,7 +468,20 @@ class MikroTikSwitchCRS328(MikroTikSwitch):
         self._commitUnregister('ports')
 
 
+class MikroTikSwitchCSS326(MikroTikSwitch):
+    def loadPorts(self):
+        self.ports = list()
+        r = self.getData('link.b')
+        for t in ['gbe'] * int(r.get('sfpo', '0'), 16) + ['sfp+'] * int(r.get('sfp', '0'), 16):
+            p = SwitchPort()
+            p.type = t
+            self.ports.append(p)
+        super().loadPorts(r)
+        self._commitUnregister('ports')
+
+
 model_mapping = {
     'generic': MikroTikSwitch,
-    'CRS328-24P-4S+': MikroTikSwitchCRS328
+    'CRS328-24P-4S+': MikroTikSwitchCRS328,
+    'CSS326-24G-2S+': MikroTikSwitchCSS326
 }

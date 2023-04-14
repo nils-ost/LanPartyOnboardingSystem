@@ -1,3 +1,4 @@
+import cherrypy
 from elements._elementBase import ElementBase, docDB
 from MTSwitch import MikroTikSwitch
 
@@ -36,15 +37,26 @@ class Switch(ElementBase):
 
     def save_post(self):
         global switch_objects
-        switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
+        test_suite = 'environment' in cherrypy.config and cherrypy.config['environment'] == 'test_suite'
+        if not test_suite:
+            switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
         self.scan_vlans()
+        self.scan_ports()
 
     def delete_pre(self):
         if docDB.search_one('Table', {'switch_id': self['_id']}) is not None:
             return {'error': {'code': 2, 'desc': 'at least one Table is using this Switch'}}
 
+    def delete_post(self):
+        from elements import Port
+        for p in [Port(p) for p in docDB.search_many('Port', {'switch_id': self['_id']})]:
+            p.delete()
+
     def connected(self):
         global switch_objects
+        test_suite = 'environment' in cherrypy.config and cherrypy.config['environment'] == 'test_suite'
+        if test_suite:
+            return False
         if not self['_id']:
             return False
         if self['_id'] not in switch_objects:
@@ -61,24 +73,26 @@ class Switch(ElementBase):
 
     def scan_devices(self):
         global switch_objects
-        from elements import Device
+        from elements import Device, Port
         if not self.connected():
             return 0
         new_count = 0
         swi = switch_objects[self['_id']]
         swi.reloadHosts()
         for port in swi.ports:
+            p = Port.get_by_number(self['_id'], port.idx)
+            if p is None:
+                continue
             for host in port.hosts:
                 device = Device.get_by_mac(host)
                 if device is None:
-                    device = Device({'mac': host, 'switch_id': self['_id'], 'switch_port': port.idx})
+                    device = Device({'mac': host, 'port_id': p['_id']})
                     device.save()
                     new_count += 1
-                elif not device['switch_id'] == self['_id'] or not device['switch_port'] == port.idx:
-                    sw = Switch.get(device['switch_id'])
+                elif not device['port_id'] == p['_id']:
+                    sw = Switch.get(p['switch_id'])
                     if sw.mac_addr() not in port.hosts:
-                        device['switch_id'] = self['_id']
-                        device['switch_port'] = port.idx
+                        device['port_id'] = p['_id']
                         device.save()
         return new_count
 
@@ -96,6 +110,23 @@ class Switch(ElementBase):
                 v = VLAN({'number': vlan.id, 'purpose': 3})
                 v.save()
                 new_count += 1
+        return new_count
+
+    def scan_ports(self):
+        global switch_objects
+        from elements import Port
+        if not self.connected():
+            return 0
+        new_count = 0
+        swi = switch_objects[self['_id']]
+        swi.reloadVlans()
+        for port in swi.ports:
+            p = Port.get_by_number(self['_id'], port.idx)
+            if p is None:
+                p = Port({'number': port.idx, 'switch_id': self['_id']})
+                p.save()
+                new_count += 1
+        return new_count
 
     def known_vlans(self):
         global switch_objects
@@ -109,6 +140,32 @@ class Switch(ElementBase):
             v = VLAN.get_by_number(vlan.id)
             result.append(v['_id'])
         return result
+
+    def add_vlan(self, vlan_id):
+        global switch_objects
+        from elements import VLAN
+        if not self.connected():
+            return 1
+        vlan = VLAN.get(vlan_id)
+        if vlan.get('_id') is None:
+            return 2
+        swi = switch_objects[self['_id']]
+        swi.vlanAdd(vlan['number'])
+        swi.commitNeeded()
+        return 0
+
+    def remove_vlan(self, vlan_id):
+        global switch_objects
+        from elements import VLAN
+        if not self.connected():
+            return 1
+        vlan = VLAN.get(vlan_id)
+        if vlan.get('_id') is None:
+            return 2
+        swi = switch_objects[self['_id']]
+        swi.vlanRemove(vlan['number'])
+        swi.commitNeeded()
+        return 0
 
     def json(self):
         result = super().json()

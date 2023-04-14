@@ -47,7 +47,7 @@
 
 ## device
 
-  * **60***(seat_id|participant_id|ip_pool_id|switch_id)*: There is no <Seat|Participant|IpPool|Switch\> with id '<seat_id|participant_id|ip_pool_id|switch_id\>'
+  * **60***(seat_id|participant_id|ip_pool_id|port_id)*: There is no <Seat|Participant|IpPool|Port\> with id '<seat_id|participant_id|ip_pool_id|port_id\>'
   * **61***(ip_pool_id)*: Because Participant is set, Purpose of IpPools VLAN needs to be 0 (play)
   * **62***(ip_pool_id)*: is used as seat_IpPool on Table and not allowed to be used directly by Device
   * **63***(ip)*: can only be set if IpPool is set
@@ -62,6 +62,12 @@
   * **80***(participant_id)*: There is no Participant with id '<participant_id\>'
   * **81***(till)*: needs to be in the future
   * **82***(ip)*: does not match with the IP of request
+
+## port
+
+  * **90***(switch_id)*: There is no Switch with id '<switch_id\>'
+  * **91***(number)*: Needs to be 0 or bigger
+  * **92***(number)*: Needs to be unique per Switch
 
 # element delete error-codes
 

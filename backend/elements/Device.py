@@ -9,8 +9,7 @@ class Device(ElementBase):
         participant_id=ElementBase.addAttr(),
         ip_pool_id=ElementBase.addAttr(),
         ip=ElementBase.addAttr(type=int, unique=True),
-        switch_id=ElementBase.addAttr(),
-        switch_port=ElementBase.addAttr(type=int, default=None)
+        port_id=ElementBase.addAttr(default=None)
     )
 
     @classmethod
@@ -22,14 +21,10 @@ class Device(ElementBase):
             return result
         return None
 
-    def save_pre(self):
-        if self['switch_id'] is None:
-            self['switch_port'] = None
-
     def validate(self):
         errors = dict()
-        if self['switch_id'] is not None and docDB.get('Switch', self['switch_id']) is None:
-            errors['switch_id'] = {'code': 60, 'desc': f"There is no Switch with id '{self['switch_id']}'"}
+        if self['port_id'] is not None and docDB.get('Port', self['port_id']) is None:
+            errors['port_id'] = {'code': 60, 'desc': f"There is no Port with id '{self['port_id']}'"}
 
         seat = docDB.get('Seat', self['seat_id'])
         if self['seat_id'] is not None:

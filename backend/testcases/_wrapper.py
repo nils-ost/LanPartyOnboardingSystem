@@ -85,7 +85,7 @@ class ApiTestBase(ApiBase):
     def login_user(self):
         Participant({'login': 'testinguser', 'pw': 'hi'}).save()
         result = self.webapp_request(path='/login/?user=testinguser', method='GET').json
-        m = hashlib.sha256()
+        m = hashlib.md5()
         m.update(result['session_id'].encode('utf-8'))
         m.update(b'hi')
         self.webapp_request(path='/login/', method='POST', data={'pw': m.hexdigest()})
@@ -93,7 +93,7 @@ class ApiTestBase(ApiBase):
     def login_admin(self):
         Participant({'login': 'testingadmin', 'pw': 'hi', 'admin': True}).save()
         result = self.webapp_request(path='/login/?user=testingadmin', method='GET').json
-        m = hashlib.sha256()
+        m = hashlib.md5()
         m.update(result['session_id'].encode('utf-8'))
         m.update(b'hi')
         self.webapp_request(path='/login/', method='POST', data={'pw': m.hexdigest()})
