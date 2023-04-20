@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Port } from 'src/app/interfaces/port';
 import { Switch, SwitchPurposeType } from 'src/app/interfaces/switch';
 import { Vlan } from 'src/app/interfaces/vlan';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
@@ -15,9 +16,11 @@ export class SwitchesListComponent implements OnChanges {
   switchPurposeType = SwitchPurposeType;
   @Input() switches!: Switch[];
   @Input() vlans!: Vlan[];
+  @Input() ports: Port[] = [];
   @Output() editedSwitchEvent = new EventEmitter<null>();
   vlansNames: Map<string, string> = new Map<string, string>;
   editDialog: boolean = false;
+  portsListDialog: boolean = false;
   selectedSwitch!: Switch;
 
   constructor(
@@ -34,6 +37,13 @@ export class SwitchesListComponent implements OnChanges {
     }
   }
 
+  portCount(switch_id: string, participants: boolean = false): number {
+    if (participants)
+      return this.ports.filter((port) => port.switch_id === switch_id && port.participants == true).length;
+    else
+      return this.ports.filter((port) => port.switch_id === switch_id).length;
+  }
+
   editSwitch(sw: Switch) {
     this.selectedSwitch = sw;
     this.editDialog = true;
@@ -42,6 +52,11 @@ export class SwitchesListComponent implements OnChanges {
   editedSwitch() {
     this.editDialog = false;
     this.editedSwitchEvent.emit(null);
+  }
+
+  showPortsList(sw: Switch) {
+    this.selectedSwitch = sw;
+    this.portsListDialog = true;
   }
 
   confirmDelete(sw: Switch) {

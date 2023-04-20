@@ -1,0 +1,89 @@
+<p-table [value]="displayPorts" sortField="number">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="number">
+                <ng-container i18n="@@elementFieldLabelPortNumber">Number</ng-container>
+                <p-sortIcon field="number"></p-sortIcon>
+            </th>
+            <th pSortableColumn="desc">
+                <ng-container i18n="@@elementFieldLabelPortDesc">Description</ng-container>
+                <p-sortIcon field="desc"></p-sortIcon>
+            </th>
+            <th pSortableColumn="participants">
+                <ng-container i18n="@@elementFieldLabelPortParticipants">Participants</ng-container>
+                <p-sortIcon field="participants"></p-sortIcon>
+            </th>
+            <th pSortableColumn="type">
+                <ng-container i18n="@@elementFieldLabelPortType">Type</ng-container>
+                <p-sortIcon field="type"></p-sortIcon>
+            </th>
+            <th pSortableColumn="enabled">
+                <ng-container i18n="@@elementFieldLabelPortEnabled">Enabled</ng-container>
+                <p-sortIcon field="enabled"></p-sortIcon>
+            </th>
+            <th pSortableColumn="link">
+                <ng-container i18n="@@elementFieldLabelPortLink">Link</ng-container>
+                <p-sortIcon field="link"></p-sortIcon>
+            </th>
+            <th pSortableColumn="speed">
+                <ng-container i18n="@@elementFieldLabelPortSpeed">Speed</ng-container>
+                <p-sortIcon field="speed"></p-sortIcon>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelPortVlanIds">Vlans</ng-container>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-port>
+        <tr>
+            <td>{{ port.number }}</td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(port, $event)"></button>
+                {{ port.desc }}
+            </td>
+            <td>
+                <ng-container *ngIf="selectedSwitch && selectedSwitch.purpose == 2; else notChangeableParticipants">
+                    <button *ngIf="port.participants" pButton type="button" class="p-button-outlined p-button-success" icon="pi pi-check" (click)="editParticipants(port, false)"></button>
+                    <button *ngIf="!port.participants" pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="editParticipants(port, true)"></button>
+                </ng-container>
+                <ng-template #notChangeableParticipants>
+                    <i *ngIf="port.participants" class="pi pi-check" style="color: var(--success-color)"></i>
+                    <i *ngIf="!port.participants" class="pi pi-times" style="color: var(--danger-color)"></i>
+                </ng-template>
+            </td>
+            <td>{{ port.type }}</td>
+            <td>
+                <ng-container *ngIf="port.enabled">
+                    <i class="pi pi-check" style="color: var(--success-color)"></i>
+                </ng-container>
+                <ng-container *ngIf="!port.enabled">
+                    <i class="pi pi-times" style="color: var(--danger-color)"></i>
+                </ng-container>
+            </td>
+            <td>
+                <ng-container *ngIf="port.link">
+                    <i class="pi pi-check" style="color: var(--success-color)"></i>
+                </ng-container>
+                <ng-container *ngIf="!port.link">
+                    <i class="pi pi-times" style="color: var(--danger-color)"></i>
+                </ng-container>
+            </td>
+            <td>{{ port.speed }}</td>
+            <td>
+                <li *ngFor="let vlan_id of port.vlan_ids">{{ vlansNames.get(vlan_id) }}</li>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-overlayPanel #editdesc [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="field">
+            <span class="p-float-label">
+                <input type="text" id="desc" pInputText [(ngModel)]="newDesc" (keyup.enter)="editDesc()" autofocus>
+                <label for="desc" i18n="@@elementFieldLabelPortDesc">Description</label>
+            </span>
+        </div>
+        <button pButton (click)="editDesc()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+</p-overlayPanel>

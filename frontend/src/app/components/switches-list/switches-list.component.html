@@ -27,6 +27,9 @@
             <th>
                 <ng-container i18n="@@elementFieldLabelSwitchKnownVlans">Configured VLANs</ng-container>
             </th>
+            <th>
+                Ports/Part
+            </th>
             <th></th>
         </tr>
     </ng-template>
@@ -43,6 +46,10 @@
                 <li *ngFor="let vlan_id of sw.known_vlans">{{ vlansNames.get(vlan_id) }}</li>
             </td>
             <td>
+                {{ portCount(sw.id) }}/{{ portCount(sw.id, true) }}
+            </td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-eye" (click)="showPortsList(sw)"></button>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editSwitch(sw)"></button>
                 <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="confirmDelete(sw)"></button>
             </td>
@@ -52,4 +59,8 @@
 
 <p-dialog [(visible)]="editDialog" header="Edit Switch" [modal]="true" [dismissableMask]="true">
     <app-switch-creadit [sw]="selectedSwitch" [vlans]="vlans" (dialogEndEvent)="editedSwitch()"></app-switch-creadit>
+</p-dialog>
+
+<p-dialog [(visible)]="portsListDialog" header="Ports List" [modal]="true" [dismissableMask]="true">
+    <app-ports-list [selectedSwitch]="selectedSwitch" [ports]="ports" [vlans]="vlans" (editedPortEvent)="editedSwitch()"></app-ports-list>
 </p-dialog>

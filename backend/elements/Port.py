@@ -3,7 +3,7 @@ from elements._elementBase import ElementBase, docDB
 
 class Port(ElementBase):
     _attrdef = dict(
-        number=ElementBase.addAttr(type=int, unique=True, notnone=True),
+        number=ElementBase.addAttr(type=int, notnone=True),
         desc=ElementBase.addAttr(default='', notnone=True),
         switch_id=ElementBase.addAttr(notnone=True),
         participants=ElementBase.addAttr(type=bool, default=False, notnone=True)

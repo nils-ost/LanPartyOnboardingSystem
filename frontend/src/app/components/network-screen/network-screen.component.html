@@ -11,7 +11,7 @@
         <button pButton (click)="createswitch.toggle($event)" i18n="@@buttonCreate">Create</button>
     </ng-template>
 
-    <app-switches-list [switches]="switches" [vlans]="vlans" (editedSwitchEvent)="creaditSwitch()"></app-switches-list>
+    <app-switches-list [switches]="switches" [vlans]="vlans" [ports]="ports" (editedSwitchEvent)="creaditSwitch()"></app-switches-list>
 </p-panel>
 
 <p-panel header="IpPools">

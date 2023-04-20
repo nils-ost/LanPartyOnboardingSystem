@@ -1,4 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+    --danger-color:#F48FB1;
+    --success-color:#C5E1A5;
+    --info-color:#81D4FA;
+    --warning-color:#FFE082;
+    --help-color:#CE93D8;
+}
+
 body {
     background-color: var(--surface-b);
 }

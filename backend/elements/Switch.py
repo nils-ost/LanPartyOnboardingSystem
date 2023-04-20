@@ -41,7 +41,11 @@ class Switch(ElementBase):
         if not test_suite:
             switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
         self.scan_vlans()
-        self.scan_ports()
+        if self.scan_ports() == 0:
+            from elements import Port
+            for p in docDB.search_many('Port', {'switch_id': self['_id']}):
+                port = Port(p)
+                port.save()
 
     def delete_pre(self):
         if docDB.search_one('Table', {'switch_id': self['_id']}) is not None:

@@ -7,6 +7,8 @@ import { Switch } from 'src/app/interfaces/switch';
 import { SwitchService } from 'src/app/services/switch.service';
 import { IpPool } from 'src/app/interfaces/ip-pool';
 import { IpPoolService } from 'src/app/services/ip-pool.service';
+import { Port } from 'src/app/interfaces/port';
+import { PortService } from 'src/app/services/port.service';
 
 @Component({
   selector: 'app-network-screen',
@@ -20,18 +22,21 @@ export class NetworkScreenComponent implements OnInit {
   vlans: Vlan[] = [];
   switches: Switch[] = [];
   ippools: IpPool[] = [];
+  ports: Port[] = [];
 
   constructor(
     private errorHandler: ErrorHandlerService,
     private vlanService: VlanService,
     private switchService: SwitchService,
-    private ippoolService: IpPoolService
+    private ippoolService: IpPoolService,
+    private portService: PortService
   ) { }
 
   ngOnInit(): void {
     this.refreshVlans();
     this.refreshSwitches();
     this.refreshIpPools();
+    this.refreshPorts();
   }
 
   refreshVlans() {
@@ -73,6 +78,19 @@ export class NetworkScreenComponent implements OnInit {
       })
   }
 
+  refreshPorts() {
+    this.portService
+      .getPorts()
+      .subscribe({
+        next: (ports: Port[]) => {
+          this.ports = ports;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
   creaditVlan() {
     this.createVlanDialog.hide();
     this.refreshVlans();
@@ -82,6 +100,7 @@ export class NetworkScreenComponent implements OnInit {
     this.createSwitchDialog.hide();
     this.refreshSwitches();
     this.refreshVlans();
+    this.refreshPorts();
   }
 
   creaditIpPool() {

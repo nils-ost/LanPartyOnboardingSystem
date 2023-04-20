@@ -9,6 +9,7 @@ model_mapping = dict()
 speed_mapping = {
     '0x01': '100M',
     '0x02': '1G',
+    '0x03': '10G',
     '0x07': None
 }
 vlan_mode_mapping = {
@@ -55,7 +56,7 @@ class MikroTikSwitch():
         try:
             url = f'http://{self._host}/{doc}'
             self.logger.info(f'getData:{url}')
-            r = self._conn.get(url)
+            r = self._conn.get(url, timeout=0.1)
             self.logger.debug(f'getData:{r.text}')
             if toJson:
                 return responseToJson(r.text)
@@ -74,7 +75,7 @@ class MikroTikSwitch():
             data = jsonToRequest(data)
             self.logger.info(f'postData:{url}')
             self.logger.debug(f'postData:{data}')
-            r = self._conn.post(url, data=data)
+            r = self._conn.post(url, data=data, timeout=0.2)
             self.logger.debug(f'postData:status_code:{r.status_code}')
         except Exception as e:
             self.logger.debug(f'postData:exception:{repr(e)}')
@@ -82,6 +83,8 @@ class MikroTikSwitch():
 
     def loadSystem(self):
         r = self.getData('sys.b')
+        if len(r) == 0:
+            return
         self.identity = asciiToStr(r.get('id', ''))
         self.mac_addr = r.get('mac', '')
         model = asciiToStr(r.get('brd', ''))

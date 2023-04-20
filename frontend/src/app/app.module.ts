@@ -37,6 +37,7 @@ import { TablesScreenComponent } from './components/tables-screen/tables-screen.
 import { SeatsListComponent } from './components/seats-list/seats-list.component';
 import { ParticipantsScreenComponent } from './components/participants-screen/participants-screen.component';
 import { ParticipantsListComponent } from './components/participants-list/participants-list.component';
+import { PortsListComponent } from './components/ports-list/ports-list.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { ParticipantsListComponent } from './components/participants-list/partic
     TablesScreenComponent,
     SeatsListComponent,
     ParticipantsScreenComponent,
-    ParticipantsListComponent
+    ParticipantsListComponent,
+    PortsListComponent
   ],
   imports: [
     BrowserModule,
