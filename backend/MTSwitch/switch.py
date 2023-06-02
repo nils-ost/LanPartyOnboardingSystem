@@ -1,12 +1,13 @@
 import requests
 from requests.auth import HTTPDigestAuth
 import logging
-from .helpers import responseToJson, asciiToStr, jsonToRequest, strToAscii
+from .helpers import responseToJson, asciiToStr, jsonToRequest, strToAscii, translateKeys
 from .parts import SwitchPort, SwitchVLAN
 
 
 model_mapping = dict()
 speed_mapping = {
+    '0x00': '10M',
     '0x01': '100M',
     '0x02': '1G',
     '0x03': '10G',
@@ -41,7 +42,7 @@ class MikroTikSwitch():
         self._conn.auth = HTTPDigestAuth(user, password)
         self._pending_commits = list()
         self.connected = False
-        self.loadSystem()
+        self.loadModel()
 
     def _commitRegister(self, component):
         if component not in self._pending_commits:
@@ -81,21 +82,45 @@ class MikroTikSwitch():
             self.logger.debug(f'postData:exception:{repr(e)}')
             self.connected = False
 
-    def loadSystem(self):
+    def loadModel(self):
         r = self.getData('sys.b')
         if len(r) == 0:
+            self.logger.error("loadModel: Couldn't fetch data")
             return
-        self.identity = asciiToStr(r.get('id', ''))
-        self.mac_addr = r.get('mac', '')
-        model = asciiToStr(r.get('brd', ''))
+
+        model = r.get('brd')
+        if model is None:
+            model = r.get('i07')
+        if model is None:
+            model = ''
+            self.logger.error("loadModel: Couldn't identify model")
+        model = asciiToStr(model)
+
+        if model not in model_mapping:
+            self.logger.info(f"loadModel: Model '{model}' not in mapping, falling back to 'generic'")
         if not model == self.model and model in model_mapping:
             self.model = model
             self.__class__ = model_mapping[model]
+        self.loadSystem()
         self.loadPorts()
         self.loadIsolation()
         self.loadHosts()
         self.loadVlans()
         self.loadPortsVlan()
+
+    def loadSystem(self, response=None):
+        if response is None:
+            r = self.getData('sys.b')
+            if len(r) == 0:
+                self.logger.error("loadSystem: Couldn't fetch data")
+                return
+        else:
+            r = response
+        self.identity = asciiToStr(r.get('id', ''))
+        self.mac_addr = r.get('mac', '')
+        self.mgmt_vlan = int(r.get('avln', '0'), 16)
+        if self.mgmt_vlan == 0:
+            self.mgmt_vlan = None
 
     def loadPorts(self, response=None):
         if response is None:
@@ -229,6 +254,17 @@ class MikroTikSwitch():
         self.loadPortsVlan(response)
         self._commitUnregister('portsvlan')
 
+    def commitSystem(self, request=None):
+        r = request if request else dict()
+        if self.mgmt_vlan is None:
+            r['avln'] = '0x00'
+        else:
+            avln = hex(self.mgmt_vlan).replace('0x', '')
+            avln = '0x' + '0' * (len(avln) % 2) + avln
+            r['avln'] = avln
+        self.postData('sys.b', r)
+        self._commitUnregister('system')
+
     def commitPorts(self, request=None):
         r = request if request else dict()
         r['nm'] = list()
@@ -305,6 +341,7 @@ class MikroTikSwitch():
         self.commitVlans()
         self.commitIsolation()
         self.commitPortsVlan()
+        self.commitSystem()
 
     def commitNeeded(self):
         while len(self._pending_commits) > 0:
@@ -317,6 +354,8 @@ class MikroTikSwitch():
                 self.commitIsolation()
             elif pending == 'portsvlan':
                 self.commitPortsVlan()
+            elif pending == 'system':
+                self.commitSystem()
 
     def portEdit(self, port, enabled=None, fwdTo=None, fwdNotTo=None, vmode=None, vreceive=None, vdefault=None, vforce=None):
         if isinstance(port, SwitchPort):
@@ -450,6 +489,7 @@ class MikroTikSwitch():
             vlan = vlan.id
         elif not isinstance(vlan, int):
             self.logger.error('vlanRemove: vlan needs to be an instance of int or SwitchVLAN')
+            return
         for idx in range(len(self.vlans)):
             if self.vlans[idx].id == vlan:
                 self.vlans.pop(idx)
@@ -457,6 +497,24 @@ class MikroTikSwitch():
                 break
         else:
             self.logger.warning(f'vlanRemove: vlan with id {vlan} was not present')
+
+    def setMgmtVlan(self, vlan=None):
+        if vlan is None:
+            self.mgmt_vlan = None
+            self._commitRegister('system')
+            return
+        elif isinstance(vlan, SwitchVLAN):
+            vlan = vlan.id
+        elif not isinstance(vlan, int):
+            self.logger.error('setMgmtVlan: vlan needs to be an instance of int, SwitchVLAN or None')
+            return
+        for idx in range(len(self.vlans)):
+            if self.vlans[idx].id == vlan:
+                self.mgmt_vlan = vlan
+                self._commitRegister('system')
+                break
+        else:
+            self.logger.error(f'setMgmtVlan: vlan with id {vlan} is not present')
 
 
 class MikroTikSwitchCRS328(MikroTikSwitch):
@@ -483,8 +541,58 @@ class MikroTikSwitchCSS326(MikroTikSwitch):
         self._commitUnregister('ports')
 
 
+class MikroTikSwitchCSS610(MikroTikSwitch):
+    _translations = {
+        'sys.b': {'i07': 'brd', 'i05': 'id', 'i03': 'mac', 'i1b': 'avln'},
+        'link.b': {'i0a': 'nm', 'i08': 'spd', 'i06': 'lnk', 'i01': 'en'},
+        'fwd.b': {
+            'i15': 'vlan', 'i17': 'vlni', 'i18': 'dvid', 'i19': 'fvid',
+            'i01': 'fp1', 'i02': 'fp2', 'i03': 'fp3', 'i04': 'fp4', 'i05': 'fp5',
+            'i06': 'fp6', 'i07': 'fp7', 'i08': 'fp8', 'i09': 'fp9', 'i0a': 'fp10'},
+        '!dhost.b': {'i01': 'adr', 'i02': 'prt'},
+        'vlan.b': {'i01': 'vid', 'i02': 'mbr', 'i03': 'igmp'}
+    }
+
+    def getData(self, doc, toJson=True):
+        r = super().getData(doc, toJson)
+        if not toJson:
+            return r
+        elif doc in self._translations:
+            return translateKeys(r, self._translations[doc])
+        else:
+            return r
+
+    def postData(self, doc, data):
+        if doc in self._translations:
+            data = translateKeys(data, dict([(v, k) for k, v in self._translations[doc].items()]), ommit_surplus=True)
+        super().postData(doc=doc, data=data)
+
+    def loadPorts(self):
+        self.ports = list()
+        r = self.getData('link.b')
+        r['prt'] = '0x0a'  # hardcoded as this value seems not to come from switch
+        r['sfpo'] = '0x08'  # hardcoded as this value seems not to come from switch
+        r['sfp'] = '0x02'  # hardcoded as this value seems not to come from switch
+        for t in ['gbe'] * int(r.get('sfpo', '0'), 16) + ['sfp+'] * int(r.get('sfp', '0'), 16):
+            p = SwitchPort()
+            p.type = t
+            self.ports.append(p)
+        super().loadPorts(r)
+        self._commitUnregister('ports')
+
+    def vlanEdit(self, vlan, isolation=None, learning=None, mirror=None, igmp=None, memberAdd=None, memberRemove=None):
+        if isolation is not None:
+            self.logger.warning('vlanEdit: switch-model does not support vlan-isolation')
+        if learning is not None:
+            self.logger.warning('vlanEdit: switch-model does not support vlan-learning')
+        if mirror is not None:
+            self.logger.warning('vlanEdit: switch-model does not support vlan-mirroring')
+        super().vlanEdit(vlan=vlan, isolation=None, learning=None, mirror=None, igmp=igmp, memberAdd=memberAdd, memberRemove=memberRemove)
+
+
 model_mapping = {
     'generic': MikroTikSwitch,
     'CRS328-24P-4S+': MikroTikSwitchCRS328,
-    'CSS326-24G-2S+': MikroTikSwitchCSS326
+    'CSS326-24G-2S+': MikroTikSwitchCSS326,
+    'CSS610-8G-2S+': MikroTikSwitchCSS610
 }
