@@ -2,11 +2,12 @@ import json
 
 
 def responseToJson(r):
-    r = r.replace("'", '')
+    r = r.replace("'", '').replace('[]', '###EMPTYBRACKET1###').replace('{}', '###EMPTYBRACKET2###')
     r = r.replace('{', '{"').replace('}', '"}').replace('[', '["').replace(']', '"]').replace(':', '":"').replace(',', '","')
     r = r.replace(':"[', ':[').replace('["[', '[[').replace(']"]', ']]').replace('{"{', '{{').replace('}"}', '}}')
     r = r.replace('{"[', '{[').replace(']"}', ']}').replace('["{', '[{').replace('}"]', '}]')
     r = r.replace(']",', '],').replace(',"[', ',[').replace('}",', '},').replace(',"{', ',{')
+    r = r.replace('###EMPTYBRACKET1###', '[]').replace('###EMPTYBRACKET2###', '{}')
     return json.loads(r)
 
 

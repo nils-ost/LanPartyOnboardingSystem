@@ -121,6 +121,11 @@ class MikroTikSwitch():
         self.mgmt_vlan = int(r.get('avln', '0'), 16)
         if self.mgmt_vlan == 0:
             self.mgmt_vlan = None
+        self._commitUnregister('system')
+
+    def reloadSystem(self, response=None):
+        self.loadSystem(response)
+        self._commitUnregister('system')
 
     def loadPorts(self, response=None):
         if response is None:
@@ -253,6 +258,14 @@ class MikroTikSwitch():
     def reloadPortsVlan(self, response=None):
         self.loadPortsVlan(response)
         self._commitUnregister('portsvlan')
+
+    def reloadAll(self):
+        self.reloadSystem()
+        self.reloadPorts()
+        self.reloadIsolation()
+        self.reloadHosts()
+        self.reloadVlans()
+        self.reloadPortsVlan()
 
     def commitSystem(self, request=None):
         r = request if request else dict()
@@ -398,14 +411,19 @@ class MikroTikSwitch():
             else:
                 self.logger.error(f'portEdit: unknown vreceive {vreceive}')
         if vdefault is not None:
-            for vlan in self.vlans:
-                if vlan.id == vdefault:
-                    if not self.ports[port].vlan_default == vdefault:
-                        self.ports[port].vlan_default = vdefault
-                        self._commitRegister('portsvlan')
-                    break
+            if vdefault == 1:
+                if not self.ports[port].vlan_default == 1:
+                    self.ports[port].vlan_default = 1
+                    self._commitRegister('portsvlan')
             else:
-                self.logger.error(f'portEdit: unknown vdefault {vdefault}')
+                for vlan in self.vlans:
+                    if vlan.id == vdefault:
+                        if not self.ports[port].vlan_default == vdefault:
+                            self.ports[port].vlan_default = vdefault
+                            self._commitRegister('portsvlan')
+                        break
+                else:
+                    self.logger.error(f'portEdit: unknown vdefault {vdefault}')
         if vforce is not None:
             if isinstance(vforce, bool):
                 if not vforce == self.ports[port].vlan_force:

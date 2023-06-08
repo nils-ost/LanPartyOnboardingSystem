@@ -171,6 +171,34 @@ class Switch(ElementBase):
         swi.commitNeeded()
         return 0
 
+    def retreat(self):
+        """
+        Removes all configuration eventually made by LPOS from a (Hardware)Switch
+        but the Switch-Configuration within LPOS is left untouched
+        """
+        global switch_objects
+        if not self.connected():
+            return
+        swi = switch_objects[self['_id']]
+        swi.setMgmtVlan(None)
+        for port in swi.ports:
+            missing_fwd = list()
+            swi.portEdit(port, enabled=True, vmode='optional', vreceive='any', vdefault=1, vforce=False)
+            for idx in range(len(swi.ports)):
+                if idx == port.idx:
+                    continue
+                if idx not in port._fwd:
+                    missing_fwd.append(idx)
+            for idx in missing_fwd:
+                swi.portEdit(port, fwdTo=idx)
+        vlan_ids = list()
+        for vlan in swi.vlans:
+            vlan_ids.append(vlan.id)
+        for vlan_id in vlan_ids:
+            swi.vlanRemove(vlan_id)
+        swi.commitNeeded()
+        swi.reloadAll()
+
     def json(self):
         result = super().json()
         result['connected'] = self.connected()
