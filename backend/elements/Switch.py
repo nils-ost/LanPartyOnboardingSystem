@@ -199,6 +199,29 @@ class Switch(ElementBase):
         swi.commitNeeded()
         swi.reloadAll()
 
+    def commit(self):
+        """
+        Sends all required configuration made in LPOS to a (Hardware)Switch
+        """
+        global switch_objects
+        from elements import VLAN, Port, Device
+        if not self.connected():
+            return
+        swi = switch_objects[self['_id']]
+        if self['onboarding_vlan_id'] is not None:
+            onboarding_vlan_nb = VLAN.get(self['onboarding_vlan_id'])['number']
+            swi.vlanAddit(vlan=onboarding_vlan_nb)
+            for idx in range(len(swi.ports)):  # TODO: maybe rework later on
+                port_id = Port.get_by_number(self['_id'], idx)['_id']
+                if len(Device.get_by_port(port_id)) == 0:
+                    swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=onboarding_vlan_nb, vforce=True)
+        for vlan in VLAN.get_by_purpose(0):  # Add Play VLAN
+            swi.vlanAddit(vlan=vlan['number'])
+        for vlan in VLAN.get_by_purpose(1):  # Add Mgmt VLAN
+            swi.vlanAddit(vlan=vlan['number'])
+        swi.commitNeeded()
+        swi.reloadAll()
+
     def json(self):
         result = super().json()
         result['connected'] = self.connected()

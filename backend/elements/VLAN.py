@@ -17,6 +17,15 @@ class VLAN(ElementBase):
             return result
         return None
 
+    @classmethod
+    def get_by_purpose(cls, number):
+        result = list()
+        for fromdb in docDB.search_many(cls.__name__, {'purpose': number}):
+            r = cls()
+            r._attr = fromdb
+            result.append(r)
+        return result
+
     def validate(self):
         errors = dict()
         if self['number'] not in range(1, 1025):

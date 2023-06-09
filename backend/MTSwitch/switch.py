@@ -502,6 +502,22 @@ class MikroTikSwitch():
         else:
             self.logger.error('vlanAdd: vlan needs to be an instance of int or SwitchVLAN')
 
+    def vlanAddit(self, vlan, isolation=None, learning=None, mirror=None, igmp=None, memberAdd=None, memberRemove=None):
+        """
+        Add or Edit a VLAN
+        """
+        if isinstance(vlan, SwitchVLAN):
+            vlan = vlan.id
+        elif not isinstance(vlan, int):
+            self.logger.error('vlanAddit: vlan needs to be an instance of int or SwitchVLAN')
+            return
+        for idx in range(len(self.vlans)):
+            if vlan == self.vlans[idx].id:
+                self.vlanEdit(vlan=vlan, isolation=isolation, learning=learning, mirror=mirror, igmp=igmp, memberAdd=memberAdd, memberRemove=memberRemove)
+                break
+        else:
+            self.vlanAdd(vlan=vlan, isolation=isolation, learning=learning, mirror=mirror, igmp=igmp, memberAdd=memberAdd, memberRemove=memberRemove)
+
     def vlanRemove(self, vlan):
         if isinstance(vlan, SwitchVLAN):
             vlan = vlan.id

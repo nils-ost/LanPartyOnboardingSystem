@@ -21,6 +21,15 @@ class Device(ElementBase):
             return result
         return None
 
+    @classmethod
+    def get_by_port(cls, port_id):
+        result = list()
+        for fromdb in docDB.search_many(cls.__name__, {'port_id': port_id}):
+            r = cls()
+            r._attr = fromdb
+            result.append(r)
+        return result
+
     def validate(self):
         errors = dict()
         if self['port_id'] is not None and docDB.get('Port', self['port_id']) is None:
