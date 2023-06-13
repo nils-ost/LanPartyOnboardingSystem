@@ -8,6 +8,7 @@ class ElementEndpointBase():
     _element = None
     _restrict_read = True  # if set to True only admin Participants are allowed to use reading methods
     _restrict_write = True  # if set to True only admin Participants are allowed to use writing methods
+    _ro_attr = list()  # List of attribute-names, that are allways read-only
 
     @cherrypy.expose()
     @cherrypy.tools.json_in()
@@ -64,6 +65,8 @@ class ElementEndpointBase():
                     cherrypy.response.status = 400
                     return {'error': 'data is needed to be submitted'}
                 attr.pop('_id', None)
+                for ro in self._ro_attr:
+                    attr.pop(ro, None)
                 el = self._element(attr)
                 result = el.save()
                 if 'errors' in result:
@@ -94,7 +97,8 @@ class ElementEndpointBase():
                     return {'error': 'Submitted data need to be of type dict'}
                 attr.pop('_id', None)
                 for k, v in attr.items():
-                    el[k] = v
+                    if k not in self._ro_attr:
+                        el[k] = v
                 result = el.save()
                 if 'errors' in result:
                     cherrypy.response.status = 400

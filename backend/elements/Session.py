@@ -8,7 +8,7 @@ class Session(ElementBase):
         till=ElementBase.addAttr(type=int, notnone=True),
         ip=ElementBase.addAttr(type=str, default=None, notnone=True),
         complete=ElementBase.addAttr(type=bool, default=False),
-        participant_id=ElementBase.addAttr(notnone=True)
+        participant_id=ElementBase.addAttr(notnone=True, fk='Participant')
     )
 
     def validate(self):

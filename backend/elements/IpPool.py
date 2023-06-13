@@ -8,7 +8,7 @@ class IpPool(ElementBase):
         mask=ElementBase.addAttr(type=int, default=24, notnone=True),
         range_start=ElementBase.addAttr(type=int, notnone=True),
         range_end=ElementBase.addAttr(type=int, notnone=True),
-        vlan_id=ElementBase.addAttr(notnone=True)
+        vlan_id=ElementBase.addAttr(notnone=True, fk='VLAN')
     )
 
     def octetts_to_int(oct1, oct2, oct3, oct4):

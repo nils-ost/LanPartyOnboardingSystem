@@ -5,11 +5,11 @@ class Device(ElementBase):
     _attrdef = dict(
         mac=ElementBase.addAttr(unique=True, notnone=True),
         desc=ElementBase.addAttr(default='', notnone=True),
-        seat_id=ElementBase.addAttr(),
-        participant_id=ElementBase.addAttr(),
-        ip_pool_id=ElementBase.addAttr(),
+        seat_id=ElementBase.addAttr(fk='Seat'),
+        participant_id=ElementBase.addAttr(fk='Participant'),
+        ip_pool_id=ElementBase.addAttr(fk='IpPool'),
         ip=ElementBase.addAttr(type=int, unique=True),
-        port_id=ElementBase.addAttr(default=None)
+        port_id=ElementBase.addAttr(default=None, fk='Port')
     )
 
     @classmethod

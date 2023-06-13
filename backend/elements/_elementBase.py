@@ -15,8 +15,27 @@ class ElementBase(object):
                 self[k] = v
 
     def __init_attr(self):
-        for name in self.__class__._attrdef.keys():
-            self._attr[name] = self.__class__._attrdef[name]['default']
+        def make_func(element, attr):
+            def _func(self, set_to=None):
+                if set_to is not None:
+                    self[attr] = set_to['_id']
+                else:
+                    if 'fk' not in self._cache:
+                        self._cache['fk'] = dict()
+                    if attr not in self._cache['fk']:
+                        self._cache['fk'][attr] = None
+                    if self._cache['fk'][attr] is None:
+                        mod = __import__('elements', fromlist=[element])
+                        cls = getattr(mod, element)
+                        self._cache['fk'][attr] = cls.get(self[attr])
+                    return self._cache['fk'][attr]
+            return _func
+
+        for name, attrdef in self.__class__._attrdef.items():
+            self._attr[name] = attrdef['default']
+            if attrdef['fk'] is not None:
+                func = make_func(attrdef['fk'], name)
+                setattr(self.__class__, name.rstrip('_id'), func)
 
     def __getitem__(self, key):
         return self._attr.get(key, None)
@@ -24,6 +43,16 @@ class ElementBase(object):
     def __setitem__(self, key, value):
         if key in self._attr:
             self._attr[key] = value
+            if self._attrdef[key]['fk'] is not None and 'fk' in self._cache and key in self._cache['fk']:
+                self._cache['fk'][key] = None
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            if self['_id'] is None or other['_id'] is None:
+                return False
+            elif self['_id'] == other['_id']:
+                return True
+        return False
 
     def __str__(self):
         return str(self._attr)
@@ -31,8 +60,8 @@ class ElementBase(object):
     def __repr__(self):
         return f"<{self.__class__.__name__}: {self['_id']}>"
 
-    def addAttr(type=str, default=None, unique=False, notnone=False):
-        return {'type': type, 'default': default, 'unique': unique, 'notnone': notnone}
+    def addAttr(type=str, default=None, unique=False, notnone=False, fk=None):
+        return {'type': type, 'default': default, 'unique': unique, 'notnone': notnone, 'fk': fk}
 
     @classmethod
     def get(cls, id):

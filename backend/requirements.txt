@@ -1,4 +1,5 @@
 CherryPy @ git+https://github.com/nils-ost/cherrypy.git@v18.6.1-1
 cherrypy-cors==1.6
+psutil
 pymongo
 requests

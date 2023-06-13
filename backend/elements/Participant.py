@@ -8,7 +8,7 @@ class Participant(ElementBase):
         name=ElementBase.addAttr(default='', notnone=True),
         login=ElementBase.addAttr(type=str, unique=True, default=None),
         pw=ElementBase.addAttr(type=str, default=None),
-        seat_id=ElementBase.addAttr(type=str, unique=True)
+        seat_id=ElementBase.addAttr(type=str, unique=True, fk='Seat')
     )
 
     def validate(self):

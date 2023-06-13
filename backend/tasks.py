@@ -56,3 +56,31 @@ def create_testdata(c):
             'range_start': IpPool.octetts_to_int(192, 168, 0, 141), 'range_end': IpPool.octetts_to_int(192, 168, 0, 160)}).save()
     IpPool({'desc': 'additional play', 'mask': 24, 'vlan_id': v_play['_id'],
             'range_start': IpPool.octetts_to_int(192, 168, 0, 161), 'range_end': IpPool.octetts_to_int(192, 168, 0, 200)}).save()
+
+
+@task(pre=[create_admin], name='create-nlpt')
+def create_nlpt_testdata(c):
+    from elements import VLAN, Switch
+    VLAN({'number': 1, 'purpose': 3, 'desc': 'default'}).save()
+    v_mgmt = VLAN({'number': 2, 'purpose': 1, 'desc': 'mgmt'})
+    v_mgmt.save()
+    v_play = VLAN({'number': 3, 'purpose': 0, 'desc': 'play'})
+    v_play.save()
+    v_t1 = VLAN({'number': 4, 'purpose': 2, 'desc': 'table 1'})
+    v_t1.save()
+    v_t2 = VLAN({'number': 5, 'purpose': 2, 'desc': 'table 2'})
+    v_t2.save()
+    v_t3 = VLAN({'number': 6, 'purpose': 2, 'desc': 'table 3'})
+    v_t3.save()
+    v_t4 = VLAN({'number': 7, 'purpose': 2, 'desc': 'table 4'})
+    v_t4.save()
+    s_core = Switch({'addr': 'c2.nlpt.sani.network', 'user': 'admin', 'pw': 'password', 'purpose': 0})
+    s_core.save()
+    s_t1 = Switch({'addr': 'p1.nlpt.sani.network', 'user': 'admin', 'pw': 'password', 'purpose': 1, 'onboarding_vlan_id': v_t1['_id']})
+    s_t1.save()
+    s_t2 = Switch({'addr': 'p2.nlpt.sani.network', 'user': 'admin', 'pw': 'password', 'purpose': 1, 'onboarding_vlan_id': v_t2['_id']})
+    s_t2.save()
+    s_t3 = Switch({'addr': 'p3.nlpt.sani.network', 'user': 'admin', 'pw': 'password', 'purpose': 1, 'onboarding_vlan_id': v_t3['_id']})
+    s_t3.save()
+    s_t4 = Switch({'addr': 'p4.nlpt.sani.network', 'user': 'admin', 'pw': 'password', 'purpose': 1, 'onboarding_vlan_id': v_t4['_id']})
+    s_t4.save()

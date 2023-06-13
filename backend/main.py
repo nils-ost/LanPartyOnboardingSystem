@@ -54,6 +54,7 @@ class DeviceEndpoint(ElementEndpointBase):
 
 class PortEndpoint(ElementEndpointBase):
     _element = Port
+    _ro_attr = ['switchlink']
 
 
 if __name__ == '__main__':

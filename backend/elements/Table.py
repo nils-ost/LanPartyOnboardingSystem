@@ -5,9 +5,9 @@ class Table(ElementBase):
     _attrdef = dict(
         number=ElementBase.addAttr(type=int, unique=True, notnone=True),
         desc=ElementBase.addAttr(default='', notnone=True),
-        switch_id=ElementBase.addAttr(notnone=True),
-        seat_ip_pool_id=ElementBase.addAttr(unique=True, notnone=True),
-        add_ip_pool_id=ElementBase.addAttr(notnone=True)
+        switch_id=ElementBase.addAttr(notnone=True, fk='Switch'),
+        seat_ip_pool_id=ElementBase.addAttr(unique=True, notnone=True, fk='IpPool'),
+        add_ip_pool_id=ElementBase.addAttr(notnone=True, fk='IpPool')
     )
 
     def validate(self):

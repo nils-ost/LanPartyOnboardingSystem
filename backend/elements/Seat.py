@@ -6,7 +6,7 @@ class Seat(ElementBase):
     _attrdef = dict(
         number=ElementBase.addAttr(type=int, default=1, notnone=True),
         pw=ElementBase.addAttr(type=str, default=None),
-        table_id=ElementBase.addAttr(notnone=True)
+        table_id=ElementBase.addAttr(notnone=True, fk='Table')
     )
 
     def validate(self):

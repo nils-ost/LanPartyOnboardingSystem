@@ -3,6 +3,7 @@ from elements._elementBase import ElementBase, docDB
 from MTSwitch import MikroTikSwitch
 
 switch_objects = dict()
+switch_macs = list()
 
 
 class Switch(ElementBase):
@@ -11,7 +12,7 @@ class Switch(ElementBase):
         user=ElementBase.addAttr(default='', notnone=True),
         pw=ElementBase.addAttr(default='', notnone=True),
         purpose=ElementBase.addAttr(type=int, default=0, notnone=True),
-        onboarding_vlan_id=ElementBase.addAttr(default=None)
+        onboarding_vlan_id=ElementBase.addAttr(default=None, fk='VLAN')
     )
 
     def validate(self):
@@ -58,6 +59,7 @@ class Switch(ElementBase):
 
     def connected(self):
         global switch_objects
+        global switch_macs
         test_suite = 'environment' in cherrypy.config and cherrypy.config['environment'] == 'test_suite'
         if test_suite:
             return False
@@ -67,7 +69,10 @@ class Switch(ElementBase):
             switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
         if not switch_objects[self['_id']].connected:
             switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
-        return switch_objects[self['_id']].connected
+        swi = switch_objects[self['_id']]
+        if swi.connected and swi.mac_addr not in switch_macs:
+            switch_macs.append(swi.mac_addr)
+        return swi.connected
 
     def mac_addr(self):
         global switch_objects
@@ -77,6 +82,7 @@ class Switch(ElementBase):
 
     def scan_devices(self):
         global switch_objects
+        global switch_macs
         from elements import Device, Port
         if not self.connected():
             return 0
@@ -87,17 +93,32 @@ class Switch(ElementBase):
             p = Port.get_by_number(self['_id'], port.idx)
             if p is None:
                 continue
+            switchlink = False
             for host in port.hosts:
+                if host in switch_macs:
+                    switchlink = True
+                    continue  # this host is a switch, switches are not handled here
                 device = Device.get_by_mac(host)
-                if device is None:
+                if device is None and not p['switchlink']:
                     device = Device({'mac': host, 'port_id': p['_id']})
                     device.save()
                     new_count += 1
-                elif not device['port_id'] == p['_id']:
-                    sw = Switch.get(p['switch_id'])
-                    if sw.mac_addr() not in port.hosts:
-                        device['port_id'] = p['_id']
+                elif device is None:
+                    # skip as this is a switchlink port and regular devices are not connected on switchlink ports
+                    pass
+                elif p['switchlink'] and device.port() is not None and device.port() == p:
+                    # remove the port from this device as the current port is a switchlink port, those do not connect devices
+                    device['port_id'] = None
+                    device.save()
+                elif not p['switchlink'] and device.port() is not None and not device.port() == p:
+                    other_port = device.port()
+                    other_port = switch_objects[other_port['switch_id']].ports[other_port['number']]
+                    if host not in other_port.hosts or len(port.hosts) <= len(other_port.hosts):
+                        device.port(p)
                         device.save()
+            if not switchlink == p['switchlink']:
+                p['switchlink'] = switchlink
+                p.save()
         return new_count
 
     def scan_vlans(self):

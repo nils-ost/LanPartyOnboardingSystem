@@ -5,8 +5,9 @@ class Port(ElementBase):
     _attrdef = dict(
         number=ElementBase.addAttr(type=int, notnone=True),
         desc=ElementBase.addAttr(default='', notnone=True),
-        switch_id=ElementBase.addAttr(notnone=True),
-        participants=ElementBase.addAttr(type=bool, default=False, notnone=True)
+        switch_id=ElementBase.addAttr(notnone=True, fk='Switch'),
+        participants=ElementBase.addAttr(type=bool, default=False, notnone=True),
+        switchlink=ElementBase.addAttr(type=bool, default=False, notnone=True)
     )
 
     @classmethod
@@ -16,6 +17,26 @@ class Port(ElementBase):
         if fromdb is not None:
             result._attr = fromdb
             return result
+        return None
+
+    @classmethod
+    def get_lpos(cls):
+        """
+        Returns the port LPOS is connected to (or None if not yet identified)
+        """
+        import psutil
+        from elements import Device
+        my_macs = list()
+        for iname, conf in psutil.net_if_addrs().items():
+            if iname == 'lo':
+                continue
+            for e in conf:
+                if e.family.name == 'AF_PACKET':
+                    my_macs.append(e.address.replace(':', ''))
+        for mac in my_macs:
+            d = Device.get_by_mac(mac)
+            if d is not None and d['port_id'] is not None:
+                return Port.get(d['port_id'])
         return None
 
     def validate(self):
