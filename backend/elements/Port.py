@@ -39,6 +39,13 @@ class Port(ElementBase):
                 return Port.get(d['port_id'])
         return None
 
+    @classmethod
+    def get_switchlinks(cls, switch_id=None):
+        if switch_id is None:
+            return [cls(p) for p in docDB.search_many(cls.__name__, {'switchlink': True})]
+        else:
+            return [cls(p) for p in docDB.search_many(cls.__name__, {'switchlink': True, 'switch_id': switch_id})]
+
     def validate(self):
         errors = dict()
         if docDB.get('Switch', self['switch_id']) is None:
@@ -103,6 +110,12 @@ class Port(ElementBase):
         if self['number'] not in range(len(sw.ports)):
             return ''
         return sw.ports[self['number']].speed
+
+    def scanned_hosts(self):
+        """
+        returns a list of mac addresses that are currently recognized on this switch-port
+        """
+        return self.switch().scanned_port_hosts(self['number'])
 
     def json(self):
         result = super().json()

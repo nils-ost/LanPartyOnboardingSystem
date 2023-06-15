@@ -112,14 +112,27 @@ class Switch(ElementBase):
                     device.save()
                 elif not p['switchlink'] and device.port() is not None and not device.port() == p:
                     other_port = device.port()
-                    other_port = switch_objects[other_port['switch_id']].ports[other_port['number']]
-                    if host not in other_port.hosts or len(port.hosts) <= len(other_port.hosts):
-                        device.port(p)
-                        device.save()
+                    try:
+                        other_port = switch_objects[other_port['switch_id']].ports[other_port['number']]
+                        if host not in other_port.hosts or len(port.hosts) <= len(other_port.hosts):
+                            device.port(p)
+                            device.save()
+                    except Exception:
+                        pass
             if not switchlink == p['switchlink']:
                 p['switchlink'] = switchlink
                 p.save()
         return new_count
+
+    def scanned_port_hosts(self, port_idx):
+        """
+        returns a list of mac addresses that are currently recognized on the switch-port
+        """
+        global switch_objects
+        if not self.connected():
+            return []
+        swi = switch_objects[self['_id']]
+        return swi.ports[port_idx].hosts
 
     def scan_vlans(self):
         global switch_objects
@@ -229,17 +242,24 @@ class Switch(ElementBase):
         if not self.connected():
             return
         swi = switch_objects[self['_id']]
-        if self['onboarding_vlan_id'] is not None:
-            onboarding_vlan_nb = VLAN.get(self['onboarding_vlan_id'])['number']
-            swi.vlanAddit(vlan=onboarding_vlan_nb)
-            for idx in range(len(swi.ports)):  # TODO: maybe rework later on
-                port_id = Port.get_by_number(self['_id'], idx)['_id']
-                if len(Device.get_by_port(port_id)) == 0:
-                    swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=onboarding_vlan_nb, vforce=True)
         for vlan in VLAN.get_by_purpose(0):  # Add Play VLAN
             swi.vlanAddit(vlan=vlan['number'])
+        mgmt_vlan_nb = 1
         for vlan in VLAN.get_by_purpose(1):  # Add Mgmt VLAN
             swi.vlanAddit(vlan=vlan['number'])
+            mgmt_vlan_nb = vlan['number']
+
+        for idx in range(len(swi.ports)):  # TODO: maybe rework later on
+            port = Port.get_by_number(self['_id'], idx)
+            if self['onboarding_vlan_id'] is not None:
+                onboarding_vlan_nb = VLAN.get(self['onboarding_vlan_id'])['number']
+                swi.vlanAddit(vlan=onboarding_vlan_nb)
+                if not port['switchlink'] and len(Device.get_by_port(port['_id'])) == 0:
+                    swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=onboarding_vlan_nb, vforce=True)
+            if port['switchlink']:
+                swi.portEdit(idx, vmode='optional', vreceive='only tagged', vdefault=mgmt_vlan_nb, vforce=False)
+                for vlan in swi.vlans:
+                    swi.vlanEdit(vlan, memberAdd=idx)
         swi.commitNeeded()
         swi.reloadAll()
 
