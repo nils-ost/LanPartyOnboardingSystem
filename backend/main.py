@@ -5,7 +5,7 @@ from helpers.docdb import docDB
 from helpers.config import get_config
 from helpers.backgroundworker import device_scanner
 from threading import Thread
-from endpoints import ElementEndpointBase, LoginEndpoint
+from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint
 from elements import VLAN, Switch, IpPool, Table, Seat, Participant, Device, Port
 
 logging.basicConfig(format='%(levelname)s:%(name)s:%(message)s', level='INFO')
@@ -22,6 +22,7 @@ class API():
         self.device = DeviceEndpoint()
         self.port = PortEndpoint()
         self.login = LoginEndpoint()
+        self.system = SystemEndpoint()
 
 
 class VLANEndpoint(ElementEndpointBase):

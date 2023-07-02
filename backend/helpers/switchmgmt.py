@@ -49,18 +49,64 @@ def switch_restart_order():
 def switches_commit():
     """
     commits all changes to all Switches
-    this is done in an order that is unlikely to lock a Switch
-    the order is determined by switch_restart_order
+    this is done in an order that is unlikely to lock a Switch.
+    The order is determined by switch_restart_order
     """
-    for s in [Switch.get(sid) for sid in switch_restart_order()]:
-        s.commit()
+    restart_order = switch_restart_order()
+    if len(restart_order) < len(Switch.all()):
+        missing = list([s['_id'] for s in Switch.all() if s['_id'] not in restart_order])
+        return {'code': 1, 'desc': 'missing Switches in restart order', 'missing': missing}
+    elif len(restart_order) > len(Switch.all()):
+        return {'code': 2, 'desc': 'to many Switches in restart order'}
+
+    retry = list()
+    for s in [Switch.get(sid) for sid in restart_order]:
+        try:
+            s.commit()
+        except Exception:
+            retry.append(s)
+
+    failed = list()
+    for s in retry:
+        try:
+            s.commit()
+        except Exception:
+            failed.append(s['_id'])
+
+    if len(failed) > 0:
+        return {'code': 3, 'desc': 'not all Switches could be commited', 'failed': failed}
+    else:
+        return {'code': 0, 'desc': 'done'}
 
 
 def switches_retreat():
     """
     retreats all changes from all Switches
-    this is done in an order that is unlikely to lock a Switch
-    the order is determined by switch_restart_order
+    this is done in an order that is unlikely to lock a Switch.
+    The order is determined by switch_restart_order
     """
-    for s in [Switch.get(sid) for sid in switch_restart_order()]:
-        s.retreat()
+    restart_order = switch_restart_order()
+    if len(restart_order) < len(Switch.all()):
+        missing = list([s['_id'] for s in Switch.all() if s['_id'] not in restart_order])
+        return {'code': 1, 'desc': 'missing Switches in restart order', 'missing': missing}
+    elif len(restart_order) > len(Switch.all()):
+        return {'code': 2, 'desc': 'to many Switches in restart order'}
+
+    retry = list()
+    for s in [Switch.get(sid) for sid in restart_order]:
+        try:
+            s.retreat()
+        except Exception:
+            retry.append(s)
+
+    failed = list()
+    for s in retry:
+        try:
+            s.retreat()
+        except Exception:
+            failed.append(s['_id'])
+
+    if len(failed) > 0:
+        return {'code': 3, 'desc': 'not all Switches could be retreated', 'failed': failed}
+    else:
+        return {'code': 0, 'desc': 'done'}

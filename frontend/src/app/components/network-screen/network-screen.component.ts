@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 import { Vlan } from '../../interfaces/vlan';
 import { VlanService } from '../../services/vlan.service';
 import { Switch } from 'src/app/interfaces/switch';
@@ -9,6 +10,8 @@ import { IpPool } from 'src/app/interfaces/ip-pool';
 import { IpPoolService } from 'src/app/services/ip-pool.service';
 import { Port } from 'src/app/interfaces/port';
 import { PortService } from 'src/app/services/port.service';
+import { SystemService } from 'src/app/services/system.service';
+import { System } from 'src/app/interfaces/system';
 
 @Component({
   selector: 'app-network-screen',
@@ -23,16 +26,20 @@ export class NetworkScreenComponent implements OnInit {
   switches: Switch[] = [];
   ippools: IpPool[] = [];
   ports: Port[] = [];
+  system!: System;
 
   constructor(
     private errorHandler: ErrorHandlerService,
+    private messageService: MessageService,
     private vlanService: VlanService,
     private switchService: SwitchService,
     private ippoolService: IpPoolService,
-    private portService: PortService
+    private portService: PortService,
+    private systemService: SystemService
   ) { }
 
   ngOnInit(): void {
+    this.refreshSystem();
     this.refreshVlans();
     this.refreshSwitches();
     this.refreshIpPools();
@@ -91,6 +98,19 @@ export class NetworkScreenComponent implements OnInit {
       })
   }
 
+  refreshSystem() {
+    this.systemService
+      .getSystem()
+      .subscribe({
+        next: (system: System) => {
+          this.system = system;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
   creaditVlan() {
     this.createVlanDialog.hide();
     this.refreshVlans();
@@ -106,6 +126,70 @@ export class NetworkScreenComponent implements OnInit {
   creaditIpPool() {
     this.createIpPoolDialog.hide();
     this.refreshIpPools();
+  }
+
+  doSystemCommit() {
+    this.messageService.add({
+      severity: 'info',
+      summary: $localize `:@@SystemExecCommitStartedSummary:Committing`,
+      detail: $localize `:@@SystemExecCommitStartedDetail:committing of all Switches started`,
+      life: 6000
+    });
+    this.systemService
+      .execCommit()
+      .subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: $localize `:@@SystemExecCommitSuccessSummary:Done`,
+            detail: $localize `:@@SystemExecCommitSuccessDetail:all Switches successful committed`,
+            life: 6000
+          });
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          let detail: string = 'unknown';
+          if (this.errorHandler.elementError) detail = this.errorHandler.elementErrors.desc;
+          this.messageService.add({
+            severity: 'error',
+            summary: $localize `:@@SystemExecCommitErrorSummary:Error`,
+            detail: detail,
+            life: 6000
+          });
+        }
+      })
+  }
+
+  doSystemRetreat() {
+    this.messageService.add({
+      severity: 'info',
+      summary: $localize `:@@SystemExecRetreatStartedSummary:Retreating`,
+      detail: $localize `:@@SystemExecRetreatStartedDetail:retreating of all Switches started`,
+      life: 6000
+    });
+    this.systemService
+      .execRetreat()
+      .subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: $localize `:@@SystemExecRetreatSuccessSummary:Done`,
+            detail: $localize `:@@SystemExecRetreatSuccessDetail:all Switches successful retreated`,
+            life: 6000
+          });
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          let detail: string = 'unknown';
+          if (this.errorHandler.elementError) detail = this.errorHandler.elementErrors.desc;
+          this.messageService.add({
+            severity: 'error',
+            summary: $localize `:@@SystemExecRetreatErrorSummary:Error`,
+            detail: detail,
+            life: 6000
+          });
+        }
+      })
   }
 
 }

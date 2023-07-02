@@ -75,3 +75,9 @@
   * **2**: at least one Table is using this <element_type\>
   * **3**: at least one Seat is using this <element_type\>
   * **4**: at least one Switch is uning this <element_type\>
+
+# switchs_commit/_retreat error-codes
+
+  * **1**: missing Switches in restart order *additional parameter `missing` with list of missing Switch-IDs*
+  * **2**: to many Switches in restart order
+  * **3**: not all Switches could be <commited|retreated\> *additional parameter `failed` with list of Switch-IDs where commit/retreat failed*
