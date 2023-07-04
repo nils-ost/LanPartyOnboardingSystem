@@ -31,6 +31,7 @@ class VLANEndpoint(ElementEndpointBase):
 
 class SwitchEndpoint(ElementEndpointBase):
     _element = Switch
+    _ro_attr = ['commited']
 
 
 class IpPoolEndpoint(ElementEndpointBase):

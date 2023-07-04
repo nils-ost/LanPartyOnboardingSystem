@@ -12,6 +12,7 @@ class Switch(ElementBase):
         user=ElementBase.addAttr(default='', notnone=True),
         pw=ElementBase.addAttr(default='', notnone=True),
         purpose=ElementBase.addAttr(type=int, default=0, notnone=True),
+        commited=ElementBase.addAttr(type=bool, default=False, notnone=True),
         onboarding_vlan_id=ElementBase.addAttr(default=None, fk='VLAN')
     )
 
@@ -232,6 +233,11 @@ class Switch(ElementBase):
             swi.vlanRemove(vlan_id)
         swi.commitNeeded()
         swi.reloadAll()
+        self['commited'] = False
+        self.save()
+        if self.count() == docDB.count(self.__class__.__name__, {'commited': False}):
+            from helpers.system import set_commited
+            set_commited(False)
 
     def commit(self):
         """
@@ -262,6 +268,11 @@ class Switch(ElementBase):
                     swi.vlanEdit(vlan, memberAdd=idx)
         swi.commitNeeded()
         swi.reloadAll()
+        self['commited'] = True
+        self.save()
+        if self.count() == docDB.count(self.__class__.__name__, {'commited': True}):
+            from helpers.system import set_commited
+            set_commited(True)
 
     def json(self):
         result = super().json()

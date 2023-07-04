@@ -1,6 +1,7 @@
 import cherrypy
 import cherrypy_cors
 from elements import Session
+from helpers.system import get_commited, get_open_commits
 
 
 class SystemEndpoint():
@@ -14,8 +15,8 @@ class SystemEndpoint():
             return
         elif cherrypy.request.method == 'GET':
             result = dict()
-            result['commited'] = False
-            result['open_commits'] = True
+            result['commited'] = get_commited()
+            result['open_commits'] = True if get_open_commits() > 0 else False
             return result
         else:
             cherrypy.response.headers['Allow'] = 'OPTIONS, GET'

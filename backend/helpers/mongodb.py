@@ -103,3 +103,6 @@ class mongoDB(object):
             return result.next()[what_field]
         else:
             return 0
+
+    def count(self, where, what={}):
+        self.coll(where).countDocuments(what)

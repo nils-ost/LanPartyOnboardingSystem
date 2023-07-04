@@ -78,6 +78,10 @@ class ElementBase(object):
             result.append(cls(element))
         return result
 
+    @classmethod
+    def count(cls):
+        return docDB.count(cls.__name__, {})
+
     def validate_base(self):
         errors = dict()
         for attr, opt in self.__class__._attrdef.items():

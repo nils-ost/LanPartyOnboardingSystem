@@ -53,10 +53,10 @@ def switches_commit():
     The order is determined by switch_restart_order
     """
     restart_order = switch_restart_order()
-    if len(restart_order) < len(Switch.all()):
+    if len(restart_order) < Switch.count():
         missing = list([s['_id'] for s in Switch.all() if s['_id'] not in restart_order])
         return {'code': 1, 'desc': 'missing Switches in restart order', 'missing': missing}
-    elif len(restart_order) > len(Switch.all()):
+    elif len(restart_order) > Switch.count():
         return {'code': 2, 'desc': 'to many Switches in restart order'}
 
     retry = list()
@@ -86,10 +86,10 @@ def switches_retreat():
     The order is determined by switch_restart_order
     """
     restart_order = switch_restart_order()
-    if len(restart_order) < len(Switch.all()):
+    if len(restart_order) < Switch.count():
         missing = list([s['_id'] for s in Switch.all() if s['_id'] not in restart_order])
         return {'code': 1, 'desc': 'missing Switches in restart order', 'missing': missing}
-    elif len(restart_order) > len(Switch.all()):
+    elif len(restart_order) > Switch.count():
         return {'code': 2, 'desc': 'to many Switches in restart order'}
 
     retry = list()
