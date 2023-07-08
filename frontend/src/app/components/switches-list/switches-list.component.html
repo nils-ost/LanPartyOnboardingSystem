@@ -22,6 +22,9 @@
                 <ng-container i18n="@@elementFieldLabelSwitchConnected">Connected</ng-container>
             </th>
             <th>
+                <ng-container i18n="@@elementFieldLabelSwitchCommited">Commited</ng-container>
+            </th>
+            <th>
                 <ng-container i18n="@@elementFieldLabelSwitchMac">HWaddr</ng-container>
             </th>
             <th>
@@ -41,6 +44,7 @@
             <td>{{ switchPurposeType[sw.purpose] }}</td>
             <td>{{ vlansNames.get(sw.onboarding_vlan_id) }}</td>
             <td>{{ sw.connected }}</td>
+            <td>{{ sw.commited }}</td>
             <td>{{ sw.mac }}</td>
             <td>
                 <li *ngFor="let vlan_id of sw.known_vlans">{{ vlansNames.get(vlan_id) }}</li>
@@ -50,6 +54,8 @@
             </td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-eye" (click)="showPortsList(sw)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-file-import" (click)="commitSwitch(sw)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-file-export" (click)="retreatSwitch(sw)"></button>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editSwitch(sw)"></button>
                 <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="confirmDelete(sw)"></button>
             </td>

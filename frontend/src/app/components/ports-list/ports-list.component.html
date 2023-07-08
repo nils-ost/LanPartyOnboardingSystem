@@ -29,6 +29,10 @@
                 <ng-container i18n="@@elementFieldLabelPortSpeed">Speed</ng-container>
                 <p-sortIcon field="speed"></p-sortIcon>
             </th>
+            <th pSortableColumn="switchlink">
+                <ng-container i18n="@@elementFieldLabelPortSwitchlink">SWlink</ng-container>
+                <p-sortIcon field="switchlink"></p-sortIcon>
+            </th>
             <th>
                 <ng-container i18n="@@elementFieldLabelPortVlanIds">Vlans</ng-container>
             </th>
@@ -69,6 +73,14 @@
                 </ng-container>
             </td>
             <td>{{ port.speed }}</td>
+            <td>
+                <ng-container *ngIf="port.switchlink">
+                    <i class="pi pi-check" style="color: var(--success-color)"></i>
+                </ng-container>
+                <ng-container *ngIf="!port.switchlink">
+                    <i class="pi pi-times" style="color: var(--danger-color)"></i>
+                </ng-container>
+            </td>
             <td>
                 <li *ngFor="let vlan_id of port.vlan_ids">{{ vlansNames.get(vlan_id) }}</li>
             </td>

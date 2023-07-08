@@ -131,8 +131,8 @@ export class NetworkScreenComponent implements OnInit {
   doSystemCommit() {
     this.messageService.add({
       severity: 'info',
-      summary: $localize `:@@SystemExecCommitStartedSummary:Committing`,
-      detail: $localize `:@@SystemExecCommitStartedDetail:committing of all Switches started`,
+      summary: $localize `:@@SystemExecCommitStartedSummary:Commiting`,
+      detail: $localize `:@@SystemExecCommitStartedDetail:commiting of all Switches started`,
       life: 6000
     });
     this.systemService
@@ -142,7 +142,7 @@ export class NetworkScreenComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: $localize `:@@SystemExecCommitSuccessSummary:Done`,
-            detail: $localize `:@@SystemExecCommitSuccessDetail:all Switches successful committed`,
+            detail: $localize `:@@SystemExecCommitSuccessDetail:all Switches successful commited`,
             life: 6000
           });
         },

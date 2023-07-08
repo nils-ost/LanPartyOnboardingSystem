@@ -36,4 +36,12 @@ export class SwitchService {
   public deleteSwitch(id: string): Observable<any> {
     return this.http.delete<any>(this.switchUrl + id + '/', {withCredentials:true});
   }
+
+  public execCommit(id: string): Observable<any> {
+    return this.http.post<any>(this.switchUrl + 'commit/' + id + '/', {}, {withCredentials:true});
+  }
+
+  public execRetreat(id: string): Observable<any> {
+    return this.http.post<any>(this.switchUrl + 'retreat/' + id + '/', {}, {withCredentials:true});
+  }
 }

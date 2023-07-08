@@ -57,11 +57,14 @@ class Port(ElementBase):
         return errors
 
     def save_pre(self):
-        switch = docDB.get('Switch', self['switch_id'])
-        if switch['purpose'] == 0:
+        if self['switchlink']:
             self['participants'] = False
-        elif switch['purpose'] == 1:
-            self['participants'] = True
+        else:
+            switch = docDB.get('Switch', self['switch_id'])
+            if switch['purpose'] == 0:
+                self['participants'] = False
+            elif switch['purpose'] == 1:
+                self['participants'] = True
 
     def vlan_ids(self):
         from elements.Switch import switch_objects

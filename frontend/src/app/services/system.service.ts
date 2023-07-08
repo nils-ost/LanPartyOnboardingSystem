@@ -9,21 +9,21 @@ import { environment } from '../../environments/environment';
 })
 export class SystemService {
 
-  private switchUrl = environment.apiUrl + '/system/';
+  private systemUrl = environment.apiUrl + '/system/';
 
   constructor(
     private http: HttpClient
   ) { }
 
   public getSystem(): Observable<System> {
-    return this.http.get<System>(this.switchUrl, {withCredentials:true});
+    return this.http.get<System>(this.systemUrl, {withCredentials:true});
   }
 
   public execCommit(): Observable<any> {
-    return this.http.post<any>(this.switchUrl + 'commit/', {}, {withCredentials:true});
+    return this.http.post<any>(this.systemUrl + 'commit/', {}, {withCredentials:true});
   }
 
   public execRetreat(): Observable<any> {
-    return this.http.post<any>(this.switchUrl + 'retreat/', {}, {withCredentials:true});
+    return this.http.post<any>(this.systemUrl + 'retreat/', {}, {withCredentials:true});
   }
 }

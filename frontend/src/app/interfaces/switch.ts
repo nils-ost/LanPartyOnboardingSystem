@@ -4,6 +4,7 @@ export interface Switch {
     user: string;
     pw: string;
     purpose: SwitchPurposeType;
+    commited: boolean;
     onboarding_vlan_id: string| null;
     connected: boolean;
     mac: string;

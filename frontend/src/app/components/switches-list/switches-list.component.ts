@@ -54,6 +54,68 @@ export class SwitchesListComponent implements OnChanges {
     this.editedSwitchEvent.emit(null);
   }
 
+  commitSwitch(sw: Switch) {
+    this.messageService.add({
+      severity: 'info',
+      summary: $localize `:@@CommitSwitchStartedSummary:Commiting`,
+      detail: $localize `:@@CommitSwitchStartedDetail:commiting started for Switch` + ': ' + sw.addr,
+      life: 6000
+    });
+    this.switchService
+      .execCommit(sw.id)
+      .subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: $localize `:@@CommitSwitchSuccessSummary:Done`,
+            detail: $localize `:@@CommitSwitchSuccessDetail:successful commited Switch` + ': ' + sw.addr,
+            life: 6000
+          });
+          this.editedSwitchEvent.emit(null);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          this.messageService.add({
+            severity: 'error',
+            summary: $localize `:@@CommitSwitchErrorSummary:Error`,
+            detail: $localize `:@@CommitSwitchErrorDetail:could not commit Switch` + ': ' + sw.addr,
+            life: 6000
+          });
+        }
+      })
+  }
+
+  retreatSwitch(sw: Switch) {
+    this.messageService.add({
+      severity: 'info',
+      summary: $localize `:@@RetreatSwitchStartedSummary:Retreating`,
+      detail: $localize `:@@RetreatSwitchStartedDetail:retreating started for Switch` + ': ' + sw.addr,
+      life: 6000
+    });
+    this.switchService
+      .execRetreat(sw.id)
+      .subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: $localize `:@@RetreatSwitchSuccessSummary:Done`,
+            detail: $localize `:@@RetreatSwitchSuccessDetail:successful retreated Switch` + ': ' + sw.addr,
+            life: 6000
+          });
+          this.editedSwitchEvent.emit(null);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          this.messageService.add({
+            severity: 'error',
+            summary: $localize `:@@RetreatSwitchErrorSummary:Error`,
+            detail: $localize `:@@RetreatSwitchErrorDetail:could not retreated Switch` + ': ' + sw.addr,
+            life: 6000
+          });
+        }
+      })
+  }
+
   showPortsList(sw: Switch) {
     this.selectedSwitch = sw;
     this.portsListDialog = true;

@@ -105,4 +105,4 @@ class mongoDB(object):
             return 0
 
     def count(self, where, what={}):
-        self.coll(where).countDocuments(what)
+        return self.coll(where).count_documents(what)
