@@ -56,15 +56,18 @@ class Port(ElementBase):
         elif docDB.search_one(self.__class__.__name__, {'switch_id': self['switch_id'], 'number': self['number'], '_id': {'$ne': self['_id']}}) is not None:
             errors['number'] = {'code': 92, 'desc': 'needs to be unique per Switch'}
         if self['switchlink_port_id'] is not None:
-            from_db = docDB.get('Port', self['switchlink_port_id'])
-            if from_db is None:
+            fromdb = docDB.get('Port', self['switchlink_port_id'])
+            if fromdb is None:
                 errors['switchlink_port_id'] = {'code': 90, 'desc': f"There is no Port with id '{self['switchlink_port_id']}'"}
-            elif not from_db['switchlink']:
+            elif not fromdb['switchlink']:
                 errors['switchlink_port_id'] = {'code': 93, 'desc': f"The Port '{self['switchlink_port_id']}' is not declared as a switchlink"}
         return errors
 
     def save_pre(self):
-        print(self._attr)
+        if self['_id'] is None:
+            self._cache['switchlink_port_id_fromdb'] = None
+        else:
+            self._cache['switchlink_port_id_fromdb'] = docDB.get(self.__class__.__name__, self['_id'])['switchlink_port_id']
         if self['switchlink']:
             self['participants'] = False
         else:
@@ -76,7 +79,11 @@ class Port(ElementBase):
                 self['participants'] = True
 
     def save_post(self):
-        print(self._attr)
+        if self._cache['switchlink_port_id_fromdb'] is not None and not self['switchlink_port_id'] == self._cache['switchlink_port_id_fromdb']:
+            oslp = Port.get(self._cache['switchlink_port_id_fromdb'])
+            if oslp['switchlink_port_id'] == self['_id']:
+                oslp['switchlink_port_id'] = None
+                oslp.save()
         slp = self.switchlink_port()
         if slp is not None and not slp['switchlink_port_id'] == self['_id']:
             slp['switchlink_port_id'] = self['_id']
