@@ -5,6 +5,7 @@ export interface Port {
     switch_id: string;
     participants: boolean;
     switchlink: boolean;
+    switchlink_port_id: string | null;
     vlan_ids: string[];
     type: string;
     enabled: boolean;

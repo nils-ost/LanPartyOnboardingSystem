@@ -42,8 +42,8 @@
         <tr>
             <td>{{ port.number }}</td>
             <td>
-                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(port, $event)"></button>
                 {{ port.desc }}
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(port, $event)"></button>
             </td>
             <td>
                 <ng-container *ngIf="selectedSwitch && selectedSwitch.purpose == 2; else notChangeableParticipants">
@@ -76,6 +76,8 @@
             <td>
                 <ng-container *ngIf="port.switchlink">
                     <i class="pi pi-check" style="color: var(--success-color)"></i>
+                    {{ switchlinkById(port.switchlink_port_id) }}
+                    <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editSwitchlinkPortIdStart(port, $event)"></button>
                 </ng-container>
                 <ng-container *ngIf="!port.switchlink">
                     <i class="pi pi-times" style="color: var(--danger-color)"></i>
@@ -97,5 +99,17 @@
             </span>
         </div>
         <button pButton (click)="editDesc()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #editswitchlinkportid [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="field">
+            <span class="p-float-label">
+                <p-dropdown id="editswitchlinkportid" [options]="switchlinkOptions" [(ngModel)]="newSwitchlinkPortId" optionLabel="name" optionValue="code" appendTo="body"></p-dropdown>
+                <label for="editswitchlinkportid" i18n="@@elementFieldLabelPortSwitchlinkPortId">Switchlink Port</label>
+            </span>
+        </div>
+        <button pButton (click)="editSwitchlinkPortId()" i18n="@@buttonSave">Save</button>
     </ng-template>
 </p-overlayPanel>

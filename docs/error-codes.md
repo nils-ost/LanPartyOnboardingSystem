@@ -65,9 +65,10 @@
 
 ## port
 
-  * **90***(switch_id)*: There is no Switch with id '<switch_id\>'
+  * **90***(switch_id|switchlink_port_id)*: There is no <Switch|Port\> with id '<switch_id|switchlink_port_id\>'
   * **91***(number)*: Needs to be 0 or bigger
   * **92***(number)*: Needs to be unique per Switch
+  * **93***(switchlink_port_id)*: The Port '<switchlink_port_id\>' is not declared as a switchlink
 
 # element delete error-codes
 

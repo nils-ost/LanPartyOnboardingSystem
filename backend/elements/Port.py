@@ -7,7 +7,8 @@ class Port(ElementBase):
         desc=ElementBase.addAttr(default='', notnone=True),
         switch_id=ElementBase.addAttr(notnone=True, fk='Switch'),
         participants=ElementBase.addAttr(type=bool, default=False, notnone=True),
-        switchlink=ElementBase.addAttr(type=bool, default=False, notnone=True)
+        switchlink=ElementBase.addAttr(type=bool, default=False, notnone=True),
+        switchlink_port_id=ElementBase.addAttr(default=None, fk='Port')
     )
 
     @classmethod
@@ -54,17 +55,38 @@ class Port(ElementBase):
             errors['number'] = {'code': 91, 'desc': 'needs to be 0 or bigger'}
         elif docDB.search_one(self.__class__.__name__, {'switch_id': self['switch_id'], 'number': self['number'], '_id': {'$ne': self['_id']}}) is not None:
             errors['number'] = {'code': 92, 'desc': 'needs to be unique per Switch'}
+        if self['switchlink_port_id'] is not None:
+            from_db = docDB.get('Port', self['switchlink_port_id'])
+            if from_db is None:
+                errors['switchlink_port_id'] = {'code': 90, 'desc': f"There is no Port with id '{self['switchlink_port_id']}'"}
+            elif not from_db['switchlink']:
+                errors['switchlink_port_id'] = {'code': 93, 'desc': f"The Port '{self['switchlink_port_id']}' is not declared as a switchlink"}
         return errors
 
     def save_pre(self):
+        print(self._attr)
         if self['switchlink']:
             self['participants'] = False
         else:
+            self['switchlink_port_id'] = None
             switch = docDB.get('Switch', self['switch_id'])
             if switch['purpose'] == 0:
                 self['participants'] = False
             elif switch['purpose'] == 1:
                 self['participants'] = True
+
+    def save_post(self):
+        print(self._attr)
+        slp = self.switchlink_port()
+        if slp is not None and not slp['switchlink_port_id'] == self['_id']:
+            slp['switchlink_port_id'] = self['_id']
+            slp.save()
+
+    def delete_post(self):
+        slp = self.switchlink_port()
+        if slp is not None:
+            slp['switchlink_port_id'] = None
+            slp.save()
 
     def vlan_ids(self):
         from elements.Switch import switch_objects

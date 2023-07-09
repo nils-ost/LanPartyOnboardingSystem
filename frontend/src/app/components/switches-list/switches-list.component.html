@@ -68,5 +68,5 @@
 </p-dialog>
 
 <p-dialog [(visible)]="portsListDialog" header="Ports List" [modal]="true" [dismissableMask]="true">
-    <app-ports-list [selectedSwitch]="selectedSwitch" [ports]="ports" [vlans]="vlans" (editedPortEvent)="editedSwitch()"></app-ports-list>
+    <app-ports-list [selectedSwitch]="selectedSwitch" [ports]="ports" [vlans]="vlans" [switches]="switches" (editedPortEvent)="editedSwitch()"></app-ports-list>
 </p-dialog>

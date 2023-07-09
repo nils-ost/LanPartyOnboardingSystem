@@ -14,29 +14,52 @@ import { PortService } from 'src/app/services/port.service';
 export class PortsListComponent implements OnChanges, OnInit {
   @Input() ports: Port[] = [];
   @Input() vlans: Vlan[] = [];
+  @Input() switches: Switch[] = [];
   @Input() selectedSwitch?: Switch;
   @Output() editedPortEvent = new EventEmitter<null>();
 
   @ViewChild('editdesc') editDescDialog: any;
+  @ViewChild('editswitchlinkportid') editSwitchlinkPortIdDialog: any;
 
   vlansNames: Map<string, string> = new Map<string, string>;
   displayPorts: Port[] =[];
   selectedPort: Port | undefined;
   newDesc: string = "";
+  newSwitchlinkPortId: string | null = null;
+  switchlinkOptions: any[];
 
   constructor(
     private errorHandler: ErrorHandlerService,
     private portService: PortService
-  ) {}
+  ) {
+    this.switchlinkOptions = [{name: 'None', code: null}];
+  }
 
   ngOnInit(): void {
     this.refreshVlanNames();
     this.refreshDisplay();
+    this.refreshSwitchlinkOptions();
   }
 
   ngOnChanges(): void {
     this.refreshVlanNames();
     this.refreshDisplay();
+    this.refreshSwitchlinkOptions();
+  }
+
+  refreshSwitchlinkOptions() {
+    let list: any[] = [{name: 'None', code: null}];
+    for (let i = 0; i < this.ports.length; i++) {
+      let port: Port = this.ports[i];
+      if (port.switchlink) {
+        let element: any = {
+          name: this.switchAddrById(port.switch_id) + ': ' + port.number,
+          code: port.id
+        };
+        list.push(element);
+      }
+    }
+    this.switchlinkOptions = list;
   }
 
   refreshDisplay() {
@@ -81,6 +104,29 @@ export class PortsListComponent implements OnChanges, OnInit {
     this.editDescDialog.hide();
   }
 
+  editSwitchlinkPortIdStart(port: Port, event: any) {
+    this.selectedPort = port;
+    this.newSwitchlinkPortId = port.switchlink_port_id;
+    this.editSwitchlinkPortIdDialog.show(event);
+  }
+
+  editSwitchlinkPortId() {
+    if (this.selectedPort) {
+      this.portService
+        .updateSwitchlinkPortId(this.selectedPort.id, this.newSwitchlinkPortId)
+        .subscribe({
+          next: (response: any) => {
+            this.editedPortEvent.emit(null);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+          }
+        })
+    }
+    this.selectedPort = undefined;
+    this.editSwitchlinkPortIdDialog.hide();
+  }
+
   editParticipants(port: Port, newValue: boolean) {
     this.portService
       .updateParticipants(port.id, newValue)
@@ -92,6 +138,22 @@ export class PortsListComponent implements OnChanges, OnInit {
           this.errorHandler.handleError(err);
         }
       })
+  }
+
+  switchlinkById(id: string | null) {
+    for (let i = 0; i < this.switchlinkOptions.length; i++) {
+      let option: any = this.switchlinkOptions[i];
+      if (option.code == id) return option.name;
+    }
+    return '';
+  }
+
+  switchAddrById(id: string) {
+    for (let i = 0; i < this.switches.length; i++) {
+      let sw: Switch = this.switches[i];
+      if (sw.id == id) return sw.addr;
+    }
+    return '';
   }
 
 }
