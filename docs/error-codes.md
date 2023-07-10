@@ -82,3 +82,10 @@
   * **1**: missing Switches in restart order *additional parameter `missing` with list of missing Switch-IDs*
   * **2**: to many Switches in restart order
   * **3**: not all Switches could be <commited|retreated\> *additional parameter `failed` with list of Switch-IDs where commit/retreat failed*
+
+# system check_integrity error-codes
+
+  * **1**: there is a missmatch in how many switchlinks should exist (<count\>) and do exist (<count\>)
+  * **2**: the following switchlinks do not have a switchlink target defined: <list of Port-IDs\> *additional parameter `nones` with list of Port-IDs without a switchlink target*
+  * **3**: the following ports are used as switchlink targets multiple times: <list of Port-IDs\> *additional parameter `multiuse` with list of Port-IDs that are used multiple times as a target*
+  * **4**: the following ports are not reflected by their switchlink targets: <list of Port-IDs\> *additional parameter `not_reflecting` with list of Port-IDs that are not reflected by their targets*
