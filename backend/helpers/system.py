@@ -21,7 +21,7 @@ def get_open_commits():
     return result
 
 
-def check_integrityy():
+def check_integrity():
     # Testing, that all Ports marked as switchlink do have a switchlink_port_id filled in,
     # all ports are only used once a switchlink_port_id and corresponding Ports reflect each other
     from elements import Port, Switch
