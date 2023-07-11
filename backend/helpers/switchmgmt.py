@@ -10,27 +10,28 @@ def _chain_len(d):
 
 
 def switch_hierarchy():
-    def next_hop(current, parent=None):
+    """
+    builds a dict thats represents the hierachy of Switches conneceted to eachother,
+    starting with the Switch that is hosting the lpos server.
+    this is done by iterating over all switchlink_port_ids of every switchlink-Port contained on a Switch
+    """
+    scanned_switches = list()
+
+    def next_hop(current_sw):
+        scanned_switches.appennd(current_sw['_id'])
         result = dict()
-        for sl in Port.get_switchlinks(current['_id']):
-            sl_result = dict()
-            if parent is None or parent.mac_addr() not in sl.scanned_hosts():
-                for slh in sl.scanned_hosts():
-                    for s in Switch.all():
-                        if s.mac_addr() == slh:
-                            sl_result[s['_id']] = next_hop(s, current)
-            max_id, max_len = (None, None)
-            for s_id, hops_len in [(s_id, _chain_len(hops)) for s_id, hops in sl_result.items()]:
-                if max_len is None or hops_len > max_len:
-                    max_id = s_id
-                    max_len = hops_len
-            if max_id is not None:
-                result[max_id] = sl_result[max_id]
+        for sl in Port.get_switchlinks(current_sw['_id']):
+            if sl.switchlink_port() is None:
+                continue
+            sl_switch = sl.switchlink_port().switch()
+            if sl_switch['_id'] in scanned_switches:
+                continue
+            result[sl_switch['_id']] = next_hop(sl_switch)
         return result
 
     lpos = Port.get_lpos()
     result = dict()
-    result[lpos.switch()['_id']] = next_hop(lpos.switch(), None)
+    result[lpos.switch()['_id']] = next_hop(lpos.switch())
     return result
 
 
