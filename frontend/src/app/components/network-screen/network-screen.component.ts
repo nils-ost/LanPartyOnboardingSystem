@@ -145,11 +145,15 @@ export class NetworkScreenComponent implements OnInit {
             detail: $localize `:@@SystemExecCommitSuccessDetail:all Switches successful commited`,
             life: 6000
           });
+          this.refreshSwitches();
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
           let detail: string = 'unknown';
-          if (this.errorHandler.elementError) detail = this.errorHandler.elementErrors.desc;
+          if (this.errorHandler.elementError) {
+            if (this.errorHandler.elementErrors.code == 1) detail = this.errorHandler.elementErrors.desc + ' ' + this.errorHandler.elementErrors.integrity.desc;
+            else detail = this.errorHandler.elementErrors.desc;
+          }
           this.messageService.add({
             severity: 'error',
             summary: $localize `:@@SystemExecCommitErrorSummary:Error`,
@@ -177,11 +181,15 @@ export class NetworkScreenComponent implements OnInit {
             detail: $localize `:@@SystemExecRetreatSuccessDetail:all Switches successful retreated`,
             life: 6000
           });
+          this.refreshSwitches();
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
           let detail: string = 'unknown';
-          if (this.errorHandler.elementError) detail = this.errorHandler.elementErrors.desc;
+          if (this.errorHandler.elementError) {
+            if (this.errorHandler.elementErrors.code == 1) detail = this.errorHandler.elementErrors.desc + ' ' + this.errorHandler.elementErrors.integrity.desc;
+            else detail = this.errorHandler.elementErrors.desc;
+          }
           this.messageService.add({
             severity: 'error',
             summary: $localize `:@@SystemExecRetreatErrorSummary:Error`,

@@ -9,11 +9,13 @@ def _chain_len(d):
     return result
 
 
-def switch_hierarchy():
+def switch_hierarchy(start_switch=None):
     """
     builds a dict thats represents the hierachy of Switches conneceted to eachother,
     starting with the Switch that is hosting the lpos server.
     this is done by iterating over all switchlink_port_ids of every switchlink-Port contained on a Switch
+
+    if start_switch is set (as Switch or SwitchID) only the subtree starting at this Switch is returend
     """
     scanned_switches = list()
 
@@ -29,13 +31,32 @@ def switch_hierarchy():
             result[sl_switch['_id']] = next_hop(sl_switch)
         return result
 
+    def find_subtree(tree, start_switch):
+        for switch, subtree in tree.items():
+            if switch == start_switch:
+                return {switch: subtree}
+            result = find_subtree(subtree, start_switch)
+            if result is not None:
+                return result
+        return None
+
     lpos = Port.get_lpos()
     result = dict()
     result[lpos.switch()['_id']] = next_hop(lpos.switch())
+    if start_switch is not None and (isinstance(start_switch, Switch) or isinstance(start_switch, str)):
+        if isinstance(start_switch, Switch):
+            start_switch = start_switch['_id']
+        return find_subtree(result, start_switch)
     return result
 
 
-def switch_restart_order():
+def switch_restart_order(start_switch=None):
+    """
+    builds a list of SwitchIDs representing the preferred order of Switches to be restarted
+    this is done by taking the switch_hierarchy into count, from where the most outer leaves are the first Switches to be restarted
+
+    if start_switch is set (as Switch or SwitchID) only the corresponding subtree of switch_hierarchy is returned
+    """
     def determine_restart(d, restart_order):
         for k, v in d.items():
             if _chain_len(v) > 0:
@@ -43,7 +64,7 @@ def switch_restart_order():
             restart_order.append(k)
 
     result = list()
-    determine_restart(switch_hierarchy(), result)
+    determine_restart(switch_hierarchy(start_switch), result)
     return result
 
 

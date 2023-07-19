@@ -266,17 +266,23 @@ class Switch(ElementBase):
         """
         global switch_objects
         from elements import VLAN
+        from helpers.switchmgmt import switch_restart_order
         if not self.connected():
             return False
 
         swi = switch_objects[self['_id']]
-        for vlan in VLAN.get_by_purpose(0):  # Add Play VLAN
+        # Add Mgmt VLAN
+        for vlan in VLAN.get_by_purpose(1):
             swi.vlanAddit(vlan=vlan['number'])
-        for vlan in VLAN.get_by_purpose(1):  # Add Mgmt VLAN
+        # Add Play VLAN
+        for vlan in VLAN.get_by_purpose(0):
             swi.vlanAddit(vlan=vlan['number'])
-        if self['onboarding_vlan_id'] is not None:
-            onboarding_vlan_nb = VLAN.get(self['onboarding_vlan_id'])['number']
-            swi.vlanAddit(vlan=onboarding_vlan_nb)
+        # determine all onboarding VLANs on this and all subsequent Switches
+        for switch_id in switch_restart_order(self['_id']):
+            sw = Switch.get(switch_id)
+            if sw['onboarding_vlan_id'] is not None:
+                onboarding_vlan_nb = VLAN.get(sw['onboarding_vlan_id'])['number']
+                swi.vlanAddit(vlan=onboarding_vlan_nb)
 
         swi.commitNeeded()
         swi.reloadAll()
