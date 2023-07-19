@@ -146,6 +146,7 @@ export class NetworkScreenComponent implements OnInit {
             life: 6000
           });
           this.refreshSwitches();
+          this.refreshPorts();
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
@@ -182,6 +183,7 @@ export class NetworkScreenComponent implements OnInit {
             life: 6000
           });
           this.refreshSwitches();
+          this.refreshPorts();
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);

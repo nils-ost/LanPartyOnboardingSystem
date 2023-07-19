@@ -91,6 +91,8 @@ def switches_commit():
         try:
             if not s.commit_vlans():
                 retry.append(s)
+            elif not s.commit_vlan_memberships():
+                retry.append(s)
         except Exception:
             retry.append(s)
 
@@ -99,6 +101,8 @@ def switches_commit():
         try:
             if not s.commit_vlans():
                 failed.append(s['_id'])
+            elif not s.commit_vlan_memberships():
+                retry.append(s['_id'])
         except Exception:
             failed.append(s['_id'])
 
@@ -129,7 +133,9 @@ def switches_retreat():
     retry = list()
     for s in [Switch.get(sid) for sid in restart_order]:
         try:
-            if not s.retreat_vlans():
+            if not s.retreat_vlan_memberships():
+                retry.append(s)
+            elif not s.retreat_vlans():
                 retry.append(s)
         except Exception:
             retry.append(s)
@@ -137,7 +143,9 @@ def switches_retreat():
     failed = list()
     for s in retry:
         try:
-            if not s.retreat_vlans():
+            if not s.retreat_vlan_memberships():
+                failed.append(s['_id'])
+            elif not s.retreat_vlans():
                 failed.append(s['_id'])
         except Exception:
             failed.append(s['_id'])

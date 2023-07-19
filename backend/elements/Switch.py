@@ -227,6 +227,20 @@ class Switch(ElementBase):
         swi.reloadAll()
         return True
 
+    def retreat_vlan_memberships(self):
+        global switch_objects
+        if not self.connected():
+            return False
+        swi = switch_objects[self['_id']]
+
+        for vlan in swi.vlans:
+            for idx in range(len(swi.ports)):
+                vlan.memberRemove(idx)
+
+        swi.commitNeeded()
+        swi.reloadAll()
+        return True
+
     def retreat(self):
         """
         Removes all configuration eventually made by LPOS from a (Hardware)Switch
@@ -283,6 +297,72 @@ class Switch(ElementBase):
             if sw['onboarding_vlan_id'] is not None:
                 onboarding_vlan_nb = VLAN.get(sw['onboarding_vlan_id'])['number']
                 swi.vlanAddit(vlan=onboarding_vlan_nb)
+
+        swi.commitNeeded()
+        swi.reloadAll()
+        return True
+
+    def commit_vlan_memberships(self):
+        global switch_objects
+        from elements import VLAN, Device, Port
+        from helpers.switchmgmt import switch_restart_order
+        if not self.connected():
+            return False
+        swi = switch_objects[self['_id']]
+
+        # Get Onboarding VLAN number
+        onboarding_vlan_nb = None
+        if self['onboarding_vlan_id'] is not None:
+            onboarding_vlan_nb = self.onboarding_vlan()['number']
+        # Get Mgmt VLAN number
+        mgmt_vlan_nb = 1
+        for vlan in VLAN.get_by_purpose(1):
+            mgmt_vlan_nb = vlan['number']
+        # Get Play VLAN number
+        play_vlan_nb = 1
+        for vlan in VLAN.get_by_purpose(0):
+            play_vlan_nb = vlan['number']
+        # Cache the LPOS-Port
+        lpos_port = Port.get_lpos()
+
+        for idx in range(len(swi.ports)):
+            port = Port.get_by_number(self['_id'], idx)
+            if port == lpos_port:
+                # add mgmt- and play-VLAN
+                swi.vlanEdit(mgmt_vlan_nb, memberAdd=idx)
+                swi.vlanEdit(play_vlan_nb, memberAdd=idx)
+                # add all onboarding-VLANs
+                for switch_id in switch_restart_order(self['_id']):
+                    sw = Switch.get(switch_id)
+                    if sw['onboarding_vlan_id'] is not None:
+                        swi.vlanEdit(sw.onboarding_vlan()['number'], memberAdd=idx)
+            elif port['switchlink']:
+                # add mgmt- and play-VLAN
+                swi.vlanEdit(mgmt_vlan_nb, memberAdd=idx)
+                swi.vlanEdit(play_vlan_nb, memberAdd=idx)
+                # add subsequent onboarding-VLANs
+                for switch_id in switch_restart_order(port.switchlink_port().switch()):
+                    sw = Switch.get(switch_id)
+                    if sw['onboarding_vlan_id'] is not None:
+                        swi.vlanEdit(sw.onboarding_vlan()['number'], memberAdd=idx)
+            elif onboarding_vlan_nb is None:
+                # this is an core Switch, all not switchlinks get the play-VLAN
+                swi.vlanEdit(play_vlan_nb, memberAdd=idx)
+            elif not port['participants']:
+                # not designated to participants, gets play-VLAN but not onboarding-VLAN
+                swi.vlanEdit(play_vlan_nb, memberAdd=idx)
+                swi.vlanEdit(onboarding_vlan_nb, memberRemove=idx)
+            else:
+                for device in Device.get_by_port(port['_id']):
+                    if device['ip'] is not None:
+                        # a valid configured Device is connected to this Port, therefor give it access to play-VLAN
+                        swi.vlanEdit(play_vlan_nb, memberAdd=idx)
+                        swi.vlanEdit(onboarding_vlan_nb, memberRemove=idx)
+                        break
+                else:
+                    # no configured Device on this Port, connect it to the onboarding-VLAN
+                    swi.vlanEdit(play_vlan_nb, memberRemove=idx)
+                    swi.vlanEdit(onboarding_vlan_nb, memberAdd=idx)
 
         swi.commitNeeded()
         swi.reloadAll()
