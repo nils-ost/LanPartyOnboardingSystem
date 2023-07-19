@@ -18,7 +18,7 @@ def switch_hierarchy():
     scanned_switches = list()
 
     def next_hop(current_sw):
-        scanned_switches.appennd(current_sw['_id'])
+        scanned_switches.append(current_sw['_id'])
         result = dict()
         for sl in Port.get_switchlinks(current_sw['_id']):
             if sl.switchlink_port() is None:
@@ -53,29 +53,36 @@ def switches_commit():
     this is done in an order that is unlikely to lock a Switch.
     The order is determined by switch_restart_order
     """
+    from helpers.system import check_integrity
+    integrity = check_integrity()
+    if not integrity.get('code', 1) == 0:
+        return {'code': 1, 'desc': 'system integrity check failed', 'integrity': integrity}
+
     restart_order = switch_restart_order()
     if len(restart_order) < Switch.count():
         missing = list([s['_id'] for s in Switch.all() if s['_id'] not in restart_order])
-        return {'code': 1, 'desc': 'missing Switches in restart order', 'missing': missing}
+        return {'code': 2, 'desc': 'missing Switches in restart order', 'missing': missing}
     elif len(restart_order) > Switch.count():
-        return {'code': 2, 'desc': 'to many Switches in restart order'}
+        return {'code': 3, 'desc': 'to many Switches in restart order'}
 
     retry = list()
     for s in [Switch.get(sid) for sid in restart_order]:
         try:
-            s.commit()
+            if not s.commit_vlans():
+                retry.append(s)
         except Exception:
             retry.append(s)
 
     failed = list()
     for s in retry:
         try:
-            s.commit()
+            if not s.commit_vlans():
+                failed.append(s['_id'])
         except Exception:
             failed.append(s['_id'])
 
     if len(failed) > 0:
-        return {'code': 3, 'desc': 'not all Switches could be commited', 'failed': failed}
+        return {'code': 4, 'desc': 'not all Switches could be commited', 'failed': failed}
     else:
         return {'code': 0, 'desc': 'done'}
 
@@ -86,28 +93,35 @@ def switches_retreat():
     this is done in an order that is unlikely to lock a Switch.
     The order is determined by switch_restart_order
     """
+    from helpers.system import check_integrity
+    integrity = check_integrity()
+    if not integrity.get('code', 1) == 0:
+        return {'code': 1, 'desc': 'system integrity check failed', 'integrity': integrity}
+
     restart_order = switch_restart_order()
     if len(restart_order) < Switch.count():
         missing = list([s['_id'] for s in Switch.all() if s['_id'] not in restart_order])
-        return {'code': 1, 'desc': 'missing Switches in restart order', 'missing': missing}
+        return {'code': 2, 'desc': 'missing Switches in restart order', 'missing': missing}
     elif len(restart_order) > Switch.count():
-        return {'code': 2, 'desc': 'to many Switches in restart order'}
+        return {'code': 3, 'desc': 'to many Switches in restart order'}
 
     retry = list()
     for s in [Switch.get(sid) for sid in restart_order]:
         try:
-            s.retreat()
+            if not s.retreat_vlans():
+                retry.append(s)
         except Exception:
             retry.append(s)
 
     failed = list()
     for s in retry:
         try:
-            s.retreat()
+            if not s.retreat_vlans():
+                failed.append(s['_id'])
         except Exception:
             failed.append(s['_id'])
 
     if len(failed) > 0:
-        return {'code': 3, 'desc': 'not all Switches could be retreated', 'failed': failed}
+        return {'code': 4, 'desc': 'not all Switches could be retreated', 'failed': failed}
     else:
         return {'code': 0, 'desc': 'done'}

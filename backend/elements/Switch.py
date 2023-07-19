@@ -206,6 +206,27 @@ class Switch(ElementBase):
         swi.commitNeeded()
         return 0
 
+    def retreat_vlans(self):
+        """
+        Removes all VLAN configuration eventually made by LPOS from a (Hardware)Switch
+        but the Switch-Configuration within LPOS is left untouched
+        """
+        global switch_objects
+        if not self.connected():
+            return False
+        swi = switch_objects[self['_id']]
+        swi.setMgmtVlan(None)
+
+        vlan_ids = list()
+        for vlan in swi.vlans:
+            vlan_ids.append(vlan.id)
+        for vlan_id in vlan_ids:
+            swi.vlanRemove(vlan_id)
+
+        swi.commitNeeded()
+        swi.reloadAll()
+        return True
+
     def retreat(self):
         """
         Removes all configuration eventually made by LPOS from a (Hardware)Switch
@@ -238,6 +259,28 @@ class Switch(ElementBase):
         if self.count() == docDB.count(self.__class__.__name__, {'commited': False}):
             from helpers.system import set_commited
             set_commited(False)
+
+    def commit_vlans(self):
+        """
+        Sends VLAN configuration made in LPOS to a (Hardware)Switch
+        """
+        global switch_objects
+        from elements import VLAN
+        if not self.connected():
+            return False
+
+        swi = switch_objects[self['_id']]
+        for vlan in VLAN.get_by_purpose(0):  # Add Play VLAN
+            swi.vlanAddit(vlan=vlan['number'])
+        for vlan in VLAN.get_by_purpose(1):  # Add Mgmt VLAN
+            swi.vlanAddit(vlan=vlan['number'])
+        if self['onboarding_vlan_id'] is not None:
+            onboarding_vlan_nb = VLAN.get(self['onboarding_vlan_id'])['number']
+            swi.vlanAddit(vlan=onboarding_vlan_nb)
+
+        swi.commitNeeded()
+        swi.reloadAll()
+        return True
 
     def commit(self):
         """

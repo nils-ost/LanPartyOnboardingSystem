@@ -53,7 +53,7 @@ def check_integrity():
         return {'code': 2, 'desc': f'the following switchlinks do not have a switchlink target defined: {none_on}', 'nones': none_on}
 
     # error for usage
-    if not len(used.key()) == switchlinks_count:
+    if not len(used.keys()) == switchlinks_count:
         multiuse = list()
         for sl, p in used.items():
             if len(p) > 1:

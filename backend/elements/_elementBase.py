@@ -79,8 +79,8 @@ class ElementBase(object):
         return result
 
     @classmethod
-    def count(cls):
-        return docDB.count(cls.__name__, {})
+    def count(cls, filter={}):
+        return docDB.count(cls.__name__, filter)
 
     def validate_base(self):
         errors = dict()

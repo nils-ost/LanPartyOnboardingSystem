@@ -79,9 +79,10 @@
 
 # switchs_commit/_retreat error-codes
 
-  * **1**: missing Switches in restart order *additional parameter `missing` with list of missing Switch-IDs*
-  * **2**: to many Switches in restart order
-  * **3**: not all Switches could be <commited|retreated\> *additional parameter `failed` with list of Switch-IDs where commit/retreat failed*
+  * **1**: system integrity check failed *additional parameter `integrity` containing the result dict of check_integrity*
+  * **2**: missing Switches in restart order *additional parameter `missing` with list of missing Switch-IDs*
+  * **3**: to many Switches in restart order
+  * **4**: not all Switches could be <commited|retreated\> *additional parameter `failed` with list of Switch-IDs where commit/retreat failed*
 
 # system check_integrity error-codes
 
