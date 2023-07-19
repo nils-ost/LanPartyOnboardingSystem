@@ -66,3 +66,10 @@ def check_integrity():
 
     # returning code, that is signaling the whole check is completed and resultet in no errors
     return {'code': 0, 'desc': 'check ok'}
+
+    # TODO:
+    # pruefen, dass groeße der IP-Pools zu vohanden Sitzen am tisch passt
+    # pruefen, dass fuer jeden tisch ein play IpPool vorhanden - obsolet, macht Table element selbst
+    # pruefen, dass ein additional play IpPool vorhanden - obsolet, macht Table element selbst
+    # pruefen, dass fuer jedes OnBoarding VLAN ein IpPool vorhanden
+    # pruefen, dass ein mgmt IpPool vorhanden

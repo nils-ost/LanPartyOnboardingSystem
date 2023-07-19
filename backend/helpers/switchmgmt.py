@@ -86,28 +86,48 @@ def switches_commit():
     elif len(restart_order) > Switch.count():
         return {'code': 3, 'desc': 'to many Switches in restart order'}
 
-    retry = list()
-    for s in [Switch.get(sid) for sid in restart_order]:
-        try:
-            if not s.commit_vlans():
-                retry.append(s)
-            elif not s.commit_vlan_memberships():
-                retry.append(s)
-        except Exception:
-            retry.append(s)
+    # stages are executed in the order of appearence
+    stages = ['vlans', 'vlan_memberships']
+    switches = list([Switch.get(sid) for sid in restart_order])
+    fails = list()
 
-    failed = list()
-    for s in retry:
-        try:
-            if not s.commit_vlans():
-                failed.append(s['_id'])
-            elif not s.commit_vlan_memberships():
-                retry.append(s['_id'])
-        except Exception:
-            failed.append(s['_id'])
+    for stage in stages:
+        retry = False
+        to_retry = list()
+        stage_fail = list()
+        switches_to_exec = switches
+        while True:
+            for s in switches_to_exec:
+                fail = False
+                executor = None
+                if stage == 'vlans':
+                    executor = s._commit_vlans
+                elif stage == 'vlan_memberships':
+                    executor = s._commit_vlan_memberships
 
-    if len(failed) > 0:
-        return {'code': 4, 'desc': 'not all Switches could be commited', 'failed': failed}
+                try:
+                    if not executor():
+                        fail = True
+                except Exception:
+                    fail = True
+
+                if fail:
+                    if retry:
+                        stage_fail.append(s)
+                    else:
+                        to_retry.append(s)
+
+            if retry or len(to_retry) == 0:
+                break
+            switches_to_exec = to_retry
+            retry = True
+
+        for s in stage_fail:
+            fails.append((s['_id'], stage))
+            switches.remove(s)
+
+    if len(fails) > 0:
+        return {'code': 4, 'desc': 'not all Switches could be commited', 'failed': fails}
     else:
         return {'code': 0, 'desc': 'done'}
 
@@ -130,27 +150,47 @@ def switches_retreat():
     elif len(restart_order) > Switch.count():
         return {'code': 3, 'desc': 'to many Switches in restart order'}
 
-    retry = list()
-    for s in [Switch.get(sid) for sid in restart_order]:
-        try:
-            if not s.retreat_vlan_memberships():
-                retry.append(s)
-            elif not s.retreat_vlans():
-                retry.append(s)
-        except Exception:
-            retry.append(s)
+    # stages are executed in the order of appearence
+    stages = ['vlan_memberships', 'vlans']
+    switches = list([Switch.get(sid) for sid in restart_order])
+    fails = list()
 
-    failed = list()
-    for s in retry:
-        try:
-            if not s.retreat_vlan_memberships():
-                failed.append(s['_id'])
-            elif not s.retreat_vlans():
-                failed.append(s['_id'])
-        except Exception:
-            failed.append(s['_id'])
+    for stage in stages:
+        retry = False
+        to_retry = list()
+        stage_fail = list()
+        switches_to_exec = switches
+        while True:
+            for s in switches_to_exec:
+                fail = False
+                executor = None
+                if stage == 'vlans':
+                    executor = s._retreat_vlans
+                elif stage == 'vlan_memberships':
+                    executor = s._retreat_vlan_memberships
 
-    if len(failed) > 0:
-        return {'code': 4, 'desc': 'not all Switches could be retreated', 'failed': failed}
+                try:
+                    if not executor():
+                        fail = True
+                except Exception:
+                    fail = True
+
+                if fail:
+                    if retry:
+                        stage_fail.append(s)
+                    else:
+                        to_retry.append(s)
+
+            if retry or len(to_retry) == 0:
+                break
+            switches_to_exec = to_retry
+            retry = True
+
+        for s in stage_fail:
+            fails.append((s['_id'], stage))
+            switches.remove(s)
+
+    if len(fails) > 0:
+        return {'code': 4, 'desc': 'not all Switches could be retreated', 'failed': fails}
     else:
         return {'code': 0, 'desc': 'done'}

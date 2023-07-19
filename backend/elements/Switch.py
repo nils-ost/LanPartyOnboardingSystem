@@ -206,9 +206,9 @@ class Switch(ElementBase):
         swi.commitNeeded()
         return 0
 
-    def retreat_vlans(self):
+    def _retreat_vlans(self):
         """
-        Removes all VLAN configuration eventually made by LPOS from a (Hardware)Switch
+        Removes all configured VLANs eventually made by LPOS from a (Hardware)Switch
         but the Switch-Configuration within LPOS is left untouched
         """
         global switch_objects
@@ -227,7 +227,11 @@ class Switch(ElementBase):
         swi.reloadAll()
         return True
 
-    def retreat_vlan_memberships(self):
+    def _retreat_vlan_memberships(self):
+        """
+        Removes all configured VLAN-memberships eventually made by LPOS from a (Hardware)Switch
+        but the Switch-Configuration within LPOS is left untouched
+        """
         global switch_objects
         if not self.connected():
             return False
@@ -246,35 +250,21 @@ class Switch(ElementBase):
         Removes all configuration eventually made by LPOS from a (Hardware)Switch
         but the Switch-Configuration within LPOS is left untouched
         """
-        global switch_objects
-        if not self.connected():
-            return
-        swi = switch_objects[self['_id']]
-        swi.setMgmtVlan(None)
-        for port in swi.ports:
-            missing_fwd = list()
-            swi.portEdit(port, enabled=True, vmode='optional', vreceive='any', vdefault=1, vforce=False)
-            for idx in range(len(swi.ports)):
-                if idx == port.idx:
-                    continue
-                if idx not in port._fwd:
-                    missing_fwd.append(idx)
-            for idx in missing_fwd:
-                swi.portEdit(port, fwdTo=idx)
-        vlan_ids = list()
-        for vlan in swi.vlans:
-            vlan_ids.append(vlan.id)
-        for vlan_id in vlan_ids:
-            swi.vlanRemove(vlan_id)
-        swi.commitNeeded()
-        swi.reloadAll()
+        stages = [self._retreat_vlan_memberships, self._retreat_vlans]
+        for stage in stages:
+            try:
+                if not stage():
+                    return False
+            except Exception:
+                return False
+
         self['commited'] = False
         self.save()
         if self.count() == docDB.count(self.__class__.__name__, {'commited': False}):
             from helpers.system import set_commited
             set_commited(False)
 
-    def commit_vlans(self):
+    def _commit_vlans(self):
         """
         Sends VLAN configuration made in LPOS to a (Hardware)Switch
         """
@@ -302,7 +292,10 @@ class Switch(ElementBase):
         swi.reloadAll()
         return True
 
-    def commit_vlan_memberships(self):
+    def _commit_vlan_memberships(self):
+        """
+        Sends VLAN-Port-membership configuration made in LPOS to a (Hardware)Switch
+        """
         global switch_objects
         from elements import VLAN, Device, Port
         from helpers.switchmgmt import switch_restart_order
@@ -372,31 +365,14 @@ class Switch(ElementBase):
         """
         Sends all required configuration made in LPOS to a (Hardware)Switch
         """
-        global switch_objects
-        from elements import VLAN, Port, Device
-        if not self.connected():
-            return
-        swi = switch_objects[self['_id']]
-        for vlan in VLAN.get_by_purpose(0):  # Add Play VLAN
-            swi.vlanAddit(vlan=vlan['number'])
-        mgmt_vlan_nb = 1
-        for vlan in VLAN.get_by_purpose(1):  # Add Mgmt VLAN
-            swi.vlanAddit(vlan=vlan['number'])
-            mgmt_vlan_nb = vlan['number']
+        stages = [self._commit_vlans, self._commit_vlan_memberships]
+        for stage in stages:
+            try:
+                if not stage():
+                    return False
+            except Exception:
+                return False
 
-        for idx in range(len(swi.ports)):  # TODO: maybe rework later on
-            port = Port.get_by_number(self['_id'], idx)
-            if self['onboarding_vlan_id'] is not None:
-                onboarding_vlan_nb = VLAN.get(self['onboarding_vlan_id'])['number']
-                swi.vlanAddit(vlan=onboarding_vlan_nb)
-                if not port['switchlink'] and len(Device.get_by_port(port['_id'])) == 0:
-                    swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=onboarding_vlan_nb, vforce=True)
-            if port['switchlink']:
-                swi.portEdit(idx, vmode='optional', vreceive='only tagged', vdefault=mgmt_vlan_nb, vforce=False)
-                for vlan in swi.vlans:
-                    swi.vlanEdit(vlan, memberAdd=idx)
-        swi.commitNeeded()
-        swi.reloadAll()
         self['commited'] = True
         self.save()
         if self.count() == docDB.count(self.__class__.__name__, {'commited': True}):
