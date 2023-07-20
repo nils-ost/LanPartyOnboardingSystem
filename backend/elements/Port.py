@@ -37,7 +37,7 @@ class Port(ElementBase):
         for mac in my_macs:
             d = Device.get_by_mac(mac)
             if d is not None and d['port_id'] is not None:
-                return Port.get(d['port_id'])
+                return d.port()
         return None
 
     @classmethod
@@ -88,6 +88,8 @@ class Port(ElementBase):
         if slp is not None and not slp['switchlink_port_id'] == self['_id']:
             slp['switchlink_port_id'] = self['_id']
             slp.save()
+        if self._cache['switchlink_port_id_fromdb'] is not None and self['switchlink_port_id'] is None and self['switchlink']:
+            self.switch().scan_devices()
 
     def delete_post(self):
         slp = self.switchlink_port()

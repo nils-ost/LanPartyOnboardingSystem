@@ -42,6 +42,8 @@ def switch_hierarchy(start_switch=None):
 
     lpos = Port.get_lpos()
     result = dict()
+    if lpos is None:
+        return result
     result[lpos.switch()['_id']] = next_hop(lpos.switch())
     if start_switch is not None and (isinstance(start_switch, Switch) or isinstance(start_switch, str)):
         if isinstance(start_switch, Switch):

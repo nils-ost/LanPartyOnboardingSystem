@@ -107,11 +107,14 @@ class Switch(ElementBase):
                 elif device is None:
                     # skip as this is a switchlink port and regular devices are not connected on switchlink ports
                     pass
-                elif p['switchlink'] and device.port() is not None and device.port() == p:
+                elif p['switchlink'] and device['port_id'] is not None and device.port() == p:
                     # remove the port from this device as the current port is a switchlink port, those do not connect devices
                     device['port_id'] = None
                     device.save()
-                elif not p['switchlink'] and device.port() is not None and not device.port() == p:
+                elif not p['switchlink'] and device['port_id'] is None:
+                    device.port(p)
+                    device.save()
+                elif not p['switchlink'] and device['port_id'] is not None and not device.port() == p:
                     other_port = device.port()
                     try:
                         other_port = switch_objects[other_port['switch_id']].ports[other_port['number']]
@@ -120,7 +123,7 @@ class Switch(ElementBase):
                             device.save()
                     except Exception:
                         pass
-            if not switchlink == p['switchlink']:
+            if not switchlink == p['switchlink'] and p['switchlink_port_id'] is None:
                 p['switchlink'] = switchlink
                 p.save()
         return new_count
