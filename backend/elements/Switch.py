@@ -248,17 +248,56 @@ class Switch(ElementBase):
         swi.reloadAll()
         return True
 
+    def _retreat_isolation(self):
+        """
+        Removes all configured Port-isolations eventually made by LPOS from a (Hardware)Switch
+        but the Switch-Configuration within LPOS is left untouched
+        """
+        global switch_objects
+        if not self.connected():
+            return False
+        swi = switch_objects[self['_id']]
+
+        for idx in range(len(swi.ports)):
+            for idy in range(len(swi.ports)):
+                if idx == idy:
+                    continue
+                swi.portEdit(idx, fwdTo=idy)
+
+        swi.commitNeeded()
+        swi.reloadAll()
+        return True
+
+    def _retreat_port_vlans(self):
+        """
+        Removes all Port-level VLAN configuration eventually made by LPOS from a (Hardware)Switch
+        but the Switch-Configuration within LPOS is left untouched
+        """
+        global switch_objects
+        if not self.connected():
+            return False
+        swi = switch_objects[self['_id']]
+
+        for idx in range(len(swi.ports)):
+            swi.portEdit(idx, enabled=True, vmode='optional', vreceive='any', vdefault=1, vforce=False)
+
+        swi.commitNeeded()
+        swi.reloadAll()
+        return True
+
     def retreat(self):
         """
         Removes all configuration eventually made by LPOS from a (Hardware)Switch
         but the Switch-Configuration within LPOS is left untouched
         """
-        stages = [self._retreat_vlan_memberships, self._retreat_vlans]
+        stages = [self._retreat_port_vlans, self._retreat_isolation, self._retreat_vlan_memberships, self._retreat_vlans]
         for stage in stages:
             try:
                 if not stage():
                     return False
-            except Exception:
+            except Exception as e:
+                print(e)
+                print(repr(e))
                 return False
 
         self['commited'] = False
@@ -364,11 +403,105 @@ class Switch(ElementBase):
         swi.reloadAll()
         return True
 
+    def _commit_isolation(self):
+        """
+        Sends Port-isolation configuration made in LPOS to a (Hardware)Switch
+        """
+        global switch_objects
+        from elements import Device, Port
+        if not self.connected():
+            return False
+        swi = switch_objects[self['_id']]
+
+        # Cache the LPOS-Port
+        lpos_port = Port.get_lpos()
+
+        for idx in range(len(swi.ports)):
+            port = Port.get_by_number(self['_id'], idx)
+            onboarding = None
+            if port == lpos_port or port['switchlink'] or self['onboarding_vlan_id'] is None or not port['participants']:
+                onboarding = False
+            else:
+                for device in Device.get_by_port(port['_id']):
+                    if device['ip'] is not None:
+                        # a valid configured Device is connected to this Port, therefor give it access to the network
+                        onboarding = False
+                        break
+                else:
+                    # no configured Device on this Port, only give it access to onboarding
+                    onboarding = True
+
+            for idy in range(len(swi.ports)):
+                if idx == idy:
+                    continue
+                porty = Port.get_by_number(self['_id'], idy)
+                if not onboarding or porty == lpos_port or porty['switchlink']:
+                    swi.portEdit(idx, fwdTo=idy)
+                else:
+                    swi.portEdit(idx, fwdNotTo=idy)
+
+        swi.commitNeeded()
+        swi.reloadAll()
+        return True
+
+    def _commit_port_vlans(self):
+        """
+        Sends Port-level VLAN configuration made in LPOS to a (Hardware)Switch
+        """
+        global switch_objects
+        from elements import Device, Port, VLAN
+        if not self.connected():
+            return False
+        swi = switch_objects[self['_id']]
+
+        # Get Onboarding VLAN number
+        onboarding_vlan_nb = None
+        if self['onboarding_vlan_id'] is not None:
+            onboarding_vlan_nb = self.onboarding_vlan()['number']
+        # Get Mgmt VLAN number
+        mgmt_vlan_nb = 1
+        for vlan in VLAN.get_by_purpose(1):
+            mgmt_vlan_nb = vlan['number']
+        # Get Play VLAN number
+        play_vlan_nb = 1
+        for vlan in VLAN.get_by_purpose(0):
+            play_vlan_nb = vlan['number']
+        # Cache the LPOS-Port
+        lpos_port = Port.get_lpos()
+
+        for idx in range(len(swi.ports)):
+            port = Port.get_by_number(self['_id'], idx)
+            if port == lpos_port:
+                # add mgmt-VLAN as default
+                swi.portEdit(idx, vmode='strict', vreceive='any', vdefault=mgmt_vlan_nb, vforce=False)
+            elif port['switchlink']:
+                # play-VLAN as default
+                swi.portEdit(idx, vmode='strict', vreceive='only tagged', vdefault=play_vlan_nb, vforce=False)
+            elif onboarding_vlan_nb is None:
+                # this is an core Switch, all not switchlinks get the play-VLAN
+                swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=play_vlan_nb, vforce=False)
+            elif not port['participants']:
+                # not designated to participants, but gets play-VLAN as default
+                swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=play_vlan_nb, vforce=False)
+            else:
+                for device in Device.get_by_port(port['_id']):
+                    if device['ip'] is not None:
+                        # a valid configured Device is connected to this Port, therefor defaults to play-VLAN
+                        swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=play_vlan_nb, vforce=False)
+                        break
+                else:
+                    # no configured Device on this Port, defaults to onboarding-VLAN
+                    swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=onboarding_vlan_nb, vforce=False)
+
+        swi.commitNeeded()
+        swi.reloadAll()
+        return True
+
     def commit(self):
         """
         Sends all required configuration made in LPOS to a (Hardware)Switch
         """
-        stages = [self._commit_vlans, self._commit_vlan_memberships]
+        stages = [self._commit_vlans, self._commit_vlan_memberships, self._commit_isolation, self._commit_port_vlans]
         for stage in stages:
             try:
                 if not stage():

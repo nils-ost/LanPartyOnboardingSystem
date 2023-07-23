@@ -89,7 +89,7 @@ def switches_commit():
         return {'code': 3, 'desc': 'to many Switches in restart order'}
 
     # stages are executed in the order of appearence
-    stages = ['vlans', 'vlan_memberships']
+    stages = ['vlans', 'vlan_memberships', 'isolation', 'port_vlans']
     switches = list([Switch.get(sid) for sid in restart_order])
     fails = list()
 
@@ -106,6 +106,10 @@ def switches_commit():
                     executor = s._commit_vlans
                 elif stage == 'vlan_memberships':
                     executor = s._commit_vlan_memberships
+                elif stage == 'isolation':
+                    executor = s._commit_isolation
+                elif stage == 'port_vlans':
+                    executor = s._commit_port_vlans
 
                 try:
                     if not executor():
@@ -153,7 +157,7 @@ def switches_retreat():
         return {'code': 3, 'desc': 'to many Switches in restart order'}
 
     # stages are executed in the order of appearence
-    stages = ['vlan_memberships', 'vlans']
+    stages = ['port_vlans', 'isolation', 'vlan_memberships', 'vlans']
     switches = list([Switch.get(sid) for sid in restart_order])
     fails = list()
 
@@ -170,6 +174,10 @@ def switches_retreat():
                     executor = s._retreat_vlans
                 elif stage == 'vlan_memberships':
                     executor = s._retreat_vlan_memberships
+                elif stage == 'isolation':
+                    executor = s._retreat_isolation
+                elif stage == 'port_vlans':
+                    executor = s._retreat_port_vlans
 
                 try:
                     if not executor():

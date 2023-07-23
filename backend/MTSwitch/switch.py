@@ -6,29 +6,30 @@ from .parts import SwitchPort, SwitchVLAN
 
 
 model_mapping = dict()
-speed_mapping = {
-    '0x00': '10M',
-    '0x01': '100M',
-    '0x02': '1G',
-    '0x03': '10G',
-    '0x07': None
-}
-vlan_mode_mapping = {
-    '0x00': 'disabled',
-    '0x01': 'optional',
-    '0x02': 'enabled',
-    '0x03': 'strict'
-}
-vlan_mode_mapping_reverse = dict([(v, k) for k, v in vlan_mode_mapping.items()])
-vlan_receive_mapping = {
-    '0x00': 'any',
-    '0x01': 'only tagged',
-    '0x02': 'only untagged'
-}
-vlan_receive_mapping_reverse = dict([(v, k) for k, v in vlan_receive_mapping.items()])
 
 
 class MikroTikSwitch():
+    speed_mapping = {
+        '0x00': '10M',
+        '0x01': '100M',
+        '0x02': '1G',
+        '0x03': '10G',
+        '0x07': None
+    }
+    vlan_mode_mapping = {
+        '0x00': 'disabled',
+        '0x01': 'optional',
+        '0x02': 'enabled',
+        '0x03': 'strict'
+    }
+    vlan_mode_mapping_reverse = dict([(v, k) for k, v in vlan_mode_mapping.items()])
+    vlan_receive_mapping = {
+        '0x00': 'any',
+        '0x01': 'only tagged',
+        '0x02': 'only untagged'
+    }
+    vlan_receive_mapping_reverse = dict([(v, k) for k, v in vlan_receive_mapping.items()])
+
     logger = logging.getLogger('MikroTikSwitch')
 
     def __init__(self, host, user, password):
@@ -159,11 +160,11 @@ class MikroTikSwitch():
             self.ports[idx].link = lnk[idx] == '1'
             self.ports[idx].name = asciiToStr(r.get('nm', list())[idx])
             spd = r.get('spd', list())[idx]
-            if spd not in speed_mapping:
+            if spd not in self.speed_mapping:
                 self.logger.warning(f"loadPorts: Detected speed {spd} can't be found in speed_mapping, replacing it by None")
                 spd = None
             else:
-                spd = speed_mapping[spd]
+                spd = self.speed_mapping[spd]
             self.ports[idx].speed = spd
         self._commitUnregister('ports')
 
@@ -242,15 +243,15 @@ class MikroTikSwitch():
         fvid = fvid[::-1] + '0' * (len(self.ports) - len(fvid))
         for idx in range(len(self.ports)):
             mode = r.get('vlan', list())[idx]
-            if mode not in vlan_mode_mapping:
+            if mode not in self.vlan_mode_mapping:
                 self.logger.warning(f"loadPortsVlan: Detected vlan_mode {mode} can't be found in vlan_mode_mapping")
             else:
-                self.ports[idx].vlan_mode = vlan_mode_mapping[mode]
+                self.ports[idx].vlan_mode = self.vlan_mode_mapping[mode]
             receive = r.get('vlni', list())[idx]
-            if receive not in vlan_receive_mapping:
+            if receive not in self.vlan_receive_mapping:
                 self.logger.warning(f"loadPortsVlan: Detected vlan_receive {receive} can't be found in vlan_receive_mapping")
             else:
-                self.ports[idx].vlan_receive = vlan_receive_mapping[receive]
+                self.ports[idx].vlan_receive = self.vlan_receive_mapping[receive]
             self.ports[idx].vlan_default = int(r.get('dvid', list())[idx], 16)
             self.ports[idx].vlan_force = fvid[idx] == '1'
         self._commitUnregister('portsvlan')
@@ -330,17 +331,17 @@ class MikroTikSwitch():
         r['dvid'] = list()
         fvid = ''
         for port in self.ports:
-            if port.vlan_mode not in vlan_mode_mapping_reverse:
+            if port.vlan_mode not in self.vlan_mode_mapping_reverse:
                 self.logger.error(f'commitPortsVlan: vlan_mode {port.vlan_mode} of Port {port.idx} not found in vlan_mode_mapping_reverse. Assumeing 0x02')
                 r['vlan'].append('0x02')
             else:
-                r['vlan'].append(vlan_mode_mapping_reverse[port.vlan_mode])
-            if port.vlan_receive not in vlan_receive_mapping_reverse:
+                r['vlan'].append(self.vlan_mode_mapping_reverse[port.vlan_mode])
+            if port.vlan_receive not in self.vlan_receive_mapping_reverse:
                 self.logger.error(
                     f'commitPortsVlan: vlan_receive {port.vlan_receive} of Port {port.idx} not found in vlan_receive_mapping_reverse. Assumeing 0x02')
                 r['vlni'].append('0x02')
             else:
-                r['vlni'].append(vlan_receive_mapping_reverse[port.vlan_receive])
+                r['vlni'].append(self.vlan_receive_mapping_reverse[port.vlan_receive])
             dvid = hex(port.vlan_default).replace('0x', '')
             r['dvid'].append('0x' + '0' * (len(dvid) % 2) + dvid)
             fvid += '1' if port.vlan_force else '0'
@@ -393,18 +394,18 @@ class MikroTikSwitch():
             if self.ports[port].fwdNotTo(fwdNotTo):
                 self._commitRegister('isolation')
         if vmode is not None:
-            if vmode in vlan_mode_mapping:
-                vmode = vlan_mode_mapping[vmode]
-            if vmode in vlan_mode_mapping_reverse:
+            if vmode in self.vlan_mode_mapping:
+                vmode = self.vlan_mode_mapping[vmode]
+            if vmode in self.vlan_mode_mapping_reverse:
                 if not vmode == self.ports[port].vlan_mode:
                     self.ports[port].vlan_mode = vmode
                     self._commitRegister('portsvlan')
             else:
                 self.logger.error(f'portEdit: unknown vmode {vmode}')
         if vreceive is not None:
-            if vreceive in vlan_receive_mapping:
-                vreceive = vlan_receive_mapping[vreceive]
-            if vreceive in vlan_receive_mapping_reverse:
+            if vreceive in self.vlan_receive_mapping:
+                vreceive = self.vlan_receive_mapping[vreceive]
+            if vreceive in self.vlan_receive_mapping_reverse:
                 if not vreceive == self.ports[port].vlan_receive:
                     self.ports[port].vlan_receive = vreceive
                     self._commitRegister('portsvlan')
@@ -576,6 +577,13 @@ class MikroTikSwitchCSS326(MikroTikSwitch):
 
 
 class MikroTikSwitchCSS610(MikroTikSwitch):
+    vlan_mode_mapping = {
+        '0x00': 'disabled',
+        '0x01': 'optional',
+        '0x02': 'strict'
+    }
+    vlan_mode_mapping_reverse = dict([(v, k) for k, v in vlan_mode_mapping.items()])
+
     _translations = {
         'sys.b': {'i07': 'brd', 'i05': 'id', 'i03': 'mac', 'i1b': 'avln'},
         'link.b': {'i0a': 'nm', 'i08': 'spd', 'i06': 'lnk', 'i01': 'en'},
