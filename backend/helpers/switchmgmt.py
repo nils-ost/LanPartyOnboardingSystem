@@ -132,9 +132,14 @@ def switches_commit():
             fails.append((s['_id'], stage))
             switches.remove(s)
 
+    for s in switches:
+        s['commited'] = True
+        s.save()
     if len(fails) > 0:
         return {'code': 4, 'desc': 'not all Switches could be commited', 'failed': fails}
     else:
+        from helpers.system import set_commited
+        set_commited(True)
         return {'code': 0, 'desc': 'done'}
 
 
@@ -200,7 +205,12 @@ def switches_retreat():
             fails.append((s['_id'], stage))
             switches.remove(s)
 
+    for s in switches:
+        s['commited'] = False
+        s.save()
     if len(fails) > 0:
         return {'code': 4, 'desc': 'not all Switches could be retreated', 'failed': fails}
     else:
+        from helpers.system import set_commited
+        set_commited(False)
         return {'code': 0, 'desc': 'done'}

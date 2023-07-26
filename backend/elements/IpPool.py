@@ -11,6 +11,15 @@ class IpPool(ElementBase):
         vlan_id=ElementBase.addAttr(notnone=True, fk='VLAN')
     )
 
+    @classmethod
+    def get_by_vlan(cls, vlan_id):
+        result = list()
+        for fromdb in docDB.search_many(cls.__name__, {'vlan_id': vlan_id}):
+            r = cls()
+            r._attr = fromdb
+            result.append(r)
+        return result
+
     def octetts_to_int(oct1, oct2, oct3, oct4):
         r = list()
         r.append(hex(oct1).replace('0x', ''))
