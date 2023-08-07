@@ -9,7 +9,9 @@ class Device(ElementBase):
         participant_id=ElementBase.addAttr(fk='Participant'),
         ip_pool_id=ElementBase.addAttr(fk='IpPool'),
         ip=ElementBase.addAttr(type=int, unique=True),
-        port_id=ElementBase.addAttr(default=None, fk='Port')
+        port_id=ElementBase.addAttr(default=None, fk='Port'),
+        onboarding_blocked=ElementBase.addAttr(type=bool, default=False),
+        pw_strikes=ElementBase.addAttr(type=int, default=0)
     )
 
     @classmethod
@@ -29,6 +31,15 @@ class Device(ElementBase):
             r._attr = fromdb
             result.append(r)
         return result
+
+    @classmethod
+    def get_by_seat(cls, seat_id):
+        result = cls()
+        fromdb = docDB.search_one(cls.__name__, {'seat_id': seat_id})
+        if fromdb is not None:
+            result._attr = fromdb
+            return result
+        return None
 
     def validate(self):
         errors = dict()

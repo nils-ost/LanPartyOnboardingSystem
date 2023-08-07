@@ -10,6 +10,15 @@ class Table(ElementBase):
         add_ip_pool_id=ElementBase.addAttr(notnone=True, fk='IpPool')
     )
 
+    @classmethod
+    def get_by_number(cls, number):
+        result = cls()
+        fromdb = docDB.search_one(cls.__name__, {'number': number})
+        if fromdb is not None:
+            result._attr = fromdb
+            return result
+        return None
+
     def validate(self):
         errors = dict()
         switch = docDB.get('Switch', self['switch_id'])

@@ -26,6 +26,15 @@ class Participant(ElementBase):
             return result
         return None
 
+    @classmethod
+    def get_by_seat(cls, seat_id):
+        result = cls()
+        fromdb = docDB.search_one(cls.__name__, {'seat_id': seat_id})
+        if fromdb is not None:
+            result._attr = fromdb
+            return result
+        return None
+
     def delete_post(self):
         for s in [Session(s) for s in docDB.search_many('Session', {'participant_id': self['_id']})]:
             s.delete()

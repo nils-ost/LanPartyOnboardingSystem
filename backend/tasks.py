@@ -60,7 +60,7 @@ def create_testdata(c):
 
 @task(pre=[create_admin], name='create-nlpt')
 def create_nlpt_testdata(c):
-    from elements import VLAN, Switch
+    from elements import VLAN, Switch, Device
     VLAN({'number': 1, 'purpose': 3, 'desc': 'default'}).save()
     v_mgmt = VLAN({'number': 2, 'purpose': 1, 'desc': 'mgmt'})
     v_mgmt.save()
@@ -84,3 +84,5 @@ def create_nlpt_testdata(c):
     s_t3.save()
     s_t4 = Switch({'addr': 'p4.nlpt.sani.network', 'user': 'admin', 'pw': 'password', 'purpose': 1, 'onboarding_vlan_id': v_t4['_id']})
     s_t4.save()
+    if Device.get_by_mac('localhost') is None:
+        Device({'mac': 'localhost'}).save()

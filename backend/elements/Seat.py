@@ -6,8 +6,27 @@ class Seat(ElementBase):
     _attrdef = dict(
         number=ElementBase.addAttr(type=int, default=1, notnone=True),
         pw=ElementBase.addAttr(type=str, default=None),
-        table_id=ElementBase.addAttr(notnone=True, fk='Table')
+        table_id=ElementBase.addAttr(notnone=True, fk='Table'),
+        claiming_device_id=ElementBase.addAttr(type=str, fk='Device', default=None)
     )
+
+    @classmethod
+    def get_by_number(cls, table_id, number):
+        result = cls()
+        fromdb = docDB.search_one(cls.__name__, {'number': number, 'table_id': table_id})
+        if fromdb is not None:
+            result._attr = fromdb
+            return result
+        return None
+
+    @classmethod
+    def get_by_claiming(cls, device_id):
+        result = cls()
+        fromdb = docDB.search_one(cls.__name__, {'claiming_device_id': device_id})
+        if fromdb is not None:
+            result._attr = fromdb
+            return result
+        return None
 
     def validate(self):
         errors = dict()

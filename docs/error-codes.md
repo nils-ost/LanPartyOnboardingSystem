@@ -94,3 +94,20 @@
   * **6**: IpPool for mgmt-VLAN is missing
   * **7**: IP of LPOS server could not be determined
   * **8**: IP of LPOS server is not in the same subnet as mgmt-IpPool
+
+# onboarding error-codes
+
+  * **1**: method not allowed
+  * **2**: Submitted data need to be of type dict
+  * **3**: data is needed to be submitted
+  * **4**: <something\> is missing in data
+  * **5**: <something\> must be of type <whatever\>
+  * **6**: could not determine device
+  * **7**: device is blocked for onboarding
+  * **8**: invalid table number
+  * **9**: invalid seat number
+  * **10**: seat is allready taken
+  * **11**: wrong password
+  * **12**: Seat is not associated to a Participant
+  * **13**: missing steps
+  * **14**: contact admin
