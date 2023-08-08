@@ -26,8 +26,8 @@
         <tr>
             <td>{{ ippool.desc }}</td>
             <td>{{ ippool.mask }}</td>
-            <td>{{ ip_int_to_str(ippool.range_start) }}</td>
-            <td>{{ ip_int_to_str(ippool.range_end) }}</td>
+            <td>{{ utils.ip_int_to_str(ippool.range_start) }}</td>
+            <td>{{ utils.ip_int_to_str(ippool.range_end) }}</td>
             <td>{{ vlansNames.get(ippool.vlan_id) }}</td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editIpPool(ippool)"></button>

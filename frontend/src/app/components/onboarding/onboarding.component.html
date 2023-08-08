@@ -1,0 +1,45 @@
+<div class="card">
+    <p-messages [(value)]="errorMsg" [enableService]="false" [closable]="false"></p-messages>
+</div>
+
+<p-card styleClass="p-card-shadow" *ngIf="onboarding && onboarding.ip">
+    <ng-container>Your IP is</ng-container>: {{ utils.ip_int_to_str(onboarding.ip) }}<br />
+    <ng-container *ngIf="onboarding.done">Please wait a few seconds till your network has been restarted. Then try to refresh this page.</ng-container>
+</p-card>
+
+
+<p-card header="Onboarding" subheader="please fill out this form" styleClass="p-card-shadow" *ngIf="onboarding && onboarding.tables">
+    <div class="field">
+        <span class="p-float-label">
+            <p-dropdown id="selTable" [options]="onboarding.tables" [(ngModel)]="selectedTable" appendTo="body"></p-dropdown>
+            <label for="selTable" i18n="@@onboardingFieldLabelTable">Table Number</label>
+        </span>
+    </div>
+
+    <div class="field">
+        <span class="p-float-label">
+            <p-inputNumber inputId="selSeat" [(ngModel)]="selectedSeat" [min]="0" [showButtons]="false"></p-inputNumber>
+            <label for="selSeat" i18n="@@onboardingFieldLabelSeat">Seat Number</label>
+        </span>
+    </div>
+
+    <div class="field">
+        <span class="p-float-label">
+            <input type="text" id="selPw" pInputText [(ngModel)]="selectedPw">
+            <label for="selPw" i18n="@@onboardingFieldLabelPw">Seat Password</label>
+        </span>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton type="button" label="Submit" (click)="sendSeatParameters()"></button>
+    </ng-template>
+</p-card>
+
+<p-card styleClass="p-card-shadow" *ngIf="onboarding && onboarding.participant">
+    <ng-container>Are you</ng-container>: {{ onboarding.participant }}
+
+    <ng-template pTemplate="footer">
+        <button pButton type="button" label="Yes" (click)="sendParticipantConfirmation(true)"></button>
+        <button pButton type="button" label="No" (click)="sendParticipantConfirmation(false)"></button>
+    </ng-template>
+</p-card>

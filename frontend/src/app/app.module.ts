@@ -15,6 +15,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PanelModule } from 'primeng/panel';
 import { ToastModule } from 'primeng/toast';
+import { MessagesModule } from 'primeng/messages';
 
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
@@ -38,6 +39,7 @@ import { SeatsListComponent } from './components/seats-list/seats-list.component
 import { ParticipantsScreenComponent } from './components/participants-screen/participants-screen.component';
 import { ParticipantsListComponent } from './components/participants-list/participants-list.component';
 import { PortsListComponent } from './components/ports-list/ports-list.component';
+import { OnboardingComponent } from './components/onboarding/onboarding.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,8 @@ import { PortsListComponent } from './components/ports-list/ports-list.component
     SeatsListComponent,
     ParticipantsScreenComponent,
     ParticipantsListComponent,
-    PortsListComponent
+    PortsListComponent,
+    OnboardingComponent
   ],
   imports: [
     BrowserModule,
@@ -77,7 +80,8 @@ import { PortsListComponent } from './components/ports-list/ports-list.component
     DialogModule,
     ConfirmDialogModule,
     PanelModule,
-    ToastModule
+    ToastModule,
+    MessagesModule
   ],
   providers: [
     ConfirmationService,
