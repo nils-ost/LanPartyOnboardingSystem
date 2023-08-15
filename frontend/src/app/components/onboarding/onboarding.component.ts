@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/api';
 import { Onboarding } from 'src/app/interfaces/onboarding';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
@@ -12,6 +12,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./onboarding.component.scss']
 })
 export class OnboardingComponent implements OnInit {
+  @Output() onboardingChangeEvent = new EventEmitter<Onboarding | undefined>;
   onboarding?: Onboarding;
   errorMsg: Message[] = [];
   selectedTable: number | undefined;
@@ -34,6 +35,7 @@ export class OnboardingComponent implements OnInit {
       .subscribe({
         next: (onboarding: Onboarding) => {
           this.onboarding = onboarding;
+          this.onboardingChangeEvent.emit(this.onboarding);
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
@@ -50,6 +52,7 @@ export class OnboardingComponent implements OnInit {
         .subscribe({
           next: (onboarding: Onboarding) => {
             this.onboarding = onboarding;
+            this.onboardingChangeEvent.emit(this.onboarding);
           },
           error: (err: HttpErrorResponse) => {
             this.errorHandler.handleError(err);
@@ -66,9 +69,11 @@ export class OnboardingComponent implements OnInit {
       .subscribe({
         next: (onboarding: Onboarding) => {
           this.onboarding = onboarding;
+          this.onboardingChangeEvent.emit(this.onboarding);
         },
         error: (err: HttpErrorResponse) => {
           this.onboarding = undefined;
+          this.onboardingChangeEvent.emit(this.onboarding);
           this.errorHandler.handleError(err);
           if (this.errorHandler.elementError) this.translateErrorCode(this.errorHandler.elementErrors);
         }

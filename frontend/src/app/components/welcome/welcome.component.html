@@ -1,9 +1,20 @@
-<p>welcome</p>
-<p>
-    Just for testing (quick access):<br />
-    <a href="/login">Login</a><br />
-    <a href="/network">Network</a><br />
-    <a href="/tables">Tables</a><br />
-    <a href="/participants">Participants</a><br />
-    <a href="/onboarding">Onboarding</a><br />
-</p>
+<div class="grid-base">
+    <div class="row-spacer"></div>
+
+    <div class="column-spacer"></div>
+
+    <div class="content">
+        <div class="button-row" *ngIf="onboarding && !login">
+            <p-button *ngIf="!login" label="Login" styleClass="p-button-secondary" icon="pi pi-sign-in" iconPos="right" (click)="gotoLogin()"></p-button>
+            <p-button *ngIf="onboarding.ip && !onboarding.done" label="Create Account" styleClass="p-button-secondary" icon="pi pi-file-import" iconPos="left"></p-button>
+        </div>
+
+        <app-onboarding (onboardingChangeEvent)="onboardingChanged($event)"></app-onboarding>
+    </div>
+
+    <div class="column-spacer"></div>
+
+    <div class="row-spacer"></div>
+</div>
+
+<app-menu *ngIf="login"></app-menu>

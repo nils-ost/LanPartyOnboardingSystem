@@ -1,4 +1,40 @@
-:host ::ng-deep .field {
-    margin-top: 1.2em;
-    padding-bottom: 1em;
+:host ::ng-deep {
+    .field {
+        margin-top: 1.2em;
+        padding-bottom: 1em;
+        display: flex;
+        justify-content: center;
+
+        .p-dropdown, .p-inputnumber, .p-inputtext {
+            width: 300px;
+        }
+    }
+
+    .p-card-footer {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        padding: 0;
+    }
+
+    .ip_display, .who_display {
+        display: flex;
+        flex-direction: column;
+
+        div {
+            display: flex;
+            justify-content: center;
+        }
+
+        .ip_ip, .who_name {
+            font-size: 2rem;
+            margin-top: 0.5em;
+            color: var(--primary-color);
+        }
+
+        .ip_reloadinfo {
+            margin-top: 0.5em;
+            text-align: center;
+        }
+    }
 }

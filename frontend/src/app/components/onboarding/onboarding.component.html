@@ -3,8 +3,17 @@
 </div>
 
 <p-card styleClass="p-card-shadow" *ngIf="onboarding && onboarding.ip">
-    <ng-container>Your IP is</ng-container>: {{ utils.ip_int_to_str(onboarding.ip) }}<br />
-    <ng-container *ngIf="onboarding.done">Please wait a few seconds till your network has been restarted. Then try to refresh this page.</ng-container>
+    <div class="ip_display">
+        <div class="ip_header">
+            <ng-container>Your IP is</ng-container>:
+        </div>
+        <div class="ip_ip">
+            {{ utils.ip_int_to_str(onboarding.ip) }}
+        </div>
+        <div *ngIf="onboarding.done" class="ip_reloadinfo">
+            Please wait a few seconds till your network has been restarted. Then try to refresh this page.
+        </div>
+    </div>
 </p-card>
 
 
@@ -25,7 +34,7 @@
 
     <div class="field">
         <span class="p-float-label">
-            <input type="text" id="selPw" pInputText [(ngModel)]="selectedPw">
+            <input type="text" id="selPw" pInputText [(ngModel)]="selectedPw" (keyup.enter)="sendSeatParameters()">
             <label for="selPw" i18n="@@onboardingFieldLabelPw">Seat Password</label>
         </span>
     </div>
@@ -36,10 +45,17 @@
 </p-card>
 
 <p-card styleClass="p-card-shadow" *ngIf="onboarding && onboarding.participant">
-    <ng-container>Are you</ng-container>: {{ onboarding.participant }}
+    <div class="who_display">
+        <div class="who_question">
+            <ng-container>Are you</ng-container>:
+        </div>
+        <div class="who_name">
+            {{ onboarding.participant }}
+        </div>
+    </div>
 
     <ng-template pTemplate="footer">
-        <button pButton type="button" label="Yes" (click)="sendParticipantConfirmation(true)"></button>
         <button pButton type="button" label="No" (click)="sendParticipantConfirmation(false)"></button>
+        <button pButton type="button" label="Yes" (click)="sendParticipantConfirmation(true)"></button>
     </ng-template>
 </p-card>
