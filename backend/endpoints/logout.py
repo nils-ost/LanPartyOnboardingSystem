@@ -11,8 +11,8 @@ class LoginEndpoint():
     @cherrypy.tools.json_out()
     def index(self, user=None):
         if cherrypy.request.method == 'OPTIONS':
-            cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST, PUT'
-            cherrypy_cors.preflight(allowed_methods=['GET', 'POST', 'PUT'])
+            cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST'
+            cherrypy_cors.preflight(allowed_methods=['GET', 'POST'])
             return
         elif cherrypy.request.method == 'GET':
             if user is not None:
@@ -82,14 +82,7 @@ class LoginEndpoint():
                     cookie['LPOSsession']['version'] = 1
                     cherrypy.response.status = 201
                     return {'session_id': s['_id'], 'till': s['till'], 'complete': s['complete']}
-        elif cherrypy.request.method == 'PUT':
-            c = cherrypy.request.cookie.get('LPOSsession')
-            if c:
-                s = Session.get(c.value)
-                s.delete()
-            cherrypy.response.status = 201
-            return {'logout': 'done'}
         else:
-            cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST, PUT'
+            cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST'
             cherrypy.response.status = 405
             return {'error': 'method not allowed'}

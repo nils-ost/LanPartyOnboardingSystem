@@ -29,6 +29,10 @@ export class LoginService {
     return this.http.post<Login>(this.loginUrl, {'pw': pw}, {withCredentials:true}).pipe(catchError(this.handleError));
   }
 
+  public logout(): Observable<any> {
+    return this.http.put<any>(this.loginUrl, {}, {withCredentials:true}).pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
       console.error('An error occurred:', error.error);

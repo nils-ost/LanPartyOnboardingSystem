@@ -42,6 +42,7 @@ import { ParticipantsListComponent } from './components/participants-list/partic
 import { PortsListComponent } from './components/ports-list/ports-list.component';
 import { OnboardingComponent } from './components/onboarding/onboarding.component';
 import { MenuComponent } from './components/menu/menu.component';
+import { LogoutComponent } from './components/logout/logout.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { MenuComponent } from './components/menu/menu.component';
     ParticipantsListComponent,
     PortsListComponent,
     OnboardingComponent,
-    MenuComponent
+    MenuComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,
