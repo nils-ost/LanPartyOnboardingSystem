@@ -5,19 +5,19 @@
 <p-card styleClass="p-card-shadow" *ngIf="onboarding && onboarding.ip">
     <div class="ip_display">
         <div class="ip_header">
-            <ng-container>Your IP is</ng-container>:
+            <ng-container i18n="@@onboardingIpHeader">Your IP is</ng-container>:
         </div>
         <div class="ip_ip">
             {{ utils.ip_int_to_str(onboarding.ip) }}
         </div>
-        <div *ngIf="onboarding.done" class="ip_reloadinfo">
+        <div *ngIf="onboarding.done" class="ip_reloadinfo" i18n="@@onboardingIpReloadinfo">
             Please wait a few seconds till your network has been restarted. Then try to refresh this page.
         </div>
     </div>
 </p-card>
 
 
-<p-card header="Onboarding" subheader="please fill out this form" styleClass="p-card-shadow" *ngIf="onboarding && onboarding.tables">
+<p-card i18n-subheader header="Onboarding" subheader="please fill out this form" styleClass="p-card-shadow" *ngIf="onboarding && onboarding.tables">
     <div class="field">
         <span class="p-float-label">
             <p-dropdown id="selTable" [options]="onboarding.tables" [(ngModel)]="selectedTable" appendTo="body"></p-dropdown>
@@ -40,14 +40,14 @@
     </div>
 
     <ng-template pTemplate="footer">
-        <button pButton type="button" label="Submit" (click)="sendSeatParameters()"></button>
+        <button pButton type="button" i18n-label label="Submit" (click)="sendSeatParameters()"></button>
     </ng-template>
 </p-card>
 
 <p-card styleClass="p-card-shadow" *ngIf="onboarding && onboarding.participant">
     <div class="who_display">
         <div class="who_question">
-            <ng-container>Are you</ng-container>:
+            <ng-container i18n="@@onboardingWhoQuestion">Are you</ng-container>:
         </div>
         <div class="who_name">
             {{ onboarding.participant }}
@@ -55,7 +55,7 @@
     </div>
 
     <ng-template pTemplate="footer">
-        <button pButton type="button" label="No" (click)="sendParticipantConfirmation(false)"></button>
-        <button pButton type="button" label="Yes" (click)="sendParticipantConfirmation(true)"></button>
+        <button pButton type="button" i18n-label label="No" (click)="sendParticipantConfirmation(false)"></button>
+        <button pButton type="button" i18n-label label="Yes" (click)="sendParticipantConfirmation(true)"></button>
     </ng-template>
 </p-card>

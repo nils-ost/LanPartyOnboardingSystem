@@ -5,8 +5,8 @@
 
     <div class="content">
         <div class="button-row" *ngIf="onboarding && !login">
-            <p-button *ngIf="!login" label="Login" styleClass="p-button-secondary" icon="pi pi-sign-in" iconPos="right" (click)="gotoLogin()"></p-button>
-            <p-button *ngIf="onboarding.ip && !onboarding.done" label="Create Account" styleClass="p-button-secondary" icon="pi pi-file-import" iconPos="left"></p-button>
+            <p-button *ngIf="!login" i18n-label label="Login" styleClass="p-button-secondary" icon="pi pi-sign-in" iconPos="right" (click)="gotoLogin()"></p-button>
+            <p-button *ngIf="onboarding.ip && !onboarding.done" i18n-label label="Create Account" styleClass="p-button-secondary" icon="pi pi-file-import" iconPos="left"></p-button>
         </div>
 
         <app-onboarding (onboardingChangeEvent)="onboardingChanged($event)"></app-onboarding>
