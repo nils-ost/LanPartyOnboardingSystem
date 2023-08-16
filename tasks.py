@@ -21,3 +21,9 @@ def stop_development(c):
 @task(pre=[stop_development], post=[start_development], name='dev-clean')
 def cleanup_development(c):
     pass
+
+
+@task(name='ng-build')
+def ng_build(c):
+    c.run('rm -rf backend/static/ang')
+    c.run('cd frontend; ng build --output-path ../backend/static/ang')

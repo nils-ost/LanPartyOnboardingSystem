@@ -7,3 +7,4 @@ __pycache__
 backend/config.json
 backend/.coverage
 backend/coverage_html_report/
+backend/static/ang
