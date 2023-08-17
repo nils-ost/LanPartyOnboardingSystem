@@ -1,4 +1,5 @@
 -r backend/requirements.txt
+-r install/requirements.txt
 bpython
 coverage
 invoke

@@ -932,7 +932,7 @@
       </trans-unit>
       <trans-unit id="elementFieldLabelSwitchConnected" datatype="html">
         <source>Connected</source>
-        <target state="signed-off">Verbinden</target>
+        <target state="signed-off">Verbunden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
           <context context-type="linenumber">22</context>

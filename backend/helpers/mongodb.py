@@ -39,12 +39,8 @@ class mongoDB(object):
         except Exception:
             return False
 
-    def clear(self, table=None):
-        if table is None:
-            for c in self.conn().list_collections():
-                self.conn().get_collection(c['name']).drop()
-        else:
-            self.conn().get_collection(table).drop()
+    def reset_connections(self):
+        mongoDB._conn = dict()
 
     def conn(self):
         p = multiprocessing.current_process().name
@@ -54,6 +50,13 @@ class mongoDB(object):
 
     def coll(self, which):
         return self.conn().get_collection(which)
+
+    def clear(self, table=None):
+        if table is None:
+            for c in self.conn().list_collections():
+                self.conn().get_collection(c['name']).drop()
+        else:
+            self.conn().get_collection(table).drop()
 
     def exists(self, where, what_id):
         return self.get(where, what_id) is not None

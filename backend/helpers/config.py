@@ -10,6 +10,10 @@ config = {
     },
     'server': {
         'port': 8000
+    },
+    'metrics': {
+        'enabled': False,
+        'port': 8001
     }
 }
 
@@ -19,6 +23,18 @@ if os.path.isfile('config.json'):
 else:
     with open('config.json', 'w') as f:
         f.write(json.dumps(config, indent=4))
+
+
+def reload_config():
+    global config
+    if os.path.isfile('config.json'):
+        with open('config.json', 'r') as f:
+            fconfig = json.load(f)
+        for k in fconfig.keys():
+            config[k].update(fconfig[k])
+    else:
+        with open('config.json', 'w') as f:
+            f.write(json.dumps(config, indent=4))
 
 
 def get_config(portion=None):
@@ -37,3 +53,6 @@ def set_config(nconfig, portion=None):
         config[portion] = nconfig
     with open('config.json', 'w') as f:
         f.write(json.dumps(config, indent=4))
+
+
+reload_config()

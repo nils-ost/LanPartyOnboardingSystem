@@ -1,0 +1,18 @@
+[Unit]
+Description=LanPartyOnboardingSystem
+
+[Service]
+Type=exec
+
+Restart=always
+RestartSec=5
+
+ExecStart=__project_dir__/venv/bin/python __project_dir__/main.py
+WorkingDirectory=__project_dir__
+KillSignal=SIGINT
+
+StandardInput=null
+SyslogIdentifier=lpos
+
+[Install]
+WantedBy=multi-user.target

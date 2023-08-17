@@ -3,3 +3,4 @@ cherrypy-cors==1.6
 psutil
 pymongo
 requests
+six
