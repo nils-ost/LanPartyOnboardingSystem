@@ -9,6 +9,10 @@
                 <ng-container i18n="@@elementFieldLabelPortDesc">Description</ng-container>
                 <p-sortIcon field="desc"></p-sortIcon>
             </th>
+            <th pSortableColumn="commit_disabled">
+                <ng-container i18n="@@elementFieldLabelPortCommitDisabled">Commit Disabled</ng-container>
+                <p-sortIcon field="commit_disabled"></p-sortIcon>
+            </th>
             <th pSortableColumn="participants">
                 <ng-container i18n="@@elementFieldLabelPortParticipants">Participants</ng-container>
                 <p-sortIcon field="participants"></p-sortIcon>
@@ -46,7 +50,16 @@
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(port, $event)"></button>
             </td>
             <td>
-                <ng-container *ngIf="selectedSwitch && selectedSwitch.purpose == 2; else notChangeableParticipants">
+                <ng-container *ngIf="!port.switchlink; else notChangeableCommitDisabled">
+                    <button *ngIf="port.commit_disabled" pButton type="button" class="p-button-outlined p-button-success" icon="pi pi-check" (click)="editCommitDisabled(port, false)"></button>
+                    <button *ngIf="!port.commit_disabled" pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="editCommitDisabled(port, true)"></button>
+                </ng-container>
+                <ng-template #notChangeableCommitDisabled>
+                    <i *ngIf="!port.participants" class="pi pi-times" style="color: var(--danger-color)"></i>
+                </ng-template>
+            </td>
+            <td>
+                <ng-container *ngIf="selectedSwitch && selectedSwitch.purpose == 2 || !port.switchlink; else notChangeableParticipants">
                     <button *ngIf="port.participants" pButton type="button" class="p-button-outlined p-button-success" icon="pi pi-check" (click)="editParticipants(port, false)"></button>
                     <button *ngIf="!port.participants" pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="editParticipants(port, true)"></button>
                 </ng-container>

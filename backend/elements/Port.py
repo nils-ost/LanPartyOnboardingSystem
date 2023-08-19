@@ -8,7 +8,8 @@ class Port(ElementBase):
         switch_id=ElementBase.addAttr(notnone=True, fk='Switch'),
         participants=ElementBase.addAttr(type=bool, default=False, notnone=True),
         switchlink=ElementBase.addAttr(type=bool, default=False, notnone=True),
-        switchlink_port_id=ElementBase.addAttr(default=None, fk='Port')
+        switchlink_port_id=ElementBase.addAttr(default=None, fk='Port'),
+        commit_disabled=ElementBase.addAttr(type=bool, default=False, notnone=True)
     )
 
     @classmethod

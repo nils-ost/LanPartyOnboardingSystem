@@ -2,16 +2,15 @@ from helpers.docdb import docDB
 
 
 def get_commited():
-    result = docDB.get('system', 'commited')
+    result = docDB.get_setting('system_commited')
     if result is None:
         return False
     else:
-        return result.get('state', False)
+        return result
 
 
 def set_commited(state):
-    if not docDB.update('system', 'commited', {'state': state}):
-        docDB.create('system', 'commited', {'state': state})
+    docDB.set_setting('system_commited', state)
 
 
 def get_open_commits():

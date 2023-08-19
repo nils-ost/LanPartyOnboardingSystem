@@ -37,6 +37,13 @@ export class PortService {
     return this.http.patch<any>(this.portUrl + id + '/', port, {withCredentials:true});
   }
 
+  public updateCommitDisabled(id: string, disabled: boolean): Observable<any> {
+    let port = {
+      'commit_disabled': disabled
+    }
+    return this.http.patch<any>(this.portUrl + id + '/', port, {withCredentials:true});
+  }
+
   public updateSwitchlinkPortId(id: string, switchlink_port_id: string | null): Observable<any> {
     let port = {
       'switchlink_port_id': switchlink_port_id

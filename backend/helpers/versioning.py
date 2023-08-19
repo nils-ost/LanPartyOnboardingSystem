@@ -135,7 +135,6 @@ def run():
         print('Versioning detected a new install!')
         docDB.set_setting('version', current_version)
         return
-    db_version = db_version['version']
     if versions_eq(db_version, current_version):
         # nothing todo allready the desired version
         print(f'Versioning detected the DB matches the current version {current_version}')

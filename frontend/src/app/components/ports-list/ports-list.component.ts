@@ -140,6 +140,19 @@ export class PortsListComponent implements OnChanges, OnInit {
       })
   }
 
+  editCommitDisabled(port: Port, newValue: boolean) {
+    this.portService
+      .updateCommitDisabled(port.id, newValue)
+      .subscribe({
+        next: (response: any) => {
+          this.editedPortEvent.emit(null);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
   switchlinkById(id: string | null) {
     for (let i = 0; i < this.switchlinkOptions.length; i++) {
       let option: any = this.switchlinkOptions[i];

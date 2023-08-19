@@ -380,6 +380,8 @@ class Switch(ElementBase):
                     sw = Switch.get(switch_id)
                     if sw['onboarding_vlan_id'] is not None:
                         swi.vlanEdit(sw.onboarding_vlan()['number'], memberAdd=idx)
+            elif port['commit_disabled']:
+                continue
             elif onboarding_vlan_nb is None:
                 # this is an core Switch, all not switchlinks get the play-VLAN
                 swi.vlanEdit(play_vlan_nb, memberAdd=idx)
@@ -419,7 +421,7 @@ class Switch(ElementBase):
         for idx in range(len(swi.ports)):
             port = Port.get_by_number(self['_id'], idx)
             onboarding = None
-            if port == lpos_port or port['switchlink'] or self['onboarding_vlan_id'] is None or not port['participants']:
+            if port == lpos_port or port['switchlink'] or self['onboarding_vlan_id'] is None or not port['participants'] or port['commit_disabled']:
                 onboarding = False
             else:
                 for device in Device.get_by_port(port['_id']):
@@ -477,6 +479,8 @@ class Switch(ElementBase):
             elif port['switchlink']:
                 # play-VLAN as default
                 swi.portEdit(idx, vmode='strict', vreceive='only tagged', vdefault=play_vlan_nb, vforce=False)
+            elif port['commit_disabled']:
+                continue
             elif onboarding_vlan_nb is None:
                 # this is an core Switch, all not switchlinks get the play-VLAN
                 swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=play_vlan_nb, vforce=False)
