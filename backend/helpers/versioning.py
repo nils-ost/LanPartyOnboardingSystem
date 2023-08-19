@@ -123,3 +123,29 @@ def test_compares():
     print('Success' if versions_gt('1.2.0.beta1', '1.2.0.alpha1') is True else 'Fail')
     print('Success' if versions_gt('1.2.0.alpha2', '1.2.0.alpha1') is True else 'Fail')
     print('Success' if versions_gt('1.2.0', '1.2.0.beta1') is True else 'Fail')
+
+
+def run():
+    import sys
+    from helpers.docdb import docDB
+    from helpers.version import version as current_version
+    db_version = docDB.get_setting('version')
+    if db_version is None:
+        # new install nothing todo
+        print('Versioning detected a new install!')
+        docDB.set_setting('version', current_version)
+        return
+    db_version = db_version['version']
+    if versions_eq(db_version, current_version):
+        # nothing todo allready the desired version
+        print(f'Versioning detected the DB matches the current version {current_version}')
+        return
+    if versions_gt(db_version, current_version):
+        # error DB is on a newer version that software, better just terminate
+        print('Versioning detected the Database is on a newer Version than the software provides! Exiting...')
+        sys.exit(0)
+
+    print(f'Versioning performing upgrade from v{db_version} to v{current_version}')
+    # here could now be done updates on the DB structure if this is required in the future
+
+    docDB.set_setting('version', current_version)

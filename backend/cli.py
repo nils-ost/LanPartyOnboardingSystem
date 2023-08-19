@@ -27,7 +27,8 @@ class bcolors:
 
 
 def version():
-    return '0'
+    from helpers.docdb import docDB
+    return docDB.get_setting('version')
 
 
 def state():
@@ -104,6 +105,7 @@ def clearDB(force=False):
 def createBackup():
     from helpers.docdb import docDB
     from helpers.config import get_config
+    from helpers.version import version
     import zipfile
     path = input('Where do you like to store the backup?: ')
     if not os.path.isdir(path):
@@ -114,7 +116,7 @@ def createBackup():
 
     metadata = dict({
         'ts': int(dt.timestamp()),
-        'version': version(),
+        'version': version,
         'db': dict()
     })
 
@@ -137,6 +139,7 @@ def createBackup():
 
 def restoreBackup():
     import zipfile
+    from helpers.version import version
     from helpers.versioning import versions_gt
     from helpers.config import reload_config
     from helpers.docdb import docDB
@@ -149,8 +152,6 @@ def restoreBackup():
         'version': '0',
         'db': dict()
     })
-
-    version = '0'
 
     with zipfile.ZipFile(backup_file, mode='r') as zf:
         with zf.open('metadata.json', 'r') as f:

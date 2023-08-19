@@ -2,6 +2,7 @@ import cherrypy
 import cherrypy_cors
 from elements import Session
 from helpers.system import get_commited, get_open_commits
+from helpers.version import version
 
 
 class SystemEndpoint():
@@ -15,8 +16,18 @@ class SystemEndpoint():
             return
         elif cherrypy.request.method == 'GET':
             result = dict()
-            result['commited'] = get_commited()
-            result['open_commits'] = True if get_open_commits() > 0 else False
+
+            cookie = cherrypy.request.cookie.get('LPOSsession')
+            if cookie:
+                session = Session.get(cookie.value)
+            else:
+                session = Session.get(None)
+            if len(session.validate_base()) == 0 and session.admin:
+                # these are for admins only
+                result['commited'] = get_commited()
+                result['open_commits'] = True if get_open_commits() > 0 else False
+
+            result['version'] = version
             return result
         else:
             cherrypy.response.headers['Allow'] = 'OPTIONS, GET'

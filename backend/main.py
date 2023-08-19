@@ -5,6 +5,7 @@ import logging
 from helpers.docdb import docDB
 from helpers.config import get_config
 from helpers.backgroundworker import device_scanner
+from helpers.versioning import run as versioning_run
 from threading import Thread
 from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint, SwitchEndpoint, OnboardingEndpoint
 from elements import VLAN, IpPool, Table, Seat, Participant, Device, Port
@@ -87,6 +88,7 @@ if __name__ == '__main__':
         'tools.response_headers.headers': [('Access-Control-Allow-Origin', 'http://localhost:4200/'), ('Access-Control-Allow-Credentials', 'true')]})
 
     docDB.wait_for_connection()
+    versioning_run()
     device_scanner_thread = Thread(target=device_scanner, daemon=True)
     device_scanner_thread.start()
     cherrypy.quickstart(API(), '/', conf)
