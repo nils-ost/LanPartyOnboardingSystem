@@ -48,7 +48,11 @@ class VLAN(ElementBase):
             switch.remove_vlan(self['number'])
 
     def commit_os_interface(self):
-        pass
+        if self['_id'] is None:
+            return  # not saved yet, therefor could be invalid
+        iname = docDB.get_setting('os_nw_interface')
+        if iname is None:
+            return  # maybe return an error
 
     def retreat_os_interface(self):
         pass
