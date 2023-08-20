@@ -99,6 +99,7 @@ def check_integrity():
         return {'code': 8, 'desc': 'IP of LPOS server is not in the same subnet as mgmt-IpPool'}
 
     # TODO:
+    # prüfen ob setting os_nw_interface gesetzt ist und das entsprechende interface in psutil gefunden werden kann
     # pruefen, dass groeße der IP-Pools zu vohanden Sitzen am tisch passt
     # pruefen, dass fuer jeden tisch ein play IpPool vorhanden - obsolet, macht Table element selbst
     # pruefen, dass ein additional play IpPool vorhanden - obsolet, macht Table element selbst

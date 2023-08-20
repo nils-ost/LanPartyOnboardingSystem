@@ -46,3 +46,9 @@ class VLAN(ElementBase):
         from elements import Switch
         for switch in Switch.all():
             switch.remove_vlan(self['number'])
+
+    def commit_os_interface(self):
+        pass
+
+    def retreat_os_interface(self):
+        pass

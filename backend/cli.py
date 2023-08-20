@@ -95,6 +95,12 @@ def create_admin():
     p.save()
 
 
+def set_os_nw_interface():
+    from docdb import docDB
+    iname = input('Enter name of network interface to be used for VLANs on this machine: ').strip()
+    docDB.set_setting('os_nw_interface', iname)
+
+
 def clearDB(force=False):
     if not force and not input('Wipe all data on database? (y/N): ').strip() == 'y':
         return
@@ -186,6 +192,7 @@ commands = [
     ('Stop Stack', stop_stack),
     ('Restart Stack', restart_stack),
     ('Create Admin', create_admin),
+    ('Set OS Network Interface for VLANs', set_os_nw_interface),
     ('Clear DB', clearDB),
     ('Create Backup', createBackup),
     ('Restore Backup', restoreBackup),
