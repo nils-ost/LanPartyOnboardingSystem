@@ -133,6 +133,7 @@ def run():
     if db_version is None:
         # new install nothing todo
         print('Versioning detected a new install!')
+        db_defaults()
         docDB.set_setting('version', current_version)
         return
     if versions_eq(db_version, current_version):
@@ -146,5 +147,13 @@ def run():
 
     print(f'Versioning performing upgrade from v{db_version} to v{current_version}')
     # here could now be done updates on the DB structure if this is required in the future
+    db_defaults()
 
     docDB.set_setting('version', current_version)
+
+
+def db_defaults():
+    from helpers.docdb import docDB
+    if docDB.get_setting('os_netplan_path') is None:
+        print('Setting /etc/netplan as os_netplan_path default')
+        docDB.set_setting('os_netplan_path', '/etc/netplan')

@@ -43,4 +43,12 @@
     <small *ngIf="vlan_id_error" class="p-error block">{{ vlan_id_error }}</small>
 </div>
 
+<div class="field">
+    <span class="checkbox">
+        <p-checkbox id="ippoollpos" [(ngModel)]="lpos" [binary]="true" [ngClass]="{'ng-invalid ng-dirty': lpos_error}"></p-checkbox>
+        <label for="ippoollpos" i18n="@@elementFieldLabelIpPoolLpos">LPOS Play IP</label>
+    </span>
+    <small *ngIf="vlan_id_error" class="p-error block">{{ lpos_error }}</small>
+</div>
+
 <button pButton (click)="commitIpPool()" i18n="@@buttonSave">Save</button>

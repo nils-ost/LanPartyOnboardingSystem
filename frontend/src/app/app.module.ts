@@ -17,6 +17,7 @@ import { PanelModule } from 'primeng/panel';
 import { ToastModule } from 'primeng/toast';
 import { MessagesModule } from 'primeng/messages';
 import { DockModule } from 'primeng/dock';
+import { CheckboxModule } from 'primeng/checkbox';
 
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
@@ -87,7 +88,8 @@ import { LogoutComponent } from './components/logout/logout.component';
     PanelModule,
     ToastModule,
     MessagesModule,
-    DockModule
+    DockModule,
+    CheckboxModule
   ],
   providers: [
     ConfirmationService,

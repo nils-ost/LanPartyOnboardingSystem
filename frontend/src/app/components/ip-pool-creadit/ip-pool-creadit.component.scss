@@ -1,4 +1,8 @@
 :host ::ng-deep .field {
     margin-top: 1.2em;
     padding-bottom: 1em;
+
+    .checkbox label {
+        margin-left: 0.5em;
+    }
 }

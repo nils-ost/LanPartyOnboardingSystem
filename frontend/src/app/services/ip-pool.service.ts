@@ -23,13 +23,13 @@ export class IpPoolService {
     return this.http.get<IpPool[]>(this.ippoolUrl, {withCredentials:true});
   }
 
-  public createIpPool(desc: string, mask: number, range_start: number, range_end: number, vlan_id: string): Observable<any> {
-    let ippool = {'desc': desc, 'mask': mask, 'range_start': range_start, 'range_end': range_end, 'vlan_id': vlan_id};
+  public createIpPool(desc: string, mask: number, range_start: number, range_end: number, vlan_id: string, lpos: boolean = false): Observable<any> {
+    let ippool = {'desc': desc, 'mask': mask, 'range_start': range_start, 'range_end': range_end, 'vlan_id': vlan_id, 'lpos': lpos};
     return this.http.post<any>(this.ippoolUrl, ippool, {withCredentials:true});
   }
 
-  public updateIpPool(id: string, desc: string, mask: number, range_start: number, range_end: number, vlan_id: string): Observable<any> {
-    let ippool = {'id': id, 'desc': desc, 'mask': mask, 'range_start': range_start, 'range_end': range_end, 'vlan_id': vlan_id};
+  public updateIpPool(id: string, desc: string, mask: number, range_start: number, range_end: number, vlan_id: string, lpos: boolean = false): Observable<any> {
+    let ippool = {'id': id, 'desc': desc, 'mask': mask, 'range_start': range_start, 'range_end': range_end, 'vlan_id': vlan_id, 'lpos': lpos};
     return this.http.patch<any>(this.ippoolUrl + id + '/', ippool, {withCredentials:true});
   }
 

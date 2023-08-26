@@ -96,9 +96,15 @@ def create_admin():
 
 
 def set_os_nw_interface():
-    from docdb import docDB
+    from helpers.docdb import docDB
     iname = input('Enter name of network interface to be used for VLANs on this machine: ').strip()
     docDB.set_setting('os_nw_interface', iname)
+
+
+def set_os_netplan_path():
+    from helpers.docdb import docDB
+    path = input('Enter path where netplan configs should be stored: ').strip()
+    docDB.set_setting('os_netplan_path', path)
 
 
 def clearDB(force=False):
@@ -193,6 +199,7 @@ commands = [
     ('Restart Stack', restart_stack),
     ('Create Admin', create_admin),
     ('Set OS Network Interface for VLANs', set_os_nw_interface),
+    ('Set OS netplan path', set_os_netplan_path),
     ('Clear DB', clearDB),
     ('Create Backup', createBackup),
     ('Restore Backup', restoreBackup),

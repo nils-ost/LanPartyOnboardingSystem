@@ -111,10 +111,10 @@ class mongoDB(object):
         return self.coll(where).count_documents(what)
 
     def get_setting(self, key):
-        r = self.coll('seetings').find_one({'_id': key})
+        r = self.coll('settings').find_one({'_id': key})
         if r is None:
             return None
         return r['value']
 
     def set_setting(self, key, value):
-        self.coll('seetings').replace_one({'_id': key}, {'_id': key, 'value': value}, True)
+        self.coll('settings').replace_one({'_id': key}, {'_id': key, 'value': value}, True)

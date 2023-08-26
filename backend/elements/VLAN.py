@@ -1,3 +1,4 @@
+import os
 from elements._elementBase import ElementBase, docDB
 
 
@@ -48,11 +49,51 @@ class VLAN(ElementBase):
             switch.remove_vlan(self['number'])
 
     def commit_os_interface(self):
+        from elements import IpPool
+        if self['purpose'] == 3:
+            return 1  # does not get an interface
         if self['_id'] is None:
-            return  # not saved yet, therefor could be invalid
+            return 2  # not saved yet, therefor could be invalid
         iname = docDB.get_setting('os_nw_interface')
         if iname is None:
-            return  # maybe return an error
+            return 3  # maybe return an error
+        netplan_path = docDB.get_setting('os_netplan_path')
+        if netplan_path is None:
+            return 4  # maybe return an error
+        if self['purpose'] == 0:
+            for pool in IpPool.get_by_vlan(self['_id']):
+                if pool['lpos']:
+                    break
+            else:
+                return 5  # no pool defined as lpos
+        else:
+            pool = IpPool.get_by_vlan(self['_id'])
+            if len(pool) == 0:
+                return 6  # no needed pool defined
+            pool = pool[0]
+        ip = '.'.join([str(e) for e in IpPool.int_to_octetts(pool['range_start'])])
+        mask = pool['mask']
+        cfg = f"""network:
+  version: 2
+  renderer: networkd
+  vlans:
+    vlan{self['number']}:
+      id: {self['number']}
+      link: {iname}
+      addresses:
+        - {ip}/{mask}
+      dhcp4: no"""
+        with open(os.path.join(netplan_path, f"02-vlan{self['number']}.yaml"), 'w') as f:
+            f.write(cfg)
+        return 0
 
     def retreat_os_interface(self):
-        pass
+        if self['purpose'] == 3:
+            return 1  # does not got an interface
+        if self['_id'] is None:
+            return 2  # not saved yet, therefor could be invalid
+        netplan_path = docDB.get_setting('os_netplan_path')
+        if netplan_path is None:
+            return 3  # maybe return an error
+        os.remove(os.path.join(netplan_path, f"02-vlan{self['number']}.yaml"))
+        return 0
