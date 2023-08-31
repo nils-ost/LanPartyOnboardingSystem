@@ -50,7 +50,7 @@ class VLAN(ElementBase):
 
     def commit_os_interface(self):
         from elements import IpPool
-        if self['purpose'] == 3:
+        if self['purpose'] in [1, 3]:
             return 1  # does not get an interface
         if self['_id'] is None:
             return 2  # not saved yet, therefor could be invalid
