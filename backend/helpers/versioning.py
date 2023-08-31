@@ -157,3 +157,6 @@ def db_defaults():
     if docDB.get_setting('os_netplan_path') is None:
         print('Setting /etc/netplan as os_netplan_path default')
         docDB.set_setting('os_netplan_path', '/etc/netplan')
+    if docDB.get_setting('os_dnsmasq_path') is None:
+        print('Setting /etc/dnsmasq.d as os_dnsmasq_path default')
+        docDB.set_setting('os_dnsmasq_path', '/etc/dnsmasq.d')

@@ -107,6 +107,36 @@ def set_os_netplan_path():
     docDB.set_setting('os_netplan_path', path)
 
 
+def set_os_dnsmasq_path():
+    from helpers.docdb import docDB
+    path = input('Enter path where dnsmasq configs should be stored: ').strip()
+    docDB.set_setting('os_dnsmasq_path', path)
+
+
+def set_domain():
+    from helpers.docdb import docDB
+    domain = input('Enter domain of local network: ').strip().strip('.')
+    docDB.set_setting('domain', domain)
+
+
+def set_subdomain():
+    from helpers.docdb import docDB
+    subdomain = input('Enter subdomain name of LPOS (without domain of local network): ').strip().strip('.')
+    docDB.set_setting('subdomain', subdomain)
+
+
+def set_gateway():
+    from helpers.docdb import docDB
+    gateway = input('Enter IP of gateway to the internet for the play-network: ').strip().strip('.')
+    docDB.set_setting('play_gateway', gateway)
+
+
+def set_upstream():
+    from helpers.docdb import docDB
+    upstream = input('Enter IP of upstream DNS-Server: ').strip().strip('.')
+    docDB.set_setting('upstream_dns', upstream)
+
+
 def clearDB(force=False):
     if not force and not input('Wipe all data on database? (y/N): ').strip() == 'y':
         return
@@ -200,6 +230,11 @@ commands = [
     ('Create Admin', create_admin),
     ('Set OS Network Interface for VLANs', set_os_nw_interface),
     ('Set OS netplan path', set_os_netplan_path),
+    ('Set OS dnsmasq path', set_os_dnsmasq_path),
+    ('Set local network domain', set_domain),
+    ('Set LPOS subdomain', set_subdomain),
+    ('Set play gateway IP', set_gateway),
+    ('Set upstream DNS IP', set_upstream),
     ('Clear DB', clearDB),
     ('Create Backup', createBackup),
     ('Restore Backup', restoreBackup),
