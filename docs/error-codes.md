@@ -88,6 +88,16 @@
   * **3**: to many Switches in restart order
   * **4**: not all Switches could be <commited|retreated\> *additional parameter `failed` with list of Switch-IDs where commit/retreat failed*
 
+# vlan_os_interfaces_commit/_retreat error-codes
+
+  * **1**: system integrity check failed *additional parameter `integrity` containing the result dict of check_integrity*
+  * **2**: not all VLAN OS-Interfaces could be <commited|retreated\> *additional parameter `failed` with list of Switch-IDs where commit/retreat failed*
+
+# vlan_dnsmasq_config_commit/_retreat error-codes
+
+  * **1**: system integrity check failed *additional parameter `integrity` containing the result dict of check_integrity*
+  * **2**: not all VLAN dnsmasq-configs could be <commited|retreated\> *additional parameter `failed` with list of Switch-IDs where commit/retreat failed*
+
 # system check_integrity error-codes
 
   * **1**: there is a missmatch in how many switchlinks should exist (<count\>) and do exist (<count\>)

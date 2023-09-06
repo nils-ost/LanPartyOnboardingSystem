@@ -19,11 +19,31 @@ export class SystemService {
     return this.http.get<System>(this.systemUrl, {withCredentials:true});
   }
 
-  public execCommit(): Observable<any> {
-    return this.http.post<any>(this.systemUrl + 'commit/', {}, {withCredentials:true});
+  public checkIntegrity(): Observable<any> {
+    return this.http.get<any>(this.systemUrl + 'integrity/', {withCredentials:true});
   }
 
-  public execRetreat(): Observable<any> {
-    return this.http.post<any>(this.systemUrl + 'retreat/', {}, {withCredentials:true});
+  public execCommitInterfaces(): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'commit_interfaces/', {}, {withCredentials:true});
+  }
+
+  public execRetreatInterfaces(): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'retreat_interfaces/', {}, {withCredentials:true});
+  }
+
+  public execCommitDnsmasq(): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'commit_dnsmasq/', {}, {withCredentials:true});
+  }
+
+  public execRetreatDnsmasq(): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'retreat_dnsmasq/', {}, {withCredentials:true});
+  }
+
+  public execCommitSwitches(): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'commit_switches/', {}, {withCredentials:true});
+  }
+
+  public execRetreatSwitches(): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'retreat_switches/', {}, {withCredentials:true});
   }
 }

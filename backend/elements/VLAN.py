@@ -101,7 +101,10 @@ class VLAN(ElementBase):
         if self['_id'] is None:
             return False  # not saved yet, therefor could be invalid
         netplan_path = docDB.get_setting('os_netplan_path')
-        os.remove(os.path.join(netplan_path, f"02-vlan{self['number']}.yaml"))
+        try:
+            os.remove(os.path.join(netplan_path, f"02-vlan{self['number']}.yaml"))
+        except FileNotFoundError:
+            pass
         return True
 
     def commit_dnsmasq_config(self):
@@ -181,5 +184,8 @@ class VLAN(ElementBase):
         if self['_id'] is None:
             return False  # not saved yet, therefor could be invalid
         dnsmasq_path = docDB.get_setting('os_dnsmasq_path')
-        os.remove(os.path.join(dnsmasq_path, f"vlan{self['number']}.config"))
+        try:
+            os.remove(os.path.join(dnsmasq_path, f"vlan{self['number']}.config"))
+        except FileNotFoundError:
+            pass
         return True
