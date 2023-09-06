@@ -290,6 +290,11 @@ class Switch(ElementBase):
         Removes all configuration eventually made by LPOS from a (Hardware)Switch
         but the Switch-Configuration within LPOS is left untouched
         """
+        from helpers.system import check_integrity_switch_commit
+        integrity = check_integrity_switch_commit()
+        if not integrity.get('code', 1) == 0:
+            return False
+
         stages = [self._retreat_port_vlans, self._retreat_isolation, self._retreat_vlan_memberships, self._retreat_vlans]
         for stage in stages:
             try:
@@ -505,6 +510,11 @@ class Switch(ElementBase):
         """
         Sends all required configuration made in LPOS to a (Hardware)Switch
         """
+        from helpers.system import check_integrity_switch_commit
+        integrity = check_integrity_switch_commit()
+        if not integrity.get('code', 1) == 0:
+            return False
+
         stages = [self._commit_vlans, self._commit_vlan_memberships, self._commit_isolation, self._commit_port_vlans]
         for stage in stages:
             try:

@@ -76,8 +76,8 @@ def switches_commit():
     this is done in an order that is unlikely to lock a Switch.
     The order is determined by switch_restart_order
     """
-    from helpers.system import check_integrity
-    integrity = check_integrity()
+    from helpers.system import check_integrity_switch_commit
+    integrity = check_integrity_switch_commit()
     if not integrity.get('code', 1) == 0:
         return {'code': 1, 'desc': 'system integrity check failed', 'integrity': integrity}
 
@@ -149,8 +149,8 @@ def switches_retreat():
     this is done in an order that is unlikely to lock a Switch.
     The order is determined by switch_restart_order
     """
-    from helpers.system import check_integrity
-    integrity = check_integrity()
+    from helpers.system import check_integrity_switch_commit
+    integrity = check_integrity_switch_commit()
     if not integrity.get('code', 1) == 0:
         return {'code': 1, 'desc': 'system integrity check failed', 'integrity': integrity}
 

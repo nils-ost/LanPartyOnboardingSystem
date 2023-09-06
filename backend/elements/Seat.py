@@ -11,6 +11,15 @@ class Seat(ElementBase):
     )
 
     @classmethod
+    def get_by_table(cls, table_id):
+        result = list()
+        for fromdb in docDB.search_many(cls.__name__, {'table_id': table_id}):
+            r = cls()
+            r._attr = fromdb
+            result.append(r)
+        return result
+
+    @classmethod
     def get_by_number(cls, table_id, number):
         result = cls()
         fromdb = docDB.search_one(cls.__name__, {'number': number, 'table_id': table_id})

@@ -50,26 +50,29 @@ class VLAN(ElementBase):
 
     def commit_os_interface(self):
         from elements import IpPool
+        from helpers.system import check_integrity_vlan_interface_commit
+        integrity = check_integrity_vlan_interface_commit()
+        if not integrity.get('code', 1) == 0:
+            return False  # integrity check failed, can't continue
+
         if self['purpose'] in [1, 3]:
-            return 1  # does not get an interface
+            return True  # does not get an interface
         if self['_id'] is None:
-            return 2  # not saved yet, therefor could be invalid
+            return False  # not saved yet, therefor could be invalid
+
         iname = docDB.get_setting('os_nw_interface')
-        if iname is None:
-            return 3  # needs to be configured
         netplan_path = docDB.get_setting('os_netplan_path')
-        if netplan_path is None:
-            return 4  # needs to be configured
+
         if self['purpose'] == 0:
             for pool in IpPool.get_by_vlan(self['_id']):
                 if pool['lpos']:
                     break
             else:
-                return 5  # no pool defined as lpos
+                return False  # no pool defined as lpos
         else:
             pool = IpPool.get_by_vlan(self['_id'])
             if len(pool) == 0:
-                return 6  # no needed pool defined
+                return False  # no needed pool defined
             pool = pool[0]
         ip = '.'.join([str(e) for e in IpPool.int_to_octetts(pool['range_start'])])
         mask = pool['mask']
@@ -85,56 +88,53 @@ class VLAN(ElementBase):
       dhcp4: no"""
         with open(os.path.join(netplan_path, f"02-vlan{self['number']}.yaml"), 'w') as f:
             f.write(cfg)
-        return 0
+        return True
 
     def retreat_os_interface(self):
+        from helpers.system import check_integrity_vlan_interface_commit
+        integrity = check_integrity_vlan_interface_commit()
+        if not integrity.get('code', 1) == 0:
+            return False  # integrity check failed, can't continue
+
         if self['purpose'] == 3:
-            return 1  # does not got an interface
+            return True  # does not got an interface
         if self['_id'] is None:
-            return 2  # not saved yet, therefor could be invalid
+            return False  # not saved yet, therefor could be invalid
         netplan_path = docDB.get_setting('os_netplan_path')
-        if netplan_path is None:
-            return 3  # needs to be configured
         os.remove(os.path.join(netplan_path, f"02-vlan{self['number']}.yaml"))
-        return 0
+        return True
 
     def commit_dnsmasq_config(self):
         from elements import IpPool
+        from helpers.system import check_integrity_vlan_dnsmasq_commit
+        integrity = check_integrity_vlan_dnsmasq_commit()
+        if not integrity.get('code', 1) == 0:
+            return False  # integrity check failed, can't continue
+
         if self['purpose'] in [1, 3]:
-            return 1  # does not get a dnsmasq config
+            return True  # does not get a dnsmasq config
         if self['_id'] is None:
-            return 2  # not saved yet, therefor could be invalid
+            return False  # not saved yet, therefor could be invalid
         iname = docDB.get_setting('os_nw_interface')
-        if iname is None:
-            return 3  # needs to be configured
         iname = f'vlan{self["number"]}@{iname}'
         dnsmasq_path = docDB.get_setting('os_dnsmasq_path')
-        if dnsmasq_path is None:
-            return 4  # needs to be configured
         domain = docDB.get_setting('domain')
-        if domain is None:
-            return 5  # needs to be configured
         subdomain = docDB.get_setting('subdomain')
-        if subdomain is None:
-            return 6  # needs to be configured
         upstream_dns = docDB.get_setting('upstream_dns')
-        if upstream_dns is None:
-            return 7  # needs to be configured
         gateway = docDB.get_setting('play_gateway')
-        if gateway is None:
-            return 8  # needs to be configured
         fqdn = subdomain + '.' + domain
+
         # determine IP
         if self['purpose'] == 0:
             for pool in IpPool.get_by_vlan(self['_id']):
                 if pool['lpos']:
                     break
             else:
-                return 9  # no pool defined as lpos
+                return False  # no pool defined as lpos
         else:
             pool = IpPool.get_by_vlan(self['_id'])
             if len(pool) == 0:
-                return 10  # no needed pool defined
+                return False  # no needed pool defined
             pool = pool[0]
         ip = '.'.join([str(e) for e in IpPool.int_to_octetts(pool['range_start'])])
 
@@ -168,15 +168,18 @@ class VLAN(ElementBase):
         # write config file
         with open(os.path.join(dnsmasq_path, f"vlan{self['number']}.config"), 'w') as f:
             f.write('\n'.join(lines))
-        return 0
+        return True
 
     def retreat_dnsmasq_config(self):
+        from helpers.system import check_integrity_vlan_dnsmasq_commit
+        integrity = check_integrity_vlan_dnsmasq_commit()
+        if not integrity.get('code', 1) == 0:
+            return False  # integrity check failed, can't continue
+
         if self['purpose'] in [1, 3]:
-            return 1  # does not got a dnsmasq config
+            return True  # does not got a dnsmasq config
         if self['_id'] is None:
-            return 2  # not saved yet, therefor could be invalid
+            return False  # not saved yet, therefor could be invalid
         dnsmasq_path = docDB.get_setting('os_dnsmasq_path')
-        if dnsmasq_path is None:
-            return 3  # needs to be configured
         os.remove(os.path.join(dnsmasq_path, f"vlan{self['number']}.config"))
-        return 0
+        return True
