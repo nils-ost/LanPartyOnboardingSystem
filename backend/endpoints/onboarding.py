@@ -2,6 +2,7 @@ import cherrypy
 import cherrypy_cors
 import subprocess
 from elements import Device, Table, Seat, Participant
+from helpers.backgroundworker import device_onboarding_schedule
 
 
 def get_devicemac(ip):
@@ -127,7 +128,8 @@ class OnboardingEndpoint():
             device.save()
             seat['claiming_device_id'] = None
             seat.save()
-            # TODO: configure and reset Switch-Port
+            # configure and reset Switch-Port
+            device_onboarding_schedule(device['_id'])
             cherrypy.response.status = 201
             return {'done': True, 'ip': device['ip']}
 

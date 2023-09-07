@@ -4,9 +4,8 @@ import cherrypy_cors
 import logging
 from helpers.docdb import docDB
 from helpers.config import get_config
-from helpers.backgroundworker import device_scanner
+from helpers.backgroundworker import device_scanner_start, device_onboarding_start
 from helpers.versioning import run as versioning_run
-from threading import Thread
 from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint, SwitchEndpoint, OnboardingEndpoint
 from elements import VLAN, IpPool, Table, Seat, Participant, Device, Port
 
@@ -89,6 +88,6 @@ if __name__ == '__main__':
 
     docDB.wait_for_connection()
     versioning_run()
-    device_scanner_thread = Thread(target=device_scanner, daemon=True)
-    device_scanner_thread.start()
+    device_scanner_start()
+    device_onboarding_start()
     cherrypy.quickstart(API(), '/', conf)

@@ -209,6 +209,22 @@ class Switch(ElementBase):
         swi.commitNeeded()
         return 0
 
+    def port_disable(self, port_number):
+        global switch_objects
+        if not self.connected():
+            return 1
+        swi = switch_objects[self['_id']]
+        swi.portEdit(port_number, enabled=False)
+        swi.commitNeeded()
+
+    def port_enable(self, port_number):
+        global switch_objects
+        if not self.connected():
+            return 1
+        swi = switch_objects[self['_id']]
+        swi.portEdit(port_number, enabled=True)
+        swi.commitNeeded()
+
     def _retreat_vlans(self):
         """
         Removes all configured VLANs eventually made by LPOS from a (Hardware)Switch
