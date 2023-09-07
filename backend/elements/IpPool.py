@@ -40,6 +40,11 @@ class IpPool(ElementBase):
             r.append(int(h[idx * 2:(idx + 1) * 2], 16))
         return tuple(r)
 
+    def mask_dotted(self):
+        mask = (2 ** self['mask'] - 1) << (32 - self['mask'])
+        octetts = self.__class__.int_to_octetts(mask)
+        return '.'.join([str(o) for o in octetts])
+
     def validate(self):
         from elements import VLAN
         errors = dict()

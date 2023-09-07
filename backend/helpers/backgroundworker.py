@@ -50,7 +50,7 @@ def device_onboarding():
             device_mac = ':'.join(re.findall('..', device['mac']))
             subprocess.call(f"sed -i '/{device_mac}/d' /var/lib/misc/dnsmasq.leases", shell=True)
             # reload dnsmasq
-            subprocess.call('systemctl reload dnsmasq', shell=True)
+            subprocess.call('systemctl restart dnsmasq', shell=True)
             # shut on switchport
             device.port().switch().port_enable(port_number)
         except Exception as e:
@@ -60,8 +60,8 @@ def device_onboarding():
 
 
 def device_onboarding_start():
-    global device_scanner_thread
-    if device_scanner_thread is None:
+    global device_onboarding_thread
+    if device_onboarding_thread is None:
         device_onboarding_thread = Thread(target=device_onboarding, daemon=True)
         device_onboarding_thread.start()
 

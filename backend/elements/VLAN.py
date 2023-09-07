@@ -146,9 +146,9 @@ class VLAN(ElementBase):
         # special lines for onboarding VLANs
         if self['purpose'] == 2:
             lines.append(f'host-record={fqdn},{ip},10')
-            first_ip = '.'.join([str(e) for e in IpPool.int_to_octetts(pool['range_start'] + 1)])
-            last_ip = '.'.join([str(e) for e in IpPool.int_to_octetts(pool['range_end'])])
-            lines.append(f'dhcp-range={iname},{first_ip},{last_ip},10s')
+            first_ip = '.'.join([str(o) for o in IpPool.int_to_octetts(pool['range_start'] + 1)])
+            last_ip = '.'.join([str(o) for o in IpPool.int_to_octetts(pool['range_end'])])
+            lines.append(f'dhcp-range={iname},{first_ip},{last_ip},{pool.mask_dotted()},10s')
 
         # special lines for play VLAN
         else:
@@ -163,10 +163,18 @@ class VLAN(ElementBase):
             lines.append(f'dhcp-option={iname},3,{gateway}')
             # determine all devices fully onboarded on play VLAN (or rather any play IpPool)
             for pool in IpPool.get_by_vlan(self['_id']):
+                first_ip = '.'.join([str(o) for o in IpPool.int_to_octetts(pool['range_start'])])
+                last_ip = '.'.join([str(o) for o in IpPool.int_to_octetts(pool['range_end'])])
+                # check if pool is a seat-pool
+                if docDB.search_one('Table', {'seat_ip_pool_id': pool['_id']}) is not None:
+                    lines.append(f'dhcp-range={iname},{first_ip},static,{pool.mask_dotted()},1h')
+                # check is pool is a additional-pool
+                elif docDB.search_one('Table', {'add_ip_pool_id': pool['_id']}) is not None:
+                    lines.append(f'dhcp-range={iname},{first_ip},{last_ip},{pool.mask_dotted()},1h')
                 for device in docDB.search_many('Device', {'ip_pool_id': pool['_id'], 'ip': {'$ne': None}}):
                     device_mac = ':'.join(re.findall('..', device['mac']))
                     device_ip = '.'.join([str(e) for e in IpPool.int_to_octetts(device['ip'])])
-                    lines.append(f'dhcp-host={iname},{device_mac},{device_ip},1h')
+                    lines.append(f'dhcp-host={device_mac},{device_ip},1h')
 
         # write config file
         with open(os.path.join(dnsmasq_path, f"vlan{self['number']}.config"), 'w') as f:
