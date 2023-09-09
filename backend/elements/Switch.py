@@ -492,31 +492,35 @@ class Switch(ElementBase):
         # Cache the LPOS-Port
         lpos_port = Port.get_lpos()
 
+        vmode = 'strict'
+        if 'strict' not in swi.vlan_mode_mapping_reverse:
+            vmode = 'enabled'
+
         for idx in range(len(swi.ports)):
             port = Port.get_by_number(self['_id'], idx)
             if port == lpos_port:
                 # add mgmt-VLAN as default
-                swi.portEdit(idx, vmode='strict', vreceive='any', vdefault=mgmt_vlan_nb, vforce=False)
+                swi.portEdit(idx, vmode=vmode, vreceive='any', vdefault=mgmt_vlan_nb, vforce=False)
             elif port['switchlink']:
                 # play-VLAN as default
-                swi.portEdit(idx, vmode='strict', vreceive='only tagged', vdefault=play_vlan_nb, vforce=False)
+                swi.portEdit(idx, vmode=vmode, vreceive='only tagged', vdefault=play_vlan_nb, vforce=False)
             elif port['commit_disabled']:
                 continue
             elif onboarding_vlan_nb is None:
                 # this is an core Switch, all not switchlinks get the play-VLAN
-                swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=play_vlan_nb, vforce=False)
+                swi.portEdit(idx, vmode=vmode, vreceive='only untagged', vdefault=play_vlan_nb, vforce=False)
             elif not port['participants']:
                 # not designated to participants, but gets play-VLAN as default
-                swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=play_vlan_nb, vforce=False)
+                swi.portEdit(idx, vmode=vmode, vreceive='only untagged', vdefault=play_vlan_nb, vforce=False)
             else:
                 for device in Device.get_by_port(port['_id']):
                     if device['ip'] is not None:
                         # a valid configured Device is connected to this Port, therefor defaults to play-VLAN
-                        swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=play_vlan_nb, vforce=False)
+                        swi.portEdit(idx, vmode=vmode, vreceive='only untagged', vdefault=play_vlan_nb, vforce=False)
                         break
                 else:
                     # no configured Device on this Port, defaults to onboarding-VLAN
-                    swi.portEdit(idx, vmode='strict', vreceive='only untagged', vdefault=onboarding_vlan_nb, vforce=False)
+                    swi.portEdit(idx, vmode=vmode, vreceive='only untagged', vdefault=onboarding_vlan_nb, vforce=False)
 
         swi.commitNeeded()
         swi.reloadAll()

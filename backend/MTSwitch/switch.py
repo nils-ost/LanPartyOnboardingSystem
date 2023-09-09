@@ -552,6 +552,33 @@ class MikroTikSwitch():
             self.logger.error(f'setMgmtVlan: vlan with id {vlan} is not present')
 
 
+class MikroTikSwitchCRS309(MikroTikSwitch):
+    vlan_mode_mapping = {
+        '0x00': 'disabled',
+        '0x01': 'optional',
+        '0x02': 'enabled'
+    }
+    vlan_mode_mapping_reverse = dict([(v, k) for k, v in vlan_mode_mapping.items()])
+
+    speed_mapping = {
+        '0x00': '10M',
+        '0x01': '100M',
+        '0x02': '1G',
+        '0x03': '10G',
+        '0x04': None
+    }
+
+    def loadPorts(self):
+        self.ports = list()
+        r = self.getData('link.b')
+        for t in ['sfp+'] * int(r.get('sfp', '0'), 16) + ['gbe']:
+            p = SwitchPort()
+            p.type = t
+            self.ports.append(p)
+        super().loadPorts(r)
+        self._commitUnregister('ports')
+
+
 class MikroTikSwitchCRS328(MikroTikSwitch):
     def loadPorts(self):
         self.ports = list()
@@ -634,6 +661,7 @@ class MikroTikSwitchCSS610(MikroTikSwitch):
 
 model_mapping = {
     'generic': MikroTikSwitch,
+    'CRS309-1G-8S+': MikroTikSwitchCRS309,
     'CRS328-24P-4S+': MikroTikSwitchCRS328,
     'CSS326-24G-2S+': MikroTikSwitchCSS326,
     'CSS610-8G-2S+': MikroTikSwitchCSS610
