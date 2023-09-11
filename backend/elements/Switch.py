@@ -226,6 +226,34 @@ class Switch(ElementBase):
         swi.portEdit(port_number, enabled=True)
         swi.commitNeeded()
 
+    def _retreat_collect_configs(self):
+        """
+        Collects the current (hardware) configuration of all commit_disabled ports,
+        and stores them in docDB to be set again on a new commit run
+        """
+        from elements import Port
+        global switch_objects
+        if not self.connected():
+            return False
+        swi = switch_objects[self['_id']]
+        swi.reloadAll()
+
+        for p in docDB.search_many('Port', {'switch_id': self['_id'], 'commit_disabled': True}):
+            p = Port(p)
+            if p['commit_config'] is not None:
+                continue
+            p['commit_config'] = dict({'vlans': list()})
+            for vlan in swi.vlans:
+                if p['number'] in vlan._member:
+                    p['commit_config']['vlans'].append(vlan.id)
+            p['commit_config']['enabled'] = swi.ports[p['number']].enabled
+            p['commit_config']['vlan_mode'] = swi.ports[p['number']].vlan_mode
+            p['commit_config']['vlan_receive'] = swi.ports[p['number']].vlan_receive
+            p['commit_config']['vlan_default'] = swi.ports[p['number']].vlan_default
+            p['commit_config']['vlan_force'] = swi.ports[p['number']].vlan_force
+            p.save()
+        return True
+
     def _retreat_vlans(self):
         """
         Removes all configured VLANs eventually made by LPOS from a (Hardware)Switch
@@ -312,7 +340,7 @@ class Switch(ElementBase):
         if not integrity.get('code', 1) == 0:
             return False
 
-        stages = [self._retreat_port_vlans, self._retreat_isolation, self._retreat_vlan_memberships, self._retreat_vlans]
+        stages = [self._retreat_collect_configs, self._retreat_port_vlans, self._retreat_isolation, self._retreat_vlan_memberships, self._retreat_vlans]
         for stage in stages:
             try:
                 if not stage():
@@ -327,6 +355,37 @@ class Switch(ElementBase):
         if self.count() == docDB.count(self.__class__.__name__, {'commited': False}):
             from helpers.system import set_commited
             set_commited(False)
+
+    def _commit_collected_configs(self):
+        """
+        Commits the collected configs (during retreat) for commit_disabled ports
+        """
+        from elements import Port
+        global switch_objects
+        if not self.connected():
+            return False
+        swi = switch_objects[self['_id']]
+
+        for p in docDB.search_many('Port', {'switch_id': self['_id'], 'commit_disabled': True}):
+            p = Port(p)
+            if p['commit_config'] is None:
+                continue
+            for vlan_id in p['commit_config']['vlans']:
+                swi.vlanEdit(vlan_id, memberAdd=p['number'])
+            swi.portEdit(
+                p['number'],
+                enabled=p['commit_config']['enabled'],
+                vmode=p['commit_config']['vlan_mode'],
+                vreceive=p['commit_config']['vlan_receive'],
+                vdefault=p['commit_config']['vlan_default'],
+                vforce=p['commit_config']['vlan_force'])
+
+            p['commit_config'] = None
+            p.save()
+        
+        swi.commitNeeded()
+        swi.reloadAll()
+        return True
 
     def _commit_vlans(self):
         """
@@ -536,7 +595,7 @@ class Switch(ElementBase):
         if not integrity.get('code', 1) == 0:
             return False
 
-        stages = [self._commit_vlans, self._commit_vlan_memberships, self._commit_isolation, self._commit_port_vlans]
+        stages = [self._commit_vlans, self._commit_vlan_memberships, self._commit_isolation, self._commit_port_vlans, self._commit_collected_configs]
         for stage in stages:
             try:
                 if not stage():

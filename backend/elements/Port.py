@@ -9,7 +9,8 @@ class Port(ElementBase):
         participants=ElementBase.addAttr(type=bool, default=False, notnone=True),
         switchlink=ElementBase.addAttr(type=bool, default=False, notnone=True),
         switchlink_port_id=ElementBase.addAttr(default=None, fk='Port'),
-        commit_disabled=ElementBase.addAttr(type=bool, default=False, notnone=True)
+        commit_disabled=ElementBase.addAttr(type=bool, default=False, notnone=True),
+        commit_config=ElementBase.addAttr(type=dict, default=None)  # contains the configuration for commit_disabled ports, collected by retreat
     )
 
     @classmethod

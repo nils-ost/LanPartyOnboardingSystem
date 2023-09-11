@@ -152,6 +152,10 @@ def run():
         for s in docDB.search_many('Switch', {'desc': None}):
             s['desc'] = ''
             docDB.replace('Switch', s)
+        print("  Adding 'commit_config' attribute to Ports")
+        for p in docDB.search_many('Port', {'commit_config': None}):
+            p['commit_config'] = None
+            docDB.replace('Port', p)
 
     db_defaults()
 
