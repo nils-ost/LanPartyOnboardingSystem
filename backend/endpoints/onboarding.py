@@ -1,7 +1,7 @@
 import cherrypy
 import cherrypy_cors
 import subprocess
-from elements import Device, Table, Seat, Participant
+from elements import Device, Table, Seat, Participant, IpPool
 from helpers.backgroundworker import device_onboarding_schedule
 
 
@@ -46,7 +46,10 @@ class OnboardingEndpoint():
             return {'error': {'code': 6, 'desc': 'could not determine device'}}
         if device['ip'] is not None:
             cherrypy.response.status = 201
-            return {'ip': device['ip']}
+            ip = IpPool.octetts_to_int(*[int(o) for o in cherrypy.request.remote.ip.split('.')])
+            if not device['ip'] == ip:
+                return {'done': True, 'ip': ip}
+            return {'ip': ip}
         if device['onboarding_blocked']:
             cherrypy.response.status = 400
             return {'error': {'code': 7, 'desc': 'device is blocked for onboarding'}}
@@ -131,7 +134,8 @@ class OnboardingEndpoint():
             # configure and reset Switch-Port
             device_onboarding_schedule(device['_id'])
             cherrypy.response.status = 201
-            return {'done': True, 'ip': device['ip']}
+            ip = IpPool.octetts_to_int(*[int(o) for o in cherrypy.request.remote.ip.split('.')])
+            return {'done': True, 'ip': ip}
 
         else:
             cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST, PUT'
