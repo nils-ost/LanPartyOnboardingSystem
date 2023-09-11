@@ -42,7 +42,7 @@ def device_onboarding():
             # shut off switchport
             device.port().switch().port_disable(port_number)
             # renew vlan config of switchport
-            device.port().switch()._commit_vlan_memberships()
+            device.port().switch().commit()
             # renew dnsmasq config of play vlan
             play_vlan = VLAN.get_by_purpose(0)[0]
             play_vlan.commit_dnsmasq_config()

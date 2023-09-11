@@ -7,15 +7,15 @@
         <target state="signed-off">darf nicht leer sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">176</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
@@ -55,7 +55,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">112</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
@@ -75,11 +75,11 @@
         <target state="signed-off">ungültiger Typ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
@@ -123,7 +123,7 @@
         <target state="signed-off">Speichern</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.html</context>
@@ -147,11 +147,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">114</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">126</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/seats-list/seats-list.component.html</context>
@@ -163,7 +163,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.html</context>
@@ -263,7 +263,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pools-list/ip-pools-list.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode30" datatype="html">
@@ -271,7 +271,7 @@
         <target state="signed-off">Wert muss zwischen 8 und 30 sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode31" datatype="html">
@@ -279,7 +279,7 @@
         <target state="signed-off">fällt nicht in den IP Bereich</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">161</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelIpPoolRangeStart" datatype="html">
@@ -291,7 +291,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pools-list/ip-pools-list.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelIpPoolRangeEnd" datatype="html">
@@ -303,7 +303,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pools-list/ip-pools-list.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode32" datatype="html">
@@ -311,11 +311,11 @@
         <target state="signed-off">Bereich Start muss kleiner als Bereich Ende sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">170</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode33" datatype="html">
@@ -323,11 +323,11 @@
         <target state="signed-off">überlappt mit bestehendem IpPool</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">171</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode34" datatype="html">
@@ -335,11 +335,11 @@
         <target state="signed-off">ungültige IP</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">172</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode35" datatype="html">
@@ -347,7 +347,7 @@
         <target state="signed-off">VLAN mit dieser ID nicht gefunden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">177</context>
         </context-group>
       </trans-unit>
       <trans-unit id="DeleteErrorGeneric" datatype="html">
@@ -419,7 +419,15 @@
         <target state="signed-off">Konfiguriere</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">251</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecCommitStartedDetail" datatype="html">
@@ -435,7 +443,15 @@
         <target state="signed-off">Abgeschlossen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">187</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">225</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">261</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecCommitSuccessDetail" datatype="html">
@@ -451,7 +467,15 @@
         <target state="signed-off">Fehler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">160</context>
+          <context context-type="linenumber">204</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">240</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">276</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatStartedSummary" datatype="html">
@@ -459,7 +483,15 @@
         <target state="signed-off">setze zurück</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">292</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">330</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">366</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatStartedDetail" datatype="html">
@@ -475,7 +507,15 @@
         <target state="signed-off">Abgeschlossen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">302</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">340</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">376</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatSuccessDetail" datatype="html">
@@ -491,7 +531,15 @@
         <target state="signed-off">Fehler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">319</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">355</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">391</context>
         </context-group>
       </trans-unit>
       <trans-unit id="onboardingFieldLabelTable" datatype="html">
@@ -499,7 +547,7 @@
         <target state="signed-off">Tisch Nummer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit>
       <trans-unit id="onboardingFieldLabelSeat" datatype="html">
@@ -507,7 +555,7 @@
         <target state="signed-off">Sitzplatz Nummer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="onboardingFieldLabelPw" datatype="html">
@@ -515,7 +563,7 @@
         <target state="signed-off">Sitzplatz Passwort</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode6" datatype="html">
@@ -719,11 +767,11 @@
         <target state="signed-off">Beschreibung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">111</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPortParticipants" datatype="html">
@@ -731,7 +779,7 @@
         <target state="signed-off">Teilnehmer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPortType" datatype="html">
@@ -739,7 +787,7 @@
         <target state="signed-off">Typ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPortEnabled" datatype="html">
@@ -747,7 +795,7 @@
         <target state="signed-off">Eingeschaltet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPortLink" datatype="html">
@@ -755,7 +803,7 @@
         <target state="signed-off">Aktiv</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPortSpeed" datatype="html">
@@ -763,7 +811,7 @@
         <target state="signed-off">Geschwindigkeit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPortSwitchlink" datatype="html">
@@ -771,7 +819,7 @@
         <target state="signed-off">SWlink</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPortVlanIds" datatype="html">
@@ -779,7 +827,7 @@
         <target state="signed-off">VLANs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPortSwitchlinkPortId" datatype="html">
@@ -787,7 +835,7 @@
         <target state="signed-off">SWlink Port</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSeatTableId" datatype="html">
@@ -835,11 +883,11 @@
         <target state="signed-off">URL</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSwitchUser" datatype="html">
@@ -847,11 +895,11 @@
         <target state="signed-off">Benutzername</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">19</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSwitchPw" datatype="html">
@@ -859,11 +907,11 @@
         <target state="signed-off">Passwort</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSwitchPurpose" datatype="html">
@@ -871,11 +919,11 @@
         <target state="signed-off">Zweck</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSwitchOnboardingVlanId" datatype="html">
@@ -883,11 +931,11 @@
         <target state="signed-off">Onboarding VLAN</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode20" datatype="html">
@@ -895,7 +943,7 @@
         <target state="signed-off">ungültiger Zweck</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode21" datatype="html">
@@ -903,7 +951,7 @@
         <target state="signed-off">darf beim gewählten Zweck nicht leer sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">122</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode22" datatype="html">
@@ -911,7 +959,7 @@
         <target state="signed-off">VLAN mit dieser ID nicht gefunden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode23" datatype="html">
@@ -919,7 +967,7 @@
         <target state="signed-off">dieses VLAN hat nicht den Zweck Onboarding</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode24" datatype="html">
@@ -927,7 +975,7 @@
         <target state="signed-off">dieses VLAN wird bereits von einem anderen Switch verwendet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">125</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSwitchConnected" datatype="html">
@@ -935,7 +983,7 @@
         <target state="signed-off">Verbunden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSwitchCommited" datatype="html">
@@ -943,7 +991,7 @@
         <target state="signed-off">Konfiguriert</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSwitchMac" datatype="html">
@@ -951,7 +999,7 @@
         <target state="signed-off">HWaddr</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSwitchKnownVlans" datatype="html">
@@ -959,7 +1007,7 @@
         <target state="signed-off">konfigurierte VLANs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="CommitSwitchStartedSummary" datatype="html">
@@ -1243,11 +1291,11 @@
         </context-group>
       </trans-unit>
       <trans-unit id="onboardingIpReloadinfo" datatype="html">
-        <source>Please wait a few seconds till your network has been restarted. Then try to refresh this page.</source>
-        <target state="signed-off">Bitte warte ein paar Sekunden, bis sich dein Netzwerk neu verbunden hat. Dann versuche diese Seite neu zu laden.</target>
+        <source>Your onboarding is completed! It now takes up to two minutes till your PC assigns it&apos;s final IP. Refresh this page to test if the assignment is done.</source>
+        <target state="signed-off">Onboarding erfolgreich abgeschlossen! Es dauert nun bis zu zwei Minuten bis dein PC sich seine entgültige IP abgeholt hat. Lade diese Seite neu um zu testen ob dieser Prozess abgeschlossen ist.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2478570325506958257" datatype="html">
@@ -1255,7 +1303,7 @@
         <target state="signed-off">Bitte vollständig ausfüllen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
       <trans-unit id="935187492052582731" datatype="html">
@@ -1263,7 +1311,7 @@
         <target state="signed-off">Abschicken</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="onboardingWhoQuestion" datatype="html">
@@ -1271,7 +1319,7 @@
         <target state="signed-off">Bist du</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3542042671420335679" datatype="html">
@@ -1279,7 +1327,7 @@
         <target state="signed-off">Nein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2807800733729323332" datatype="html">
@@ -1287,7 +1335,7 @@
         <target state="signed-off">Ja</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2454050363478003966" datatype="html">
@@ -1304,6 +1352,226 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
           <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelIpPoolLpos" datatype="html">
+        <source>LPOS IP</source>
+        <target state="signed-off">LPOS IP</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ip-pools-list/ip-pools-list.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ElementErrorCode38" datatype="html">
+        <source>range_start and range_end need to be equal</source>
+        <target state="signed-off">Bereich Start und Ende müssen gleich sein</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ElementErrorCode37" datatype="html">
+        <source>Purpose of VLAN needs to be 0 (play)</source>
+        <target state="signed-off">Zweck des VLAN muss 0 (play) sein</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ElementErrorCode39" datatype="html">
+        <source>only one IpPool per VLAN with this purpose is allowed</source>
+        <target state="signed-off">es ist nur ein IpPool pro VLAN, mit diesem Zweck, erlaubt</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ElementErrorCode36" datatype="html">
+        <source>Only allowed once, but there is already an IpPool set as LPOS</source>
+        <target state="signed-off">es existiert bereits ein LPOS IpPool, es ist nur einer erlaubt</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemCheckIntegrityStartedSummary" datatype="html">
+        <source>checking integrity</source>
+        <target state="signed-off">Vollständigkeitsprüfung</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemCheckIntegrityStartedDetail" datatype="html">
+        <source>checking system integrity started</source>
+        <target state="signed-off">Prüfung des Konfigurationsvollständigkeit gestartet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemCheckIntegritySuccessSummary" datatype="html">
+        <source>Done</source>
+        <target state="signed-off">Abgeschlossen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemCheckIntegritySuccessDetail" datatype="html">
+        <source>system integrity is valid</source>
+        <target state="signed-off">Konfiguration ist vollständig</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemCheckIntegrityErrorSummary" datatype="html">
+        <source>Error</source>
+        <target state="signed-off">Fehler</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">161</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecCommitSwitchesStartedDetail" datatype="html">
+        <source>commiting of all Switches started</source>
+        <target state="signed-off">Konfiguration aller Switche gestartet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecCommitSwitchesSuccessDetail" datatype="html">
+        <source>all Switches successful commited</source>
+        <target state="signed-off">alle Switche erfolgreich konfiguriert</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecCommitInterfacesStartedDetail" datatype="html">
+        <source>commiting of all OS-VLAN-Interfaces started</source>
+        <target state="signed-off">Konfiguration aller Betriebssystem-VLANs gestartet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">216</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecCommitInterfacesSuccessDetail" datatype="html">
+        <source>all OS-VLAN-Interfaces successful commited</source>
+        <target state="signed-off">alle Betriebssystem-VLANs erfolgreich konfiguriert</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">226</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecCommitDnsmasqStartedDetail" datatype="html">
+        <source>commiting of all dnsmasq configs started</source>
+        <target state="signed-off">Konfiguration von dnsmasq gestartet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">252</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecCommitDnsmasqSuccessDetail" datatype="html">
+        <source>all dnsmasq configs successful commited</source>
+        <target state="signed-off">dnsmasq erfolgreich konfiguriert</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">262</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecRetreatSwitchesStartedDetail" datatype="html">
+        <source>retreating of all Switches started</source>
+        <target state="signed-off">Zurücksetzen aller Switche gestartet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">293</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecRetreatSwitchesSuccessDetail" datatype="html">
+        <source>all Switches successful retreated</source>
+        <target state="signed-off">alle Switche erolgreich zurückgesetzt</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">303</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecRetreatInterfacesStartedDetail" datatype="html">
+        <source>retreating of all OS-VLAN-Interfaces started</source>
+        <target state="signed-off">Zurücksetzen aller Betriebssystem-VLANs gestartet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">331</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecRetreatInterfacesSuccessDetail" datatype="html">
+        <source>all OS-VLAN-Interfaces successful retreated</source>
+        <target state="signed-off">alle Betriebssystem-VLANs erfolgreich zurückgesetzt</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">341</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecRetreatDnsmasqStartedDetail" datatype="html">
+        <source>retreating of all dnsmasq configs started</source>
+        <target state="signed-off">Zurücksetzen der dnsmasq Konfiguration gestartet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">367</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecRetreatDnsmasqSuccessDetail" datatype="html">
+        <source>all dnsmasq configs successful retreated</source>
+        <target state="signed-off">dnsmasq erfolgreich zurückgesetzt</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">377</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="onboardingIpReloadinfo2" datatype="html">
+        <source>If you don&apos;t like to wait that long, you can open Windows-Commandprompt (Win+R) and type &apos;ipconfig /renew&apos; this should assign your play-IP immediately.</source>
+        <target state="signed-off">Falls du nicht so lange warten willst, öffne die Window-Kommandozeile (Win+R) und gib 'ipconfig /renew' ein, dies lässt die entgültige IP sofort zuweisen.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPortCommitDisabled" datatype="html">
+        <source>Commit Disabled</source>
+        <target state="signed-off">Auto-Konfiguration</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelSwitchDesc" datatype="html">
+        <source>Description</source>
+        <target state="signed-off">Beschreibung</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="onboardingIpHeaderUpcoming" datatype="html">
+        <source>Your IP is going to be</source>
+        <target state="signed-off">Deine IP wird lauten</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
     </body>

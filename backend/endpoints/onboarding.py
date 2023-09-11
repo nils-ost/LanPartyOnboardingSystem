@@ -45,10 +45,10 @@ class OnboardingEndpoint():
             cherrypy.response.status = 400
             return {'error': {'code': 6, 'desc': 'could not determine device'}}
         if device['ip'] is not None:
-            cherrypy.response.status = 201
             ip = IpPool.octetts_to_int(*[int(o) for o in cherrypy.request.remote.ip.split('.')])
+            cherrypy.response.status = 201
             if not device['ip'] == ip:
-                return {'done': True, 'ip': ip}
+                return {'done': True, 'ip': device['ip']}
             return {'ip': ip}
         if device['onboarding_blocked']:
             cherrypy.response.status = 400
@@ -134,8 +134,7 @@ class OnboardingEndpoint():
             # configure and reset Switch-Port
             device_onboarding_schedule(device['_id'])
             cherrypy.response.status = 201
-            ip = IpPool.octetts_to_int(*[int(o) for o in cherrypy.request.remote.ip.split('.')])
-            return {'done': True, 'ip': ip}
+            return {'done': True, 'ip': device['ip']}
 
         else:
             cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST, PUT'
