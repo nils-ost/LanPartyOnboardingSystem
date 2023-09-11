@@ -53,7 +53,7 @@ export class PortsListComponent implements OnChanges, OnInit {
       let port: Port = this.ports[i];
       if (port.switchlink) {
         let element: any = {
-          name: this.switchAddrById(port.switch_id) + ': ' + port.number,
+          name: this.switchAddrById(port.switch_id) + ' (' + this.switchDescById(port.switch_id) + '): ' + port.number,
           code: port.id
         };
         list.push(element);
@@ -165,6 +165,14 @@ export class PortsListComponent implements OnChanges, OnInit {
     for (let i = 0; i < this.switches.length; i++) {
       let sw: Switch = this.switches[i];
       if (sw.id == id) return sw.addr;
+    }
+    return '';
+  }
+
+  switchDescById(id: string) {
+    for (let i = 0; i < this.switches.length; i++) {
+      let sw: Switch = this.switches[i];
+      if (sw.id == id) return sw.desc;
     }
     return '';
   }

@@ -14,6 +14,7 @@ export class SwitchCreaditComponent implements OnChanges {
   @Input() sw?: Switch;
   @Input() vlans: Vlan[] = [];
   @Output() dialogEndEvent = new EventEmitter<null>();
+  desc: string = "";
   addr: string = "";
   user: string = "";
   pw: string = "";
@@ -39,6 +40,7 @@ export class SwitchCreaditComponent implements OnChanges {
 
   ngOnChanges(): void {
     if (this.sw) {
+      this.desc = this.sw.desc;
       this.addr = this.sw.addr;
       this.user = this.sw.user;
       this.pw = this.sw.pw;
@@ -72,7 +74,7 @@ export class SwitchCreaditComponent implements OnChanges {
   createSwitch() {
     this.clearErrors();
     this.switchService
-      .createSwitch(this.addr, this.user, this.pw, this.purpose, this.onboarding_vlan_id)
+      .createSwitch(this.desc, this.addr, this.user, this.pw, this.purpose, this.onboarding_vlan_id)
       .subscribe({
         next: (response: any) => {
           this.dialogEndEvent.emit(null);
@@ -87,7 +89,7 @@ export class SwitchCreaditComponent implements OnChanges {
   editSwitch() {
     this.clearErrors();
     this.switchService
-      .updateSwitch(this.sw!.id, this.addr, this.user, this.pw, this.purpose, this.onboarding_vlan_id)
+      .updateSwitch(this.sw!.id, this.desc, this.addr, this.user, this.pw, this.purpose, this.onboarding_vlan_id)
       .subscribe({
         next: (response: any) => {
           this.dialogEndEvent.emit(null);

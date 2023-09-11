@@ -1,5 +1,6 @@
 export interface Switch {
     id: string;
+    desc: string;
     addr: string;
     user: string;
     pw: string;

@@ -1,6 +1,10 @@
-<p-table [value]="switches" sortField="purpose">
+<p-table [value]="switches" sortField="desc">
     <ng-template pTemplate="header">
         <tr>
+            <th pSortableColumn="desc">
+                <ng-container i18n="@@elementFieldLabelSwitchDesc">Description</ng-container>
+                <p-sortIcon field="desc"></p-sortIcon>
+            </th>
             <th pSortableColumn="addr">
                 <ng-container i18n="@@elementFieldLabelSwitchAddr">Address</ng-container>
                 <p-sortIcon field="addr"></p-sortIcon>
@@ -38,6 +42,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-sw>
         <tr>
+            <td>{{ sw.desc }}</td>
             <td>{{ sw.addr }}</td>
             <td>{{ sw.user }}</td>
             <td>{{ sw.pw }}</td>

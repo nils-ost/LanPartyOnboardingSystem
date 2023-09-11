@@ -1,6 +1,13 @@
 <div class="field">
     <span class="p-float-label">
-        <input type="text" id="switchaddr" pInputText [(ngModel)]="addr" [ngClass]="{'ng-invalid ng-dirty': addr_error}" autofocus>
+        <input type="text" id="switchdesc" pInputText [(ngModel)]="desc" autofocus>
+        <label for="switchdesc" i18n="@@elementFieldLabelSwitchDesc">Description</label>
+    </span>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
+        <input type="text" id="switchaddr" pInputText [(ngModel)]="addr" [ngClass]="{'ng-invalid ng-dirty': addr_error}">
         <label for="switchaddr" i18n="@@elementFieldLabelSwitchAddr">Address</label>
     </span>
     <small *ngIf="addr_error" class="p-error block">{{ addr_error }}</small>

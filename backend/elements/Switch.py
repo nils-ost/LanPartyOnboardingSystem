@@ -8,6 +8,7 @@ switch_macs = list()
 
 class Switch(ElementBase):
     _attrdef = dict(
+        desc=ElementBase.addAttr(default='', notnone=True),
         addr=ElementBase.addAttr(unique=True, notnone=True),
         user=ElementBase.addAttr(default='', notnone=True),
         pw=ElementBase.addAttr(default='', notnone=True),

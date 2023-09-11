@@ -146,7 +146,13 @@ def run():
         sys.exit(0)
 
     print(f'Versioning performing upgrade from v{db_version} to v{current_version}')
-    # here could now be done updates on the DB structure if this is required in the future
+    
+    if versions_lt(db_version, '0.2'):
+        print("  Adding 'desc' attribute to Switches")
+        for s in docDB.search_many('Switch', {'desc': None}):
+            s['desc'] = ''
+            docDB.replace('Switch', s)
+
     db_defaults()
 
     docDB.set_setting('version', current_version)
