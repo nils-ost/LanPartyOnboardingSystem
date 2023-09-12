@@ -72,7 +72,7 @@ export class TableCreaditComponent implements OnChanges{
     for (let i = 0; i < this.switches.length; i++) {
       let sw: Switch = this.switches[i];
       if (sw.purpose = SwitchPurposeType.mixed || sw.purpose == SwitchPurposeType.participants)
-        list.push({name: sw.addr, code: sw.id});
+        list.push({name: sw.addr + ' (' + sw.desc + ')', code: sw.id});
     }
     this.switchesOptions = list;
   }

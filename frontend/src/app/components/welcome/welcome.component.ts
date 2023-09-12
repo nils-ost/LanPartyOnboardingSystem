@@ -10,6 +10,7 @@ import { LoginService } from 'src/app/services/login.service';
   styleUrls: ['./welcome.component.scss']
 })
 export class WelcomeComponent implements OnInit, OnChanges {
+  uri: String = window.location.pathname;
   login: boolean = false;
   onboarding?: Onboarding;
 
@@ -43,6 +44,14 @@ export class WelcomeComponent implements OnInit, OnChanges {
 
   gotoLogin() {
     this.router.navigate(['/login']);
+  }
+
+  gotoDE() {
+    window.location.href = '/de/';
+  }
+
+  gotoEN() {
+    window.location.href = '/en/';
   }
 
 }
