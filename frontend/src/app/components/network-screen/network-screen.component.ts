@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
+import { Subscription, timer, Subject } from 'rxjs';
 import { Vlan } from '../../interfaces/vlan';
 import { VlanService } from '../../services/vlan.service';
 import { Switch } from 'src/app/interfaces/switch';
@@ -18,10 +19,12 @@ import { System } from 'src/app/interfaces/system';
   templateUrl: './network-screen.component.html',
   styleUrls: ['./network-screen.component.scss']
 })
-export class NetworkScreenComponent implements OnInit {
+export class NetworkScreenComponent implements OnInit, OnDestroy {
   @ViewChild('createvlan') createVlanDialog: any;
   @ViewChild('createswitch') createSwitchDialog: any;
   @ViewChild('createippool') createIpPoolDialog: any;
+  refreshPortsTimer = timer(20000, 20000);
+  refreshPortsTimerSubscription: Subscription | undefined;
   vlans: Vlan[] = [];
   switches: Switch[] = [];
   ippools: IpPool[] = [];
@@ -46,6 +49,19 @@ export class NetworkScreenComponent implements OnInit {
     this.refreshSwitches();
     this.refreshIpPools();
     this.refreshPorts();
+    this.enableAutoRefresh();
+  }
+
+  ngOnDestroy(): void {
+    this.disableAutoRefresh();
+  }
+
+  enableAutoRefresh() {
+    this.refreshPortsTimerSubscription = this.refreshPortsTimer.subscribe(() => this.refreshPorts());
+  }
+
+  disableAutoRefresh() {
+    this.refreshPortsTimerSubscription?.unsubscribe();
   }
 
   refreshVlans() {

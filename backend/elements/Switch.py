@@ -90,6 +90,7 @@ class Switch(ElementBase):
             return 0
         new_count = 0
         swi = switch_objects[self['_id']]
+        swi.reloadPorts()
         swi.reloadHosts()
         for port in swi.ports:
             p = Port.get_by_number(self['_id'], port.idx)
