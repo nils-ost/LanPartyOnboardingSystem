@@ -76,3 +76,25 @@ def jsonAllAsciiToStr(j):
         else:
             r[k] = v
     return r
+
+
+def jsonAllHexToInt(j):
+    """
+    Helper for development to just try to convert everything in a json from hex to int
+    (to find interesting numeric variables)
+    """
+    r = dict()
+    for k, v in j.items():
+        if isinstance(v, list):
+            r[k] = list()
+            for e in v:
+                try:
+                    r[k].append(int(e, 16))
+                except Exception:
+                    r[k].append(e)
+        else:
+            try:
+                r[k] = int(v, 16)
+            except Exception:
+                r[k] = v
+    return r

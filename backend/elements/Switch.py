@@ -226,6 +226,13 @@ class Switch(ElementBase):
         swi.portEdit(port_number, enabled=True)
         swi.commitNeeded()
 
+    def metrics(self):
+        global switch_objects
+        if not self.connected():
+            return dict()
+        swi = switch_objects[self['_id']]
+        return swi.loadStatsRaw()
+
     def _retreat_collect_configs(self):
         """
         Collects the current (hardware) configuration of all commit_disabled ports,
@@ -382,7 +389,7 @@ class Switch(ElementBase):
 
             p['commit_config'] = None
             p.save()
-        
+
         swi.commitNeeded()
         swi.reloadAll()
         return True

@@ -1,7 +1,7 @@
 import requests
 from requests.auth import HTTPDigestAuth
 import logging
-from .helpers import responseToJson, asciiToStr, jsonToRequest, strToAscii, translateKeys
+from .helpers import responseToJson, asciiToStr, jsonToRequest, strToAscii, translateKeys, jsonAllHexToInt
 from .parts import SwitchPort, SwitchVLAN
 
 
@@ -267,6 +267,10 @@ class MikroTikSwitch():
         self.reloadHosts()
         self.reloadVlans()
         self.reloadPortsVlan()
+
+    def loadStatsRaw(self):
+        j = self.getData('!stats.b')
+        return jsonAllHexToInt(j)
 
     def commitSystem(self, request=None):
         r = request if request else dict()
@@ -619,7 +623,10 @@ class MikroTikSwitchCSS610(MikroTikSwitch):
             'i01': 'fp1', 'i02': 'fp2', 'i03': 'fp3', 'i04': 'fp4', 'i05': 'fp5',
             'i06': 'fp6', 'i07': 'fp7', 'i08': 'fp8', 'i09': 'fp9', 'i0a': 'fp10'},
         '!dhost.b': {'i01': 'adr', 'i02': 'prt'},
-        'vlan.b': {'i01': 'vid', 'i02': 'mbr', 'i03': 'igmp'}
+        'vlan.b': {'i01': 'vid', 'i02': 'mbr', 'i03': 'igmp'},
+        '!stats.b': {
+            'i01': 'rb', 'i05': 'rup', 'i07': 'rbp', 'i08': 'rmp', 'i0f': 'tb',
+            'i11': 'tup', 'i13': 'tmp', 'i14': 'tbp', 'i23': 'rtp', 'i24': 'ttp'}
     }
 
     def getData(self, doc, toJson=True):

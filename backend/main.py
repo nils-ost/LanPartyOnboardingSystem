@@ -7,6 +7,7 @@ from helpers.config import get_config
 from helpers.backgroundworker import device_scanner_start, device_onboarding_start
 from helpers.versioning import run as versioning_run
 from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint, SwitchEndpoint, OnboardingEndpoint
+from endpoints.metrics import start_metrics_exporter
 from elements import VLAN, IpPool, Table, Seat, Participant, Device, Port
 
 logging.basicConfig(format='%(levelname)s:%(name)s:%(message)s', level='INFO')
@@ -90,4 +91,5 @@ if __name__ == '__main__':
     versioning_run()
     device_scanner_start()
     device_onboarding_start()
+    start_metrics_exporter()
     cherrypy.quickstart(API(), '/', conf)
