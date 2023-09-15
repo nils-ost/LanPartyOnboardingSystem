@@ -4,11 +4,11 @@
     <div class="column-spacer"></div>
 
     <div class="content">
-        <div class="button-row" *ngIf="onboarding && !login">
+        <div class="button-row" *ngIf="onboarding">
             <p-button *ngIf="!login" i18n-label label="Login" styleClass="p-button-secondary" icon="pi pi-sign-in" iconPos="right" (click)="gotoLogin()"></p-button>
             <p-button *ngIf="uri.startsWith('/en/')" label="Deutsch" styleClass="p-button-secondary" icon="pi pi-flag" iconPos="left" (click)="gotoDE()"></p-button>
             <p-button *ngIf="uri.startsWith('/de/')" label="English" styleClass="p-button-secondary" icon="pi pi-flag" iconPos="left" (click)="gotoEN()"></p-button>
-            <p-button *ngIf="onboarding.ip && !onboarding.done && false" i18n-label label="Create Account" styleClass="p-button-secondary" icon="pi pi-file-import" iconPos="left"></p-button>
+            <p-button *ngIf="onboarding.ip && !onboarding.done && !login && false" i18n-label label="Create Account" styleClass="p-button-secondary" icon="pi pi-file-import" iconPos="left"></p-button>
         </div>
 
         <app-onboarding (onboardingChangeEvent)="onboardingChanged($event)"></app-onboarding>

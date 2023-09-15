@@ -7,6 +7,8 @@ import { Table } from 'src/app/interfaces/table';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Participant } from 'src/app/interfaces/participant';
 import { ParticipantService } from 'src/app/services/participant.service';
+import { IpPool } from 'src/app/interfaces/ip-pool';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-seats-list',
@@ -16,6 +18,7 @@ import { ParticipantService } from 'src/app/services/participant.service';
 export class SeatsListComponent implements OnChanges, OnInit {
   @Input() tables!: Table[];
   @Input() seats!: Seat[];
+  @Input() ippools!: IpPool[];
   @Input() participants!: Participant[];
   @Input() selectedTable?: Table;
   @Output() editedSeatEvent = new EventEmitter<null>();
@@ -31,6 +34,7 @@ export class SeatsListComponent implements OnChanges, OnInit {
   newPassword: string = "";
   newParticipantId: string | null = null;
   tablesNumbers: Map<string, number> = new Map<string, number>;
+  tableStartIp: Map<string, number> = new Map<string, number>;
   participantsNameBySeat: Map<string, string> = new Map<string, string>
   participantsBySeat: Map<string, Participant> = new Map<string, Participant>
   participantsById: Map<string, Participant> = new Map<string, Participant>
@@ -41,7 +45,8 @@ export class SeatsListComponent implements OnChanges, OnInit {
     private confirmationService: ConfirmationService,
     private errorHandler: ErrorHandlerService,
     private seatService: SeatService,
-    private participantService: ParticipantService
+    private participantService: ParticipantService,
+    private utils: UtilsService
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +58,17 @@ export class SeatsListComponent implements OnChanges, OnInit {
     for (let i = 0; i < this.tables.length; i++) {
       let table: Table = this.tables[i];
       this.tablesNumbers.set(table.id, table.number);
+    }
+
+    for (let i = 0; i < this.tables.length; i++) {
+      let table: Table = this.tables[i];
+      for (let j = 0; j < this.ippools.length; j++) {
+        let pool: IpPool = this.ippools[j];
+        if (pool.id == table.seat_ip_pool_id) {
+          this.tableStartIp.set(table.id, pool.range_start);
+          break;
+        }
+      }
     }
 
     this.seatsById.clear();
@@ -68,6 +84,7 @@ export class SeatsListComponent implements OnChanges, OnInit {
           let element = {
             table: this.tablesNumbers.get(seat.table_id),
             seatNumber: seat.number,
+            seatIp: this.seatIpStr(seat.number, seat.table_id),
             seat: seat
           }
           newList.push(element);
@@ -80,6 +97,7 @@ export class SeatsListComponent implements OnChanges, OnInit {
         let element = {
           table: this.tablesNumbers.get(seat.table_id),
           seatNumber: seat.number,
+          seatIp: this.seatIpStr(seat.number, seat.table_id),
           seat: seat
         }
         newList.push(element);
@@ -100,6 +118,16 @@ export class SeatsListComponent implements OnChanges, OnInit {
       list.push({name: participant.name, code: participant.id});
     }
     this.participantsOptions = list;
+  }
+
+  seatIpStr(seat_nb: number, table_id: string): string {
+    let ip: number | undefined = this.tableStartIp.get(table_id);
+    if (ip) {
+      return this.utils.ip_int_to_str(ip + seat_nb - 1);
+    }
+    else {
+      return '';
+    }
   }
 
   deletePw(seat: Seat) {

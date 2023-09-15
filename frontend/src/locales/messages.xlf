@@ -104,11 +104,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/seats-list/seats-list.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/seats-list/seats-list.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
@@ -330,209 +330,209 @@
         <source>checking integrity</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">152</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemCheckIntegrityStartedDetail" datatype="html">
         <source>checking system integrity started</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">153</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemCheckIntegritySuccessSummary" datatype="html">
         <source>Done</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">162</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemCheckIntegritySuccessDetail" datatype="html">
         <source>system integrity is valid</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">163</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemCheckIntegrityErrorSummary" datatype="html">
         <source>Error</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">177</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecCommitStartedSummary" datatype="html">
         <source>Commiting</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">193</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">231</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">251</context>
+          <context context-type="linenumber">267</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecCommitSwitchesStartedDetail" datatype="html">
         <source>commiting of all Switches started</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">194</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecCommitSuccessSummary" datatype="html">
         <source>Done</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">187</context>
+          <context context-type="linenumber">203</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">225</context>
+          <context context-type="linenumber">241</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">261</context>
+          <context context-type="linenumber">277</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecCommitSwitchesSuccessDetail" datatype="html">
         <source>all Switches successful commited</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">188</context>
+          <context context-type="linenumber">204</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecCommitErrorSummary" datatype="html">
         <source>Error</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">220</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">256</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">276</context>
+          <context context-type="linenumber">292</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecCommitInterfacesStartedDetail" datatype="html">
         <source>commiting of all OS-VLAN-Interfaces started</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">216</context>
+          <context context-type="linenumber">232</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecCommitInterfacesSuccessDetail" datatype="html">
         <source>all OS-VLAN-Interfaces successful commited</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">226</context>
+          <context context-type="linenumber">242</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecCommitDnsmasqStartedDetail" datatype="html">
         <source>commiting of all dnsmasq configs started</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">252</context>
+          <context context-type="linenumber">268</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecCommitDnsmasqSuccessDetail" datatype="html">
         <source>all dnsmasq configs successful commited</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">262</context>
+          <context context-type="linenumber">278</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatStartedSummary" datatype="html">
         <source>Retreating</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">292</context>
+          <context context-type="linenumber">308</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">330</context>
+          <context context-type="linenumber">346</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">366</context>
+          <context context-type="linenumber">382</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatSwitchesStartedDetail" datatype="html">
         <source>retreating of all Switches started</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">293</context>
+          <context context-type="linenumber">309</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatSuccessSummary" datatype="html">
         <source>Done</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">302</context>
+          <context context-type="linenumber">318</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">340</context>
+          <context context-type="linenumber">356</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">376</context>
+          <context context-type="linenumber">392</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatSwitchesSuccessDetail" datatype="html">
         <source>all Switches successful retreated</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">303</context>
+          <context context-type="linenumber">319</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatErrorSummary" datatype="html">
         <source>Error</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">319</context>
+          <context context-type="linenumber">335</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">355</context>
+          <context context-type="linenumber">371</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">391</context>
+          <context context-type="linenumber">407</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatInterfacesStartedDetail" datatype="html">
         <source>retreating of all OS-VLAN-Interfaces started</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">331</context>
+          <context context-type="linenumber">347</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatInterfacesSuccessDetail" datatype="html">
         <source>all OS-VLAN-Interfaces successful retreated</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">341</context>
+          <context context-type="linenumber">357</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatDnsmasqStartedDetail" datatype="html">
         <source>retreating of all dnsmasq configs started</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">367</context>
+          <context context-type="linenumber">383</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatDnsmasqSuccessDetail" datatype="html">
         <source>all dnsmasq configs successful retreated</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">377</context>
+          <context context-type="linenumber">393</context>
         </context-group>
       </trans-unit>
       <trans-unit id="onboardingIpHeader" datatype="html">
@@ -916,18 +916,25 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/seats-list/seats-list.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelSeatIp" datatype="html">
+        <source>IP</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/seats-list/seats-list.component.html</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSeatParticipant" datatype="html">
         <source>Participant</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/seats-list/seats-list.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/seats-list/seats-list.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSwitchDesc" datatype="html">
@@ -1390,7 +1397,7 @@
         <source>Create Account</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/welcome/welcome.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
     </body>

@@ -11,6 +11,9 @@
                 <ng-container i18n="@@elementFieldLabelSeatPw">Password</ng-container>
             </th>
             <th>
+                <ng-container i18n="@@elementFieldLabelSeatIp">IP</ng-container>
+            </th>
+            <th>
                 <ng-container i18n="@@elementFieldLabelSeatParticipant">Participant</ng-container>
             </th>
         </tr>
@@ -25,6 +28,7 @@
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editPasswordStart(element.seat, $event)"></button>
                 {{ element.seat.pw || '---' }}
             </td>
+            <td>{{ element.seatIp }}</td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editParticipantStart(element.seat, participantsBySeat.get(element.seat.id), $event)"></button>
                 <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="deleteParticipant(element.seat, participantsBySeat.get(element.seat.id))" *ngIf="participantsBySeat.get(element.seat.id)"></button>
