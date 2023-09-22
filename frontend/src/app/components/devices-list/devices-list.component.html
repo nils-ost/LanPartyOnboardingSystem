@@ -38,6 +38,7 @@
     <ng-template pTemplate="body" let-device>
         <tr>
             <td>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(device, $event)"></button>
                 {{ device.desc }}
             </td>
             <td>
@@ -59,7 +60,8 @@
                 {{ utils.portIdToReadable(device.port_id) }}
             </td>
             <td>
-                {{ device.onboarding_blocked }}
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-times" (click)="setBlocked(device, true)" *ngIf="!device.onboarding_blocked"></button>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-check" (click)="setBlocked(device, false)" *ngIf="device.onboarding_blocked"></button>
             </td>
             <td>
                 {{ device.pw_strikes }}
@@ -67,3 +69,15 @@
         </tr>
     </ng-template>
 </p-table>
+
+<p-overlayPanel #editdesc [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="field">
+            <span class="p-float-label">
+                <input type="text" id="newDesc" pInputText [(ngModel)]="newDesc" (keyup.enter)="editDesc()" autofocus>
+                <label for="newDesc" i18n="@@elementFieldLabelDeviceDesc">Description</label>
+            </span>
+        </div>
+        <button pButton (click)="editDesc()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+</p-overlayPanel>

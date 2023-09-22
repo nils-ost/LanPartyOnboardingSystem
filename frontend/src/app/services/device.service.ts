@@ -48,7 +48,15 @@ export class DeviceService {
     return this.http.patch<any>(this.deviceUrl + id + '/', device, {withCredentials:true});
   }
 
-  public changeBlocked(id: string, blocked: boolean, strikes: number = 0): Observable<any> {
+  public updateDesc(id: string, desc: string): Observable<any> {
+    let device = {
+      'id': id,
+      'desc': desc
+    }
+    return this.http.patch<any>(this.deviceUrl + id + '/', device, {withCredentials:true});
+  }
+
+  public updateBlocked(id: string, blocked: boolean, strikes: number = 0): Observable<any> {
     if (!blocked) strikes = 0;
     let device = {
       'id': id,
