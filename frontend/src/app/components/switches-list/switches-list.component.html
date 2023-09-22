@@ -9,12 +9,6 @@
                 <ng-container i18n="@@elementFieldLabelSwitchAddr">Address</ng-container>
                 <p-sortIcon field="addr"></p-sortIcon>
             </th>
-            <th>
-                <ng-container i18n="@@elementFieldLabelSwitchUser">Username</ng-container>
-            </th>
-            <th>
-                <ng-container i18n="@@elementFieldLabelSwitchPw">Password</ng-container>
-            </th>
             <th pSortableColumn="purpose">
                 <ng-container i18n="@@elementFieldLabelSwitchPurpose">Purpose</ng-container>
                 <p-sortIcon field="purpose"></p-sortIcon>
@@ -44,8 +38,6 @@
         <tr>
             <td>{{ sw.desc }}</td>
             <td>{{ sw.addr }}</td>
-            <td>{{ sw.user }}</td>
-            <td>{{ sw.pw }}</td>
             <td>{{ switchPurposeType[sw.purpose] }}</td>
             <td>{{ vlansNames.get(sw.onboarding_vlan_id) }}</td>
             <td>{{ sw.connected }}</td>
