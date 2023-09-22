@@ -1,0 +1,69 @@
+<p-table [value]="devices" sortField="mac">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="desc">
+                <ng-container i18n="@@elementFieldLabelDeviceDesc">Description</ng-container>
+                <p-sortIcon field="desc"></p-sortIcon>
+            </th>
+            <th pSortableColumn="mac">
+                <ng-container i18n="@@elementFieldLabelDeviceMac">MAC</ng-container>
+                <p-sortIcon field="mac"></p-sortIcon>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelDeviceSeatId">Seat</ng-container>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelDeviceParticipantId">Participant</ng-container>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelDeviceIppoolId">IpPool</ng-container>
+            </th>
+            <th pSortableColumn="ip">
+                <ng-container i18n="@@elementFieldLabelDeviceIp">IP</ng-container>
+                <p-sortIcon field="ip"></p-sortIcon>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelDevicePortId">Port</ng-container>
+            </th>
+            <th pSortableColumn="onboarding_blocked">
+                <ng-container i18n="@@elementFieldLabelOnboardingBlocked">Blocked</ng-container>
+                <p-sortIcon field="onboarding_blocked"></p-sortIcon>
+            </th>
+            <th pSortableColumn="pw_strikes">
+                <ng-container i18n="@@elementFieldLabelPwStrikes">Strikes</ng-container>
+                <p-sortIcon field="pw_strikes"></p-sortIcon>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-device>
+        <tr>
+            <td>
+                {{ device.desc }}
+            </td>
+            <td>
+                {{ device.mac }}
+            </td>
+            <td>
+                {{ utils.seatIdToReadable(device.seat_id) }}
+            </td>
+            <td>
+                {{ utils.participantIdToReadable(device.participant_id) }}
+            </td>
+            <td>
+                {{ utils.ipPoolIdToReadable(device.ip_pool_id) }}
+            </td>
+            <td>
+                {{ utils.ip_int_to_str(device.ip) }}
+            </td>
+            <td>
+                {{ utils.portIdToReadable(device.port_id) }}
+            </td>
+            <td>
+                {{ device.onboarding_blocked }}
+            </td>
+            <td>
+                {{ device.pw_strikes }}
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

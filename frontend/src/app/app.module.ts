@@ -44,6 +44,8 @@ import { PortsListComponent } from './components/ports-list/ports-list.component
 import { OnboardingComponent } from './components/onboarding/onboarding.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { DevicesScreenComponent } from './components/devices-screen/devices-screen.component';
+import { DevicesListComponent } from './components/devices-list/devices-list.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,9 @@ import { LogoutComponent } from './components/logout/logout.component';
     PortsListComponent,
     OnboardingComponent,
     MenuComponent,
-    LogoutComponent
+    LogoutComponent,
+    DevicesScreenComponent,
+    DevicesListComponent
   ],
   imports: [
     BrowserModule,

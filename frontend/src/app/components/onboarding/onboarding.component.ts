@@ -18,11 +18,11 @@ export class OnboardingComponent implements OnInit {
   selectedTable: number | undefined;
   selectedSeat: number | undefined;
   selectedPw: string | undefined;
-  utils: UtilsService = new UtilsService();
 
   constructor(
     private errorHandler: ErrorHandlerService,
-    private onboardingService: OnboardingService
+    private onboardingService: OnboardingService,
+    public utils: UtilsService
   ) {}
 
   ngOnInit(): void {
