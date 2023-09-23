@@ -1,4 +1,5 @@
 from elements._elementBase import ElementBase, docDB
+from helpers.client import get_client_ip
 from datetime import datetime
 import cherrypy
 
@@ -19,7 +20,7 @@ class Session(ElementBase):
             errors['till'] = {'code': 81, 'desc': 'needs to be in the future'}
             self.delete()
         if cherrypy.request:
-            if not self['ip'] == cherrypy.request.remote.ip:
+            if not self['ip'] == get_client_ip():
                 errors['ip'] = {'code': 82, 'desc': 'does not match with the IP of request'}
                 self.delete()
         return errors

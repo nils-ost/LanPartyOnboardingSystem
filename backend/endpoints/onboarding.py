@@ -1,19 +1,8 @@
 import cherrypy
 import cherrypy_cors
-import subprocess
 from elements import Device, Table, Seat, Participant, IpPool
 from helpers.backgroundworker import device_onboarding_schedule
-
-
-def get_devicemac(ip):
-    if ip == '127.0.0.1':
-        return 'localhost'
-    r = subprocess.check_output('cat /proc/net/arp | grep ' + str(ip), shell=True).decode('utf-8')
-    r = r.strip().split()
-    if not r[2] == '0x0':
-        return r[3].replace(':', '')
-    r = subprocess.check_output('cat /var/lib/misc/dnsmasq.leases | grep ' + str(ip), shell=True).decode('utf-8')
-    return r.strip().split()[1].replace(':', '')
+from helpers.client import get_client_ip, get_client_mac
 
 
 def possible_tables(device):
@@ -39,13 +28,12 @@ class OnboardingEndpoint():
             cherrypy_cors.preflight(allowed_methods=['GET', 'POST', 'PUT'])
             return
 
-        mac = get_devicemac(cherrypy.request.remote.ip)
-        device = Device.get_by_mac(mac)
+        device = Device.get_by_mac(get_client_mac())
         if device is None:
             cherrypy.response.status = 400
             return {'error': {'code': 6, 'desc': 'could not determine device'}}
         if device['ip'] is not None:
-            ip = IpPool.octetts_to_int(*[int(o) for o in cherrypy.request.remote.ip.split('.')])
+            ip = IpPool.octetts_to_int(*[int(o) for o in get_client_ip().split('.')])
             cherrypy.response.status = 201
             if not device['ip'] == ip:
                 return {'done': True, 'ip': device['ip']}
