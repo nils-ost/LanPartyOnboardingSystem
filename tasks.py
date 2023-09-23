@@ -23,7 +23,16 @@ def cleanup_development(c):
     pass
 
 
-@task(name='ng-build')
+@task(name='nlpt-onb')
+def extract_nlpt_onboarding(c):
+    c.run('sudo docker pull ghcr.io/nlptournament/nlpt-onboarding:main')
+    c.run('sudo docker run --rm --name extract-onb -d ghcr.io/nlptournament/nlpt-onboarding:main')
+    c.run('sudo docker cp extract-onb:/usr/share/nginx/html backend/static/ang/')
+    c.run('sudo chown -R 1000:1000 backend/static/ang/html; mv backend/static/ang/html backend/static/ang/onb')
+    c.run('sudo docker stop extract-onb')
+
+
+@task(name='ng-build', post=['extract_nlpt_onboarding'])
 def ng_build(c):
     c.run('rm -rf backend/static/ang')
     c.run('cd frontend; ng build --output-path ../backend/static/ang')

@@ -62,7 +62,7 @@ if __name__ == '__main__':
         '/': {
             'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static'),
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'ang/en',
+            'tools.staticdir.dir': 'ang/onb',
             'tools.staticdir.index': 'index.html'
         },
         '/de': {
