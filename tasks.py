@@ -32,7 +32,7 @@ def extract_nlpt_onboarding(c):
     c.run('sudo docker stop extract-onb')
 
 
-@task(name='ng-build', post=['extract_nlpt_onboarding'])
+@task(name='ng-build', post=[extract_nlpt_onboarding])
 def ng_build(c):
     c.run('rm -rf backend/static/ang')
     c.run('cd frontend; ng build --output-path ../backend/static/ang')
