@@ -45,19 +45,19 @@
                 {{ device.mac }}
             </td>
             <td>
-                {{ utils.seatIdToReadable(device.seat_id) }}
+                {{ seatsReadable.get(device.seat_id) || '---' }}
             </td>
             <td>
-                {{ utils.participantIdToReadable(device.participant_id) }}
+                {{ participantsReadable.get(device.participant_id) || '---' }}
             </td>
             <td>
-                {{ utils.ipPoolIdToReadable(device.ip_pool_id) }}
+                {{ ippoolsReadable.get(device.ip_pool_id) || '---' }}
             </td>
             <td>
                 {{ utils.ip_int_to_str(device.ip) }}
             </td>
             <td>
-                {{ utils.portIdToReadable(device.port_id) }}
+                {{ portsReadable.get(device.port_id) || '---' }}
             </td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-times" (click)="setBlocked(device, true)" *ngIf="!device.onboarding_blocked"></button>
