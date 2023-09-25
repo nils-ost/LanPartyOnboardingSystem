@@ -39,7 +39,7 @@ export class MenuComponent {
           positionLeft: 15,
           showDelay: 100
         },
-        icon: 'pi-desktop',
+        icon: 'pi-sitemap',
         command: () => {
           this.router.navigate(['/network']);
         }
@@ -70,6 +70,20 @@ export class MenuComponent {
         icon: 'pi-users',
         command: () => {
           this.router.navigate(['/participants']);
+        }
+      },
+      {
+        label: 'Devices',
+        tooltipOptions: {
+          tooltipLabel: 'Devices',
+          tooltipPosition: 'top',
+          positionTop: 0,
+          positionLeft: 15,
+          showDelay: 100
+        },
+        icon: 'pi-desktop',
+        command: () => {
+          this.router.navigate(['/devices']);
         }
       },
       {

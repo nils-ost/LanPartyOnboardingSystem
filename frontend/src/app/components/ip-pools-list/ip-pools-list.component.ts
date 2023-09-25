@@ -19,13 +19,13 @@ export class IpPoolsListComponent implements OnChanges {
   vlansNames: Map<string, string> = new Map<string, string>;
   editDialog: boolean = false;
   selectedIpPool!: IpPool;
-  utils: UtilsService = new UtilsService();
 
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private errorHandler: ErrorHandlerService,
-    private ippoolService: IpPoolService
+    private ippoolService: IpPoolService,
+    public utils: UtilsService
   ) {}
 
   ngOnChanges(): void {

@@ -48,6 +48,43 @@ export class DeviceService {
     return this.http.patch<any>(this.deviceUrl + id + '/', device, {withCredentials:true});
   }
 
+  public updateDesc(id: string, desc: string): Observable<any> {
+    let device = {
+      'id': id,
+      'desc': desc
+    }
+    return this.http.patch<any>(this.deviceUrl + id + '/', device, {withCredentials:true});
+  }
+
+  public updateBlocked(id: string, blocked: boolean, strikes: number = 0): Observable<any> {
+    if (!blocked) strikes = 0;
+    let device = {
+      'id': id,
+      'onboarding_blocked': blocked,
+      'pw_strikes': strikes
+    }
+    return this.http.patch<any>(this.deviceUrl + id + '/', device, {withCredentials:true});
+  }
+
+  public updateSeatId(id: string, seat_id: string | null): Observable<any> {
+    let device = {
+      'id': id,
+      'seat_id': seat_id
+    }
+    return this.http.patch<any>(this.deviceUrl + id + '/', device, {withCredentials:true});
+  }
+
+  public removeSeat(id: string): Observable<any> {
+    let device = {
+      'id': id,
+      'seat_id': null,
+      'participant_id': null,
+      'ip_pool_id': null,
+      'ip': null
+    }
+    return this.http.patch<any>(this.deviceUrl + id + '/', device, {withCredentials:true});
+  }
+
   public deleteDevice(id: string): Observable<any> {
     return this.http.delete<any>(this.deviceUrl + id + '/', {withCredentials:true});
   }

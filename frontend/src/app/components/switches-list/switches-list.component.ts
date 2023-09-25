@@ -6,6 +6,7 @@ import { Switch, SwitchPurposeType } from 'src/app/interfaces/switch';
 import { Vlan } from 'src/app/interfaces/vlan';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { SwitchService } from 'src/app/services/switch.service';
+import { SystemService } from 'src/app/services/system.service';
 
 @Component({
   selector: 'app-switches-list',
@@ -27,7 +28,8 @@ export class SwitchesListComponent implements OnChanges {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private errorHandler: ErrorHandlerService,
-    private switchService: SwitchService
+    private switchService: SwitchService,
+    private systemService: SystemService
   ) {}
 
   ngOnChanges(): void {
@@ -55,6 +57,10 @@ export class SwitchesListComponent implements OnChanges {
   }
 
   commitSwitch(sw: Switch) {
+    this.doInterfacesCommit(sw);
+  }
+
+  doSwitchCommit(sw: Switch) {
     this.messageService.add({
       severity: 'info',
       summary: $localize `:@@CommitSwitchStartedSummary:Commiting`,
@@ -79,6 +85,78 @@ export class SwitchesListComponent implements OnChanges {
             severity: 'error',
             summary: $localize `:@@CommitSwitchErrorSummary:Error`,
             detail: $localize `:@@CommitSwitchErrorDetail:could not commit Switch` + ': ' + sw.addr,
+            life: 6000
+          });
+        }
+      })
+  }
+
+  doInterfacesCommit(sw: Switch) {
+    this.messageService.add({
+      severity: 'info',
+      summary: $localize `:@@SystemExecCommitStartedSummary:Commiting`,
+      detail: $localize `:@@SystemExecCommitInterfacesStartedDetail:commiting of all OS-VLAN-Interfaces started`,
+      life: 6000
+    });
+    this.systemService
+      .execCommitInterfaces()
+      .subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: $localize `:@@SystemExecCommitSuccessSummary:Done`,
+            detail: $localize `:@@SystemExecCommitInterfacesSuccessDetail:all OS-VLAN-Interfaces successful commited`,
+            life: 6000
+          });
+          this.doDnsmasqCommit(sw);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          let detail: string = 'unknown';
+          if (this.errorHandler.elementError) {
+            if (this.errorHandler.elementErrors.code == 1) detail = this.errorHandler.elementErrors.desc + ' ' + this.errorHandler.elementErrors.integrity.desc;
+            else detail = this.errorHandler.elementErrors.desc;
+          }
+          this.messageService.add({
+            severity: 'error',
+            summary: $localize `:@@SystemExecCommitErrorSummary:Error`,
+            detail: detail,
+            life: 6000
+          });
+        }
+      })
+  }
+
+  doDnsmasqCommit(sw: Switch) {
+    this.messageService.add({
+      severity: 'info',
+      summary: $localize `:@@SystemExecCommitStartedSummary:Commiting`,
+      detail: $localize `:@@SystemExecCommitDnsmasqStartedDetail:commiting of all dnsmasq configs started`,
+      life: 6000
+    });
+    this.systemService
+      .execCommitDnsmasq()
+      .subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: $localize `:@@SystemExecCommitSuccessSummary:Done`,
+            detail: $localize `:@@SystemExecCommitDnsmasqSuccessDetail:all dnsmasq configs successful commited`,
+            life: 6000
+          });
+          this.doSwitchCommit(sw);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          let detail: string = 'unknown';
+          if (this.errorHandler.elementError) {
+            if (this.errorHandler.elementErrors.code == 1) detail = this.errorHandler.elementErrors.desc + ' ' + this.errorHandler.elementErrors.integrity.desc;
+            else detail = this.errorHandler.elementErrors.desc;
+          }
+          this.messageService.add({
+            severity: 'error',
+            summary: $localize `:@@SystemExecCommitErrorSummary:Error`,
+            detail: detail,
             life: 6000
           });
         }

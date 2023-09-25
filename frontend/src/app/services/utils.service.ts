@@ -5,9 +5,11 @@ import { Injectable } from '@angular/core';
 })
 export class UtilsService {
 
-  constructor() { }
+  constructor(
+  ) { }
 
-  public ip_int_to_str(ip: number): string {
+  public ip_int_to_str(ip: number | null): string {
+    if (!ip) return '---';
     let result: string = "";
     let hex = ip.toString(16);
     if (hex.length < 8) hex = '0' + hex;

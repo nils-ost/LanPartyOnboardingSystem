@@ -1,0 +1,148 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { Device } from 'src/app/interfaces/device';
+import { IpPool } from 'src/app/interfaces/ip-pool';
+import { Participant } from 'src/app/interfaces/participant';
+import { Port } from 'src/app/interfaces/port';
+import { Seat } from 'src/app/interfaces/seat';
+import { Switch } from 'src/app/interfaces/switch';
+import { Table } from 'src/app/interfaces/table';
+import { DeviceService } from 'src/app/services/device.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { IpPoolService } from 'src/app/services/ip-pool.service';
+import { ParticipantService } from 'src/app/services/participant.service';
+import { PortService } from 'src/app/services/port.service';
+import { SeatService } from 'src/app/services/seat.service';
+import { SwitchService } from 'src/app/services/switch.service';
+import { TableService } from 'src/app/services/table.service';
+
+@Component({
+  selector: 'app-devices-screen',
+  templateUrl: './devices-screen.component.html',
+  styleUrls: ['./devices-screen.component.scss']
+})
+export class DevicesScreenComponent implements OnInit {
+  devices: Device[] = [];
+  tables: Table[] = [];
+  seats: Seat[] = [];
+  ippools: IpPool[] = [];
+  participants: Participant[] = [];
+  ports: Port[] = [];
+  switches: Switch[] = [];
+
+  constructor(
+    private errorHandler: ErrorHandlerService,
+    private deviceService: DeviceService,
+    private tableService: TableService,
+    private seatService: SeatService,
+    private ippoolService: IpPoolService,
+    private participantService: ParticipantService,
+    private portService: PortService,
+    private switchService: SwitchService
+  ) { }
+
+  ngOnInit(): void {
+    this.refreshDevices();
+    this.refreshTables();
+    this.refreshSeats();
+    this.refreshIppools();
+    this.refreshParticipants();
+    this.refreshPorts();
+    this.refreshSwitches();
+  }
+
+  refreshDevices() {
+    this.deviceService
+      .getDevices()
+      .subscribe({
+        next: (devices: Device[]) => {
+          this.devices = devices;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
+  refreshTables() {
+    this.tableService
+      .getTables()
+      .subscribe({
+        next: (tables: Table[]) => {
+          this.tables = tables;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
+  refreshSeats() {
+    this.seatService
+      .getSeats()
+      .subscribe({
+        next: (seats: Seat[]) => {
+          this.seats = seats;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
+  refreshIppools() {
+    this.ippoolService
+      .getIpPools()
+      .subscribe({
+        next: (ippools: IpPool[]) => {
+          this.ippools = ippools;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
+  refreshParticipants() {
+    this.participantService
+      .getParticipants()
+      .subscribe({
+        next: (participants: Participant[]) => {
+          this.participants = participants;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
+  refreshPorts() {
+    this.portService
+      .getPorts()
+      .subscribe({
+        next: (ports: Port[]) => {
+          this.ports = ports;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
+  refreshSwitches() {
+    this.switchService
+      .getSwitches()
+      .subscribe({
+        next: (switches: Switch[]) => {
+          this.switches = switches;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
+  creaditDevice() {
+    this.refreshDevices();
+  }
+}

@@ -7,12 +7,14 @@ import { NetworkScreenComponent } from './components/network-screen/network-scre
 import { TablesScreenComponent } from './components/tables-screen/tables-screen.component';
 import { ParticipantsScreenComponent } from './components/participants-screen/participants-screen.component';
 import { OnboardingComponent } from './components/onboarding/onboarding.component';
+import { DevicesScreenComponent } from './components/devices-screen/devices-screen.component';
 
 const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent },
   { path: 'network', component: NetworkScreenComponent },
   { path: 'tables', component: TablesScreenComponent },
   { path: 'participants', component: ParticipantsScreenComponent},
+  { path: 'devices', component: DevicesScreenComponent},
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
   { path: 'onboarding', component: OnboardingComponent },

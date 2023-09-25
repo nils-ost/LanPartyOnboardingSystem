@@ -1,0 +1,10 @@
+<p-panel header="Devices">
+    <ng-template pTemplate="icons">
+    </ng-template>
+
+    <app-devices-list [devices]="devices" [tables]="tables" [seats]="seats" [ippools]="ippools" [participants]="participants" [ports]="ports" [switches]="switches" (editedDeviceEvent)="creaditDevice()"></app-devices-list>
+</p-panel>
+
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+<app-menu></app-menu>
