@@ -68,9 +68,7 @@ class VLAN(ElementBase):
             def_gw = docDB.get_setting('play_gateway')
             def_ns = docDB.get_setting('upstream_dns')
             route_cfg = f"""
-      routes:
-        - to: default
-          via: {def_gw}
+      gateway4: {def_gw}
       nameservers:
         addresses: [{def_ns}]"""
             for pool in IpPool.get_by_vlan(self['_id']):
