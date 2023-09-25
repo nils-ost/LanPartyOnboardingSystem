@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ConfirmationService } from 'primeng/api';
 import { Device } from 'src/app/interfaces/device';
 import { IpPool } from 'src/app/interfaces/ip-pool';
 import { Participant } from 'src/app/interfaces/participant';
@@ -27,30 +28,42 @@ export class DevicesListComponent implements OnChanges {
   @Output() editedDeviceEvent = new EventEmitter<null>();
 
   @ViewChild('editdesc') editDescDialog: any;
+  @ViewChild('editseat') editSeatDialog: any;
 
+  seatsOptions: any[] = [];
   seatsReadable: Map<string, string> = new Map<string, string>;
   ippoolsReadable: Map<string, string> = new Map<string, string>;
   participantsReadable: Map<string, string> = new Map<string, string>;
   portsReadable: Map<string, string> = new Map<string, string>;
+  devicesReadable: Map<string, string> = new Map<string, string>;
 
+  newSeatId: string | null = null;
   selectedDevice: Device | undefined = undefined;
   newDesc: string = "";
 
   constructor(
     public utils: UtilsService,
     private errorHandler: ErrorHandlerService,
+    private confirmationService: ConfirmationService,
     private deviceService: DeviceService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (('tables' in changes || 'seats' in changes) && this.tables.length > 0 && this.seats.length > 0) {
       let tablesById: Map<string, Table> = new Map<string, Table>;
+      let newList: any[] = [];
+      newList.push({name: '--null--', code: null});
       for (let i = 0; i < this.tables.length; i++) tablesById.set(this.tables[i].id, this.tables[i]);
       for (let i = 0; i < this.seats.length; i++) {
         let seat: Seat = this.seats[i];
         let table: Table | undefined = tablesById.get(seat.table_id);
-        if (table) this.seatsReadable.set(seat.id, table.number + '(' + table.desc + ')' + ': #' + seat.number);
+        if (table) {
+          let name: string = table.number + '(' + table.desc + ')' + ': #' + seat.number;
+          this.seatsReadable.set(seat.id, name);
+          newList.push({name: name, code: seat.id});
+        }
       }
+      this.seatsOptions = newList;
     }
 
     if ('ippools' in changes) {
@@ -66,6 +79,13 @@ export class DevicesListComponent implements OnChanges {
         let login: string = "";
         if (participant.login) login = participant.login;
         this.participantsReadable.set(participant.id, participant.name + ' (' + login + ')');
+      }
+    }
+
+    if ('devices' in changes) {
+      for (let i = 0; i < this.devices.length; i++) {
+        let device: Device = this.devices[i];
+        this.devicesReadable.set(device.id, device.mac + ' (' + device.desc + ')');
       }
     }
 
@@ -114,5 +134,87 @@ export class DevicesListComponent implements OnChanges {
           this.errorHandler.handleError(err);
         }
       })
+  }
+
+  editSeatStart(device: Device, event: any) {
+    this.selectedDevice = device;
+    this.newSeatId = device.seat_id;
+    this.editSeatDialog.show(event);
+  }
+
+  editSeatCheck() {
+    if (this.selectedDevice) {
+      if (this.newSeatId) {
+        let havingDevice: Device | undefined = undefined;
+        for (let i = 0; i < this.devices.length; i++) {
+          if (this.devices[i].seat_id == this.newSeatId) {
+            havingDevice = this.devices[i];
+            break;
+          }
+        }
+        if (havingDevice) {
+          if (havingDevice.id != this.selectedDevice.id) {
+            this.confirmationService.confirm({
+              message: 'Seat "' + this.seatsReadable.get(this.newSeatId) + '" is allready assigned to Device "' + this.devicesReadable.get(havingDevice.id) + '". Are you sure to assign it to Device "' + this.devicesReadable.get(this.selectedDevice.id) + '"?',
+              accept: () => {
+                this.editSeat(havingDevice!.id);
+              }
+            });
+          }
+          else {
+            // Nothing needs to be done as device is allready having this seat (close dialog)
+            this.selectedDevice = undefined;
+            this.editSeatDialog.hide();
+          }
+        }
+        else this.editSeat(undefined);
+      }
+      else this.editSeat(undefined);
+    }
+  }
+
+  editSeat(havingDevice_id: string | undefined) {
+    if (this.selectedDevice) {
+      if (havingDevice_id) {
+        this.deviceService
+          .removeSeat(havingDevice_id)
+          .subscribe({
+            next: (response: any) => {
+              this.editSeat(undefined);
+            },
+            error: (err: HttpErrorResponse) => {
+              this.errorHandler.handleError(err);
+            }
+          })
+      }
+      else {
+        if (this.newSeatId) {
+          this.deviceService
+            .updateSeatId(this.selectedDevice.id, this.newSeatId)
+            .subscribe({
+              next: (response: any) => {
+                this.editedDeviceEvent.emit(null);
+              },
+              error: (err: HttpErrorResponse) => {
+                this.errorHandler.handleError(err);
+              }
+            })
+        }
+        else {
+          this.deviceService
+            .removeSeat(this.selectedDevice.id)
+            .subscribe({
+              next: (response: any) => {
+                this.editedDeviceEvent.emit(null);
+              },
+              error: (err: HttpErrorResponse) => {
+                this.errorHandler.handleError(err);
+              }
+            })
+        }
+        this.selectedDevice = undefined;
+      }
+      this.editSeatDialog.hide();
+    }
   }
 }
