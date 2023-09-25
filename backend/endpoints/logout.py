@@ -3,6 +3,7 @@ import cherrypy_cors
 import hashlib
 from datetime import datetime
 from elements import Session, Participant
+from helpers.client import get_client_ip
 
 
 class LoginEndpoint():
@@ -18,7 +19,7 @@ class LoginEndpoint():
             if user is not None:
                 p = Participant.get_by_login(user)
                 if p is not None:
-                    s = Session({'participant_id': p['_id'], 'complete': False, 'ip': cherrypy.request.remote.ip})
+                    s = Session({'participant_id': p['_id'], 'complete': False, 'ip': get_client_ip()})
                     s['till'] = int(datetime.now().timestamp() + 300)
                     cookie = cherrypy.response.cookie
                     cookie['LPOSsession'] = s.save().get('created')

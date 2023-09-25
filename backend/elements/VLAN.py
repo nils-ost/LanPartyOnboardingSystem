@@ -62,8 +62,17 @@ class VLAN(ElementBase):
 
         iname = docDB.get_setting('os_nw_interface')
         netplan_path = docDB.get_setting('os_netplan_path')
+        route_cfg = ''
 
         if self['purpose'] == 0:
+            def_gw = docDB.get_setting('play_gateway')
+            def_ns = docDB.get_setting('upstream_dns')
+            route_cfg = f"""
+      routes:
+        - to: default
+          via: {def_gw}
+      nameservers:
+        addresses: [{def_ns}]"""
             for pool in IpPool.get_by_vlan(self['_id']):
                 if pool['lpos']:
                     break
@@ -85,7 +94,7 @@ class VLAN(ElementBase):
       link: {iname}
       addresses:
         - {ip}/{mask}
-      dhcp4: no"""
+      dhcp4: no{route_cfg}"""
         with open(os.path.join(netplan_path, f"02-vlan{self['number']}.yaml"), 'w') as f:
             f.write(cfg)
         return True
