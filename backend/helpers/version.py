@@ -1,2 +1,2 @@
 # this file is replaced by create-bundle invoker; please leave it untouched except for development
-version = '0.0.0'
+version = '0.3.0.6'
