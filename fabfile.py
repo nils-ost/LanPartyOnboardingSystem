@@ -85,7 +85,7 @@ def setup_virtualenv(c, pdir):
 
 
 def upload_project_files(c):
-    for f in ['main.py', 'cli.py', 'requirements.txt']:
+    for f in ['main.py', 'main-hf.py', 'cli.py', 'requirements.txt']:
         print(f'Uploading {f}')
         c.put(os.path.join('backend', f), remote=os.path.join(project_dir, f))
     for d in ['backend/elements', 'backend/endpoints', 'backend/helpers', 'backend/MTSwitch']:
