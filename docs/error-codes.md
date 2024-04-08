@@ -48,6 +48,7 @@
   * **50***(table_id)*: There is no Table with id '<table_id\>'
   * **51***(number)*: needs to be 1 or bigger
   * **52***(number)*: needs to be unique per Table
+  * **53***(number_absolute)*: needs to be 0 or bigger
 
 ## device
 

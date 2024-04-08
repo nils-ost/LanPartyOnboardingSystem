@@ -70,6 +70,56 @@ class TestSeat(unittest.TestCase):
         self.assertNotIn('errors', el.save())
         self.assertEqual(len(Seat.all()), 1)
 
+    def test_number_absolute_unique_or_none(self):
+        self.assertEqual(len(Seat.all()), 0)
+        # create seat 1 on table 1
+        s1t1 = Seat({'number': 1, 'table_id': self.t1_id})
+        self.assertNotIn('errors', s1t1.save())
+        self.assertEqual(len(Seat.all()), 1)
+        # create seat 1 on table 2
+        s1t2 = Seat({'number': 1, 'table_id': self.t2_id})
+        self.assertNotIn('errors', s1t2.save())
+        self.assertEqual(len(Seat.all()), 2)
+        # create seat 2 on table 1
+        s2t1 = Seat({'number': 2, 'table_id': self.t1_id})
+        self.assertNotIn('errors', s2t1.save())
+        self.assertEqual(len(Seat.all()), 3)
+        # setting absolute number of s1t1 to 10
+        s1t1['number_absolute'] = 10
+        self.assertNotIn('errors', s1t1.save())
+        # setting absolute number of s2t1 to 11
+        s2t1['number_absolute'] = 11
+        self.assertNotIn('errors', s2t1.save())
+        # setting absolute number of s1t2 to 10 is not allowed
+        s1t2['number_absolute'] = 10
+        self.assertIn('number_absolute', s1t2.save()['errors'])
+        # but setting absolute number of s1t2 to 20 is no problem
+        s1t2['number_absolute'] = 20
+        self.assertNotIn('errors', s1t2.save())
+        # switching absolute numbers of s1t1 and s2t1
+        s1t1['number_absolute'] = None
+        self.assertNotIn('errors', s1t1.save())
+        s2t1['number_absolute'] = 10
+        self.assertNotIn('errors', s2t1.save())
+        s1t1['number_absolute'] = 11
+        self.assertNotIn('errors', s1t1.save())
+
+    def test_number_absolute_range(self):
+        # needs to be positive or 0
+        self.assertEqual(len(Seat.all()), 0)
+        # negative is not allowed
+        el = Seat({'number': 1, 'table_id': self.t1_id, 'number_absolute': -1})
+        self.assertIn('number_absolute', el.save()['errors'])
+        self.assertEqual(len(Seat.all()), 0)
+        # zero is allowed
+        el = Seat({'number': 1, 'table_id': self.t1_id, 'number_absolute': 0})
+        self.assertNotIn('errors', el.save())
+        self.assertEqual(len(Seat.all()), 1)
+        # one is allowed
+        el = Seat({'number': 2, 'table_id': self.t1_id, 'number_absolute': 1})
+        self.assertNotIn('errors', el.save())
+        self.assertEqual(len(Seat.all()), 2)
+
 
 setup_module = setUpModule
 teardown_module = tearDownModule

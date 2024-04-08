@@ -5,6 +5,7 @@ from elements import Participant, Device
 class Seat(ElementBase):
     _attrdef = dict(
         number=ElementBase.addAttr(type=int, default=1, notnone=True),
+        number_absolute=ElementBase.addAttr(type=int, default=None, unique=True),
         pw=ElementBase.addAttr(type=str, default=None),
         table_id=ElementBase.addAttr(notnone=True, fk='Table'),
         claiming_device_id=ElementBase.addAttr(type=str, fk='Device', default=None)
@@ -45,6 +46,8 @@ class Seat(ElementBase):
             errors['number'] = {'code': 51, 'desc': 'needs to be 1 or bigger'}
         elif docDB.search_one(self.__class__.__name__, {'table_id': self['table_id'], 'number': self['number'], '_id': {'$ne': self['_id']}}) is not None:
             errors['number'] = {'code': 52, 'desc': 'needs to be unique per Table'}
+        if self['number_absolute'] is not None and self['number_absolute'] < 0:
+            errors['number_absolute'] = {'code': 53, 'desc': 'needs to be 0 or bigger'}
         return errors
 
     def delete_post(self):
