@@ -26,6 +26,16 @@ def get_open_commits():
         result += 1
     return result
 
+def get_use_absolute_seatnumbers():
+    result = docDB.get_setting('absolute_seatnumbers')
+    if result is None:
+        return False
+    else:
+        return result
+
+def set_use_absolute_seatnumbers(state):
+    docDB.set_setting('absolute_seatnumbers', state)
+
 
 def _check_integrity_switchlinks():
     last_check = docDB.get_setting('integrity_switchlinks')

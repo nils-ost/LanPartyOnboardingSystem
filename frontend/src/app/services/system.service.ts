@@ -46,4 +46,8 @@ export class SystemService {
   public execRetreatSwitches(): Observable<any> {
     return this.http.post<any>(this.systemUrl + 'retreat_switches/', {}, {withCredentials:true});
   }
+
+  public setAbsoluteSeatnumbers(enable: boolean): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'absolute_seatnumbers/', {'enable': enable}, {withCredentials:true});
+  }
 }

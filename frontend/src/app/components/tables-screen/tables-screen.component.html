@@ -1,3 +1,6 @@
+<button *ngIf="!absolute_seatnumbers" pButton (click)="setAbsoluteSeatnumbers(true)" i18n="@@buttonSystemEnableAbsoluteSeatnumbers">Enable Absolute Seatnumbers</button>
+<button *ngIf="absolute_seatnumbers" pButton (click)="setAbsoluteSeatnumbers(false)" i18n="@@buttonSystemDisableAbsoluteSeatnumbers">Disable Absolute Seatnumbers</button>
+
 <p-panel header="Tables">
     <ng-template pTemplate="icons">
         <button pButton (click)="createtable.toggle($event)" i18n="@@buttonCreate">Create</button>
@@ -7,7 +10,7 @@
 </p-panel>
 
 <p-panel header="Seats">
-    <app-seats-list [seats]="seats" [tables]="tables" [ippools]="ippools" [participants]="participants" [selectedTable]="selectedTable" (editedSeatEvent)="refreshSeats()" (editedParticipantEvent)="refreshParticipants()"></app-seats-list>
+    <app-seats-list [system]="system" [seats]="seats" [tables]="tables" [ippools]="ippools" [participants]="participants" [selectedTable]="selectedTable" (editedSeatEvent)="refreshSeats()" (editedParticipantEvent)="refreshParticipants()"></app-seats-list>
 </p-panel>
 
 <p-overlayPanel #createtable [showCloseIcon]="true">

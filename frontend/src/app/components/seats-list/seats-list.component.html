@@ -7,6 +7,9 @@
             <th>
                 <ng-container i18n="@@elementFieldLabelSeatNumber">Number</ng-container>
             </th>
+            <th *ngIf="absolute_seatnumbers">
+                <ng-container i18n="@@elementFieldLabelSeatNumberAbsolute">Absolute Number</ng-container>
+            </th>
             <th>
                 <ng-container i18n="@@elementFieldLabelSeatPw">Password</ng-container>
             </th>
@@ -22,6 +25,7 @@
         <tr>
             <td *ngIf="!selectedTable">{{ element.table }}</td>
             <td>{{ element.seatNumber }}</td>
+            <td *ngIf="absolute_seatnumbers">{{ element.absoluteNumber }}</td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="deletePw(element.seat)" *ngIf="element.seat.pw"></button>
                 <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-question" (click)="generatePw(element.seat)"></button>

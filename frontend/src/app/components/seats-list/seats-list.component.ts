@@ -9,6 +9,7 @@ import { Participant } from 'src/app/interfaces/participant';
 import { ParticipantService } from 'src/app/services/participant.service';
 import { IpPool } from 'src/app/interfaces/ip-pool';
 import { UtilsService } from 'src/app/services/utils.service';
+import { System } from 'src/app/interfaces/system';
 
 @Component({
   selector: 'app-seats-list',
@@ -16,6 +17,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./seats-list.component.scss']
 })
 export class SeatsListComponent implements OnChanges, OnInit {
+  @Input() system?: System;
   @Input() tables!: Table[];
   @Input() seats!: Seat[];
   @Input() ippools!: IpPool[];
@@ -35,10 +37,11 @@ export class SeatsListComponent implements OnChanges, OnInit {
   newParticipantId: string | null = null;
   tablesNumbers: Map<string, number> = new Map<string, number>;
   tableStartIp: Map<string, number> = new Map<string, number>;
-  participantsNameBySeat: Map<string, string> = new Map<string, string>
-  participantsBySeat: Map<string, Participant> = new Map<string, Participant>
-  participantsById: Map<string, Participant> = new Map<string, Participant>
-  seatsById: Map<string, Seat> = new Map<string, Seat>
+  participantsNameBySeat: Map<string, string> = new Map<string, string>;
+  participantsBySeat: Map<string, Participant> = new Map<string, Participant>;
+  participantsById: Map<string, Participant> = new Map<string, Participant>;
+  seatsById: Map<string, Seat> = new Map<string, Seat>;
+  absolute_seatnumbers: boolean = false;
 
   constructor(
     private messageService: MessageService,
@@ -52,9 +55,12 @@ export class SeatsListComponent implements OnChanges, OnInit {
   ngOnInit(): void {
     this.multiSortMeta.push({field: 'table', order: 1});
     this.multiSortMeta.push({field: 'seatNumber', order: 1});
+    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
   }
 
   ngOnChanges(): void {
+    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
+    
     for (let i = 0; i < this.tables.length; i++) {
       let table: Table = this.tables[i];
       this.tablesNumbers.set(table.id, table.number);
@@ -84,6 +90,7 @@ export class SeatsListComponent implements OnChanges, OnInit {
           let element = {
             table: this.tablesNumbers.get(seat.table_id),
             seatNumber: seat.number,
+            absoluteNumber: seat.number_absolute,
             seatIp: this.seatIpStr(seat.number, seat.table_id),
             seat: seat
           }
@@ -97,6 +104,7 @@ export class SeatsListComponent implements OnChanges, OnInit {
         let element = {
           table: this.tablesNumbers.get(seat.table_id),
           seatNumber: seat.number,
+          absoluteNumber: seat.number_absolute,
           seatIp: this.seatIpStr(seat.number, seat.table_id),
           seat: seat
         }
