@@ -3,6 +3,7 @@ import cherrypy_cors
 from elements import Device, Table, Seat, Participant, IpPool
 from helpers.backgroundworker import device_onboarding_schedule
 from helpers.client import get_client_ip, get_client_mac
+from helpers.system import get_use_absolute_seatnumbers
 
 
 def possible_tables(device):
@@ -48,26 +49,30 @@ class OnboardingEndpoint():
 
         elif cherrypy.request.method == 'POST':
             attr = cherrypy.request.json
+            absSeatNumbers = get_use_absolute_seatnumbers()
             if not isinstance(attr, dict):
                 cherrypy.response.status = 400
                 return {'error': {'code': 2, 'desc': 'Submitted data need to be of type dict'}}
             elif len(attr) == 0:
                 cherrypy.response.status = 400
                 return {'error': {'code': 3, 'desc': 'data is needed to be submitted'}}
-            elif 'pw' not in attr or 'table' not in attr or 'seat' not in attr:
+            elif 'pw' not in attr or (not absSeatNumbers and 'table' not in attr) or 'seat' not in attr:
                 cherrypy.response.status = 400
                 return {'error': {'code': 4, 'desc': 'table, seat or pw is missing in data'}}
-            elif not isinstance(attr['seat'], int) or not isinstance(attr['seat'], int):
+            elif not isinstance(attr['seat'], int) or (not absSeatNumbers and not isinstance(attr['table'], int)):
                 cherrypy.response.status = 400
                 return {'error': {'code': 5, 'desc': 'table and seat must be of type int'}}
             elif not isinstance(attr['pw'], str):
                 cherrypy.response.status = 400
                 return {'error': {'code': 5, 'desc': 'pw must be of type str'}}
-            if attr['table'] not in possible_tables(device):
+            if not absSeatNumbers and attr['table'] not in possible_tables(device):
                 cherrypy.response.status = 400
                 return {'error': {'code': 8, 'desc': 'invalid table number'}}
-            table = Table.get_by_number(attr['table'])
-            seat = Seat.get_by_number(table['_id'], attr['seat'])
+            if absSeatNumbers:
+                seat = Seat.get_by_number_absolute(attr['seat'])
+            else:
+                table = Table.get_by_number(attr['table'])
+                seat = Seat.get_by_number(table['_id'], attr['seat'])
             if seat is None:
                 cherrypy.response.status = 400
                 return {'error': {'code': 9, 'desc': 'invalid seat number'}}

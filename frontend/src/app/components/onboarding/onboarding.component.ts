@@ -1,7 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/api';
 import { Onboarding } from 'src/app/interfaces/onboarding';
+import { System } from 'src/app/interfaces/system';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { OnboardingService } from 'src/app/services/onboarding.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -11,9 +12,11 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './onboarding.component.html',
   styleUrls: ['./onboarding.component.scss']
 })
-export class OnboardingComponent implements OnInit {
+export class OnboardingComponent implements OnInit, OnChanges {
+  @Input() system?: System;
   @Output() onboardingChangeEvent = new EventEmitter<Onboarding | undefined>;
   onboarding?: Onboarding;
+  absolute_seatnumbers: boolean = false;
   errorMsg: Message[] = [];
   selectedTable: number | undefined;
   selectedSeat: number | undefined;
@@ -27,6 +30,11 @@ export class OnboardingComponent implements OnInit {
 
   ngOnInit(): void {
     this.refreshOnboarding();
+    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
+  }
+
+  ngOnChanges(): void {
+    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
   }
 
   refreshOnboarding() {
@@ -45,10 +53,12 @@ export class OnboardingComponent implements OnInit {
   }
 
   sendSeatParameters() {
-    if (this.selectedTable && this.selectedSeat && this.selectedPw) {
+    if ((this.absolute_seatnumbers || this.selectedTable) && this.selectedSeat && this.selectedPw) {
       this.errorMsg = [];
+      let table: number = 0;
+      if (!this.absolute_seatnumbers && this.selectedTable) table = this.selectedTable;
       this.onboardingService
-        .startOnboarding(this.selectedTable, this.selectedSeat, this.selectedPw)
+        .startOnboarding(table, this.selectedSeat, this.selectedPw)
         .subscribe({
           next: (onboarding: Onboarding) => {
             this.onboarding = onboarding;
@@ -60,6 +70,7 @@ export class OnboardingComponent implements OnInit {
           }
         })
     }
+    else console.log('missing something');
   }
 
   sendParticipantConfirmation(selection: boolean) {

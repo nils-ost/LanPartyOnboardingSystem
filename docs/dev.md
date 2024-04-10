@@ -10,4 +10,5 @@ ln -s ng.js ng
 cd ../../../../..
 echo -e "source venv/bin/activate\nunset PS1\nPATH_add frontend/node_modules/@angular/cli/bin" > .envrc
 direnv allow
+pre-commit install
 ```

@@ -30,6 +30,15 @@ class Seat(ElementBase):
         return None
 
     @classmethod
+    def get_by_number_absolute(cls, number):
+        result = cls()
+        fromdb = docDB.search_one(cls.__name__, {'number_absolute': number})
+        if fromdb is not None:
+            result._attr = fromdb
+            return result
+        return None
+
+    @classmethod
     def get_by_claiming(cls, device_id):
         result = cls()
         fromdb = docDB.search_one(cls.__name__, {'claiming_device_id': device_id})
