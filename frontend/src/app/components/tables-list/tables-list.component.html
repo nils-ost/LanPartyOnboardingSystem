@@ -39,6 +39,7 @@
                 {{ seatCounts.get(table.id) || 0 }}
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-plus" (click)="addSeatsStart(table)"></button>
                 <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-minus" (click)="delSeatsStart(table)" *ngIf="seatCounts.get(table.id) || 0 > 0"></button>
+                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-hashtag" (click)="numberSeatsStart(table)" *ngIf="absolute_seatnumbers"></button>
             </td>
         </tr>
     </ng-template>
@@ -70,4 +71,19 @@
         </span>
     </div>
     <button pButton (click)="delSeats()" i18n="@@buttonCommit">Commit</button>
+</p-dialog>
+
+<p-dialog [(visible)]="numberSeatsDialog" header="Number Seats" [modal]="true" [dismissableMask]="true" *ngIf="selectedTable">
+    <p>
+        Enter the first new Seat-Number and if it should increase or decrease
+    </p>
+    <div class="field">
+        <p-toggleButton [(ngModel)]="numberSeatsAsc" onLabel="Increasing" offLabel="Decreasing"></p-toggleButton>
+    </div>
+    <div class="field">
+        <span class="p-float-label">
+            <p-inputNumber [(ngModel)]="adddelSeatsCount" [min]="0" (keyup.enter)="numberSeats()" [showButtons]="true"></p-inputNumber>
+        </span>
+    </div>
+    <button pButton (click)="numberSeats()" i18n="@@buttonCommit">Commit</button>
 </p-dialog>

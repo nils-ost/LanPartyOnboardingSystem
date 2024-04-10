@@ -1,9 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { IpPool } from 'src/app/interfaces/ip-pool';
 import { Seat } from 'src/app/interfaces/seat';
 import { Switch } from 'src/app/interfaces/switch';
+import { System } from 'src/app/interfaces/system';
 import { Table } from 'src/app/interfaces/table';
 import { Vlan } from 'src/app/interfaces/vlan';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
@@ -15,7 +16,8 @@ import { TableService } from 'src/app/services/table.service';
   templateUrl: './tables-list.component.html',
   styleUrls: ['./tables-list.component.scss']
 })
-export class TablesListComponent implements OnChanges {
+export class TablesListComponent implements OnInit, OnChanges {
+  @Input() system?: System;
   @Input() tables!: Table[];
   @Input() ippools!: IpPool[];
   @Input() switches!: Switch[];
@@ -25,10 +27,13 @@ export class TablesListComponent implements OnChanges {
   @Output() editedSeatEvent = new EventEmitter<null>();
   @Output() selectTableEvent = new EventEmitter<Table | undefined>();
 
+  absolute_seatnumbers: boolean = false;
   editDialog: boolean = false;
   addSeatsDialog: boolean = false;
   delSeatsDialog: boolean = false;
+  numberSeatsDialog: boolean = false;
   adddelSeatsCount: number = 0;
+  numberSeatsAsc: boolean = true;
   selectedTable!: Table;
 
   ippoolsNames: Map<string, string> = new Map<string, string>;
@@ -42,6 +47,10 @@ export class TablesListComponent implements OnChanges {
     private tableService: TableService,
     private seatService: SeatService
   ) {}
+
+  ngOnInit(): void {
+    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
+  }
 
   ngOnChanges(): void {
     for (let i = 0; i < this.ippools.length; i++) {
@@ -62,6 +71,7 @@ export class TablesListComponent implements OnChanges {
       if (storedVal) newVal = storedVal + 1;
       this.seatCounts.set(table_id, newVal);
     }
+    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
   }
 
   selectTable(selection: Table | undefined) {
@@ -106,6 +116,50 @@ export class TablesListComponent implements OnChanges {
             })
         }
     });
+  }
+
+  numberSeatsStart(table: Table) {
+    this.selectedTable = table;
+    this.selectTableEvent.emit(table);
+    this.adddelSeatsCount = 0;
+    this.numberSeatsDialog = true;
+  }
+
+  numberSeats() {
+    this.numberSeatsDialog = false;
+    for (let i = 0; i < this.seats.length; i++) {
+      let seat: Seat = this.seats[i];
+      if (seat.table_id == this.selectedTable.id) {
+        this.seatService
+          .updateAbsoluteNumber(seat.id, null)
+          .subscribe({
+            next: () => {},
+            error: (err: HttpErrorResponse) => {
+              this.errorHandler.handleError(err);
+            }
+          })
+      }
+    }
+    for (let i = 0; i < this.seats.length; i++) {
+      let seat: Seat = this.seats[i];
+      if (seat.table_id == this.selectedTable.id) {
+        let absNumber: number = 0;
+        if (this.numberSeatsAsc) absNumber = this.adddelSeatsCount + (seat.number - 1);
+        else absNumber = this.adddelSeatsCount - (seat.number - 1);
+        if (absNumber >= 0) {
+          this.seatService
+            .updateAbsoluteNumber(seat.id, absNumber)
+            .subscribe({
+              next: () => {
+                this.editedSeatEvent.emit(null);
+              },
+              error: (err: HttpErrorResponse) => {
+                this.errorHandler.handleError(err);
+              }
+            })
+        }
+      }
+    }
   }
 
   addSeatsStart(table: Table) {

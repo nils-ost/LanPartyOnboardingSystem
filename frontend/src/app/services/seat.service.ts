@@ -49,6 +49,13 @@ export class SeatService {
     return this.http.patch<any>(this.seatUrl + id + '/', seat, {withCredentials:true});
   }
 
+  public updateAbsoluteNumber(id: string, absnumber: number | null): Observable<any> {
+    let seat = {
+      'number_absolute': absnumber
+    }
+    return this.http.patch<any>(this.seatUrl + id + '/', seat, {withCredentials:true});
+  }
+
   public deleteSeat(id: string): Observable<any> {
     return this.http.delete<any>(this.seatUrl + id + '/', {withCredentials:true});
   }

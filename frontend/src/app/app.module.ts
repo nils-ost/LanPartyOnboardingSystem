@@ -18,6 +18,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessagesModule } from 'primeng/messages';
 import { DockModule } from 'primeng/dock';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
@@ -93,7 +94,8 @@ import { DevicesListComponent } from './components/devices-list/devices-list.com
     ToastModule,
     MessagesModule,
     DockModule,
-    CheckboxModule
+    CheckboxModule,
+    ToggleButtonModule
   ],
   providers: [
     ConfirmationService,

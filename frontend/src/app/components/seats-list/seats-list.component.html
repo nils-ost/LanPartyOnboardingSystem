@@ -25,7 +25,11 @@
         <tr>
             <td *ngIf="!selectedTable">{{ element.table }}</td>
             <td>{{ element.seatNumber }}</td>
-            <td *ngIf="absolute_seatnumbers">{{ element.absoluteNumber }}</td>
+            <td *ngIf="absolute_seatnumbers">
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="deleteAbsoluteNumber(element.seat)" *ngIf="element.seat.number_absolute"></button>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editAbsoluteNumberStart(element.seat, $event)"></button>
+                {{ element.seat.number_absolute || '---' }}
+            </td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="deletePw(element.seat)" *ngIf="element.seat.pw"></button>
                 <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-question" (click)="generatePw(element.seat)"></button>
@@ -63,5 +67,17 @@
             </span>
         </div>
         <button pButton (click)="editParticipantCheck()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #editabsolutenumber [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="field">
+            <span class="p-float-label">
+                <p-inputNumber inputId="newAbsoluteNumber" [(ngModel)]="newAbsoluteNumber" [min]="0" [showButtons]="true" (keyup.enter)="editAbsoluteNumber()"></p-inputNumber>
+                <label for="newAbsoluteNumber" i18n="@@elementFieldLabelSeatAbsoluteNumber">Absolute Number</label>
+            </span>
+        </div>
+        <button pButton (click)="editAbsoluteNumber()" i18n="@@buttonSave">Save</button>
     </ng-template>
 </p-overlayPanel>

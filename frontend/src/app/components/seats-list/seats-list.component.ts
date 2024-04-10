@@ -28,6 +28,7 @@ export class SeatsListComponent implements OnChanges, OnInit {
 
   @ViewChild('editpassword') editPasswordDialog: any;
   @ViewChild('editparticipant') editParticipantDialog: any;
+  @ViewChild('editabsolutenumber') editAbsoluteNumberDialog: any;
   multiSortMeta: any[] = [];
 
   participantsOptions: any[] = [];
@@ -35,6 +36,7 @@ export class SeatsListComponent implements OnChanges, OnInit {
   selectedSeat: Seat | undefined;
   newPassword: string = "";
   newParticipantId: string | null = null;
+  newAbsoluteNumber: number | null = null;
   tablesNumbers: Map<string, number> = new Map<string, number>;
   tableStartIp: Map<string, number> = new Map<string, number>;
   participantsNameBySeat: Map<string, string> = new Map<string, string>;
@@ -90,7 +92,6 @@ export class SeatsListComponent implements OnChanges, OnInit {
           let element = {
             table: this.tablesNumbers.get(seat.table_id),
             seatNumber: seat.number,
-            absoluteNumber: seat.number_absolute,
             seatIp: this.seatIpStr(seat.number, seat.table_id),
             seat: seat
           }
@@ -104,7 +105,6 @@ export class SeatsListComponent implements OnChanges, OnInit {
         let element = {
           table: this.tablesNumbers.get(seat.table_id),
           seatNumber: seat.number,
-          absoluteNumber: seat.number_absolute,
           seatIp: this.seatIpStr(seat.number, seat.table_id),
           seat: seat
         }
@@ -136,6 +136,43 @@ export class SeatsListComponent implements OnChanges, OnInit {
     else {
       return '';
     }
+  }
+
+  deleteAbsoluteNumber(seat: Seat) {
+    this.seatService
+      .updateAbsoluteNumber(seat.id, null)
+      .subscribe({
+        next: () => {
+          this.editedSeatEvent.emit(null);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
+  editAbsoluteNumberStart(seat: Seat, event: any) {
+    this.selectedSeat = seat;
+    if (seat.number_absolute) this.newAbsoluteNumber = seat.number_absolute;
+    else this.newAbsoluteNumber = null;
+    this.editAbsoluteNumberDialog.show(event);
+  }
+
+  editAbsoluteNumber() {
+    if (this.selectedSeat) {
+      this.seatService
+        .updateAbsoluteNumber(this.selectedSeat.id, this.newAbsoluteNumber)
+        .subscribe({
+          next: () => {
+            this.editedSeatEvent.emit(null);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+          }
+        })
+    }
+    this.selectedSeat = undefined;
+    this.editAbsoluteNumberDialog.hide();
   }
 
   deletePw(seat: Seat) {

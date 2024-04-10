@@ -118,6 +118,7 @@
   * **15**: no Seats present for Table '<number\>: <desc\>'
   * **16**: not enough IPs in play-IpPool '<desc\>' for Table '<number\>: <desc\>'
   * **17**: not enough IPs in onboarding-IpPool '<desc\>' for Table '<number\>: <desc\>'
+  * **18**: Seat <number\> of Table '<number\>: <desc\>' is missing number_absolute
 
 # onboarding error-codes
 

@@ -149,10 +149,17 @@ def _check_integrity_tables():
 
     from elements import Table, Seat, IpPool
     for table in Table.all():
+        table_seats = Seat.get_by_table(table['_id'])
         # check if Table has Seats
-        nb_seats = len(Seat.get_by_table(table['_id']))
+        nb_seats = len(table_seats)
         if nb_seats == 0:
             return {'code': 15, 'desc': f"no Seats present for Table '{table['number']}: {table['desc']}'"}
+
+        # check if all seats have a number_absolute, if this setting is enabled
+        if get_use_absolute_seatnumbers():
+            for seat in table_seats:
+                if seat['number_absolute'] is None:
+                    return {'code': 18, 'desc': f"Seat {seat['number']} of Table '{table['number']}: {table['desc']}' is missing number_absolute"}
 
         # check if enough IPs for all Seats in play-IpPool of table
         play_pool = table.seat_ip_pool()
