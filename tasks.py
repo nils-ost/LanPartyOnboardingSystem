@@ -1,3 +1,4 @@
+import os
 from invoke import task
 
 
@@ -7,11 +8,21 @@ def start_development(c):
     if 'dev-mongo' not in r.stdout:
         print('Starting mongoDB')
         c.run('sudo docker run --name dev-mongo --rm -p 27017:27017 -d mongo:4.4')
+    r = c.run('sudo docker ps -f name=dev-haproxy', hide=True)
+    if 'dev-haproxy' not in r.stdout:
+        print('Starting HAproxy')
+        haproxycfg = os.path.join(os.path.abspath('.'), 'install/haproxy.cfg')
+        cmd = [
+            'sudo docker run --name dev-haproxy --rm',
+            '--add-host=host.docker.internal:host-gateway --sysctl net.ipv4.ip_unprivileged_port_start=0',
+            f'-v {haproxycfg}:/usr/local/etc/haproxy/haproxy.cfg:ro -p 80:80 -p 8404:8404 -d haproxy:lts-alpine'
+        ]
+        c.run(' '.join(cmd))
 
 
 @task(name='dev-stop')
 def stop_development(c):
-    for name in ['dev-mongo']:
+    for name in ['dev-haproxy', 'dev-mongo']:
         r = c.run(f'sudo docker ps -f name={name}', hide=True)
         if name in r.stdout:
             print(f'Stopping {name}')

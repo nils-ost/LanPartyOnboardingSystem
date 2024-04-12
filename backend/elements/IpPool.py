@@ -41,9 +41,25 @@ class IpPool(ElementBase):
         return tuple(r)
 
     def mask_dotted(self):
+        return self.mask(dotted=True)
+
+    def mask(self, octetts=False, dotted=False):
         mask = (2 ** self['mask'] - 1) << (32 - self['mask'])
-        octetts = self.__class__.int_to_octetts(mask)
-        return '.'.join([str(o) for o in octetts])
+        if not octetts and not dotted:
+            return mask
+        oct = self.__class__.int_to_octetts(mask)
+        if octetts:
+            return oct
+        return '.'.join([str(o) for o in oct])
+
+    def subnet_ip(self, octetts=False, dotted=False):
+        ip = self['range_start'] & self.mask()
+        if not octetts and not dotted:
+            return ip
+        oct = self.__class__.int_to_octetts(ip)
+        if octetts:
+            return oct
+        return '.'.join([str(o) for o in oct])
 
     def validate(self):
         from elements import VLAN

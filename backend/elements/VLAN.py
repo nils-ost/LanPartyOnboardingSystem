@@ -1,4 +1,6 @@
 import os
+import json
+import subprocess
 from elements._elementBase import ElementBase, docDB
 
 
@@ -60,41 +62,32 @@ class VLAN(ElementBase):
         if self['_id'] is None:
             return False  # not saved yet, therefor could be invalid
 
-        iname = docDB.get_setting('os_nw_interface')
-        netplan_path = docDB.get_setting('os_netplan_path')
-        route_cfg = ''
+        pool = IpPool.get_by_vlan(self['_id'])
+        if len(pool) == 0:
+            return False  # no needed pool defined
+        pool = pool[0]
 
-        if self['purpose'] == 0:
-            def_gw = docDB.get_setting('play_gateway')
-            def_ns = docDB.get_setting('upstream_dns')
-            route_cfg = f"""
-      gateway4: {def_gw}
-      nameservers:
-        addresses: [{def_ns}]"""
-            for pool in IpPool.get_by_vlan(self['_id']):
-                if pool['lpos']:
-                    break
+        iname = docDB.get_setting('os_nw_interface')
+        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+
+        if not 0 == subprocess.call(f'{dcmd} network ls | grep ipvlan{self["number"]}', shell=True):
+            # vlan not yet defined, defining it
+            subnet = f'{pool.subnet_ip(dotted=True)}/{pool["mask"]}'
+            subprocess.call(f'{dcmd} network create -d ipvlan --subnet={subnet} -o parent={iname}.{self["number"]} ipvlan{self["number"]}', shell=True)
+
+        # hook the first IP of corresponding pool to haproxy
+        try:
+            format = '\u007b\u007b.ID\u007d\u007d|\u007b\u007b.Image\u007d\u007d|\u007b\u007b.Names\u007d\u007d'
+            hap_container = subprocess.check_output(f"sudo docker ps --format='{format}' | grep haproxy", shell=True).decode('utf-8').split('|')[0]
+            for k in json.loads(subprocess.check_output(f'{dcmd} network inspect ipvlan{self["number"]}', shell=True).decode('utf-8').strip())[0]['Containers']:
+                if k.startswith(hap_container):
+                    break  # haproxy allready connected to this vlan, for-else is not executed
             else:
-                return False  # no pool defined as lpos
-        else:
-            pool = IpPool.get_by_vlan(self['_id'])
-            if len(pool) == 0:
-                return False  # no needed pool defined
-            pool = pool[0]
-        ip = '.'.join([str(e) for e in IpPool.int_to_octetts(pool['range_start'])])
-        mask = pool['mask']
-        cfg = f"""network:
-  version: 2
-  renderer: networkd
-  vlans:
-    vlan{self['number']}:
-      id: {self['number']}
-      link: {iname}
-      addresses:
-        - {ip}/{mask}
-      dhcp4: no{route_cfg}"""
-        with open(os.path.join(netplan_path, f"02-vlan{self['number']}.yaml"), 'w') as f:
-            f.write(cfg)
+                hap_ip = '.'.join(str(o) for o in IpPool.int_to_octetts(pool['range_start']))
+                subprocess.call(f'{dcmd} network connect --ip={hap_ip} ipvlan{self["number"]} {hap_container}', shell=True)
+        except Exception:
+            pass  # haproxy container not started or can't be found, skipping this step
+
         return True
 
     def retreat_os_interface(self):
@@ -103,15 +96,27 @@ class VLAN(ElementBase):
         if not integrity.get('code', 1) == 0:
             return False  # integrity check failed, can't continue
 
-        if self['purpose'] == 3:
+        if self['purpose'] in [1, 3]:
             return True  # does not got an interface
         if self['_id'] is None:
             return False  # not saved yet, therefor could be invalid
-        netplan_path = docDB.get_setting('os_netplan_path')
+
+        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+        if not 0 == subprocess.call(f'{dcmd} network ls | grep ipvlan{self["number"]}', shell=True):
+            return True  # allready removed
+
+        # unbind vlan from HAproxy
         try:
-            os.remove(os.path.join(netplan_path, f"02-vlan{self['number']}.yaml"))
-        except FileNotFoundError:
-            pass
+            format = '\u007b\u007b.ID\u007d\u007d|\u007b\u007b.Image\u007d\u007d|\u007b\u007b.Names\u007d\u007d'
+            hap_container = subprocess.check_output(f"sudo docker ps --format='{format}' | grep haproxy", shell=True).decode('utf-8').split('|')[0]
+            for k in json.loads(subprocess.check_output(f'{dcmd} network inspect ipvlan{self["number"]}', shell=True).decode('utf-8').strip())[0]['Containers']:
+                if k.startswith(hap_container):
+                    # haproxy is connected to this vlan, disconnecting haproxy
+                    subprocess.call(f'{dcmd} network disconnect ipvlan{self["number"]} {hap_container}', shell=True)
+        except Exception:
+            pass  # haproxy container not started or can't be found, skipping this step
+
+        subprocess.call(f'{dcmd} network rm ipvlan{self["number"]}', shell=True)
         return True
 
     def commit_dnsmasq_config(self):
