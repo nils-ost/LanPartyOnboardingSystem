@@ -70,53 +70,112 @@ class VLAN(ElementBase):
         iname = docDB.get_setting('os_nw_interface')
         dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
 
-        if not 0 == subprocess.call(f'{dcmd} network ls | grep ipvlan{self["number"]}', shell=True):
+        if not 0 == subprocess.call(f'{dcmd} network ls | grep lpos-ipvlan{self["number"]}', shell=True):
             # vlan not yet defined, defining it
             subnet = f'{pool.subnet_ip(dotted=True)}/{pool["mask"]}'
-            subprocess.call(f'{dcmd} network create -d ipvlan --subnet={subnet} -o parent={iname}.{self["number"]} ipvlan{self["number"]}', shell=True)
+            subprocess.call(f'{dcmd} network create -d ipvlan --subnet={subnet} -o parent={iname}.{self["number"]} lpos-ipvlan{self["number"]}', shell=True)
 
         # hook the first IP of corresponding pool to haproxy
         try:
             format = '\u007b\u007b.ID\u007d\u007d|\u007b\u007b.Image\u007d\u007d|\u007b\u007b.Names\u007d\u007d'
             hap_container = subprocess.check_output(f"sudo docker ps --format='{format}' | grep haproxy", shell=True).decode('utf-8').split('|')[0]
-            for k in json.loads(subprocess.check_output(f'{dcmd} network inspect ipvlan{self["number"]}', shell=True).decode('utf-8').strip())[0]['Containers']:
+            tmp_cmd = f'{dcmd} network inspect lpos-ipvlan{self["number"]}'
+            for k in json.loads(subprocess.check_output(tmp_cmd, shell=True).decode('utf-8').strip())[0]['Containers']:
                 if k.startswith(hap_container):
                     break  # haproxy allready connected to this vlan, for-else is not executed
             else:
                 hap_ip = '.'.join(str(o) for o in IpPool.int_to_octetts(pool['range_start']))
-                subprocess.call(f'{dcmd} network connect --ip={hap_ip} ipvlan{self["number"]} {hap_container}', shell=True)
+                subprocess.call(f'{dcmd} network connect --ip={hap_ip} lpos-ipvlan{self["number"]} {hap_container}', shell=True)
         except Exception:
             pass  # haproxy container not started or can't be found, skipping this step
 
         return True
 
     def retreat_os_interface(self):
-        from helpers.system import check_integrity_vlan_interface_commit
-        integrity = check_integrity_vlan_interface_commit()
-        if not integrity.get('code', 1) == 0:
-            return False  # integrity check failed, can't continue
-
         if self['purpose'] in [1, 3]:
             return True  # does not got an interface
         if self['_id'] is None:
             return False  # not saved yet, therefor could be invalid
 
         dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
-        if not 0 == subprocess.call(f'{dcmd} network ls | grep ipvlan{self["number"]}', shell=True):
+        if not 0 == subprocess.call(f'{dcmd} network ls | grep lpos-ipvlan{self["number"]}', shell=True):
             return True  # allready removed
 
         # unbind vlan from HAproxy
         try:
             format = '\u007b\u007b.ID\u007d\u007d|\u007b\u007b.Image\u007d\u007d|\u007b\u007b.Names\u007d\u007d'
             hap_container = subprocess.check_output(f"sudo docker ps --format='{format}' | grep haproxy", shell=True).decode('utf-8').split('|')[0]
-            for k in json.loads(subprocess.check_output(f'{dcmd} network inspect ipvlan{self["number"]}', shell=True).decode('utf-8').strip())[0]['Containers']:
+            tmp_cmd = f'{dcmd} network inspect lpos-ipvlan{self["number"]}'
+            for k in json.loads(subprocess.check_output(tmp_cmd, shell=True).decode('utf-8').strip())[0]['Containers']:
                 if k.startswith(hap_container):
                     # haproxy is connected to this vlan, disconnecting haproxy
-                    subprocess.call(f'{dcmd} network disconnect ipvlan{self["number"]} {hap_container}', shell=True)
+                    subprocess.call(f'{dcmd} network disconnect lpos-ipvlan{self["number"]} {hap_container}', shell=True)
         except Exception:
             pass  # haproxy container not started or can't be found, skipping this step
 
-        subprocess.call(f'{dcmd} network rm ipvlan{self["number"]}', shell=True)
+        subprocess.call(f'{dcmd} network rm lpos-ipvlan{self["number"]}', shell=True)
+        return True
+
+    def commit_dns_server(self):
+        from elements import IpPool
+        from helpers.system import check_integrity_vlan_dns_commit
+        integrity = check_integrity_vlan_dns_commit()
+        if not integrity.get('code', 1) == 0:
+            return False  # integrity check failed, can't continue
+
+        if self['purpose'] in [1, 3]:
+            return True  # does not get a dns server
+        if self['_id'] is None:
+            return False  # not saved yet, therefor could be invalid
+
+        pool = IpPool.get_by_vlan(self['_id'])
+        if len(pool) == 0:
+            return False  # no needed pool defined
+        pool = pool[0]
+
+        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+        if not 0 == subprocess.call(f'{dcmd} network ls | grep lpos-ipvlan{self["number"]}', shell=True):
+            return False  # VLAN not defined, can't start DNS-Server
+
+        if not 0 == subprocess.call(f'{dcmd} ps --format=\u007b\u007b.Names\u007d\u007d | grep lpos-ipvlan{self["number"]}-dns', shell=True):
+            # DNS-Server not yet started, configuring and starting it
+            lpos_domain = '.'.join([docDB.get_setting('subdomain'), docDB.get_setting('domain')])
+            lpos_ip = '.'.join(str(o) for o in IpPool.int_to_octetts(pool['range_start']))
+            dns_ip = '.'.join(str(o) for o in IpPool.int_to_octetts(pool['range_start'] + 1))
+
+            open('/tmp/Corefile', 'w').write('. {\n    hosts /app/hosts\n}')
+            open('/tmp/hosts', 'w').write(f'{lpos_ip}  {lpos_domain} www.{lpos_domain}')
+
+            subprocess.call(f'{dcmd} run --rm --name copier-dns-{self["number"]} -v lpos-ipvlan{self["number"]}-dns:/app -d alpine sleep 3', shell=True)
+            subprocess.call(f'{dcmd} cp /tmp/Corefile copier-dns-{self["number"]}:/app/', shell=True)
+            subprocess.call(f'{dcmd} cp /tmp/hosts copier-dns-{self["number"]}:/app/', shell=True)
+            start_cmd = list([
+                f'{dcmd} run --rm --name lpos-ipvlan{self["number"]}-dns',
+                f'--net=lpos-ipvlan{self["number"]} --ip={dns_ip}',
+                f'-v lpos-ipvlan{self["number"]}-dns:/app',
+                'coredns/coredns -conf /app/Corefile'
+            ])
+            subprocess.call(' '.join(start_cmd), shell=True)
+        return True
+
+    def retreat_dns_server(self):
+        if self['purpose'] in [1, 3]:
+            return True  # does not get a dns server
+        if self['_id'] is None:
+            return False  # not saved yet, therefor could be invalid
+
+        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+
+        try:
+            subprocess.call(f'{dcmd} stop lpos-ipvlan{self["number"]}-dns', shell=True)
+        except Exception:
+            pass
+
+        try:
+            subprocess.call(f'{dcmd} volume rm lpos-ipvlan{self["number"]}-dns', shell=True)
+        except Exception:
+            pass
+
         return True
 
     def commit_dnsmasq_config(self):

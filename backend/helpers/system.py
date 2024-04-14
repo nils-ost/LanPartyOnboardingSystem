@@ -26,12 +26,14 @@ def get_open_commits():
         result += 1
     return result
 
+
 def get_use_absolute_seatnumbers():
     result = docDB.get_setting('absolute_seatnumbers')
     if result is None:
         return False
     else:
         return result
+
 
 def set_use_absolute_seatnumbers(state):
     docDB.set_setting('absolute_seatnumbers', state)
@@ -169,7 +171,7 @@ def _check_integrity_tables():
         # check if enough IPs in onboarding IpPool (at least half number of seats plus one for LPOS)
         ob_vlan = table.switch().onboarding_vlan()
         ob_pool = IpPool.get_by_vlan(ob_vlan['_id'])[0]
-        if (ob_pool['range_end'] + 1 - ob_pool['range_start']) < (nb_seats / 2 + 1):
+        if (ob_pool['range_end'] + 1 - ob_pool['range_start']) < (nb_seats / 2 + 3):
             return {'code': 17, 'desc': f"not enough IPs in onboarding-IpPool '{ob_pool['desc']}' for Table '{table['number']}: {table['desc']}'"}
 
     docDB.set_setting('integrity_tables', datetime.now().timestamp())
@@ -281,6 +283,17 @@ def check_integrity_switch_commit():
 def check_integrity_vlan_interface_commit():
     """
     do all integrity checks required for commiting vlan's os_interface
+    """
+    for check in [_check_interity_settings, _check_integrity_ippools]:
+        r = check()
+        if not r.get('code', 1) == 0:
+            return r
+    return {'code': 0, 'desc': 'check ok'}
+
+
+def check_integrity_vlan_dns_commit():
+    """
+    do all integrity checks required for commiting vlan's dns server
     """
     for check in [_check_interity_settings, _check_integrity_ippools]:
         r = check()
