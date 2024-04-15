@@ -40,6 +40,13 @@ class IpPool(ElementBase):
             r.append(int(h[idx * 2:(idx + 1) * 2], 16))
         return tuple(r)
 
+    def int_to_dotted(input):
+        return '.'.join(str(o) for o in IpPool.int_to_octetts(input))
+
+    def dotted_to_int(str_input):
+        str_input = str_input.split('/')[0]
+        return IpPool.octetts_to_int(*[int(o) for o in str_input.split('.')])
+
     def mask_dotted(self):
         return self.mask(dotted=True)
 
