@@ -177,6 +177,60 @@ class VLAN(ElementBase):
             pass
 
         return True
+    
+    def commit_dhcp_server(self):
+        from helpers.system import check_integrity_vlan_dhcp_commit
+        integrity = check_integrity_vlan_dhcp_commit()
+        if not integrity.get('code', 1) == 0:
+            return False  # integrity check failed, can't continue
+
+        if self['purpose'] in [1, 3]:
+            return True  # does not get a dns server
+        if self['_id'] is None:
+            return False  # not saved yet, therefor could be invalid
+        
+        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+        
+        # check lpos internal network exists
+        # determine next free ip in lpos internal network
+        internal_ip = '0.0.0.0'
+        hap_ip = ''
+        dns_ip = ''
+        dhcp_ip = ''
+        subnet_ip = ''
+        subnet_mask = ''
+        range_start = ''
+        range_end = ''
+        lpos_domain = ''
+        # create ctrl-agent conf
+        ctrl_agent_conf = dict({'http-host': internal_ip, 'http-port': 8000})
+        ctrl_agent_conf['control-sockets'] = {'dhcp4': {'socket-type': 'unix', 'socket-name': '/run/kea/control_socket_4'}}
+        ctrl_agent_conf['loggers'] = [{'name': 'kea-ctrl-agent', 'output_options': [{'output': 'stdout'}], 'severity': 'INFO'}]
+        open('/tmp/kea-ctrl-agent.conf', 'w').write(json.dumps({'Control-agent': ctrl_agent_conf}, indent=4))
+        # create dhcp4 conf
+        dhcp4_conf = dict({'renew-timer': 2, 'rebind-timer': 5, 'valid-lifetime': 10, 'option-data': list()})
+        dhcp4_conf['option-data'].append({'name': 'domain-name-servers', 'data': dns_ip})
+        dhcp4_conf['option-data'].append({'name': 'routers', 'data': hap_ip})
+        dhcp4_conf['option-data'].append({'name': 'v4-captive-portal', 'data': f'http://{lpos_domain}/', 'always-send': True})
+        dhcp4_conf['subnet4'] = [{'id': 1, 'subnet': f'{subnet_ip}/{subnet_mask}', 'pools': [{'pool': f'{range_start}-{range_end}'}], 'interface': 'eth0'}]
+        dhcp4_conf['interfaces-config'] = {'interfaces': ['eth0'], 'service-sockets-max-retries': 5, 'service-sockets-require-all': True}
+        dhcp4_conf['control-socket'] = {'socket-type': 'unix', 'socket-name': '/run/kea/control_socket_4'}
+        dhcp4_conf['loggers'] = [{'name': 'kea-dhcp4', 'output_options': [{'output': 'stdout'}], 'severity': 'INFO'}]
+        dhcp4_conf['lease-database'] = {'type': 'memfile'}
+        open('/tmp/kea-dhcp4.conf', 'w').write(json.dumps({'Dhcp4': dhcp4_conf}, indent=4))
+        # copy confs into volume
+        subprocess.call(f'{dcmd} run --rm --name copier-dhcp-{self["number"]} -v lpos-ipvlan{self["number"]}-dhcp:/app -d alpine sleep 3', shell=True)
+        subprocess.call(f'{dcmd} cp /tmp/kea-ctrl-agent.conf copier-dhcp-{self["number"]}:/app/', shell=True)
+        subprocess.call(f'{dcmd} cp /tmp/kea-dhcp4.conf copier-dhcp-{self["number"]}:/app/', shell=True)
+        # start container with volume
+        start_cmd = list([
+            f'{dcmd} run --rm --name lpos-ipvlan{self["number"]}-dhcp',
+            f'--net=lpos-internal -p 127.0.0.1:80{self["number"]}:8000',
+            f'--net=lpos-ipvlan{self["number"]} --ip={dhcp_ip}',
+            f'-v lpos-ipvlan{self["number"]}-dhcp:/etc/kea',
+            'docker.cloudsmith.io/isc/docker/kea-dhcp4'
+        ])
+        subprocess.call(' '.join(start_cmd), shell=True)
 
     def commit_dnsmasq_config(self):
         from elements import IpPool

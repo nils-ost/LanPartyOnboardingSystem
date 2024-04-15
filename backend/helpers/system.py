@@ -302,6 +302,17 @@ def check_integrity_vlan_dns_commit():
     return {'code': 0, 'desc': 'check ok'}
 
 
+def check_integrity_vlan_dhcp_commit():
+    """
+    do all integrity checks required for commiting vlan's dhcp server
+    """
+    for check in [_check_interity_settings, _check_integrity_ippools]:
+        r = check()
+        if not r.get('code', 1) == 0:
+            return r
+    return {'code': 0, 'desc': 'check ok'}
+
+
 def check_integrity_vlan_dnsmasq_commit():
     """
     do all integrity checks required for commiting vlan's dnsmasq_config
