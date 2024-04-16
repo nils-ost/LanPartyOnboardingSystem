@@ -125,6 +125,12 @@ def set_subdomain():
     docDB.set_setting('subdomain', subdomain)
 
 
+def set_dhcpip():
+    from helpers.docdb import docDB
+    gateway = input('Enter IP the DHCP-Server should get in the play-network: ').strip().strip('.')
+    docDB.set_setting('play_dhcp', gateway)
+
+
 def set_gateway():
     from helpers.docdb import docDB
     gateway = input('Enter IP of gateway to the internet for the play-network: ').strip().strip('.')
@@ -233,6 +239,7 @@ commands = [
     ('Set OS dnsmasq path', set_os_dnsmasq_path),
     ('Set local network domain', set_domain),
     ('Set LPOS subdomain', set_subdomain),
+    ('Set play dhcp IP', set_dhcpip),
     ('Set play gateway IP', set_gateway),
     ('Set upstream DNS IP', set_upstream),
     ('Clear DB', clearDB),

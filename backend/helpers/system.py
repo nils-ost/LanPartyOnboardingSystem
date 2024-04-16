@@ -244,7 +244,7 @@ def _check_interity_settings():
     if not os.path.isdir(dnsmasq_path):
         return {'code': 11, 'desc': f"invalid path '{dnsmasq_path}'"}
 
-    for setting in ['domain', 'subdomain', 'upstream_dns', 'play_gateway']:
+    for setting in ['domain', 'subdomain', 'upstream_dns', 'play_gateway', 'play_dhcp']:
         if docDB.get_setting(setting) is None:
             return {'code': 9, 'desc': f"setting '{setting}' is not defined, but it's needed"}
 
