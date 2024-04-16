@@ -10,6 +10,7 @@ def get_client_ip():
 
 
 def get_client_mac():
+    # TODO: rework for kea dhcp
     ip = get_client_ip()
     if ip == '127.0.0.1':
         return 'localhost'

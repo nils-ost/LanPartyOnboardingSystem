@@ -1,6 +1,5 @@
 from elements import VLAN
 import subprocess
-import os
 
 
 def vlan_os_interfaces_commit():
@@ -45,51 +44,67 @@ def vlan_os_interfaces_retreat():
         return {'code': 0, 'desc': 'done'}
 
 
-def vlan_dnsmasq_config_commit():
+def vlan_dns_server_commit():
     """
-    commits all VLANs dnsmasq configs
+    commits all VLANs DNS-Servers
     """
-    from helpers.system import check_integrity_vlan_dnsmasq_commit
-    integrity = check_integrity_vlan_dnsmasq_commit()
+    from helpers.system import check_integrity_vlan_dns_commit
+    integrity = check_integrity_vlan_dns_commit()
     if not integrity.get('code', 1) == 0:
         return {'code': 1, 'desc': 'system integrity check failed', 'integrity': integrity}
 
     fails = list()
     for vlan in VLAN.all():
-        if not vlan.commit_dnsmasq_config():
+        if not vlan.commit_dns_server():
             fails.append(vlan['_id'])
 
     if len(fails) > 0:
-        return {'code': 2, 'desc': 'not all VLAN dnsmasq-configs could be commited', 'failed': fails}
-    else:
-        try:
-            os.remove('/var/lib/misc/dnsmasq.leases')
-        except Exception:
-            pass
-        subprocess.call('systemctl restart dnsmasq', shell=True)
-        return {'code': 0, 'desc': 'done'}
+        return {'code': 2, 'desc': 'not all VLAN DNS-Servers could be commited', 'failed': fails}
+    return {'code': 0, 'desc': 'done'}
 
 
-def vlan_dnsmasq_config_retreat():
+def vlan_dns_server_retreat():
     """
-    retreats all VLANs dnsmasq configs
+    retreats all VLANs DNS-Servers
     """
-    from helpers.system import check_integrity_vlan_dnsmasq_commit
-    integrity = check_integrity_vlan_dnsmasq_commit()
+    fails = list()
+    for vlan in VLAN.all():
+        if not vlan.retreat_dns_server():
+            fails.append(vlan['_id'])
+
+    if len(fails) > 0:
+        return {'code': 2, 'desc': 'not all VLAN DNS-Servers could be retreated', 'failed': fails}
+    return {'code': 0, 'desc': 'done'}
+
+
+def vlan_dhcp_server_commit():
+    """
+    commits all VLANs DHCP-Servers
+    """
+    from helpers.system import check_integrity_vlan_dhcp_commit
+    integrity = check_integrity_vlan_dhcp_commit()
     if not integrity.get('code', 1) == 0:
         return {'code': 1, 'desc': 'system integrity check failed', 'integrity': integrity}
 
     fails = list()
     for vlan in VLAN.all():
-        if not vlan.retreat_dnsmasq_config():
+        if not vlan.commit_dhcp_server():
             fails.append(vlan['_id'])
 
     if len(fails) > 0:
-        return {'code': 2, 'desc': 'not all VLAN dnsmasq-configs could be commited', 'failed': fails}
-    else:
-        try:
-            os.remove('/var/lib/misc/dnsmasq.leases')
-        except Exception:
-            pass
-        subprocess.call('systemctl restart dnsmasq', shell=True)
-        return {'code': 0, 'desc': 'done'}
+        return {'code': 2, 'desc': 'not all VLAN DHCP-Servers could be commited', 'failed': fails}
+    return {'code': 0, 'desc': 'done'}
+
+
+def vlan_dhcp_server_retreat():
+    """
+    retreats all VLANs DHCP-Servers
+    """
+    fails = list()
+    for vlan in VLAN.all():
+        if not vlan.retreat_dhcp_server():
+            fails.append(vlan['_id'])
+
+    if len(fails) > 0:
+        return {'code': 2, 'desc': 'not all VLAN DHCP-Servers could be retreated', 'failed': fails}
+    return {'code': 0, 'desc': 'done'}

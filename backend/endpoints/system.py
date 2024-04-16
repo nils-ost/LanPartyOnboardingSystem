@@ -143,7 +143,7 @@ class SystemEndpoint():
     @cherrypy.expose()
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
-    def commit_dnsmasq(self):
+    def commit_dns_servers(self):
         if cherrypy.request.method == 'OPTIONS':
             cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
             cherrypy_cors.preflight(allowed_methods=['POST'])
@@ -162,8 +162,8 @@ class SystemEndpoint():
             return {'error': 'access not allowed'}
 
         if cherrypy.request.method == 'POST':
-            from helpers.vlanmgmt import vlan_dnsmasq_config_commit
-            result = vlan_dnsmasq_config_commit()
+            from helpers.vlanmgmt import vlan_dns_server_commit
+            result = vlan_dns_server_commit()
             if result.get('code', 1) == 0:
                 cherrypy.response.status = 201
                 return result
@@ -178,7 +178,7 @@ class SystemEndpoint():
     @cherrypy.expose()
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
-    def retreat_dnsmasq(self):
+    def retreat_dns_servers(self):
         if cherrypy.request.method == 'OPTIONS':
             cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
             cherrypy_cors.preflight(allowed_methods=['POST'])
@@ -197,8 +197,78 @@ class SystemEndpoint():
             return {'error': 'access not allowed'}
 
         if cherrypy.request.method == 'POST':
-            from helpers.vlanmgmt import vlan_dnsmasq_config_retreat
-            result = vlan_dnsmasq_config_retreat()
+            from helpers.vlanmgmt import vlan_dns_server_retreat
+            result = vlan_dns_server_retreat()
+            if result.get('code', 1) == 0:
+                cherrypy.response.status = 201
+                return result
+            else:
+                cherrypy.response.status = 400
+                return {'error': result}
+        else:
+            cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
+            cherrypy.response.status = 405
+            return {'error': 'method not allowed'}
+
+    @cherrypy.expose()
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
+    def commit_dhcp_servers(self):
+        if cherrypy.request.method == 'OPTIONS':
+            cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
+            cherrypy_cors.preflight(allowed_methods=['POST'])
+            return
+
+        cookie = cherrypy.request.cookie.get('LPOSsession')
+        if cookie:
+            session = Session.get(cookie.value)
+        else:
+            session = Session.get(None)
+        if len(session.validate_base()) > 0:
+            cherrypy.response.status = 401
+            return {'error': 'not authorized'}
+        elif not session.admin():
+            cherrypy.response.status = 403
+            return {'error': 'access not allowed'}
+
+        if cherrypy.request.method == 'POST':
+            from helpers.vlanmgmt import vlan_dhcp_server_commit
+            result = vlan_dhcp_server_commit()
+            if result.get('code', 1) == 0:
+                cherrypy.response.status = 201
+                return result
+            else:
+                cherrypy.response.status = 400
+                return {'error': result}
+        else:
+            cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
+            cherrypy.response.status = 405
+            return {'error': 'method not allowed'}
+
+    @cherrypy.expose()
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
+    def retreat_dhcp_servers(self):
+        if cherrypy.request.method == 'OPTIONS':
+            cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
+            cherrypy_cors.preflight(allowed_methods=['POST'])
+            return
+
+        cookie = cherrypy.request.cookie.get('LPOSsession')
+        if cookie:
+            session = Session.get(cookie.value)
+        else:
+            session = Session.get(None)
+        if len(session.validate_base()) > 0:
+            cherrypy.response.status = 401
+            return {'error': 'not authorized'}
+        elif not session.admin():
+            cherrypy.response.status = 403
+            return {'error': 'access not allowed'}
+
+        if cherrypy.request.method == 'POST':
+            from helpers.vlanmgmt import vlan_dhcp_server_retreat
+            result = vlan_dhcp_server_retreat()
             if result.get('code', 1) == 0:
                 cherrypy.response.status = 201
                 return result
@@ -279,7 +349,7 @@ class SystemEndpoint():
             cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
             cherrypy.response.status = 405
             return {'error': 'method not allowed'}
-        
+
     @cherrypy.expose()
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()

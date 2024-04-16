@@ -43,14 +43,12 @@ def device_onboarding():
             device.port().switch().port_disable(port_number)
             # renew vlan config of switchport
             device.port().switch().commit()
-            # renew dnsmasq config of play vlan
+            # renew DHCP config of play vlan
             play_vlan = VLAN.get_by_purpose(0)[0]
-            play_vlan.commit_dnsmasq_config()
-            # remove existing dhcp lease of device
+            play_vlan.commit_dhcp_server()
+            # remove existing dhcp lease of device TODO: rework
             device_mac = ':'.join(re.findall('..', device['mac']))
             subprocess.call(f"sed -i '/{device_mac}/d' /var/lib/misc/dnsmasq.leases", shell=True)
-            # reload dnsmasq
-            subprocess.call('systemctl restart dnsmasq', shell=True)
             # shut on switchport
             device.port().switch().port_enable(port_number)
         except Exception as e:

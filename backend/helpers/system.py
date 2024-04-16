@@ -237,13 +237,6 @@ def _check_interity_settings():
     if not os.path.isdir(netplan_path):
         return {'code': 11, 'desc': f"invalid path '{netplan_path}'"}
 
-    dnsmasq_path = docDB.get_setting('os_dnsmasq_path')
-    if dnsmasq_path is None:
-        return {'code': 9, 'desc': "setting 'os_dnsmasq_path' is not defined, but it's needed"}
-    # check if it's a valid path
-    if not os.path.isdir(dnsmasq_path):
-        return {'code': 11, 'desc': f"invalid path '{dnsmasq_path}'"}
-
     for setting in ['domain', 'subdomain', 'upstream_dns', 'play_gateway', 'play_dhcp']:
         if docDB.get_setting(setting) is None:
             return {'code': 9, 'desc': f"setting '{setting}' is not defined, but it's needed"}
@@ -305,17 +298,6 @@ def check_integrity_vlan_dns_commit():
 def check_integrity_vlan_dhcp_commit():
     """
     do all integrity checks required for commiting vlan's dhcp server
-    """
-    for check in [_check_interity_settings, _check_integrity_ippools]:
-        r = check()
-        if not r.get('code', 1) == 0:
-            return r
-    return {'code': 0, 'desc': 'check ok'}
-
-
-def check_integrity_vlan_dnsmasq_commit():
-    """
-    do all integrity checks required for commiting vlan's dnsmasq_config
     """
     for check in [_check_interity_settings, _check_integrity_ippools]:
         r = check()

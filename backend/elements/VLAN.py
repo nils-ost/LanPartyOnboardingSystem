@@ -1,4 +1,3 @@
-import os
 import json
 import subprocess
 from elements._elementBase import ElementBase, docDB
@@ -193,7 +192,7 @@ class VLAN(ElementBase):
         dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
         if not 0 == subprocess.call(f'{dcmd} network ls | grep lpos-ipvlan{self["number"]}', shell=True):
             return False  # VLAN not defined, can't start DNS-Server
-        
+
         # create ctrl-agent conf
         ctrl_agent_conf = dict({'http-host': '127.0.0.1', 'http-port': 8000})
         ctrl_agent_conf['control-sockets'] = {'dhcp4': {'socket-type': 'unix', 'socket-name': '/dev/null'}}
@@ -218,7 +217,7 @@ class VLAN(ElementBase):
                 # if pool is additional-pool, add it to the available ranges
                 if docDB.search_one('Table', {'add_ip_pool_id': pool['_id']}) is not None:
                     subnet = f'{pool.subnet_ip(dotted=True)/{pool["mask"]}}'
-                    range = f'{IpPool.int_to_dotted(pool['range_start'])}-{IpPool.int_to_dotted(pool['range_end'])}'
+                    range = f'{IpPool.int_to_dotted(pool["range_start"])}-{IpPool.int_to_dotted(pool["range_end"])}'
                     for e in dhcp4_conf['subnet4']:
                         if e['subnet'] == subnet:
                             e['pools'].append({'pool': range})
@@ -289,95 +288,4 @@ class VLAN(ElementBase):
         except Exception:
             pass
 
-        return True
-
-    def commit_dnsmasq_config(self):
-        from elements import IpPool
-        from helpers.system import check_integrity_vlan_dnsmasq_commit
-        integrity = check_integrity_vlan_dnsmasq_commit()
-        if not integrity.get('code', 1) == 0:
-            return False  # integrity check failed, can't continue
-
-        if self['purpose'] in [1, 3]:
-            return True  # does not get a dnsmasq config
-        if self['_id'] is None:
-            return False  # not saved yet, therefor could be invalid
-        iname = docDB.get_setting('os_nw_interface')
-        iname = f'vlan{self["number"]}@{iname}'
-        dnsmasq_path = docDB.get_setting('os_dnsmasq_path')
-        domain = docDB.get_setting('domain')
-        subdomain = docDB.get_setting('subdomain')
-        upstream_dns = docDB.get_setting('upstream_dns')
-        gateway = docDB.get_setting('play_gateway')
-        fqdn = subdomain + '.' + domain
-
-        # determine IP
-        if self['purpose'] == 0:
-            for pool in IpPool.get_by_vlan(self['_id']):
-                if pool['lpos']:
-                    break
-            else:
-                return False  # no pool defined as lpos
-        else:
-            pool = IpPool.get_by_vlan(self['_id'])
-            if len(pool) == 0:
-                return False  # no needed pool defined
-            pool = pool[0]
-        ip = '.'.join([str(e) for e in IpPool.int_to_octetts(pool['range_start'])])
-
-        lines = list()
-
-        # special lines for onboarding VLANs
-        if self['purpose'] == 2:
-            lines.append(f'host-record={fqdn},{ip},10')
-            first_ip = '.'.join([str(o) for o in IpPool.int_to_octetts(pool['range_start'] + 1)])
-            last_ip = '.'.join([str(o) for o in IpPool.int_to_octetts(pool['range_end'])])
-            lines.append(f'dhcp-range={iname},{first_ip},{last_ip},{pool.mask_dotted()},10s')
-
-        # special lines for play VLAN
-        else:
-            import re
-            lines.append('localise-queries')
-            lines.append('no-resolv')
-            lines.append(f'host-record={fqdn},{ip}')
-            lines.append(f'server={upstream_dns}')
-            lines.append(f'local=/{domain}/')
-            lines.append('bogus-priv')
-            lines.append('domain-needed')
-            lines.append(f'dhcp-option={iname},3,{gateway}')
-            # determine all devices fully onboarded on play VLAN (or rather any play IpPool)
-            for pool in IpPool.get_by_vlan(self['_id']):
-                first_ip = '.'.join([str(o) for o in IpPool.int_to_octetts(pool['range_start'])])
-                last_ip = '.'.join([str(o) for o in IpPool.int_to_octetts(pool['range_end'])])
-                # check if pool is a seat-pool
-                if docDB.search_one('Table', {'seat_ip_pool_id': pool['_id']}) is not None:
-                    lines.append(f'dhcp-range={iname},{first_ip},static,{pool.mask_dotted()},1h')
-                # check is pool is a additional-pool
-                elif docDB.search_one('Table', {'add_ip_pool_id': pool['_id']}) is not None:
-                    lines.append(f'dhcp-range={iname},{first_ip},{last_ip},{pool.mask_dotted()},1h')
-                for device in docDB.search_many('Device', {'ip_pool_id': pool['_id'], 'ip': {'$ne': None}}):
-                    device_mac = ':'.join(re.findall('..', device['mac']))
-                    device_ip = '.'.join([str(e) for e in IpPool.int_to_octetts(device['ip'])])
-                    lines.append(f'dhcp-host={device_mac},{device_ip},1h')
-
-        # write config file
-        with open(os.path.join(dnsmasq_path, f"vlan{self['number']}.config"), 'w') as f:
-            f.write('\n'.join(lines))
-        return True
-
-    def retreat_dnsmasq_config(self):
-        from helpers.system import check_integrity_vlan_dnsmasq_commit
-        integrity = check_integrity_vlan_dnsmasq_commit()
-        if not integrity.get('code', 1) == 0:
-            return False  # integrity check failed, can't continue
-
-        if self['purpose'] in [1, 3]:
-            return True  # does not got a dnsmasq config
-        if self['_id'] is None:
-            return False  # not saved yet, therefor could be invalid
-        dnsmasq_path = docDB.get_setting('os_dnsmasq_path')
-        try:
-            os.remove(os.path.join(dnsmasq_path, f"vlan{self['number']}.config"))
-        except FileNotFoundError:
-            pass
         return True

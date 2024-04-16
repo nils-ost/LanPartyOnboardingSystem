@@ -31,12 +31,20 @@ export class SystemService {
     return this.http.post<any>(this.systemUrl + 'retreat_interfaces/', {}, {withCredentials:true});
   }
 
-  public execCommitDnsmasq(): Observable<any> {
-    return this.http.post<any>(this.systemUrl + 'commit_dnsmasq/', {}, {withCredentials:true});
+  public execCommitDnsServers(): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'commit_dns_servers/', {}, {withCredentials:true});
   }
 
-  public execRetreatDnsmasq(): Observable<any> {
-    return this.http.post<any>(this.systemUrl + 'retreat_dnsmasq/', {}, {withCredentials:true});
+  public execRetreatDnsServers(): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'retreat_dns_servers/', {}, {withCredentials:true});
+  }
+
+  public execCommitDhcpServers(): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'commit_dhcp_servers/', {}, {withCredentials:true});
+  }
+
+  public execRetreatDhcpServers(): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'retreat_dhcp_servers/', {}, {withCredentials:true});
   }
 
   public execCommitSwitches(): Observable<any> {

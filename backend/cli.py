@@ -107,12 +107,6 @@ def set_os_netplan_path():
     docDB.set_setting('os_netplan_path', path)
 
 
-def set_os_dnsmasq_path():
-    from helpers.docdb import docDB
-    path = input('Enter path where dnsmasq configs should be stored: ').strip()
-    docDB.set_setting('os_dnsmasq_path', path)
-
-
 def set_domain():
     from helpers.docdb import docDB
     domain = input('Enter domain of local network: ').strip().strip('.')
@@ -236,7 +230,6 @@ commands = [
     ('Create Admin', create_admin),
     ('Set OS Network Interface for VLANs', set_os_nw_interface),
     ('Set OS netplan path', set_os_netplan_path),
-    ('Set OS dnsmasq path', set_os_dnsmasq_path),
     ('Set local network domain', set_domain),
     ('Set LPOS subdomain', set_subdomain),
     ('Set play dhcp IP', set_dhcpip),

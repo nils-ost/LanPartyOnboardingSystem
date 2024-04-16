@@ -146,7 +146,7 @@ def run():
         sys.exit(0)
 
     print(f'Versioning performing upgrade from v{db_version} to v{current_version}')
-    
+
     if versions_lt(db_version, '0.2'):
         print("  Adding 'desc' attribute to Switches")
         for s in docDB.search_many('Switch', {'desc': None}):
@@ -167,6 +167,3 @@ def db_defaults():
     if docDB.get_setting('os_netplan_path') is None:
         print('Setting /etc/netplan as os_netplan_path default')
         docDB.set_setting('os_netplan_path', '/etc/netplan')
-    if docDB.get_setting('os_dnsmasq_path') is None:
-        print('Setting /etc/dnsmasq.d as os_dnsmasq_path default')
-        docDB.set_setting('os_dnsmasq_path', '/etc/dnsmasq.d')

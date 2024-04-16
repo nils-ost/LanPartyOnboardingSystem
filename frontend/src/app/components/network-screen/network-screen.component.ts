@@ -164,7 +164,7 @@ export class NetworkScreenComponent implements OnInit, OnDestroy {
             life: 6000
           });
           if (this.commit_all) this.doSwitchesCommit();
-          if (this.retreat_all) this.doDnsmasqRetreat();
+          if (this.retreat_all) this.doDhcpServersRetreat();
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
@@ -242,7 +242,7 @@ export class NetworkScreenComponent implements OnInit, OnDestroy {
             detail: $localize `:@@SystemExecCommitInterfacesSuccessDetail:all OS-VLAN-Interfaces successful commited`,
             life: 6000
           });
-          if (this.commit_all) this.doDnsmasqCommit();
+          if (this.commit_all) this.doDnsServerCommit();
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
@@ -261,21 +261,57 @@ export class NetworkScreenComponent implements OnInit, OnDestroy {
       })
   }
 
-  doDnsmasqCommit() {
+  doDnsServerCommit() {
     this.messageService.add({
       severity: 'info',
       summary: $localize `:@@SystemExecCommitStartedSummary:Commiting`,
-      detail: $localize `:@@SystemExecCommitDnsmasqStartedDetail:commiting of all dnsmasq configs started`,
+      detail: $localize `:@@SystemExecCommitDnsServersStartedDetail:commiting of all DNS servers started`,
       life: 6000
     });
     this.systemService
-      .execCommitDnsmasq()
+      .execCommitDnsServers()
       .subscribe({
         next: (response: any) => {
           this.messageService.add({
             severity: 'success',
             summary: $localize `:@@SystemExecCommitSuccessSummary:Done`,
-            detail: $localize `:@@SystemExecCommitDnsmasqSuccessDetail:all dnsmasq configs successful commited`,
+            detail: $localize `:@@SystemExecCommitDnsServersSuccessDetail:all DNS servers successful commited`,
+            life: 6000
+          });
+          if (this.commit_all) this.doDhcpServerCommit();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          let detail: string = 'unknown';
+          if (this.errorHandler.elementError) {
+            if (this.errorHandler.elementErrors.code == 1) detail = this.errorHandler.elementErrors.desc + ' ' + this.errorHandler.elementErrors.integrity.desc;
+            else detail = this.errorHandler.elementErrors.desc;
+          }
+          this.messageService.add({
+            severity: 'error',
+            summary: $localize `:@@SystemExecCommitErrorSummary:Error`,
+            detail: detail,
+            life: 6000
+          });
+        }
+      })
+  }
+
+  doDhcpServerCommit() {
+    this.messageService.add({
+      severity: 'info',
+      summary: $localize `:@@SystemExecCommitStartedSummary:Commiting`,
+      detail: $localize `:@@SystemExecCommitDhcpServersStartedDetail:commiting of all DHCP servers started`,
+      life: 6000
+    });
+    this.systemService
+      .execCommitDhcpServers()
+      .subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: $localize `:@@SystemExecCommitSuccessSummary:Done`,
+            detail: $localize `:@@SystemExecCommitDhcpServersSuccessDetail:all DHCP servers successful commited`,
             life: 6000
           });
           this.commit_all = false;
@@ -376,24 +412,60 @@ export class NetworkScreenComponent implements OnInit, OnDestroy {
       })
   }
 
-  doDnsmasqRetreat() {
+  doDnsServersRetreat() {
     this.messageService.add({
       severity: 'info',
       summary: $localize `:@@SystemExecRetreatStartedSummary:Retreating`,
-      detail: $localize `:@@SystemExecRetreatDnsmasqStartedDetail:retreating of all dnsmasq configs started`,
+      detail: $localize `:@@SystemExecRetreatDnsServersStartedDetail:retreating of all DNS servers started`,
       life: 6000
     });
     this.systemService
-      .execRetreatDnsmasq()
+      .execRetreatDnsServers()
       .subscribe({
         next: (response: any) => {
           this.messageService.add({
             severity: 'success',
             summary: $localize `:@@SystemExecRetreatSuccessSummary:Done`,
-            detail: $localize `:@@SystemExecRetreatDnsmasqSuccessDetail:all dnsmasq configs successful retreated`,
+            detail: $localize `:@@SystemExecRetreatDnsServersSuccessDetail:all DNS servers successful retreated`,
             life: 6000
           });
           if (this.retreat_all) this.doInterfacesRetreat();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          let detail: string = 'unknown';
+          if (this.errorHandler.elementError) {
+            if (this.errorHandler.elementErrors.code == 1) detail = this.errorHandler.elementErrors.desc + ' ' + this.errorHandler.elementErrors.integrity.desc;
+            else detail = this.errorHandler.elementErrors.desc;
+          }
+          this.messageService.add({
+            severity: 'error',
+            summary: $localize `:@@SystemExecRetreatErrorSummary:Error`,
+            detail: detail,
+            life: 6000
+          });
+        }
+      })
+  }
+
+  doDhcpServersRetreat() {
+    this.messageService.add({
+      severity: 'info',
+      summary: $localize `:@@SystemExecRetreatStartedSummary:Retreating`,
+      detail: $localize `:@@SystemExecRetreatDhcpServersStartedDetail:retreating of all DHCP servers started`,
+      life: 6000
+    });
+    this.systemService
+      .execRetreatDhcpServers()
+      .subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: $localize `:@@SystemExecRetreatSuccessSummary:Done`,
+            detail: $localize `:@@SystemExecRetreatDhcpServersSuccessDetail:all DHCP servers successful retreated`,
+            life: 6000
+          });
+          if (this.retreat_all) this.doDnsServersRetreat();
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
