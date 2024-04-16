@@ -41,6 +41,15 @@ class Device(ElementBase):
             return result
         return None
 
+    @classmethod
+    def get_by_ip(cls, ip):
+        result = cls()
+        fromdb = docDB.search_one(cls.__name__, {'ip': ip})
+        if fromdb is not None:
+            result._attr = fromdb
+            return result
+        return None
+
     def validate(self):
         errors = dict()
         if self['port_id'] is not None and docDB.get('Port', self['port_id']) is None:

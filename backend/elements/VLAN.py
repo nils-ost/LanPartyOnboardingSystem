@@ -152,7 +152,7 @@ class VLAN(ElementBase):
                 f'{dcmd} run --rm --name lpos-ipvlan{self["number"]}-dns',
                 f'--net=lpos-ipvlan{self["number"]} --ip={dns_ip}',
                 f'-v lpos-ipvlan{self["number"]}-dns:/app',
-                'coredns/coredns -conf /app/Corefile'
+                '-d coredns/coredns -conf /app/Corefile'
             ])
             subprocess.call(' '.join(start_cmd), shell=True)
         return True
@@ -203,7 +203,7 @@ class VLAN(ElementBase):
         dhcp4_conf = dict({'subnet4': list(), 'option-data': list()})
         dhcp4_conf['interfaces-config'] = {'interfaces': ['*'], 'service-sockets-max-retries': 5, 'service-sockets-require-all': True}
         dhcp4_conf['loggers'] = [{'name': 'kea-dhcp4', 'output_options': [{'output': 'stdout'}], 'severity': 'INFO'}]
-        dhcp4_conf['lease-database'] = {'type': 'memfile', 'persist': True, 'name': '/etc/kea/kea-leases4.csv'}
+        dhcp4_conf['lease-database'] = {'type': 'memfile', 'persist': True, 'name': '/tmp/kea-leases4.csv'}
         if self['purpose'] == 0:
             # specialties for play vlan
             import re
@@ -234,13 +234,14 @@ class VLAN(ElementBase):
             if len(pool) == 0:
                 return False  # no needed pool defined
             pool = pool[0]
-            subnet = f'{pool.subnet_ip(dotted=True)/{pool["mask"]}}'
+            subnet = f'{pool.subnet_ip(dotted=True)}/{pool["mask"]}'
             range = f'{IpPool.int_to_dotted(pool["range_start"] + 3)}-{IpPool.int_to_dotted(pool["range_end"])}'
             lpos_ip = IpPool.int_to_dotted(pool['range_start'])
             dns_ip = IpPool.int_to_dotted(pool['range_start'] + 1)
             dhcp_ip = IpPool.int_to_dotted(pool['range_start'] + 2)
             lpos_domain = '.'.join([docDB.get_setting('subdomain'), docDB.get_setting('domain')])
             dhcp4_conf.update({'renew-timer': 2, 'rebind-timer': 5, 'valid-lifetime': 10})
+            dhcp4_conf['lease-database']['lfc-interval'] = 60
             dhcp4_conf['subnet4'].append({'subnet': subnet, 'pools': [{'pool': range}]})
             dhcp4_conf['option-data'].append({'name': 'domain-name-servers', 'data': dns_ip})
             dhcp4_conf['option-data'].append({'name': 'routers', 'data': lpos_ip})
@@ -258,7 +259,7 @@ class VLAN(ElementBase):
                 f'{dcmd} run --rm --name lpos-ipvlan{self["number"]}-dhcp',
                 f'--net=lpos-ipvlan{self["number"]} --ip={dhcp_ip}',
                 f'-v lpos-ipvlan{self["number"]}-dhcp:/etc/kea',
-                'docker.cloudsmith.io/isc/docker/kea-dhcp4'
+                '-d docker.cloudsmith.io/isc/docker/kea-dhcp4'
             ])
             subprocess.call(' '.join(start_cmd), shell=True)
         else:
