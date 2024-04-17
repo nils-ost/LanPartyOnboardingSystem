@@ -17,6 +17,9 @@ haproxy_image = 'haproxy:lts-alpine'
 haproxy_service = 'docker.haproxy.service'
 haproxy_config = '/etc/haproxy/haproxy.cfg'
 lpos_service = 'lpos.service'
+dns_image = 'coredns/coredns:1.11.1'
+dhcp_image = 'docker.cloudsmith.io/isc/docker/kea-dhcp4:2.5.7'
+alpine_image = 'alpine'
 
 
 def docker_pull(c, image):
@@ -204,6 +207,9 @@ def deploy_lpos_pre(c):
     install_apt_package(c, 'python3')
     install_apt_package(c, 'virtualenv')
     install_apt_package(c, 'git')
+    docker_pull(c, alpine_image)
+    docker_pull(c, dns_image)
+    docker_pull(c, dhcp_image)
     create_directorys_lpos(c)
 
 

@@ -152,7 +152,7 @@ class VLAN(ElementBase):
                 f'{dcmd} run --rm --name lpos-ipvlan{self["number"]}-dns',
                 f'--net=lpos-ipvlan{self["number"]} --ip={dns_ip}',
                 f'-v lpos-ipvlan{self["number"]}-dns:/app',
-                '-d coredns/coredns -conf /app/Corefile'
+                '-d coredns/coredns:1.11.1 -conf /app/Corefile'
             ])
             subprocess.call(' '.join(start_cmd), shell=True)
         return True
@@ -216,7 +216,7 @@ class VLAN(ElementBase):
             for pool in IpPool.get_by_vlan(self['_id']):
                 # if pool is additional-pool, add it to the available ranges
                 if docDB.search_one('Table', {'add_ip_pool_id': pool['_id']}) is not None:
-                    subnet = f'{pool.subnet_ip(dotted=True)/{pool["mask"]}}'
+                    subnet = f'{pool.subnet_ip(dotted=True)}/{pool["mask"]}'
                     range = f'{IpPool.int_to_dotted(pool["range_start"])}-{IpPool.int_to_dotted(pool["range_end"])}'
                     for e in dhcp4_conf['subnet4']:
                         if e['subnet'] == subnet:
@@ -259,7 +259,7 @@ class VLAN(ElementBase):
                 f'{dcmd} run --rm --name lpos-ipvlan{self["number"]}-dhcp',
                 f'--net=lpos-ipvlan{self["number"]} --ip={dhcp_ip}',
                 f'-v lpos-ipvlan{self["number"]}-dhcp:/etc/kea',
-                '-d docker.cloudsmith.io/isc/docker/kea-dhcp4'
+                '-d docker.cloudsmith.io/isc/docker/kea-dhcp4:2.5.7'
             ])
             subprocess.call(' '.join(start_cmd), shell=True)
         else:

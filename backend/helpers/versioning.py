@@ -163,7 +163,4 @@ def run():
 
 
 def db_defaults():
-    from helpers.docdb import docDB
-    if docDB.get_setting('os_netplan_path') is None:
-        print('Setting /etc/netplan as os_netplan_path default')
-        docDB.set_setting('os_netplan_path', '/etc/netplan')
+    pass

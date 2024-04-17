@@ -1,6 +1,5 @@
 from helpers.docdb import docDB
 from datetime import datetime
-import os
 import psutil
 
 
@@ -229,13 +228,6 @@ def _check_interity_settings():
             break
     else:
         return {'code': 10, 'desc': f"invalid hw-interface name '{iname}'"}
-
-    netplan_path = docDB.get_setting('os_netplan_path')
-    if netplan_path is None:
-        return {'code': 9, 'desc': "setting 'os_netplan_path' is not defined, but it's needed"}
-    # check if it's a valid path
-    if not os.path.isdir(netplan_path):
-        return {'code': 11, 'desc': f"invalid path '{netplan_path}'"}
 
     for setting in ['domain', 'subdomain', 'upstream_dns', 'play_gateway', 'play_dhcp']:
         if docDB.get_setting(setting) is None:

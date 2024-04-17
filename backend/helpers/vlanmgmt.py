@@ -1,5 +1,4 @@
 from elements import VLAN
-import subprocess
 
 
 def vlan_os_interfaces_commit():
@@ -19,7 +18,6 @@ def vlan_os_interfaces_commit():
     if len(fails) > 0:
         return {'code': 2, 'desc': 'not all VLAN OS-Interfaces could be commited', 'failed': fails}
     else:
-        subprocess.call('netplan apply', shell=True)
         return {'code': 0, 'desc': 'done'}
 
 
@@ -40,7 +38,6 @@ def vlan_os_interfaces_retreat():
     if len(fails) > 0:
         return {'code': 2, 'desc': 'not all VLAN OS-Interfaces could be retreated', 'failed': fails}
     else:
-        subprocess.call('netplan apply', shell=True)
         return {'code': 0, 'desc': 'done'}
 
 
