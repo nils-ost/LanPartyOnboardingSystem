@@ -30,8 +30,6 @@ def device_scanner_start():
 
 def device_onboarding():
     from elements import Device, VLAN
-    import subprocess
-    import re
     import logging
     time.sleep(5)
     while True:
@@ -46,9 +44,6 @@ def device_onboarding():
             # renew DHCP config of play vlan
             play_vlan = VLAN.get_by_purpose(0)[0]
             play_vlan.commit_dhcp_server()
-            # remove existing dhcp lease of device TODO: rework
-            device_mac = ':'.join(re.findall('..', device['mac']))
-            subprocess.call(f"sed -i '/{device_mac}/d' /var/lib/misc/dnsmasq.leases", shell=True)
             # shut on switchport
             device.port().switch().port_enable(port_number)
         except Exception as e:

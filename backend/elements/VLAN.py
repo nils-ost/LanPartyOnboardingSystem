@@ -83,7 +83,7 @@ class VLAN(ElementBase):
                 if k.startswith(hap_container):
                     break  # haproxy allready connected to this vlan, for-else is not executed
             else:
-                hap_ip = IpPool.int_to_dotted(pool['range_start'])
+                hap_ip = IpPool.int_to_dotted(pool['range_start'] + 1)
                 subprocess.call(f'{dcmd} network connect --ip={hap_ip} lpos-ipvlan{self["number"]} {hap_container}', shell=True)
         except Exception:
             pass  # haproxy container not started or can't be found, skipping this step
@@ -139,11 +139,11 @@ class VLAN(ElementBase):
         if not 0 == subprocess.call(f'{dcmd} ps --format=\u007b\u007b.Names\u007d\u007d | grep lpos-ipvlan{self["number"]}-dns', shell=True):
             # DNS-Server not yet started, configuring and starting it
             lpos_domain = '.'.join([docDB.get_setting('subdomain'), docDB.get_setting('domain')])
-            lpos_ip = IpPool.int_to_dotted(pool['range_start'])
-            dns_ip = IpPool.int_to_dotted(pool['range_start'] + 1)
+            lpos_ip = IpPool.int_to_dotted(pool['range_start'] + 1)
+            dns_ip = IpPool.int_to_dotted(pool['range_start'] + 2)
 
-            open('/tmp/Corefile', 'w').write('. {\n    hosts /app/hosts\n}')
-            open('/tmp/hosts', 'w').write(f'{lpos_ip}  {lpos_domain} www.{lpos_domain}')
+            open('/tmp/Corefile', 'w').write('. {\n    log\n    errors\n    auto\n    hosts /etc/coredns/hosts {\n        ttl 10\n    }\n}')
+            open('/tmp/hosts', 'w').write(f'{lpos_ip}  {lpos_domain} www.{lpos_domain}\n{lpos_ip}  www.msftconnecttest.com\n131.107.255.255  dns.msftncsi.com')
 
             subprocess.call(f'{dcmd} run --rm --name copier-dns-{self["number"]} -v lpos-ipvlan{self["number"]}-dns:/app -d alpine sleep 3', shell=True)
             subprocess.call(f'{dcmd} cp /tmp/Corefile copier-dns-{self["number"]}:/app/', shell=True)
@@ -151,8 +151,8 @@ class VLAN(ElementBase):
             start_cmd = list([
                 f'{dcmd} run --rm --name lpos-ipvlan{self["number"]}-dns',
                 f'--net=lpos-ipvlan{self["number"]} --ip={dns_ip}',
-                f'-v lpos-ipvlan{self["number"]}-dns:/app',
-                '-d coredns/coredns:1.11.1 -conf /app/Corefile'
+                f'-v lpos-ipvlan{self["number"]}-dns:/etc/coredns',
+                '-d coredns/coredns:1.11.1 -conf /etc/coredns/Corefile'
             ])
             subprocess.call(' '.join(start_cmd), shell=True)
         return True
@@ -204,11 +204,13 @@ class VLAN(ElementBase):
         dhcp4_conf['interfaces-config'] = {'interfaces': ['*'], 'service-sockets-max-retries': 5, 'service-sockets-require-all': True}
         dhcp4_conf['loggers'] = [{'name': 'kea-dhcp4', 'output_options': [{'output': 'stdout'}], 'severity': 'INFO'}]
         dhcp4_conf['lease-database'] = {'type': 'memfile', 'persist': True, 'name': '/tmp/kea-leases4.csv'}
+        dhcp4_conf['authoritative'] = True
         if self['purpose'] == 0:
             # specialties for play vlan
             import re
             dhcp_ip = docDB.get_setting('play_dhcp')
-            dhcp4_conf.update({'renew-timer': 900, 'rebind-timer': 1800, 'valid-lifetime': 3600})
+            dhcp4_conf.update({'renew-timer': 3600, 'rebind-timer': 3600, 'valid-lifetime': 3600})
+            dhcp4_conf['reservation-mode'] = 'global'
             dhcp4_conf['reservations'] = list()
             dhcp4_conf['option-data'].append({'name': 'domain-name-servers', 'data': docDB.get_setting('upstream_dns')})
             dhcp4_conf['option-data'].append({'name': 'routers', 'data': docDB.get_setting('play_gateway')})
@@ -235,12 +237,12 @@ class VLAN(ElementBase):
                 return False  # no needed pool defined
             pool = pool[0]
             subnet = f'{pool.subnet_ip(dotted=True)}/{pool["mask"]}'
-            range = f'{IpPool.int_to_dotted(pool["range_start"] + 3)}-{IpPool.int_to_dotted(pool["range_end"])}'
-            lpos_ip = IpPool.int_to_dotted(pool['range_start'])
-            dns_ip = IpPool.int_to_dotted(pool['range_start'] + 1)
-            dhcp_ip = IpPool.int_to_dotted(pool['range_start'] + 2)
+            range = f'{IpPool.int_to_dotted(pool["range_start"] + 4)}-{IpPool.int_to_dotted(pool["range_end"])}'
+            lpos_ip = IpPool.int_to_dotted(pool['range_start'] + 1)
+            dns_ip = IpPool.int_to_dotted(pool['range_start'] + 2)
+            dhcp_ip = IpPool.int_to_dotted(pool['range_start'] + 3)
             lpos_domain = '.'.join([docDB.get_setting('subdomain'), docDB.get_setting('domain')])
-            dhcp4_conf.update({'renew-timer': 2, 'rebind-timer': 5, 'valid-lifetime': 10})
+            dhcp4_conf.update({'renew-timer': 10, 'rebind-timer': 20, 'valid-lifetime': 20})
             dhcp4_conf['lease-database']['lfc-interval'] = 60
             dhcp4_conf['subnet4'].append({'subnet': subnet, 'pools': [{'pool': range}]})
             dhcp4_conf['option-data'].append({'name': 'domain-name-servers', 'data': dns_ip})

@@ -170,7 +170,7 @@ def _check_integrity_tables():
         # check if enough IPs in onboarding IpPool (at least half number of seats plus one for LPOS)
         ob_vlan = table.switch().onboarding_vlan()
         ob_pool = IpPool.get_by_vlan(ob_vlan['_id'])[0]
-        if (ob_pool['range_end'] + 1 - ob_pool['range_start']) < (nb_seats / 2 + 3):
+        if (ob_pool['range_end'] + 1 - ob_pool['range_start']) < (nb_seats / 2 + 4):
             return {'code': 17, 'desc': f"not enough IPs in onboarding-IpPool '{ob_pool['desc']}' for Table '{table['number']}: {table['desc']}'"}
 
     docDB.set_setting('integrity_tables', datetime.now().timestamp())
