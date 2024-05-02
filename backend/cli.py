@@ -115,8 +115,8 @@ def set_subdomain():
 
 def set_dhcpip():
     from helpers.docdb import docDB
-    gateway = input('Enter IP the DHCP-Server should get in the play-network: ').strip().strip('.')
-    docDB.set_setting('play_dhcp', gateway)
+    dhcpip = input('Enter IP the DHCP-Server should get in the play-network: ').strip().strip('.')
+    docDB.set_setting('play_dhcp', dhcpip)
 
 
 def set_gateway():
@@ -129,6 +129,22 @@ def set_upstream():
     from helpers.docdb import docDB
     upstream = input('Enter IP of upstream DNS-Server: ').strip().strip('.')
     docDB.set_setting('upstream_dns', upstream)
+
+
+def set_sso_login_url():
+    from helpers.docdb import docDB
+    if current_url := docDB.get_setting('sso_login_url') is not None:
+        print(f'Current vlue: {current_url}')
+    url = input('Enter the URL the client is redirected to, for SSO Login. Be aware, that to this URL the callback URL is automatically appended: ').strip()
+    docDB.set_setting('sso_login_url', url)
+
+
+def set_sso_onboarding_url():
+    from helpers.docdb import docDB
+    if current_url := docDB.get_setting('sso_onboarding_url') is not None:
+        print(f'Current vlue: {current_url}')
+    url = input('Enter the URL of SSO system, to fetch participant data: ').strip()
+    docDB.set_setting('sso_onboarding_url', url)
 
 
 def clearDB(force=False):
@@ -228,6 +244,8 @@ commands = [
     ('Set play dhcp IP', set_dhcpip),
     ('Set play gateway IP', set_gateway),
     ('Set upstream DNS IP', set_upstream),
+    ('Set SSO-Login URL', set_sso_login_url),
+    ('Set SSO-Onboarding URL', set_sso_onboarding_url),
     ('Clear DB', clearDB),
     ('Create Backup', createBackup),
     ('Restore Backup', restoreBackup),

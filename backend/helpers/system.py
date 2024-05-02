@@ -38,6 +38,18 @@ def set_use_absolute_seatnumbers(state):
     docDB.set_setting('absolute_seatnumbers', state)
 
 
+def get_use_nlpt_sso():
+    result = docDB.get_setting('nlpt_sso')
+    if result is None:
+        return False
+    else:
+        return result
+
+
+def set_use_nlpt_sso(state):
+    docDB.set_setting('nlpt_sso', state)
+
+
 def _check_integrity_switchlinks():
     last_check = docDB.get_setting('integrity_switchlinks')
     if last_check is not None and (last_check + check_max_diff) >= datetime.now().timestamp():
@@ -232,6 +244,14 @@ def _check_interity_settings():
     for setting in ['domain', 'subdomain', 'upstream_dns', 'play_gateway', 'play_dhcp']:
         if docDB.get_setting(setting) is None:
             return {'code': 9, 'desc': f"setting '{setting}' is not defined, but it's needed"}
+
+    if docDB.get_setting('nlpt_sso'):
+        if not docDB.get_setting('absolute_seatnumbers'):
+            return {'code': 19, 'desc': 'nlpt_sso is enabled but absolute_seatnumbers is disabled'}
+        if docDB.get_setting('sso_login_url') is None:
+            return {'code': 9, 'desc': "setting 'sso_login_url' is not defined, but it's needed"}
+        if docDB.get_setting('sso_onboarding_url') is None:
+            return {'code': 9, 'desc': "setting 'sso_onboarding_url' is not defined, but it's needed"}
 
     docDB.set_setting('integrity_settings', datetime.now().timestamp())
     return {'code': 0, 'desc': 'check ok'}

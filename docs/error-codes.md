@@ -119,6 +119,7 @@
   * **16**: not enough IPs in play-IpPool '<desc\>' for Table '<number\>: <desc\>'
   * **17**: not enough IPs in onboarding-IpPool '<desc\>' for Table '<number\>: <desc\>'
   * **18**: Seat <number\> of Table '<number\>: <desc\>' is missing number_absolute
+  * **19**: nlpt_sso is enabled but absolute_seatnumbers is disabled
 
 # onboarding error-codes
 
@@ -136,3 +137,4 @@
   * **12**: Seat is not associated to a Participant
   * **13**: missing steps
   * **14**: contact admin
+  * **15**: could not fetch Participant data from SSO system

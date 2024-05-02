@@ -1,7 +1,7 @@
 import cherrypy
 import cherrypy_cors
 from elements import Session
-from helpers.system import get_commited, get_open_commits, get_use_absolute_seatnumbers
+from helpers.system import get_commited, get_open_commits, get_use_absolute_seatnumbers, get_use_nlpt_sso
 from helpers.version import version
 
 
@@ -28,6 +28,7 @@ class SystemEndpoint():
                 result['open_commits'] = True if get_open_commits() > 0 else False
 
             result['seatnumbers_absolute'] = get_use_absolute_seatnumbers()
+            result['nlpt_sso'] = get_use_nlpt_sso()
             result['version'] = version
             return result
         else:
@@ -376,8 +377,49 @@ class SystemEndpoint():
             if 'enable' not in attr:
                 cherrypy.response.status = 400
                 return {'error': 'missing "enable" attribute in request'}
-            from helpers.system import set_use_absolute_seatnumbers
+            from helpers.system import set_use_absolute_seatnumbers, set_use_nlpt_sso
+            if not attr['enable']:
+                set_use_nlpt_sso(False)
             set_use_absolute_seatnumbers(bool(attr['enable']))
+            cherrypy.response.status = 201
+            return {'status': 'ok'}
+        else:
+            cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
+            cherrypy.response.status = 405
+            return {'error': 'method not allowed'}
+
+    @cherrypy.expose()
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
+    def nlpt_sso(self):
+        if cherrypy.request.method == 'OPTIONS':
+            cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
+            cherrypy_cors.preflight(allowed_methods=['POST'])
+            return
+
+        cookie = cherrypy.request.cookie.get('LPOSsession')
+        if cookie:
+            session = Session.get(cookie.value)
+        else:
+            session = Session.get(None)
+        if len(session.validate_base()) > 0:
+            cherrypy.response.status = 401
+            return {'error': 'not authorized'}
+        elif not session.admin():
+            cherrypy.response.status = 403
+            return {'error': 'access not allowed'}
+
+        if cherrypy.request.method == 'POST':
+            attr = cherrypy.request.json
+            if 'enable' not in attr:
+                cherrypy.response.status = 400
+                return {'error': 'missing "enable" attribute in request'}
+            from helpers.system import set_use_absolute_seatnumbers, set_use_nlpt_sso, docDB
+            if attr['enable']:
+                set_use_absolute_seatnumbers(True)
+                if docDB.get_setting('sso_login_url') is None:
+                    docDB.set_setting('sso_login_url', 'https://nlpt.online/app/event-login?redirect=')
+            set_use_nlpt_sso(bool(attr['enable']))
             cherrypy.response.status = 201
             return {'status': 'ok'}
         else:
