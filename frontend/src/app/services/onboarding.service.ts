@@ -26,6 +26,13 @@ export class OnboardingService {
     return this.http.post<Onboarding>(this.onboardingUrl, payload);
   }
 
+  public ssoOnboarding(token: string): Observable<Onboarding> {
+    let payload = {
+      'token': token
+    }
+    return this.http.post<Onboarding>(this.onboardingUrl, payload);
+  }
+
   public completeOnboarding(choice: boolean): Observable<Onboarding> {
     return this.http.put<Onboarding>(this.onboardingUrl, {'choice': choice});
   }

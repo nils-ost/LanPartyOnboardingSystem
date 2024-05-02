@@ -22,6 +22,21 @@
     </div>
 </p-card>
 
+<p-card i18n-subheader header="Onboarding" subheader="via nlpt.online" styleClass="p-card-shadow" *ngIf="(onboarding && onboarding.login_url) || (sso_onboarding && !onboarding)">
+    <div class="sso_display" *ngIf="onboarding">
+        <div class="sso_redirectinfo" i18n="@@onboardingSSORedirectInfo">
+            This event uses a centralized Login. Please click the following button, to start the Login process.
+        </div>
+        <div>
+            <a href="SSOLoginUrl()" class="p-button" i18n="@@onboardingSSOLoginButton">Open Login</a>
+        </div>
+    </div>
+    <div class="sso_display" *ngIf="!onboarding">
+        <div class="sso_pleasewait" i18n="@@onboardingSSOPleaseWait">
+            System is receiving your Login data, please stand by.
+        </div>
+    </div>
+</p-card>
 
 <p-card i18n-subheader header="Onboarding" subheader="please fill out this form" styleClass="p-card-shadow" *ngIf="onboarding && onboarding.tables">
     <div class="field" *ngIf="!absolute_seatnumbers">

@@ -17,7 +17,7 @@
         padding: 0;
     }
 
-    .ip_display, .who_display {
+    .ip_display, .who_display, .sso_display {
         display: flex;
         flex-direction: column;
 
@@ -32,7 +32,7 @@
             color: var(--primary-color);
         }
 
-        .ip_reloadinfo {
+        .ip_reloadinfo, .sso_redirectinfo, .sso_pleasewait {
             margin-top: 0.5em;
             text-align: center;
         }

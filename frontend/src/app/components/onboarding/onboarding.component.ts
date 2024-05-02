@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Message } from 'primeng/api';
 import { Onboarding } from 'src/app/interfaces/onboarding';
 import { System } from 'src/app/interfaces/system';
@@ -17,6 +18,7 @@ export class OnboardingComponent implements OnInit, OnChanges {
   @Output() onboardingChangeEvent = new EventEmitter<Onboarding | undefined>;
   onboarding?: Onboarding;
   absolute_seatnumbers: boolean = false;
+  sso_onboarding: boolean = false;
   errorMsg: Message[] = [];
   selectedTable: number | undefined;
   selectedSeat: number | undefined;
@@ -25,6 +27,7 @@ export class OnboardingComponent implements OnInit, OnChanges {
   constructor(
     private errorHandler: ErrorHandlerService,
     private onboardingService: OnboardingService,
+    private route: ActivatedRoute,
     public utils: UtilsService
   ) {}
 
@@ -38,18 +41,35 @@ export class OnboardingComponent implements OnInit, OnChanges {
   }
 
   refreshOnboarding() {
-    this.onboardingService
-      .getOnboarding()
-      .subscribe({
-        next: (onboarding: Onboarding) => {
-          this.onboarding = onboarding;
-          this.onboardingChangeEvent.emit(this.onboarding);
-        },
-        error: (err: HttpErrorResponse) => {
-          this.errorHandler.handleError(err);
-          if (this.errorHandler.elementError) this.translateErrorCode(this.errorHandler.elementErrors);
-        }
-      })
+    let token = this.route.snapshot.paramMap.get('token');
+    if (token) {
+      this.sso_onboarding = true;
+      this.onboardingService
+        .ssoOnboarding(token)
+        .subscribe({
+          next: (onboarding: Onboarding) => {
+            this.onboarding = onboarding;
+            this.onboardingChangeEvent.emit(this.onboarding);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+            if (this.errorHandler.elementError) this.translateErrorCode(this.errorHandler.elementErrors);
+          }
+        })
+    }
+    else
+      this.onboardingService
+        .getOnboarding()
+        .subscribe({
+          next: (onboarding: Onboarding) => {
+            this.onboarding = onboarding;
+            this.onboardingChangeEvent.emit(this.onboarding);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+            if (this.errorHandler.elementError) this.translateErrorCode(this.errorHandler.elementErrors);
+          }
+        })
   }
 
   sendSeatParameters() {
@@ -91,6 +111,11 @@ export class OnboardingComponent implements OnInit, OnChanges {
       })
   }
 
+  SSOLoginUrl(): String {
+    if (this.onboarding?.login_url) return this.onboarding.login_url + window.location.href;
+    else return window.location.href;
+  }
+
   translateErrorCode(error: any) {
     let msg: string = "";
 
@@ -103,6 +128,7 @@ export class OnboardingComponent implements OnInit, OnChanges {
     if (error.code === 12) msg = $localize `:@@OnboardingErrorCode12:This Seat is not associated to a Participant. Please contact an admin.`;
     if (error.code === 13) msg = $localize `:@@OnboardingErrorCode13:Something went wrong. Please try again.`;
     if (error.code === 14) msg = $localize `:@@OnboardingErrorCode14:Please contact an admin.`;
+    if (error.code === 15) msg = $localize `:@@OnboardingErrorCode15:Invalid Login on SSO provider.`;
 
     if (msg === "") msg = $localize `:@@OnboardingErrorCodeFallback:Unknown error. Please contact an admin.`;
     this.errorMsg = [
