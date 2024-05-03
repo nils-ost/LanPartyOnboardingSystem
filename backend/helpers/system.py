@@ -296,3 +296,14 @@ def check_integrity_vlan_dhcp_commit():
         if not r.get('code', 1) == 0:
             return r
     return {'code': 0, 'desc': 'check ok'}
+
+
+def check_integrity_haproxy_commit():
+    """
+    do all integrity checks required for commiting haproxy settings
+    """
+    for check in [_check_interity_settings]:
+        r = check()
+        if not r.get('code', 1) == 0:
+            return r
+    return {'code': 0, 'desc': 'check ok'}

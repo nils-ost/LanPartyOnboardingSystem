@@ -180,6 +180,7 @@ export class SwitchesListComponent implements OnChanges {
             detail: $localize `:@@SystemExecCommitDhcpServersSuccessDetail:all DHCP servers successful commited`,
             life: 6000
           });
+          this.doSwitchCommit(sw);
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);

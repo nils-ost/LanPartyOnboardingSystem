@@ -163,7 +163,7 @@ export class NetworkScreenComponent implements OnInit, OnDestroy {
             detail: $localize `:@@SystemCheckIntegritySuccessDetail:system integrity is valid`,
             life: 6000
           });
-          if (this.commit_all) this.doSwitchesCommit();
+          if (this.commit_all) this.doHaproxyCommit();
           if (this.retreat_all) this.doDhcpServersRetreat();
         },
         error: (err: HttpErrorResponse) => {
@@ -185,6 +185,42 @@ export class NetworkScreenComponent implements OnInit, OnDestroy {
   doSystemCommit() {
     this.commit_all = true;
     this.doCheckIntegrity();
+  }
+
+  doHaproxyCommit() {
+    this.messageService.add({
+      severity: 'info',
+      summary: $localize `:@@SystemExecCommitStartedSummary:Commiting`,
+      detail: $localize `:@@SystemExecCommitHaproxyStartedDetail:commiting of HAproxy settings started`,
+      life: 6000
+    });
+    this.systemService
+      .execCommitHaproxy()
+      .subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: $localize `:@@SystemExecCommitSuccessSummary:Done`,
+            detail: $localize `:@@SystemExecCommitHaproxySuccessDetail:HAproxy settings successful commited`,
+            life: 6000
+          });
+          if (this.commit_all) this.doSwitchesCommit();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          let detail: string = 'unknown';
+          if (this.errorHandler.elementError) {
+            if (this.errorHandler.elementErrors.code == 1) detail = this.errorHandler.elementErrors.desc + ' ' + this.errorHandler.elementErrors.integrity.desc;
+            else detail = this.errorHandler.elementErrors.desc;
+          }
+          this.messageService.add({
+            severity: 'error',
+            summary: $localize `:@@SystemExecCommitErrorSummary:Error`,
+            detail: detail,
+            life: 6000
+          });
+        }
+      })
   }
 
   doSwitchesCommit() {

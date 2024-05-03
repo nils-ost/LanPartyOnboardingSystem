@@ -52,6 +52,7 @@ class VLAN(ElementBase):
     def commit_os_interface(self):
         from elements import IpPool
         from helpers.system import check_integrity_vlan_interface_commit
+        from helpers.haproxy import attach_ipvlan as hap_attach_ipvlan
         integrity = check_integrity_vlan_interface_commit()
         if not integrity.get('code', 1) == 0:
             return False  # integrity check failed, can't continue
@@ -75,18 +76,7 @@ class VLAN(ElementBase):
             subprocess.call(f'{dcmd} network create -d ipvlan --subnet={subnet} -o parent={iname}.{self["number"]} lpos-ipvlan{self["number"]}', shell=True)
 
         # hook the first IP of corresponding pool to haproxy
-        try:
-            format = '\u007b\u007b.ID\u007d\u007d|\u007b\u007b.Image\u007d\u007d|\u007b\u007b.Names\u007d\u007d'
-            hap_container = subprocess.check_output(f"sudo docker ps --format='{format}' | grep haproxy", shell=True).decode('utf-8').split('|')[0]
-            tmp_cmd = f'{dcmd} network inspect lpos-ipvlan{self["number"]}'
-            for k in json.loads(subprocess.check_output(tmp_cmd, shell=True).decode('utf-8').strip())[0]['Containers']:
-                if k.startswith(hap_container):
-                    break  # haproxy allready connected to this vlan, for-else is not executed
-            else:
-                hap_ip = IpPool.int_to_dotted(pool['range_start'] + 1)
-                subprocess.call(f'{dcmd} network connect --ip={hap_ip} lpos-ipvlan{self["number"]} {hap_container}', shell=True)
-        except Exception:
-            pass  # haproxy container not started or can't be found, skipping this step
+        hap_attach_ipvlan(f"lpos-ipvlan{self['number']}", pool['range_start'] + 1)
 
         return True
 

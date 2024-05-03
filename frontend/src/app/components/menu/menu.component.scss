@@ -2,3 +2,7 @@
 ::ng-deep .p-tooltip.p-tooltip-top .p-tooltip-arrow {
     border: 0;
 }
+
+::ng-deep .p-dock {
+    position: fixed !important;
+}

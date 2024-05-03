@@ -13,7 +13,7 @@ mongodb_image = 'mongo:4.4'
 mongodb_service = 'docker.mongodb.service'
 mongoexporter_image = 'bitnami/mongodb-exporter:0.30.0'
 mongoexporter_service = 'docker.mongoexporter.service'
-haproxy_image = 'haproxy:lts-alpine'
+haproxy_image = 'haproxytech/haproxy-alpine:latest'
 haproxy_service = 'docker.haproxy.service'
 haproxy_config = '/etc/haproxy/haproxy.cfg'
 lpos_service = 'lpos.service'
@@ -190,6 +190,7 @@ def deploy_mongodb(c):
 
     systemctl_stop(c, mongodb_service)
     systemctl_install_service(c, 'docker.service', mongodb_service, [
+        ('__execstartpre__', ''),
         ('__additional__', ''),
         ('__storage__', storagedir_mongo + ':/data/db'),
         ('__port__', '27017:27017'),
@@ -233,6 +234,7 @@ def deploy_haproxy(c):
     install_apt_package(c, 'curl')
     install_docker(c)
     systemctl_start_docker(c)
+    docker_pull(c, alpine_image)
     docker_pull(c, haproxy_image)
     systemctl_stop(c, haproxy_service)
 
@@ -249,9 +251,12 @@ def deploy_haproxy(c):
     c.run(f"sed -i 's/local_lpos host.docker.internal:[0-9]*/local_lpos host.docker.internal:{lpos_config['server']['port']}/' {haproxy_config}")
 
     systemctl_install_service(c, 'docker.service', haproxy_service, [
+        ('__execstartpre__', '\\n'.join([
+            'ExecStartPre=/usr/bin/docker run --rm --name copier-haproxy -v %n:/app -d alpine sleep 3',
+            f'ExecStartPre=/usr/bin/docker cp {haproxy_config} copier-haproxy:/app/'])),
         ('__additional__', '--add-host=host.docker.internal:host-gateway --sysctl net.ipv4.ip_unprivileged_port_start=0'),
-        ('__storage__', haproxy_config + ':/usr/local/etc/haproxy/haproxy.cfg:ro'),
-        ('__port__', '80:80 -p 8404:8404'),
+        ('__storage__', '%n:/usr/local/etc/haproxy/'),
+        ('__port__', '80:80 -p 8404:8404 -p 127.0.0.1:5555:5555'),
         ('__image__', haproxy_image)
     ])
     c.run('systemctl daemon-reload')
@@ -331,6 +336,7 @@ def deploy_monitoring(c):
     if c.run(f'systemctl is-active {mongodb_service}', warn=True, hide=True).ok:
         docker_pull(c, mongoexporter_image)
         systemctl_install_service(c, 'docker.service', mongoexporter_service, [
+            ('__execstartpre__', ''),
             ('__additional__', f'--link {mongodb_service}'),
             ('__storage__', '/dev/null:/mnt/dummy:ro'),
             ('__port__', '9216:9216'),
@@ -385,6 +391,7 @@ def deploy(c):
     install_logrotate(c)
     systemctl_install_service(c, 'lpos.service', lpos_service, [('__project_dir__', project_dir)])
     systemctl_install_service(c, 'docker.service', mongodb_service, [
+        ('__execstartpre__', ''),
         ('__additional__', ''),
         ('__storage__', storagedir_mongo + ':/data/db'),
         ('__port__', '27017:27017'),

@@ -33,6 +33,9 @@
                 <ng-container i18n="@@elementFieldLabelPwStrikes">Strikes</ng-container>
                 <p-sortIcon field="pw_strikes"></p-sortIcon>
             </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelDeviceDelete">Delete</ng-container>
+            </th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-device>
@@ -66,6 +69,9 @@
             </td>
             <td>
                 {{ device.pw_strikes }}
+            </td>
+            <td>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="deleteDevice(device)"></button>
             </td>
         </tr>
     </ng-template>
