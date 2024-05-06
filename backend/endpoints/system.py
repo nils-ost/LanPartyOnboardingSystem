@@ -354,6 +354,43 @@ class SystemEndpoint():
     @cherrypy.expose()
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
+    def commit_haproxy(self):
+        if cherrypy.request.method == 'OPTIONS':
+            cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
+            cherrypy_cors.preflight(allowed_methods=['POST'])
+            return
+
+        cookie = cherrypy.request.cookie.get('LPOSsession')
+        if cookie:
+            session = Session.get(cookie.value)
+        else:
+            session = Session.get(None)
+        if len(session.validate_base()) > 0:
+            cherrypy.response.status = 401
+            return {'error': 'not authorized'}
+        elif not session.admin():
+            cherrypy.response.status = 403
+            return {'error': 'access not allowed'}
+
+        if cherrypy.request.method == 'POST':
+            from helpers.system import check_integrity_haproxy_commit
+            result = check_integrity_haproxy_commit()
+            if result.get('code', 1) == 0:
+                from helpers.haproxy import set_ms_redirect_url
+                set_ms_redirect_url()
+                cherrypy.response.status = 201
+                return {'code': 0, 'desc': 'done'}
+            else:
+                cherrypy.response.status = 400
+                return {'error': result}
+        else:
+            cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
+            cherrypy.response.status = 405
+            return {'error': 'method not allowed'}
+
+    @cherrypy.expose()
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
     def absolute_seatnumbers(self):
         if cherrypy.request.method == 'OPTIONS':
             cherrypy.response.headers['Allow'] = 'OPTIONS, POST'

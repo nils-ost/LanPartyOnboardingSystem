@@ -8,6 +8,12 @@ config = {
         'port': 27017,
         'database': 'LPOS'
     },
+    'haproxy': {
+        'host': '127.0.0.1',
+        'api_port': 5555,
+        'api_user': 'admin',
+        'api_pw': 'adminpwd'
+    },
     'server': {
         'port': 8000
     },

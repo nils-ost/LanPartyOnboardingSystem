@@ -142,6 +142,19 @@ export class DevicesListComponent implements OnChanges {
     this.editSeatDialog.show(event);
   }
 
+  deleteDevice(device: Device) {
+    this.deviceService
+      .deleteDevice(device.id)
+      .subscribe({
+        next: (response: any) => {
+          this.editedDeviceEvent.emit(null);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
   editSeatCheck() {
     if (this.selectedDevice) {
       if (this.newSeatId) {
