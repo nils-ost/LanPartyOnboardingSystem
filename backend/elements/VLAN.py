@@ -52,7 +52,7 @@ class VLAN(ElementBase):
     def commit_os_interface(self):
         from elements import IpPool
         from helpers.system import check_integrity_vlan_interface_commit
-        from helpers.haproxy import attach_ipvlan as hap_attach_ipvlan
+        from helpers.haproxy import attach_ipvlan as hap_attach_ipvlan, default_gateway as hap_default_gateway, setup_sso_login_proxy as hap_sso_proxy
         integrity = check_integrity_vlan_interface_commit()
         if not integrity.get('code', 1) == 0:
             return False  # integrity check failed, can't continue
@@ -75,8 +75,13 @@ class VLAN(ElementBase):
             subnet = f'{pool.subnet_ip(dotted=True)}/{pool["mask"]}'
             subprocess.call(f'{dcmd} network create -d ipvlan --subnet={subnet} -o parent={iname}.{self["number"]} lpos-ipvlan{self["number"]}', shell=True)
 
-        # hook the first IP of corresponding pool to haproxy
-        hap_attach_ipvlan(f"lpos-ipvlan{self['number']}", pool['range_start'] + 1)
+        # depending on the vlan-purpose configure haproxy
+        if self['purpose'] == 0:
+            hap_attach_ipvlan(f"lpos-ipvlan{self['number']}", IpPool.get_lpos()['range_start'])
+            hap_default_gateway(docDB.get_setting('play_gateway'))
+            hap_sso_proxy()
+        else:
+            hap_attach_ipvlan(f"lpos-ipvlan{self['number']}", pool['range_start'] + 1)
 
         return True
 
@@ -107,7 +112,7 @@ class VLAN(ElementBase):
 
     def commit_dns_server(self):
         from elements import IpPool
-        from helpers.system import check_integrity_vlan_dns_commit
+        from helpers.system import check_integrity_vlan_dns_commit, get_use_nlpt_sso
         integrity = check_integrity_vlan_dns_commit()
         if not integrity.get('code', 1) == 0:
             return False  # integrity check failed, can't continue
@@ -133,7 +138,15 @@ class VLAN(ElementBase):
             dns_ip = IpPool.int_to_dotted(pool['range_start'] + 2)
 
             open('/tmp/Corefile', 'w').write('. {\n    log\n    errors\n    auto\n    hosts /etc/coredns/hosts {\n        ttl 10\n    }\n}')
-            open('/tmp/hosts', 'w').write(f'{lpos_ip}  {lpos_domain} www.{lpos_domain}\n{lpos_ip}  www.msftconnecttest.com\n131.107.255.255  dns.msftncsi.com')
+            hosts = [
+                f'{lpos_ip}  {lpos_domain} www.{lpos_domain}',
+                f'{lpos_ip}  www.msftconnecttest.com',
+                '131.107.255.255  dns.msftncsi.com']
+            if get_use_nlpt_sso():
+                from urllib.parse import urlparse
+                sso_domain = urlparse(docDB.get_setting('sso_login_url')).netloc
+                hosts.append(f'{lpos_ip} {sso_domain}')
+            open('/tmp/hosts', 'w').write('\n'.join(hosts))
 
             subprocess.call(f'{dcmd} run --rm --name copier-dns-{self["number"]} -v lpos-ipvlan{self["number"]}-dns:/app -d alpine sleep 3', shell=True)
             subprocess.call(f'{dcmd} cp /tmp/Corefile copier-dns-{self["number"]}:/app/', shell=True)

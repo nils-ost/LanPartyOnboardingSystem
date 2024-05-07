@@ -15,7 +15,7 @@ def start_development(c):
         c.run('sudo docker run --rm --name copier-haproxy -v dev-haproxy:/app -d alpine sleep 3')
         c.run(f'sudo docker cp {haproxycfg} copier-haproxy:/app/')
         cmd = [
-            'sudo docker run --name dev-haproxy --rm',
+            'sudo docker run --name dev-haproxy --rm --cap-add=NET_ADMIN',
             '--add-host=host.docker.internal:host-gateway --sysctl net.ipv4.ip_unprivileged_port_start=0',
             '-v dev-haproxy:/usr/local/etc/haproxy/ -p 80:80 -p 8404:8404 -p 5555:5555 -d haproxytech/haproxy-alpine:latest'
         ]

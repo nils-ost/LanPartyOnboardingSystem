@@ -254,7 +254,7 @@ def deploy_haproxy(c):
         ('__execstartpre__', '\\n'.join([
             'ExecStartPre=/usr/bin/docker run --rm --name copier-haproxy -v %n:/app -d alpine sleep 3',
             f'ExecStartPre=/usr/bin/docker cp {haproxy_config} copier-haproxy:/app/'])),
-        ('__additional__', '--add-host=host.docker.internal:host-gateway --sysctl net.ipv4.ip_unprivileged_port_start=0'),
+        ('__additional__', '--cap-add=NET_ADMIN --add-host=host.docker.internal:host-gateway --sysctl net.ipv4.ip_unprivileged_port_start=0'),
         ('__storage__', '%n:/usr/local/etc/haproxy/'),
         ('__port__', '80:80 -p 8404:8404 -p 127.0.0.1:5555:5555'),
         ('__image__', haproxy_image)

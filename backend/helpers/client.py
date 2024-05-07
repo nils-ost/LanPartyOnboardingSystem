@@ -1,5 +1,8 @@
 import cherrypy
 import subprocess
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def get_client_ip():
@@ -41,3 +44,22 @@ def get_client_mac(ip=None):
             return d['mac']
 
     return 'unknown_device'
+
+
+def nslookup(domain):
+    logger.info(f'executing nslookup of {domain}')
+    dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+    try:
+        format = '\u007b\u007b.ID\u007d\u007d|\u007b\u007b.Image\u007d\u007d|\u007b\u007b.Names\u007d\u007d'
+        hap_container = subprocess.check_output(f"{dcmd} ps --format='{format}' | grep haproxy", shell=True).decode('utf-8').split('|')[0]
+        addr = False
+        for line in subprocess.check_output(f'{dcmd} exec {hap_container} nslookup -type=a {domain}', shell=True).decode('utf-8').strip().split('\n'):
+            if line.startswith('Name') and line.split(':')[-1].strip() == domain:
+                addr = True
+            if line.startswith('Address') and addr:
+                return line.split(':')[-1].strip()
+        else:
+            logger.warning('address could not be determined')
+            return None
+    except Exception:
+        logger.warning("haproxy container not started or can't be found")

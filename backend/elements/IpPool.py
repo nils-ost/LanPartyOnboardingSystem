@@ -20,6 +20,12 @@ class IpPool(ElementBase):
             result.append(r)
         return result
 
+    @classmethod
+    def get_lpos(cls):
+        result = cls()
+        result._attr = docDB.search_one(cls.__name__, {'lpos': True})
+        return result
+
     def octetts_to_int(oct1, oct2, oct3, oct4):
         r = list()
         r.append(hex(oct1).replace('0x', ''))
