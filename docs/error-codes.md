@@ -70,10 +70,12 @@
 
 ## port
 
-  * **90***(switch_id|switchlink_port_id)*: There is no <Switch|Port\> with id '<switch_id|switchlink_port_id\>'
+  * **90***(switch_id|switchlink_port_id|commit_config.vlan)*: There is no <Switch|Port|VLAN\> with id '<switch_id|switchlink_port_id|vlan_id\>'
   * **91***(number)*: Needs to be 0 or bigger
   * **92***(number)*: Needs to be unique per Switch
   * **93***(switchlink_port_id)*: The Port '<switchlink_port_id\>' is not declared as a switchlink
+  * **94***(commit_config.mode|commit_config.receive)*: needs to be one of <list of some values\> but is <value\>
+  * **95***(commit_config.vlans)*: at least one vlan is required
 
 # element delete error-codes
 
