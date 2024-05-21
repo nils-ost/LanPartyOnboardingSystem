@@ -63,6 +63,9 @@ class Port(ElementBase):
                 errors['switchlink_port_id'] = {'code': 90, 'desc': f"There is no Port with id '{self['switchlink_port_id']}'"}
             elif not fromdb['switchlink']:
                 errors['switchlink_port_id'] = {'code': 93, 'desc': f"The Port '{self['switchlink_port_id']}' is not declared as a switchlink"}
+        if self['switchlink']:
+            self['commit_config'] = None
+            self['commit_disabled'] = False
         if self['commit_config'] is not None:
             # enabled
             if 'enabled' not in self['commit_config'] or self['commit_config']['enabled'] is None:

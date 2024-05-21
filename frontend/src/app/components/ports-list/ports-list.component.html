@@ -57,6 +57,7 @@
                 <ng-template #notChangeableCommitDisabled>
                     <i *ngIf="!port.participants" class="pi pi-times" style="color: var(--danger-color)"></i>
                 </ng-template>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editVlanConfigStart(port, $event)"></button>
             </td>
             <td>
                 <ng-container *ngIf="selectedSwitch && selectedSwitch.purpose == 2 || !port.switchlink; else notChangeableParticipants">
@@ -122,6 +123,48 @@
                 <p-dropdown id="editswitchlinkportid" [options]="switchlinkOptions" [(ngModel)]="newSwitchlinkPortId" optionLabel="name" optionValue="code" appendTo="body"></p-dropdown>
                 <label for="editswitchlinkportid" i18n="@@elementFieldLabelPortSwitchlinkPortId">Switchlink Port</label>
             </span>
+        </div>
+        <button pButton (click)="editSwitchlinkPortId()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #editvlanconfig [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="flex flex-column gap-3">
+            <div class="field-checkbox">
+                <p-radioButton name="vlan_setting" value="auto" [(ngModel)]="vlan_setting" inputId="vlansetting1" />
+                <label for="vlansetting1" class="ml-2">Auto</label>
+            </div>
+            <div class="field-checkbox">
+                <p-radioButton name="vlan_setting" value="disable" [(ngModel)]="vlan_setting" inputId="vlansetting2" />
+                <label for="vlansetting2" class="ml-2">Exclude from Commits</label>
+            </div>
+            <div class="field-checkbox">
+                <p-radioButton name="vlan_setting" value="manual" [(ngModel)]="vlan_setting" inputId="vlansetting3" />
+                <label for="vlansetting3" class="ml-2">Manual</label>
+            </div>
+            <div *ngIf="vlan_setting == 'manual'" class="field">
+                <div class="field">
+                    <p-inputSwitch id="editVlanEnabled" [(ngModel)]="vlan_config.enabled" />
+                    <label for="editVlanEnabled" i18n="@@elementFieldLabelPortVlanEnabled">Enabled</label>
+                </div>
+                <div class="field">
+                    <span class="p-float-label">
+                        <p-dropdown id="editVlanMode" [options]="vlanModeOptions" [(ngModel)]="vlan_config.mode" optionLabel="name" optionValue="code" appendTo="body"></p-dropdown>
+                        <label for="editVlanMode" i18n="@@elementFieldLabelPortVlanMode">Mode</label>
+                    </span>
+                </div>
+                <div class="field">
+                    <span class="p-float-label">
+                        <p-dropdown id="editVlanReceive" [options]="vlanReceiveOptions" [(ngModel)]="vlan_config.receive" optionLabel="name" optionValue="code" appendTo="body"></p-dropdown>
+                        <label for="editVlanReceive" i18n="@@elementFieldLabelPortVlanReceive">Receive</label>
+                    </span>
+                </div>
+                <div class="field">
+                    <p-inputSwitch id="editVlanForce" [(ngModel)]="vlan_config.force" />
+                    <label for="editVlanForce" i18n="@@elementFieldLabelPortVlanForce">Force</label>
+                </div>
+            </div>
         </div>
         <button pButton (click)="editSwitchlinkPortId()" i18n="@@buttonSave">Save</button>
     </ng-template>

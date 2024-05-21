@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
-import { Port } from 'src/app/interfaces/port';
+import { Port, PortCommitConfig } from 'src/app/interfaces/port';
 import { Switch } from 'src/app/interfaces/switch';
 import { Vlan } from 'src/app/interfaces/vlan';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
@@ -20,6 +20,7 @@ export class PortsListComponent implements OnChanges, OnInit {
 
   @ViewChild('editdesc') editDescDialog: any;
   @ViewChild('editswitchlinkportid') editSwitchlinkPortIdDialog: any;
+  @ViewChild('editvlanconfig') editVlanConfigDialog: any;
 
   vlansNames: Map<string, string> = new Map<string, string>;
   displayPorts: Port[] =[];
@@ -27,6 +28,11 @@ export class PortsListComponent implements OnChanges, OnInit {
   newDesc: string = "";
   newSwitchlinkPortId: string | null = null;
   switchlinkOptions: any[];
+  vlanModeOptions: any[] = [{name: 'disabled', code: '0x00'}, {name: 'optional', code: '0x01'}, {name: 'enabled', code: '0x02'}, {name: 'strict', code: '0x03'}];
+  vlanReceiveOptions: any[] = [{name: 'any', code: '0x00'}, {name: 'only tagged', code: '0x01'}, {name: 'only untagged', code: '0x02'}];
+
+  vlan_setting: string = "auto";
+  vlan_config!: PortCommitConfig;
 
   constructor(
     private errorHandler: ErrorHandlerService,
@@ -138,6 +144,25 @@ export class PortsListComponent implements OnChanges, OnInit {
           this.errorHandler.handleError(err);
         }
       })
+  }
+
+  editVlanConfigStart(port: Port, event: any) {
+    this.selectedPort = port;
+    this.vlan_config = {
+      vlans: [],
+      default: "",
+      enabled: true,
+      mode: "0x01",
+      receive: "0x00",
+      force: false
+    } as PortCommitConfig;
+    if (port.commit_disabled) this.vlan_setting = "disable";
+    else if (port.commit_config) {
+      this.vlan_setting = "manual";
+      this.vlan_config = port.commit_config;
+    }
+    else this.vlan_setting = "auto";
+    this.editVlanConfigDialog.show(event);
   }
 
   editCommitDisabled(port: Port, newValue: boolean) {

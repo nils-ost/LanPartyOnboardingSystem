@@ -19,6 +19,8 @@ import { MessagesModule } from 'primeng/messages';
 import { DockModule } from 'primeng/dock';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
@@ -95,7 +97,9 @@ import { DevicesListComponent } from './components/devices-list/devices-list.com
     MessagesModule,
     DockModule,
     CheckboxModule,
-    ToggleButtonModule
+    ToggleButtonModule,
+    RadioButtonModule,
+    InputSwitchModule
   ],
   providers: [
     ConfirmationService,
