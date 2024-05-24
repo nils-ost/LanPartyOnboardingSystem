@@ -143,3 +143,53 @@ def setup_sso_login_proxy():
         if r.status_code > 300:
             logger.error(f"creating switching_rule on frontend 'fe_lpos' for backend 'be_sso' failed:\n{r.text}")
             return
+
+
+class LPOSHAproxy():
+    def __init__(self):
+        pass
+
+
+class SSOHAproxy():
+    def __init__(self):
+        self.logger = logging.getLogger('SSO - HAproxy')
+        self.container_running()
+
+    def container_running(self):
+        """
+        Checks if the container, containing the HAproxy for online-sso, is allready running
+        """
+        self.logger.info('checking if container is allready running')
+        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+        try:
+            format = '\u007b\u007b.ID\u007d\u007d|\u007b\u007b.Names\u007d\u007d'
+            self.container_id = subprocess.check_output(f"{dcmd} ps --format='{format}' | grep lpos-ssoproxy", shell=True).decode('utf-8').split('|')[0]
+            self.logger.info(f'container is running under id: {self.container_id}')
+            return True
+        except Exception:
+            self.logger.info("container not started or can't be found")
+            self.container_id = None
+            return False
+
+    def start_container(self):
+        pass
+
+    def attach_ipvlan(self, name, int_ip):
+        from elements import IpPool
+        ip = IpPool.int_to_dotted(int_ip)
+        logger.info(f"attaching ipvlan '{name}' with IP {ip}")
+        if self.container_id is None and not self.container_running():
+            logger.warning("container not started or can't be found")
+            return
+        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+        tmp_cmd = f'{dcmd} network inspect {name}'
+        for k in json.loads(subprocess.check_output(tmp_cmd, shell=True).decode('utf-8').strip())[0]['Containers']:
+            if k.startswith(self.container_id):
+                logger.info(f"allready connected to ipvlan '{name}'")
+                break  # haproxy allready connected to this vlan, for-else is not executed
+        else:
+            subprocess.call(f'{dcmd} network connect --ip={ip} {name} {self.container_id}', shell=True)
+
+
+lposHAproxy = LPOSHAproxy()
+ssoHAproxy = SSOHAproxy()
