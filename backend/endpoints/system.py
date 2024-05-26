@@ -1,5 +1,6 @@
 import cherrypy
 import cherrypy_cors
+from helpers.docdb import docDB
 from elements import Session
 from helpers.system import get_commited, get_open_commits, get_use_absolute_seatnumbers, get_use_nlpt_sso
 from helpers.version import version
@@ -376,8 +377,11 @@ class SystemEndpoint():
             from helpers.system import check_integrity_haproxy_commit
             result = check_integrity_haproxy_commit()
             if result.get('code', 1) == 0:
-                from helpers.haproxy import set_ms_redirect_url
-                set_ms_redirect_url()
+                from helpers.haproxy import ssoHAproxy, lposHAproxy
+                if docDB.get_setting('nlpt_sso'):
+                    ssoHAproxy.start_container()
+                    ssoHAproxy.setup_sso_ip()
+                lposHAproxy.set_ms_redirect_url()
                 cherrypy.response.status = 201
                 return {'code': 0, 'desc': 'done'}
             else:

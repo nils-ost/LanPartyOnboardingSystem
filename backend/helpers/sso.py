@@ -8,8 +8,7 @@ logger = logging.getLogger(__name__)
 def nlpt_fetch_participant(token):
     logger.info(f'Fetching Participant with token: {"*" * (len(token) - 4)}{token[-4:]}')
     s = requests.Session()
-    s.headers = {'Content-Type': 'application/json'}
-    s.auth('Bearer', token)
+    s.headers = {'Content-Type': 'application/json', 'authentication': f'Bearer {token}'}
 
     r = s.get(docDB.get_setting('sso_onboarding_url'))
     if r.status_code > 300:
