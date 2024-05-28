@@ -11,7 +11,8 @@ class Device(ElementBase):
         ip=ElementBase.addAttr(type=int, unique=True),
         port_id=ElementBase.addAttr(default=None, fk='Port'),
         onboarding_blocked=ElementBase.addAttr(type=bool, default=False),
-        pw_strikes=ElementBase.addAttr(type=int, default=0)
+        pw_strikes=ElementBase.addAttr(type=int, default=0),
+        last_scan_ts=ElementBase.addAttr(type=int, default=0, notnone=True)
     )
 
     @classmethod

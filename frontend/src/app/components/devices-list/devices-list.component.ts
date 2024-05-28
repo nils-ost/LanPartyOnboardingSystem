@@ -30,6 +30,7 @@ export class DevicesListComponent implements OnChanges {
   @ViewChild('editdesc') editDescDialog: any;
   @ViewChild('editseat') editSeatDialog: any;
 
+  currentTs: number = 0;
   seatsOptions: any[] = [];
   seatsReadable: Map<string, string> = new Map<string, string>;
   ippoolsReadable: Map<string, string> = new Map<string, string>;
@@ -46,7 +47,9 @@ export class DevicesListComponent implements OnChanges {
     private errorHandler: ErrorHandlerService,
     private confirmationService: ConfirmationService,
     private deviceService: DeviceService
-  ) {}
+  ) {
+    this.currentTs = Math.floor(Date.now() / 1000);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (('tables' in changes || 'seats' in changes) && this.tables.length > 0 && this.seats.length > 0) {
@@ -87,6 +90,7 @@ export class DevicesListComponent implements OnChanges {
         let device: Device = this.devices[i];
         this.devicesReadable.set(device.id, device.mac + ' (' + device.desc + ')');
       }
+      this.currentTs = Math.floor(Date.now() / 1000);
     }
 
     if (('switches' in changes || 'ports' in changes) && this.switches.length > 0 && this.ports.length > 0) {
