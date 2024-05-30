@@ -23,6 +23,7 @@ export class OnboardingComponent implements OnInit, OnChanges {
   selectedTable: number | undefined;
   selectedSeat: number | undefined;
   selectedPw: string | undefined;
+  tokenFetched: boolean = false;
 
   constructor(
     private errorHandler: ErrorHandlerService,
@@ -41,14 +42,15 @@ export class OnboardingComponent implements OnInit, OnChanges {
   }
 
   refreshOnboarding() {
-    let token = this.route.snapshot.paramMap.get('token');
-    if (token) {
+    let token = window.location.search.split('token=').pop()?.split('&')[0];
+    if (token && !this.tokenFetched) {
       this.sso_onboarding = true;
       this.onboardingService
         .ssoOnboarding(token)
         .subscribe({
           next: (onboarding: Onboarding) => {
             this.onboarding = onboarding;
+            this.tokenFetched = true;
             this.onboardingChangeEvent.emit(this.onboarding);
           },
           error: (err: HttpErrorResponse) => {

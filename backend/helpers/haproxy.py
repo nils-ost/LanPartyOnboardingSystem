@@ -156,10 +156,10 @@ class LPOSHAproxy(_BaseHAproxy):
         self.logger = logging.getLogger('LPOS - HAproxy')
         self._container_search_name = 'haproxy'
         self.config = {
-            'host': config['api_user'],
-            'api_port': config['api_pw'],
-            'api_user': config['host'],
-            'api_pw': config['api_port']
+            'host': config['host'],
+            'api_port': config['api_port'],
+            'api_user': config['api_user'],
+            'api_pw': config['api_pw']
         }
         self.container_running()
 
