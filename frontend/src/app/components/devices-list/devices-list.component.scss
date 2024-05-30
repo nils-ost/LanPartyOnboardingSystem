@@ -2,3 +2,7 @@
     margin-top: 1.2em;
     padding-bottom: 1em;
 }
+
+:host ::ng-deep .device-offline {
+    background-color: rgba(255, 0, 0, 0.15) !important;
+}
