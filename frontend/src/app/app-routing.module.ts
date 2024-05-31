@@ -8,6 +8,7 @@ import { TablesScreenComponent } from './components/tables-screen/tables-screen.
 import { ParticipantsScreenComponent } from './components/participants-screen/participants-screen.component';
 import { OnboardingComponent } from './components/onboarding/onboarding.component';
 import { DevicesScreenComponent } from './components/devices-screen/devices-screen.component';
+import { SettingsScreenComponent } from './components/settings-screen/settings-screen.component';
 
 const routes: Routes = [
   { path: 'welcome', component: WelcomeComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
   { path: 'onboarding', component: OnboardingComponent },
+  { path: 'settings', component: SettingsScreenComponent },
   { path: '**', component: WelcomeComponent },
 ];
 

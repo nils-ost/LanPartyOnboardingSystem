@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/api';
+import { Subscription, timer } from 'rxjs';
 import { Onboarding } from 'src/app/interfaces/onboarding';
 import { System } from 'src/app/interfaces/system';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
@@ -13,9 +13,13 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './onboarding.component.html',
   styleUrls: ['./onboarding.component.scss']
 })
-export class OnboardingComponent implements OnInit, OnChanges {
+export class OnboardingComponent implements OnInit, OnChanges, OnDestroy {
   @Input() system?: System;
   @Output() onboardingChangeEvent = new EventEmitter<Onboarding | undefined>;
+
+  refreshOnboardingTimer = timer(5000, 5000);
+  refreshOnboardingTimerSubscription: Subscription | undefined;
+
   onboarding?: Onboarding;
   absolute_seatnumbers: boolean = false;
   sso_onboarding: boolean = false;
@@ -28,7 +32,6 @@ export class OnboardingComponent implements OnInit, OnChanges {
   constructor(
     private errorHandler: ErrorHandlerService,
     private onboardingService: OnboardingService,
-    private route: ActivatedRoute,
     public utils: UtilsService
   ) {}
 
@@ -41,7 +44,16 @@ export class OnboardingComponent implements OnInit, OnChanges {
     if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
   }
 
+  ngOnDestroy(): void {
+    this.disableAutoRefresh();
+  }
+
+  disableAutoRefresh() {
+    this.refreshOnboardingTimerSubscription?.unsubscribe();
+  }
+
   refreshOnboarding() {
+    this.errorMsg = [];
     let token = window.location.search.split('token=').pop()?.split('&')[0];
     if (token && !this.tokenFetched) {
       this.sso_onboarding = true;
@@ -64,12 +76,18 @@ export class OnboardingComponent implements OnInit, OnChanges {
         .getOnboarding()
         .subscribe({
           next: (onboarding: Onboarding) => {
+            this.refreshOnboardingTimerSubscription?.unsubscribe();
             this.onboarding = onboarding;
             this.onboardingChangeEvent.emit(this.onboarding);
           },
           error: (err: HttpErrorResponse) => {
             this.errorHandler.handleError(err);
-            if (this.errorHandler.elementError) this.translateErrorCode(this.errorHandler.elementErrors);
+            if (this.errorHandler.elementError) {
+              this.translateErrorCode(this.errorHandler.elementErrors);
+              if (this.errorHandler.elementErrors.code === 6 && this.refreshOnboardingTimerSubscription == undefined) {
+                this.refreshOnboardingTimerSubscription = this.refreshOnboardingTimer.subscribe(() => this.refreshOnboarding());
+              }
+            }
           }
         })
   }
@@ -121,7 +139,7 @@ export class OnboardingComponent implements OnInit, OnChanges {
   translateErrorCode(error: any) {
     let msg: string = "";
 
-    if (error.code === 6) msg = $localize `:@@OnboardingErrorCode6:Your Device is unknown. Please contact an admin.`;
+    if (error.code === 6) msg = $localize `:@@OnboardingErrorCode6:Your Device is not yet known. Please stand by, this screen will automatically refresh, when your Device is ready for Onboarding.`;
     if (error.code === 7) msg = $localize `:@@OnboardingErrorCode7:Your Device is blocked for onboarding. Please contact an admin.`;
     if (error.code === 8) msg = $localize `:@@OnboardingErrorCode8:Invalid Table number. Please try again.`;
     if (error.code === 9) msg = $localize `:@@OnboardingErrorCode9:Invalid Seat number. Please try again.`;

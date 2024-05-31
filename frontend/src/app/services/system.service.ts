@@ -62,4 +62,8 @@ export class SystemService {
   public setAbsoluteSeatnumbers(enable: boolean): Observable<any> {
     return this.http.post<any>(this.systemUrl + 'absolute_seatnumbers/', {'enable': enable}, {withCredentials:true});
   }
+
+  public setNlptSso(enable: boolean): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'nlpt_sso/', {'enable': enable}, {withCredentials:true});
+  }
 }

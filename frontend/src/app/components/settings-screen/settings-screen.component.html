@@ -1,0 +1,15 @@
+<p>settings-screen works!</p>
+
+<p-panel header="NLPT-SSO">
+    <ng-template pTemplate="icons">
+        <p-inputSwitch [(ngModel)]="nlpt_sso_enabled" />
+    </ng-template>
+
+    <ng-container *ngIf="nlpt_sso_enabled">
+        Something to set...
+    </ng-container>
+</p-panel>
+
+<button pButton (click)="save()" i18n="@@buttonSave">Save</button>
+
+<app-menu></app-menu>

@@ -87,6 +87,20 @@ export class MenuComponent {
         }
       },
       {
+        label: 'Settings',
+        tooltipOptions: {
+          tooltipLabel: 'Settings',
+          tooltipPosition: 'top',
+          positionTop: 0,
+          positionLeft: 15,
+          showDelay: 100
+        },
+        icon: 'pi-cog',
+        command: () => {
+          this.router.navigate(['/settings']);
+        }
+      },
+      {
         label: 'Logout',
         tooltipOptions: {
           tooltipLabel: 'Logout',
