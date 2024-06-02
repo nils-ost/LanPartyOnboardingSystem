@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2024-05-31T07:34:59.670Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.1.0 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="cmnN-38pnmb77QNJ2GZo" version="24.1.0" type="device">
+<mxfile host="Electron" modified="2024-06-02T21:25:16.063Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.1.0 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="YgtTnINPygEdKmS-dIGn" version="24.1.0" type="device">
   <diagram id="wcmjMXEbXOUI_5ojHGwT" name="Seite-1">
     <mxGraphModel dx="2074" dy="1138" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -312,6 +312,21 @@
         </mxCell>
         <mxCell id="LbffNxMu1DLhnjCqcATJ-7" value="user --&lt;br&gt;admin rw" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;spacing=7;" parent="LbffNxMu1DLhnjCqcATJ-8" vertex="1">
           <mxGeometry x="20" y="250" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="uv4anf9Su2EmNAvUE8BI-4" value="setting" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="485" width="140" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="uv4anf9Su2EmNAvUE8BI-5" value="id : string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="uv4anf9Su2EmNAvUE8BI-4">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="uv4anf9Su2EmNAvUE8BI-6" value="value : any" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="uv4anf9Su2EmNAvUE8BI-4">
+          <mxGeometry y="52" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="uv4anf9Su2EmNAvUE8BI-9" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;dashed=1;endArrow=none;endFill=0;fillColor=#fff2cc;strokeColor=#d6b656;" edge="1" parent="1" source="uv4anf9Su2EmNAvUE8BI-8" target="uv4anf9Su2EmNAvUE8BI-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uv4anf9Su2EmNAvUE8BI-8" value="for more detail about&lt;div&gt;all&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;settings see:&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;system_settings.md&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;autosize=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="520" width="130" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

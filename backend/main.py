@@ -6,7 +6,7 @@ from helpers.docdb import docDB
 from helpers.config import get_config
 from helpers.backgroundworker import device_scanner_start, device_onboarding_start
 from helpers.versioning import run as versioning_run
-from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint, SwitchEndpoint, OnboardingEndpoint
+from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint, SwitchEndpoint, OnboardingEndpoint, SettingEndpoint
 from endpoints.metrics import start_metrics_exporter
 from elements import VLAN, IpPool, Table, Seat, Participant, Device, Port
 
@@ -26,6 +26,7 @@ class API():
         self.login = LoginEndpoint()
         self.system = SystemEndpoint()
         self.onboarding = OnboardingEndpoint()
+        self.setting = SettingEndpoint()
 
 
 class VLANEndpoint(ElementEndpointBase):
