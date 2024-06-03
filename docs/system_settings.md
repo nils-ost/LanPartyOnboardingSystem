@@ -6,8 +6,8 @@
 | :-------------------- | :--: | :---: | :--: | :--- |
 | commited              | bool |  ro   |  --  |  |
 | open_commits          | bool |  ro   |  --  |  |
-| seatnumbers_absolute  | bool |  rw   |  ro  |  |
-| nlpt_sso              | bool |  rw   |  ro  |  |
+| seatnumbers_absolute  | bool |  ro   |  ro  |  |
+| nlpt_sso              | bool |  ro   |  ro  |  |
 | version               | str  |  ro   |  ro  |  |
 
 ## Setting(s) Endpoint

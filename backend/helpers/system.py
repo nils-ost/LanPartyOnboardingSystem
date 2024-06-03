@@ -245,8 +245,8 @@ def _check_interity_settings():
         if docDB.get_setting(setting) is None:
             return {'code': 9, 'desc': f"setting '{setting}' is not defined, but it's needed"}
 
-    if docDB.get_setting('nlpt_sso'):
-        if not docDB.get_setting('absolute_seatnumbers'):
+    if get_use_nlpt_sso():
+        if not get_use_absolute_seatnumbers():
             return {'code': 19, 'desc': 'nlpt_sso is enabled but absolute_seatnumbers is disabled'}
         if docDB.get_setting('sso_login_url') is None:
             return {'code': 9, 'desc': "setting 'sso_login_url' is not defined, but it's needed"}

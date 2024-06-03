@@ -51,7 +51,7 @@ class VLAN(ElementBase):
 
     def commit_os_interface(self):
         from elements import IpPool
-        from helpers.system import check_integrity_vlan_interface_commit
+        from helpers.system import check_integrity_vlan_interface_commit, get_use_nlpt_sso
         from helpers.haproxy import ssoHAproxy, lposHAproxy
         integrity = check_integrity_vlan_interface_commit()
         if not integrity.get('code', 1) == 0:
@@ -80,7 +80,7 @@ class VLAN(ElementBase):
             lposHAproxy.attach_ipvlan(f"lpos-ipvlan{self['number']}", IpPool.get_lpos()['range_start'])
         else:
             lposHAproxy.attach_ipvlan(f"lpos-ipvlan{self['number']}", pool['range_start'] + 1)
-            if docDB.get_setting('nlpt_sso'):
+            if get_use_nlpt_sso():
                 ssoHAproxy.attach_ipvlan(f"lpos-ipvlan{self['number']}", pool['range_start'] + 4)
 
         return True
