@@ -32,7 +32,6 @@ export class TablesScreenComponent implements OnInit {
   participants: Participant[] = [];
 
   selectedTable: Table | undefined;
-  absolute_seatnumbers: boolean = false;
 
   constructor(
     private errorHandler: ErrorHandlerService,
@@ -61,7 +60,6 @@ export class TablesScreenComponent implements OnInit {
       .subscribe({
         next: (system: System) => {
           this.system = system;
-          this.absolute_seatnumbers = system.seatnumbers_absolute;
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
@@ -160,19 +158,6 @@ export class TablesScreenComponent implements OnInit {
     else {
       this.selectedTable = undefined;
     }
-  }
-
-  setAbsoluteSeatnumbers(enable: boolean) {
-    this.systemService
-      .setAbsoluteSeatnumbers(enable)
-      .subscribe({
-        next: () => {
-          this.refreshSystem();
-        },
-        error: (err: HttpErrorResponse) => {
-          this.errorHandler.handleError(err);
-        }
-      })
   }
 
 }

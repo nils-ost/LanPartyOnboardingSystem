@@ -22,9 +22,6 @@ class SettingEndpoint():
                 cherrypy_cors.preflight(allowed_methods=['GET'])
                 return
             else:
-                if docDB.get_setting(setting_id) is None:
-                    cherrypy.response.status = 404
-                    return {'error': f'id {setting_id} not found'}
                 cherrypy.response.headers['Allow'] = 'OPTIONS, GET, PATCH'
                 cherrypy_cors.preflight(allowed_methods=['GET', 'PATCH'])
                 return
