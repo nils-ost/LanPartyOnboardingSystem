@@ -379,7 +379,7 @@ class SystemEndpoint():
                 from helpers.haproxy import ssoHAproxy, lposHAproxy
                 if get_use_nlpt_sso():
                     ssoHAproxy.start_container()
-                    # TODO: wait for start of container...
+                    ssoHAproxy.wait_for_running()
                     ssoHAproxy.setup_sso_ip()
                 lposHAproxy.set_ms_redirect_url()
                 cherrypy.response.status = 201

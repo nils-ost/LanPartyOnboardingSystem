@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 import logging
 import subprocess
 from helpers.docdb import docDB
@@ -126,6 +127,21 @@ class _BaseHAproxy():
             self.logger.info("container not started or can't be found")
             self.container_id = None
             return False
+
+    def wait_for_running(self, timeout=5):
+        count = 0
+        while True:
+            if count >= timeout:
+                return False
+            try:
+                s, url = self._get_api_session()
+                r = s.get(f'{url}/services/haproxy/stats/native')
+                if r.status_code == 200:
+                    return True
+                time.sleep(1)
+            except Exception:
+                time.sleep(1)
+            count += 1
 
     def attach_ipvlan(self, name, int_ip):
         from elements import IpPool
