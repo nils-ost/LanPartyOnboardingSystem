@@ -213,7 +213,7 @@ class VLAN(ElementBase):
             # specialties for play vlan
             import re
             dhcp_ip = docDB.get_setting('play_dhcp')
-            dhcp4_conf.update({'renew-timer': 3600, 'rebind-timer': 3600, 'valid-lifetime': 3600})
+            dhcp4_conf.update({'renew-timer': 1800, 'rebind-timer': 2700, 'valid-lifetime': 3600})
             dhcp4_conf['reservation-mode'] = 'global'
             dhcp4_conf['reservations'] = list()
             dhcp4_conf['option-data'].append({'name': 'domain-name-servers', 'data': docDB.get_setting('upstream_dns')})
@@ -246,7 +246,7 @@ class VLAN(ElementBase):
             dns_ip = IpPool.int_to_dotted(pool['range_start'] + 2)
             dhcp_ip = IpPool.int_to_dotted(pool['range_start'] + 3)
             lpos_domain = '.'.join([docDB.get_setting('subdomain'), docDB.get_setting('domain')])
-            dhcp4_conf.update({'renew-timer': 10, 'rebind-timer': 20, 'valid-lifetime': 20})
+            dhcp4_conf.update({'renew-timer': 10, 'rebind-timer': 20, 'valid-lifetime': 30})
             dhcp4_conf['lease-database']['lfc-interval'] = 60
             dhcp4_conf['subnet4'].append({'subnet': subnet, 'pools': [{'pool': range}]})
             dhcp4_conf['option-data'].append({'name': 'domain-name-servers', 'data': dns_ip})

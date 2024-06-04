@@ -20,7 +20,7 @@ def create_admin(c):
 
 @task(pre=[create_admin], name='create-testdata')
 def create_testdata(c):
-    from elements import VLAN, Switch, IpPool
+    from elements import VLAN, Switch, IpPool, Device
     VLAN({'number': 1, 'purpose': 3, 'desc': 'default'}).save()
     v_mgmt = VLAN({'number': 2, 'purpose': 1, 'desc': 'mgmt'})
     v_mgmt.save()
@@ -56,6 +56,8 @@ def create_testdata(c):
             'range_start': IpPool.octetts_to_int(192, 168, 0, 141), 'range_end': IpPool.octetts_to_int(192, 168, 0, 160)}).save()
     IpPool({'desc': 'additional play', 'mask': 24, 'vlan_id': v_play['_id'],
             'range_start': IpPool.octetts_to_int(192, 168, 0, 161), 'range_end': IpPool.octetts_to_int(192, 168, 0, 200)}).save()
+    if Device.get_by_mac('localhost') is None:
+        Device({'mac': 'localhost'}).save()
 
 
 @task(pre=[create_admin], name='create-nlpt')

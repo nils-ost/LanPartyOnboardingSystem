@@ -174,6 +174,14 @@
           <context context-type="linenumber">81</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
@@ -203,7 +211,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-screen/tables-screen.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelVlanDesc" datatype="html">
@@ -631,7 +639,7 @@
         <target state="signed-off">Tisch Nummer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="onboardingFieldLabelSeat" datatype="html">
@@ -639,7 +647,7 @@
         <target state="signed-off">Sitzplatz Nummer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="onboardingFieldLabelPw" datatype="html">
@@ -647,7 +655,7 @@
         <target state="signed-off">Sitzplatz Passwort</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode6" datatype="html">
@@ -655,7 +663,7 @@
         <target state="signed-off">Dein Gerät ist noch nicht bereit für das Onboarding. Bitte warten bis es vom System registriert wurde. Diese Seite lädt automatisch neu, sobald es weitergehen kann.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">173</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode7" datatype="html">
@@ -663,7 +671,7 @@
         <target state="signed-off">Deinem Gerät ist es verboten das Onboarding durchzuführen. Bitte kontaktiere einen Admin.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">174</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode8" datatype="html">
@@ -671,7 +679,7 @@
         <target state="signed-off">Ungültige Tisch Nummer. Bitte erneut versuchen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode9" datatype="html">
@@ -679,7 +687,7 @@
         <target state="signed-off">Ungültige Sitzplatz Nummer. Bitte erneut versuchen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">176</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode10" datatype="html">
@@ -687,7 +695,7 @@
         <target state="signed-off">Dieser Sitzplatz ist bereits vergeben. Bitte erneut versuchen oder einen Admin kontaktieren.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">177</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode11" datatype="html">
@@ -695,7 +703,7 @@
         <target state="signed-off">Passwort falsch. Bitte erneut versuchen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">178</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode12" datatype="html">
@@ -703,7 +711,7 @@
         <target state="signed-off">DIeser Sitzplatz ist keinem Teilnehmer zugewiesen. Bitte kontaktiere einen Admin.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">179</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode13" datatype="html">
@@ -711,7 +719,7 @@
         <target state="signed-off">Es ist etwas schief gelaufen. Bitte erneut versuchen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">180</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode14" datatype="html">
@@ -719,7 +727,7 @@
         <target state="signed-off">Bitte kontaktiere einen Admin.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">181</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCodeFallback" datatype="html">
@@ -727,7 +735,7 @@
         <target state="signed-off">Unbekannter Fehler. Bitte kontaktiere einen Admin.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelParticipantName" datatype="html">
@@ -1383,7 +1391,7 @@
         <target state="signed-off">Bitte vollständig ausfüllen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="935187492052582731" datatype="html">
@@ -1391,7 +1399,7 @@
         <target state="signed-off">Abschicken</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="onboardingWhoQuestion" datatype="html">
@@ -1399,7 +1407,7 @@
         <target state="signed-off">Bist du</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3542042671420335679" datatype="html">
@@ -1407,7 +1415,7 @@
         <target state="signed-off">Nein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2807800733729323332" datatype="html">
@@ -1415,7 +1423,7 @@
         <target state="signed-off">Ja</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2454050363478003966" datatype="html">
@@ -1884,6 +1892,70 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
           <context context-type="linenumber">491</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="onboardingIpReloadinfo3" datatype="html">
+        <source>Onboarding completed! GLHF gaming :)</source>
+        <target state="signed-off">Onboarding abgeschlossen! GLHF beim zocken :)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4284470476256399898" datatype="html">
+        <source>via nlpt.online</source>
+        <target state="signed-off">per nlpt.online</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="onboardingSSORedirectInfo" datatype="html">
+        <source>This event uses a centralized Login. Please click the following button, to start the Login process.</source>
+        <target state="signed-off">Auf dieser Veranstaltung wird ein zentrales Login verwendet. Klicke auf den folgenden Knopf um dort hin zu gelangen.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="onboardingSSOLoginButton" datatype="html">
+        <source>Open Login</source>
+        <target state="signed-off">Anmeldung öffnen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="onboardingSSOPleaseWait" datatype="html">
+        <source>System is receiving your Login data, please stand by.</source>
+        <target state="signed-off">Bite warten! System empfängt Anmeldedaten...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="OnboardingErrorCode15" datatype="html">
+        <source>Invalid Login on SSO provider.</source>
+        <target state="signed-off">Anmeldung beim zentralen Login fehlgeschlagen.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelSettingSsologinurl" datatype="html">
+        <source>SSO Login URL</source>
+        <target state="signed-off">URL SSO Anmeldung</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelSettingsSoonboardingurl" datatype="html">
+        <source>SSO Onboarding URL</source>
+        <target state="signed-off">URL SSO Onboarding</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
     </body>

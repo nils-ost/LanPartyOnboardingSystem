@@ -20,6 +20,7 @@ import { DockModule } from 'primeng/dock';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
@@ -99,7 +100,8 @@ import { SettingsScreenComponent } from './components/settings-screen/settings-s
     DockModule,
     CheckboxModule,
     ToggleButtonModule,
-    InputSwitchModule
+    InputSwitchModule,
+    ProgressSpinnerModule
   ],
   providers: [
     ConfirmationService,

@@ -6,6 +6,7 @@ import { Onboarding } from 'src/app/interfaces/onboarding';
 import { System } from 'src/app/interfaces/system';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { OnboardingService } from 'src/app/services/onboarding.service';
+import { OnlineCheckService } from 'src/app/services/online-check.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
@@ -19,6 +20,8 @@ export class OnboardingComponent implements OnInit, OnChanges, OnDestroy {
 
   refreshOnboardingTimer = timer(5000, 5000);
   refreshOnboardingTimerSubscription: Subscription | undefined;
+  onlineCheckTimer = timer(2000, 1000);
+  onlineCheckTimerSubscription: Subscription | undefined;
 
   onboarding?: Onboarding;
   absolute_seatnumbers: boolean = false;
@@ -28,10 +31,12 @@ export class OnboardingComponent implements OnInit, OnChanges, OnDestroy {
   selectedSeat: number | undefined;
   selectedPw: string | undefined;
   tokenFetched: boolean = false;
+  doneOnline: boolean = false;  // if onboarding is done and the online-check was successful, this gets true
 
   constructor(
     private errorHandler: ErrorHandlerService,
     private onboardingService: OnboardingService,
+    private onlineCheckService: OnlineCheckService,
     public utils: UtilsService
   ) {}
 
@@ -64,6 +69,7 @@ export class OnboardingComponent implements OnInit, OnChanges, OnDestroy {
             this.onboarding = onboarding;
             this.tokenFetched = true;
             this.onboardingChangeEvent.emit(this.onboarding);
+            if (onboarding.done) this.onlineCheck();
           },
           error: (err: HttpErrorResponse) => {
             this.errorHandler.handleError(err);
@@ -79,6 +85,7 @@ export class OnboardingComponent implements OnInit, OnChanges, OnDestroy {
             this.refreshOnboardingTimerSubscription?.unsubscribe();
             this.onboarding = onboarding;
             this.onboardingChangeEvent.emit(this.onboarding);
+            if (onboarding.done) this.onlineCheck();
           },
           error: (err: HttpErrorResponse) => {
             this.errorHandler.handleError(err);
@@ -103,6 +110,7 @@ export class OnboardingComponent implements OnInit, OnChanges, OnDestroy {
           next: (onboarding: Onboarding) => {
             this.onboarding = onboarding;
             this.onboardingChangeEvent.emit(this.onboarding);
+            if (onboarding.done) this.onlineCheck();
           },
           error: (err: HttpErrorResponse) => {
             this.errorHandler.handleError(err);
@@ -121,6 +129,7 @@ export class OnboardingComponent implements OnInit, OnChanges, OnDestroy {
         next: (onboarding: Onboarding) => {
           this.onboarding = onboarding;
           this.onboardingChangeEvent.emit(this.onboarding);
+          if (onboarding.done) this.onlineCheck();
         },
         error: (err: HttpErrorResponse) => {
           this.onboarding = undefined;
@@ -134,6 +143,28 @@ export class OnboardingComponent implements OnInit, OnChanges, OnDestroy {
   SSOLoginUrl(): String {
     if (this.onboarding?.login_url) return this.onboarding.login_url + window.location.href;
     else return window.location.href;
+  }
+
+  onlineCheck() {
+    console.log('online check called')
+    if (this.onlineCheckTimerSubscription == undefined) {
+      this.doneOnline = false;
+      this.onlineCheckTimerSubscription = this.onlineCheckTimer.subscribe(() => this.onlineCheck());
+      console.log('activated online check')
+      return;
+    }
+    console.log('executing online check')
+    this.onlineCheckService
+      .execute()
+      .subscribe({
+        next: () => {
+          this.onlineCheckTimerSubscription?.unsubscribe();
+          this.doneOnline = true;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
   }
 
   translateErrorCode(error: any) {
