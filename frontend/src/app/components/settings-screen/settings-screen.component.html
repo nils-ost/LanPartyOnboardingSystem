@@ -1,0 +1,40 @@
+
+<p-panel header="Absolute Seat Numbers">
+    <ng-template pTemplate="icons">
+        <p-inputSwitch [(ngModel)]="absolute_seatnumbers" />&nbsp;
+        <button pButton (click)="save_absolute_seatnumbers()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+
+    <ng-container *ngIf="!absolute_seatnumbers">
+        Currently absolut seatnumbering is disabled. The pariticipants need to provide a tablenumber and a seatnumber (on this table) while onboarding.
+    </ng-container>
+
+    <ng-container *ngIf="absolute_seatnumbers">
+        The absolute seatnumbering is now enabled. Apply a individual seatnumber for every seat to satisfy integrity checks. Partisipants then use this number during onbording.
+    </ng-container>
+</p-panel>
+
+<p-panel header="NLPT-SSO">
+    <ng-template pTemplate="icons">
+        <p-inputSwitch [(ngModel)]="nlpt_sso" />&nbsp;
+        <button pButton (click)="save_nlpt_sso()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+
+    <ng-container *ngIf="nlpt_sso">
+        <div class="field url">
+            <span class="p-float-label">
+                <input type="text" id="ssologinurl" pInputText [(ngModel)]="sso_login_url">
+                <label for="ssologinurl" i18n="@@elementFieldLabelSettingSsologinurl">SSO Login URL</label>
+            </span>
+        </div>
+
+        <div class="field url">
+            <span class="p-float-label">
+                <input type="text" id="ssoonboardingurl" pInputText [(ngModel)]="sso_onboarding_url">
+                <label for="ssoonboardingurl" i18n="@@elementFieldLabelSettingsSoonboardingurl">SSO Onboarding URL</label>
+            </span>
+        </div>
+    </ng-container>
+</p-panel>
+
+<app-menu></app-menu>

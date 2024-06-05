@@ -9,4 +9,5 @@ export interface Device {
     port_id: string | null;
     onboarding_blocked: boolean;
     pw_strikes: number;
+    last_scan_ts: number;
 }

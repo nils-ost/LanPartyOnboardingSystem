@@ -1,6 +1,3 @@
-<button *ngIf="!absolute_seatnumbers" pButton (click)="setAbsoluteSeatnumbers(true)" i18n="@@buttonSystemEnableAbsoluteSeatnumbers">Enable Absolute Seatnumbers</button>
-<button *ngIf="absolute_seatnumbers" pButton (click)="setAbsoluteSeatnumbers(false)" i18n="@@buttonSystemDisableAbsoluteSeatnumbers">Disable Absolute Seatnumbers</button>
-
 <p-panel header="Tables">
     <ng-template pTemplate="icons">
         <button pButton (click)="createtable.toggle($event)" i18n="@@buttonCreate">Create</button>

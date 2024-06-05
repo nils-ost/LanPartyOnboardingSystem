@@ -39,7 +39,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-device>
-        <tr>
+        <tr [ngClass]="{'device-offline': (currentTs - device.last_scan_ts) > 60}">
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(device, $event)"></button>
                 {{ device.desc }}

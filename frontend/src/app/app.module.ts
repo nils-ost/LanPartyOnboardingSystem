@@ -21,6 +21,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
@@ -49,6 +50,7 @@ import { MenuComponent } from './components/menu/menu.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { DevicesScreenComponent } from './components/devices-screen/devices-screen.component';
 import { DevicesListComponent } from './components/devices-list/devices-list.component';
+import { SettingsScreenComponent } from './components/settings-screen/settings-screen.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +76,8 @@ import { DevicesListComponent } from './components/devices-list/devices-list.com
     MenuComponent,
     LogoutComponent,
     DevicesScreenComponent,
-    DevicesListComponent
+    DevicesListComponent,
+    SettingsScreenComponent
   ],
   imports: [
     BrowserModule,
@@ -99,7 +102,8 @@ import { DevicesListComponent } from './components/devices-list/devices-list.com
     CheckboxModule,
     ToggleButtonModule,
     RadioButtonModule,
-    InputSwitchModule
+    InputSwitchModule,
+    ProgressSpinnerModule
   ],
   providers: [
     ConfirmationService,

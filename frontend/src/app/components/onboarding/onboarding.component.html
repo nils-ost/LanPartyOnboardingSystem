@@ -4,31 +4,37 @@
 
 <p-card styleClass="p-card-shadow" *ngIf="onboarding && onboarding.ip">
     <div class="ip_display">
-        <div class="ip_header" *ngIf="!onboarding.done">
+        <div class="ip_header" *ngIf="!onboarding.done || doneOnline">
             <ng-container i18n="@@onboardingIpHeader">Your IP is</ng-container>:
         </div>
-        <div class="ip_header" *ngIf="onboarding.done">
+        <div class="ip_header" *ngIf="onboarding.done && !doneOnline">
             <ng-container i18n="@@onboardingIpHeaderUpcoming">Your IP is going to be</ng-container>:
         </div>
         <div class="ip_ip">
             {{ utils.ip_int_to_str(onboarding.ip) }}
         </div>
-        <div *ngIf="onboarding.done" class="ip_reloadinfo" i18n="@@onboardingIpReloadinfo">
+        <div *ngIf="onboarding.done && !doneOnline" class="ip_reloadinfo" i18n="@@onboardingIpReloadinfo">
             Your onboarding is completed! It now takes up to two minutes till your PC assigns it's final IP. Refresh this page to test if the assignment is done.
         </div>
-        <div *ngIf="onboarding.done" class="ip_reloadinfo" i18n="@@onboardingIpReloadinfo2">
+        <div *ngIf="onboarding.done && !doneOnline" class="ip_reloadinfo" i18n="@@onboardingIpReloadinfo2">
             If you don't like to wait that long, you can open Windows-Commandprompt (Win+R) and type 'ipconfig /renew' this should assign your play-IP immediately.
+        </div>
+        <div *ngIf="onboarding.done && !doneOnline" class="ip_reloadinfo">
+            <p-progressSpinner ariaLabel="waiting till online" />
+        </div>
+        <div *ngIf="onboarding.done && doneOnline" class="ip_reloadinfo" i18n="@@onboardingIpReloadinfo3">
+            Onboarding completed! GLHF gaming :)
         </div>
     </div>
 </p-card>
 
-<p-card i18n-subheader header="Onboarding" subheader="via nlpt.online" styleClass="p-card-shadow" *ngIf="(onboarding && onboarding.login_url) || (sso_onboarding && !onboarding)">
+<p-card i18n-subheader header="Onboarding" subheader="via nlpt.online" styleClass="p-card-shadow" *ngIf="((onboarding && onboarding.login_url) || (sso_onboarding && !onboarding) && !tokenFetched)">
     <div class="sso_display" *ngIf="onboarding">
         <div class="sso_redirectinfo" i18n="@@onboardingSSORedirectInfo">
             This event uses a centralized Login. Please click the following button, to start the Login process.
         </div>
         <div>
-            <a href="SSOLoginUrl()" class="p-button" i18n="@@onboardingSSOLoginButton">Open Login</a>
+            <a href="{{ SSOLoginUrl() }}" class="p-button" i18n="@@onboardingSSOLoginButton">Open Login</a>
         </div>
     </div>
     <div class="sso_display" *ngIf="!onboarding">

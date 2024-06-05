@@ -1,4 +1,5 @@
 import cherrypy
+from datetime import datetime
 from elements._elementBase import ElementBase, docDB
 from MTSwitch import MikroTikSwitch
 
@@ -104,7 +105,6 @@ class Switch(ElementBase):
                 device = Device.get_by_mac(host)
                 if device is None and not p['switchlink']:
                     device = Device({'mac': host, 'port_id': p['_id']})
-                    device.save()
                     new_count += 1
                 elif device is None:
                     # skip as this is a switchlink port and regular devices are not connected on switchlink ports
@@ -112,19 +112,19 @@ class Switch(ElementBase):
                 elif p['switchlink'] and device['port_id'] is not None and device.port() == p:
                     # remove the port from this device as the current port is a switchlink port, those do not connect devices
                     device['port_id'] = None
-                    device.save()
                 elif not p['switchlink'] and device['port_id'] is None:
                     device.port(p)
-                    device.save()
                 elif not p['switchlink'] and device['port_id'] is not None and not device.port() == p:
                     other_port = device.port()
                     try:
                         other_port = switch_objects[other_port['switch_id']].ports[other_port['number']]
                         if host not in other_port.hosts or len(port.hosts) <= len(other_port.hosts):
                             device.port(p)
-                            device.save()
                     except Exception:
                         pass
+                if device is not None:
+                    device['last_scan_ts'] = int(datetime.now().timestamp())
+                    device.save()  # generic save for everything happend above
             if not switchlink == p['switchlink'] and p['switchlink_port_id'] is None:
                 p['switchlink'] = switchlink
                 p.save()

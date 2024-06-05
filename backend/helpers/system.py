@@ -179,10 +179,10 @@ def _check_integrity_tables():
         if (play_pool['range_end'] + 1 - play_pool['range_start']) < nb_seats:
             return {'code': 16, 'desc': f"not enough IPs in play-IpPool '{play_pool['desc']}' for Table '{table['number']}: {table['desc']}'"}
 
-        # check if enough IPs in onboarding IpPool (at least half number of seats plus one for LPOS)
+        # check if enough IPs in onboarding IpPool (at least half number of seats plus one for LPOS, DNS, DHCP and SSOproxy)
         ob_vlan = table.switch().onboarding_vlan()
         ob_pool = IpPool.get_by_vlan(ob_vlan['_id'])[0]
-        if (ob_pool['range_end'] + 1 - ob_pool['range_start']) < (nb_seats / 2 + 4):
+        if (ob_pool['range_end'] + 1 - ob_pool['range_start']) < (nb_seats / 2 + 5):
             return {'code': 17, 'desc': f"not enough IPs in onboarding-IpPool '{ob_pool['desc']}' for Table '{table['number']}: {table['desc']}'"}
 
     docDB.set_setting('integrity_tables', datetime.now().timestamp())
@@ -245,8 +245,8 @@ def _check_interity_settings():
         if docDB.get_setting(setting) is None:
             return {'code': 9, 'desc': f"setting '{setting}' is not defined, but it's needed"}
 
-    if docDB.get_setting('nlpt_sso'):
-        if not docDB.get_setting('absolute_seatnumbers'):
+    if get_use_nlpt_sso():
+        if not get_use_absolute_seatnumbers():
             return {'code': 19, 'desc': 'nlpt_sso is enabled but absolute_seatnumbers is disabled'}
         if docDB.get_setting('sso_login_url') is None:
             return {'code': 9, 'desc': "setting 'sso_login_url' is not defined, but it's needed"}
