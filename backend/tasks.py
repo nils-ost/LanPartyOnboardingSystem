@@ -20,7 +20,7 @@ def create_admin(c):
 
 @task(pre=[create_admin], name='create-testdata')
 def create_testdata(c):
-    from elements import VLAN, Switch, IpPool, Device
+    from elements import VLAN, Switch, IpPool, Device, Port
     VLAN({'number': 1, 'purpose': 3, 'desc': 'default'}).save()
     v_mgmt = VLAN({'number': 2, 'purpose': 1, 'desc': 'mgmt'})
     v_mgmt.save()
@@ -40,6 +40,10 @@ def create_testdata(c):
     s_t2.save()
     s_t3 = Switch({'addr': '172.16.0.13', 'user': 'admin', 'pw': 'password4', 'purpose': 1, 'onboarding_vlan_id': v_t3['_id']})
     s_t3.save()
+    for s in [s_core, s_t1, s_t2, s_t3]:
+        for i in range(12):
+            p = Port({'number': i, 'switch_id': s['_id']})
+            p.save()
     IpPool({'desc': 'switches', 'mask': 24, 'vlan_id': v_mgmt['_id'],
             'range_start': IpPool.octetts_to_int(172, 16, 0, 10), 'range_end': IpPool.octetts_to_int(172, 16, 0, 19)}).save()
     IpPool({'desc': 'onboarding table 1', 'mask': 24, 'vlan_id': v_t1['_id'],

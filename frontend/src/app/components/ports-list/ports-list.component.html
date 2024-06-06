@@ -156,6 +156,12 @@
                 </div>
                 <div class="field">
                     <span class="p-float-label">
+                        <p-multiSelect id="editVlanVlans" [options]="vlansSelectable" [(ngModel)]="vlan_config.vlans" optionLabel="label" optionValue="value"  appendTo="body" />
+                        <label for="editVlanVlans" i18n="@@elementFieldLabelPortVlanVlans">VLANs</label>
+                    </span>
+                </div>
+                <div class="field">
+                    <span class="p-float-label">
                         <p-dropdown id="editVlanReceive" [options]="vlanReceiveOptions" [(ngModel)]="vlan_config.receive" optionLabel="name" optionValue="code" appendTo="body"></p-dropdown>
                         <label for="editVlanReceive" i18n="@@elementFieldLabelPortVlanReceive">Receive</label>
                     </span>
@@ -166,6 +172,6 @@
                 </div>
             </div>
         </div>
-        <button pButton (click)="editSwitchlinkPortId()" i18n="@@buttonSave">Save</button>
+        <button pButton (click)="editVlanConfig()" i18n="@@buttonSave">Save</button>
     </ng-template>
 </p-overlayPanel>

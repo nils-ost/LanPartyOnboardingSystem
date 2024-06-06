@@ -1,10 +1,16 @@
 # Detailed information about Element-Attributes
 
+## Port.commit_disabled
+
+Boolean - default value is False
+
+If set to True this Port is not touched during commits, if it is False configuration is done according to `Port.commit_config`
+
 ## Port.commit_config
 
 This attribute can be None or dict()
 
-If it is None, this means the Port is configured automatically, if it is a dict() the config contained in the dict() is wirten to port on commit.
+If it is None, this means the Port is configured automatically, if it is a dict() the config contained in the dict() is written to port on commit.
 
 ### possible attributes in dict()
 

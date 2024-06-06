@@ -23,6 +23,7 @@ export class PortsListComponent implements OnChanges, OnInit {
   @ViewChild('editvlanconfig') editVlanConfigDialog: any;
 
   vlansNames: Map<string, string> = new Map<string, string>;
+  vlansSelectable: any[] = [];
   displayPorts: Port[] =[];
   selectedPort: Port | undefined;
   newDesc: string = "";
@@ -81,10 +82,13 @@ export class PortsListComponent implements OnChanges, OnInit {
   }
 
   refreshVlanNames() {
+    let selectables: any[] = [];
     for (let i: number = 0; i < this.vlans.length; i++) {
       let vlan = this.vlans[i];
       this.vlansNames.set(vlan.id, vlan.number + ': ' + vlan.desc);
+      selectables.push({'label': vlan.number + ': ' + vlan.desc, 'value': vlan.id})
     }
+    this.vlansSelectable = selectables;
   }
 
   editDescStart(port: Port, event: any) {
@@ -163,6 +167,27 @@ export class PortsListComponent implements OnChanges, OnInit {
     }
     else this.vlan_setting = "auto";
     this.editVlanConfigDialog.show(event);
+  }
+
+  editVlanConfig() {
+    if (this.selectedPort) {
+      let disabled: boolean = false;
+      let config: any = this.vlan_config;
+      if (this.vlan_setting != 'manual') config = null;
+      if (this.vlan_setting == 'disable') disabled = true;
+      this.portService
+        .updateCommitConfig(this.selectedPort.id, config, disabled)
+        .subscribe({
+          next: () => {
+            this.editedPortEvent.emit(null);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+          }
+        })
+    }
+    this.selectedPort = undefined;
+    this.editVlanConfigDialog.hide();
   }
 
   editCommitDisabled(port: Port, newValue: boolean) {

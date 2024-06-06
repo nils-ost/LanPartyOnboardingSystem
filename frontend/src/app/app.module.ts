@@ -22,6 +22,7 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
@@ -103,7 +104,8 @@ import { SettingsScreenComponent } from './components/settings-screen/settings-s
     ToggleButtonModule,
     RadioButtonModule,
     InputSwitchModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    MultiSelectModule
   ],
   providers: [
     ConfirmationService,
