@@ -10,7 +10,9 @@ class Port(ElementBase):
         switchlink=ElementBase.addAttr(type=bool, default=False, notnone=True),
         switchlink_port_id=ElementBase.addAttr(default=None, fk='Port'),
         commit_disabled=ElementBase.addAttr(type=bool, default=False, notnone=True),
-        commit_config=ElementBase.addAttr(type=dict, default=None)  # contains the configuration for commit_disabled ports, collected by retreat
+        retreat_disabled=ElementBase.addAttr(type=bool, default=False, notnone=True),
+        commit_config=ElementBase.addAttr(type=dict, default=None),
+        retreat_config=ElementBase.addAttr(type=dict, default=None)
     )
 
     @classmethod
@@ -65,7 +67,9 @@ class Port(ElementBase):
                 errors['switchlink_port_id'] = {'code': 93, 'desc': f"The Port '{self['switchlink_port_id']}' is not declared as a switchlink"}
         if self['switchlink']:
             self['commit_config'] = None
+            self['retreat_config'] = None
             self['commit_disabled'] = False
+            self['retreat_disabled'] = False
         if self['commit_config'] is not None:
             # enabled
             if 'enabled' not in self['commit_config'] or self['commit_config']['enabled'] is None:
@@ -107,6 +111,47 @@ class Port(ElementBase):
                         self['commit_config']['deault'] = self['commit_config']['vlans'][0]
                     if docDB.get('VLAN', self['commit_config']['deault']) is None:
                         errors['commit_config.vlans'] = {'code': 90, 'desc': f"There is no VLAN with id '{self['commit_config']['deault']}'"}
+        if self['retreat_config'] is not None:
+            # enabled
+            if 'enabled' not in self['retreat_config'] or self['retreat_config']['enabled'] is None:
+                self['retreat_config']['enabled'] = True
+            if not isinstance(self['retreat_config']['enabled'], bool):
+                errors['retreat_config.enabled'] = {'code': 3, 'desc': 'needs to be of type bool'}
+            # force
+            if 'force' not in self['retreat_config'] or self['retreat_config']['force'] is None:
+                self['retreat_config']['force'] = False
+            if not isinstance(self['retreat_config']['force'], bool):
+                errors['retreat_config.force'] = {'code': 3, 'desc': 'needs to be of type bool'}
+            # mode
+            if 'mode' not in self['retreat_config'] or self['retreat_config']['mode'] is None:
+                self['retreat_config']['mode'] = '0x01'
+            if not isinstance(self['retreat_config']['mode'], str):
+                errors['retreat_config.mode'] = {'code': 3, 'desc': 'needs to be of type str'}
+            elif self['retreat_config']['mode'] not in ['0x00', '0x01', '0x02', '0x03']:
+                valid_values = '0x00 (disabled), 0x01 (optional), 0x02 (enabled), 0x03 (strict)'
+                errors['retreat_config.mode'] = {'code': 94, 'desc': f"needs to be one of {valid_values} but is {self['retreat_config']['mode']}"}
+            # receive
+            if 'receive' not in self['retreat_config'] or self['retreat_config']['receive'] is None:
+                self['retreat_config']['receive'] = '0x00'
+            if not isinstance(self['retreat_config']['receive'], str):
+                errors['retreat_config.receive'] = {'code': 3, 'desc': 'needs to be of type str'}
+            elif self['retreat_config']['receive'] not in ['0x00', '0x01', '0x02']:
+                valid_values = '0x00 (any), 0x01 (only tagged), 0x02 (only untagged)'
+                errors['retreat_config.receive'] = {'code': 94, 'desc': f"needs to be one of {valid_values} but is {self['retreat_config']['receive']}"}
+            # vlans
+            if len(self['retreat_config']['vlans']) == 0:
+                errors['retreat_config.vlans'] = {'code': 95, 'desc': 'at least one vlan is required'}
+            else:
+                for vlan_id in self['retreat_config']['vlans']:
+                    if docDB.get('VLAN', vlan_id) is None:
+                        errors['retreat_config.vlans'] = {'code': 90, 'desc': f"There is no VLAN with id '{vlan_id}'"}
+                        break
+                else:
+                    # deault (vlan)
+                    if 'deault' not in self['retreat_config'] or self['retreat_config']['deault'] is None:
+                        self['retreat_config']['deault'] = self['retreat_config']['vlans'][0]
+                    if docDB.get('VLAN', self['retreat_config']['deault']) is None:
+                        errors['retreat_config.vlans'] = {'code': 90, 'desc': f"There is no VLAN with id '{self['retreat_config']['deault']}'"}
         return errors
 
     def save_pre(self):

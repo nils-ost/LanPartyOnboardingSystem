@@ -16,7 +16,9 @@ export interface Port {
     switchlink: boolean;
     switchlink_port_id: string | null;
     commit_disabled: boolean;
+    retreat_disabled: boolean;
     commit_config: PortCommitConfig | null;
+    retreat_config: PortCommitConfig | null;
     vlan_ids: string[];
     type: string;
     enabled: boolean;

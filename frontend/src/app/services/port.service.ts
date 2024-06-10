@@ -44,10 +44,12 @@ export class PortService {
     return this.http.patch<any>(this.portUrl + id + '/', port, {withCredentials:true});
   }
 
-  public updateCommitConfig(id: string, config: any, disabled: boolean = false): Observable<any> {
+  public updateCommitConfig(id: string, commit_config: any, retreat_config: any, commit_disabled: boolean = false, retreat_disabled: boolean = false): Observable<any> {
     let port = {
-    'commit_disabled': disabled,
-    'commit_config': config
+    'commit_disabled': commit_disabled,
+    'commit_config': commit_config,
+    'retreat_disabled': retreat_disabled,
+    'retreat_config': retreat_config
     }
     return this.http.patch<any>(this.portUrl + id + '/', port, {withCredentials:true});
   }

@@ -20,20 +20,23 @@ export class PortsListComponent implements OnChanges, OnInit {
 
   @ViewChild('editdesc') editDescDialog: any;
   @ViewChild('editswitchlinkportid') editSwitchlinkPortIdDialog: any;
-  @ViewChild('editvlanconfig') editVlanConfigDialog: any;
+  editVlanConfigDialog: boolean = false;
 
   vlansNames: Map<string, string> = new Map<string, string>;
   vlansSelectable: any[] = [];
   displayPorts: Port[] =[];
   selectedPort: Port | undefined;
+  selectedPortName: string = "";
   newDesc: string = "";
   newSwitchlinkPortId: string | null = null;
   switchlinkOptions: any[];
   vlanModeOptions: any[] = [{name: 'disabled', code: '0x00'}, {name: 'optional', code: '0x01'}, {name: 'enabled', code: '0x02'}, {name: 'strict', code: '0x03'}];
   vlanReceiveOptions: any[] = [{name: 'any', code: '0x00'}, {name: 'only tagged', code: '0x01'}, {name: 'only untagged', code: '0x02'}];
 
-  vlan_setting: string = "auto";
-  vlan_config!: PortCommitConfig;
+  vlan_commit_setting: string = "auto";
+  vlan_commit_config!: PortCommitConfig;
+  vlan_retreat_setting: string = "auto";
+  vlan_retreat_config!: PortCommitConfig;
 
   constructor(
     private errorHandler: ErrorHandlerService,
@@ -152,7 +155,8 @@ export class PortsListComponent implements OnChanges, OnInit {
 
   editVlanConfigStart(port: Port, event: any) {
     this.selectedPort = port;
-    this.vlan_config = {
+    if (this.selectedSwitch) this.selectedPortName = this.selectedSwitch.desc + ": " + port.number;
+    this.vlan_commit_config = {
       vlans: [],
       default: "",
       enabled: true,
@@ -160,23 +164,46 @@ export class PortsListComponent implements OnChanges, OnInit {
       receive: "0x00",
       force: false
     } as PortCommitConfig;
-    if (port.commit_disabled) this.vlan_setting = "disable";
+    if (port.commit_disabled) this.vlan_commit_setting = "disable";
     else if (port.commit_config) {
-      this.vlan_setting = "manual";
-      this.vlan_config = port.commit_config;
+      this.vlan_commit_setting = "manual";
+      this.vlan_commit_config = port.commit_config;
     }
-    else this.vlan_setting = "auto";
-    this.editVlanConfigDialog.show(event);
+    else this.vlan_commit_setting = "auto";
+    this.vlan_retreat_config = {
+      vlans: [],
+      default: "",
+      enabled: true,
+      mode: "0x01",
+      receive: "0x00",
+      force: false
+    } as PortCommitConfig;
+    if (port.retreat_disabled) this.vlan_retreat_setting = "disable";
+    else if (port.retreat_config) {
+      this.vlan_retreat_setting = "manual";
+      this.vlan_retreat_config = port.retreat_config;
+    }
+    else this.vlan_retreat_setting = "auto";
+    this.editVlanConfigDialog = true;
+  }
+
+  editVlanConfigAbort() {
+    this.selectedPort = undefined;
+    this.selectedPortName = "";
   }
 
   editVlanConfig() {
     if (this.selectedPort) {
-      let disabled: boolean = false;
-      let config: any = this.vlan_config;
-      if (this.vlan_setting != 'manual') config = null;
-      if (this.vlan_setting == 'disable') disabled = true;
+      let commit_disabled: boolean = false;
+      let commit_config: any = this.vlan_commit_config;
+      if (this.vlan_commit_setting != 'manual') commit_config = null;
+      if (this.vlan_commit_setting == 'disable') commit_disabled = true;
+      let retreat_disabled: boolean = false;
+      let retreat_config: any = this.vlan_retreat_config;
+      if (this.vlan_retreat_setting != 'manual') retreat_config = null;
+      if (this.vlan_retreat_setting == 'disable') retreat_disabled = true;
       this.portService
-        .updateCommitConfig(this.selectedPort.id, config, disabled)
+        .updateCommitConfig(this.selectedPort.id, commit_config, retreat_config, commit_disabled, retreat_disabled)
         .subscribe({
           next: () => {
             this.editedPortEvent.emit(null);
@@ -187,7 +214,7 @@ export class PortsListComponent implements OnChanges, OnInit {
         })
     }
     this.selectedPort = undefined;
-    this.editVlanConfigDialog.hide();
+    this.editVlanConfigDialog = false;
   }
 
   editCommitDisabled(port: Port, newValue: boolean) {

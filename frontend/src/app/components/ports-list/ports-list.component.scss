@@ -7,3 +7,15 @@
     margin-top: 0.4em;
     padding-bottom: 0.3em;
 }
+
+.content-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2em;
+}
+
+.content-column {
+    display: flex;
+    flex-direction: column;
+}
