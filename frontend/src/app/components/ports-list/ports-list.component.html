@@ -10,7 +10,7 @@
                 <p-sortIcon field="desc"></p-sortIcon>
             </th>
             <th pSortableColumn="commit_disabled">
-                <ng-container i18n="@@elementFieldLabelPortCommitDisabled">Commit Disabled</ng-container>
+                <ng-container i18n="@@elementFieldLabelPortManualConfig">Config</ng-container>
                 <p-sortIcon field="commit_disabled"></p-sortIcon>
             </th>
             <th pSortableColumn="participants">
@@ -51,13 +51,11 @@
             </td>
             <td>
                 <ng-container *ngIf="!port.switchlink; else notChangeableCommitDisabled">
-                    <button *ngIf="port.commit_disabled" pButton type="button" class="p-button-outlined p-button-success" icon="pi pi-check" (click)="editCommitDisabled(port, false)"></button>
-                    <button *ngIf="!port.commit_disabled" pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="editCommitDisabled(port, true)"></button>
+                    <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editVlanConfigStart(port, $event)"></button>
                 </ng-container>
                 <ng-template #notChangeableCommitDisabled>
-                    <i *ngIf="!port.participants" class="pi pi-times" style="color: var(--danger-color)"></i>
+                    <i *ngIf="!port.participants" class="pi pi-pencil" style="color: var(--danger-color)"></i>
                 </ng-template>
-                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editVlanConfigStart(port, $event)"></button>
             </td>
             <td>
                 <ng-container *ngIf="selectedSwitch && selectedSwitch.purpose == 2 || !port.switchlink; else notChangeableParticipants">
@@ -152,7 +150,7 @@
                     </div>
                     <div class="field">
                         <span class="p-float-label">
-                            <p-dropdown id="editCommitVlanMode" [options]="vlanModeOptions" [(ngModel)]="vlan_commit_config.mode" optionLabel="name" optionValue="code" appendTo="body"></p-dropdown>
+                            <p-dropdown id="editCommitVlanMode" [options]="vlanModeOptions" [(ngModel)]="vlan_commit_config.mode" appendTo="body"></p-dropdown>
                             <label for="editCommitVlanMode" i18n="@@elementFieldLabelPortVlanMode">Mode</label>
                         </span>
                     </div>
@@ -170,7 +168,7 @@
                     </div>
                     <div class="field">
                         <span class="p-float-label">
-                            <p-dropdown id="editCommitVlanReceive" [options]="vlanReceiveOptions" [(ngModel)]="vlan_commit_config.receive" optionLabel="name" optionValue="code" appendTo="body"></p-dropdown>
+                            <p-dropdown id="editCommitVlanReceive" [options]="vlanReceiveOptions" [(ngModel)]="vlan_commit_config.receive" appendTo="body"></p-dropdown>
                             <label for="editCommitVlanReceive" i18n="@@elementFieldLabelPortVlanReceive">Receive</label>
                         </span>
                     </div>
@@ -201,7 +199,7 @@
                     </div>
                     <div class="field">
                         <span class="p-float-label">
-                            <p-dropdown id="editRetreatVlanMode" [options]="vlanModeOptions" [(ngModel)]="vlan_retreat_config.mode" optionLabel="name" optionValue="code" appendTo="body"></p-dropdown>
+                            <p-dropdown id="editRetreatVlanMode" [options]="vlanModeOptions" [(ngModel)]="vlan_retreat_config.mode" appendTo="body"></p-dropdown>
                             <label for="editRetreatVlanMode" i18n="@@elementFieldLabelPortVlanMode">Mode</label>
                         </span>
                     </div>
@@ -219,7 +217,7 @@
                     </div>
                     <div class="field">
                         <span class="p-float-label">
-                            <p-dropdown id="editRetreatVlanReceive" [options]="vlanReceiveOptions" [(ngModel)]="vlan_retreat_config.receive" optionLabel="name" optionValue="code" appendTo="body"></p-dropdown>
+                            <p-dropdown id="editRetreatVlanReceive" [options]="vlanReceiveOptions" [(ngModel)]="vlan_retreat_config.receive" appendTo="body"></p-dropdown>
                             <label for="editRetreatVlanReceive" i18n="@@elementFieldLabelPortVlanReceive">Receive</label>
                         </span>
                     </div>

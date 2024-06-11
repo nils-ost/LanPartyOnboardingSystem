@@ -83,19 +83,19 @@ class Port(ElementBase):
                 errors['commit_config.force'] = {'code': 3, 'desc': 'needs to be of type bool'}
             # mode
             if 'mode' not in self['commit_config'] or self['commit_config']['mode'] is None:
-                self['commit_config']['mode'] = '0x01'
+                self['commit_config']['mode'] = 'optional'
             if not isinstance(self['commit_config']['mode'], str):
                 errors['commit_config.mode'] = {'code': 3, 'desc': 'needs to be of type str'}
-            elif self['commit_config']['mode'] not in ['0x00', '0x01', '0x02', '0x03']:
-                valid_values = '0x00 (disabled), 0x01 (optional), 0x02 (enabled), 0x03 (strict)'
+            elif self['commit_config']['mode'] not in ['disabled', 'optional', 'enabled', 'strict']:
+                valid_values = 'disabled, optional, enabled, strict'
                 errors['commit_config.mode'] = {'code': 94, 'desc': f"needs to be one of {valid_values} but is {self['commit_config']['mode']}"}
             # receive
             if 'receive' not in self['commit_config'] or self['commit_config']['receive'] is None:
-                self['commit_config']['receive'] = '0x00'
+                self['commit_config']['receive'] = 'any'
             if not isinstance(self['commit_config']['receive'], str):
                 errors['commit_config.receive'] = {'code': 3, 'desc': 'needs to be of type str'}
-            elif self['commit_config']['receive'] not in ['0x00', '0x01', '0x02']:
-                valid_values = '0x00 (any), 0x01 (only tagged), 0x02 (only untagged)'
+            elif self['commit_config']['receive'] not in ['any', 'only tagged', 'only untagged']:
+                valid_values = 'any, only tagged, only untagged'
                 errors['commit_config.receive'] = {'code': 94, 'desc': f"needs to be one of {valid_values} but is {self['commit_config']['receive']}"}
             # vlans
             if len(self['commit_config']['vlans']) == 0:
@@ -124,19 +124,19 @@ class Port(ElementBase):
                 errors['retreat_config.force'] = {'code': 3, 'desc': 'needs to be of type bool'}
             # mode
             if 'mode' not in self['retreat_config'] or self['retreat_config']['mode'] is None:
-                self['retreat_config']['mode'] = '0x01'
+                self['retreat_config']['mode'] = 'optional'
             if not isinstance(self['retreat_config']['mode'], str):
                 errors['retreat_config.mode'] = {'code': 3, 'desc': 'needs to be of type str'}
-            elif self['retreat_config']['mode'] not in ['0x00', '0x01', '0x02', '0x03']:
-                valid_values = '0x00 (disabled), 0x01 (optional), 0x02 (enabled), 0x03 (strict)'
+            elif self['retreat_config']['mode'] not in ['disabled', 'optional', 'enabled', 'strict']:
+                valid_values = 'disabled, optional, enabled, strict'
                 errors['retreat_config.mode'] = {'code': 94, 'desc': f"needs to be one of {valid_values} but is {self['retreat_config']['mode']}"}
             # receive
             if 'receive' not in self['retreat_config'] or self['retreat_config']['receive'] is None:
                 self['retreat_config']['receive'] = '0x00'
             if not isinstance(self['retreat_config']['receive'], str):
                 errors['retreat_config.receive'] = {'code': 3, 'desc': 'needs to be of type str'}
-            elif self['retreat_config']['receive'] not in ['0x00', '0x01', '0x02']:
-                valid_values = '0x00 (any), 0x01 (only tagged), 0x02 (only untagged)'
+            elif self['retreat_config']['receive'] not in ['any', 'only tagged', 'only untagged']:
+                valid_values = 'any, only tagged, only untagged'
                 errors['retreat_config.receive'] = {'code': 94, 'desc': f"needs to be one of {valid_values} but is {self['retreat_config']['receive']}"}
             # vlans
             if len(self['retreat_config']['vlans']) == 0:

@@ -30,8 +30,8 @@ export class PortsListComponent implements OnChanges, OnInit {
   newDesc: string = "";
   newSwitchlinkPortId: string | null = null;
   switchlinkOptions: any[];
-  vlanModeOptions: any[] = [{name: 'disabled', code: '0x00'}, {name: 'optional', code: '0x01'}, {name: 'enabled', code: '0x02'}, {name: 'strict', code: '0x03'}];
-  vlanReceiveOptions: any[] = [{name: 'any', code: '0x00'}, {name: 'only tagged', code: '0x01'}, {name: 'only untagged', code: '0x02'}];
+  vlanModeOptions: string[] = ['disabled', 'optional', 'enabled', 'strict'];
+  vlanReceiveOptions: string[] = ['any', 'only tagged', 'only untagged'];
 
   vlansSelectable: any[] = [];
   vlansCommitDefaultSelectable: any[] = [];
@@ -164,8 +164,8 @@ export class PortsListComponent implements OnChanges, OnInit {
       vlans: [],
       default: "",
       enabled: true,
-      mode: "0x01",
-      receive: "0x00",
+      mode: "optional",
+      receive: "any",
       force: false
     } as PortCommitConfig;
     if (port.commit_disabled) this.vlan_commit_setting = "disable";
@@ -178,8 +178,8 @@ export class PortsListComponent implements OnChanges, OnInit {
       vlans: [],
       default: "",
       enabled: true,
-      mode: "0x01",
-      receive: "0x00",
+      mode: "optional",
+      receive: "any",
       force: false
     } as PortCommitConfig;
     if (port.retreat_disabled) this.vlan_retreat_setting = "disable";
@@ -245,19 +245,6 @@ export class PortsListComponent implements OnChanges, OnInit {
       else this.vlan_retreat_config.default = this.vlan_retreat_config.vlans[0];
     }
     this.vlansRetreatDefaultSelectable = selectables;
-  }
-
-  editCommitDisabled(port: Port, newValue: boolean) {
-    this.portService
-      .updateCommitDisabled(port.id, newValue)
-      .subscribe({
-        next: (response: any) => {
-          this.editedPortEvent.emit(null);
-        },
-        error: (err: HttpErrorResponse) => {
-          this.errorHandler.handleError(err);
-        }
-      })
   }
 
   switchlinkById(id: string | null) {
