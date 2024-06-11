@@ -158,8 +158,14 @@
                     </div>
                     <div class="field">
                         <span class="p-float-label">
-                            <p-multiSelect id="editCommitVlanVlans" [options]="vlansSelectable" [(ngModel)]="vlan_commit_config.vlans" optionLabel="label" optionValue="value"  appendTo="body" />
+                            <p-multiSelect id="editCommitVlanVlans" [options]="vlansSelectable" [(ngModel)]="vlan_commit_config.vlans" optionLabel="label" optionValue="value" (onChange)="commitVlansChanged()"  appendTo="body" />
                             <label for="editCommitVlanVlans" i18n="@@elementFieldLabelPortVlanVlans">VLANs</label>
+                        </span>
+                    </div>
+                    <div class="field">
+                        <span class="p-float-label">
+                            <p-dropdown id="editCommitVlanDefault" [options]="vlansCommitDefaultSelectable" [(ngModel)]="vlan_commit_config.default" optionLabel="label" optionValue="value" appendTo="body"></p-dropdown>
+                            <label for="editCommitVlanDefault" i18n="@@elementFieldLabelPortVlanDefault">Default</label>
                         </span>
                     </div>
                     <div class="field">
@@ -201,8 +207,14 @@
                     </div>
                     <div class="field">
                         <span class="p-float-label">
-                            <p-multiSelect id="editRetreatVlanVlans" [options]="vlansSelectable" [(ngModel)]="vlan_retreat_config.vlans" optionLabel="label" optionValue="value"  appendTo="body" />
+                            <p-multiSelect id="editRetreatVlanVlans" [options]="vlansSelectable" [(ngModel)]="vlan_retreat_config.vlans" optionLabel="label" optionValue="value" (onChange)="retreatVlansChanged()" appendTo="body" />
                             <label for="editRetreatVlanVlans" i18n="@@elementFieldLabelPortVlanVlans">VLANs</label>
+                        </span>
+                    </div>
+                    <div class="field">
+                        <span class="p-float-label">
+                            <p-dropdown id="editRetreatVlanDefault" [options]="vlansRetreatDefaultSelectable" [(ngModel)]="vlan_retreat_config.default" optionLabel="label" optionValue="value" appendTo="body"></p-dropdown>
+                            <label for="editRetreatVlanDefault" i18n="@@elementFieldLabelPortVlanDefault">Default</label>
                         </span>
                     </div>
                     <div class="field">
