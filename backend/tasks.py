@@ -32,13 +32,13 @@ def create_testdata(c):
     v_t2.save()
     v_t3 = VLAN({'number': 6, 'purpose': 2, 'desc': 'table 3'})
     v_t3.save()
-    s_core = Switch({'addr': '172.16.0.10', 'user': 'admin', 'pw': 'password1', 'purpose': 0})
+    s_core = Switch({'desc': 'C1', 'addr': '172.16.0.10', 'user': 'admin', 'pw': 'password1', 'purpose': 0})
     s_core.save()
-    s_t1 = Switch({'addr': '172.16.0.11', 'user': 'admin', 'pw': 'password2', 'purpose': 2, 'onboarding_vlan_id': v_t1['_id']})
+    s_t1 = Switch({'desc': 'M1', 'addr': '172.16.0.11', 'user': 'admin', 'pw': 'password2', 'purpose': 2, 'onboarding_vlan_id': v_t1['_id']})
     s_t1.save()
-    s_t2 = Switch({'addr': '172.16.0.12', 'user': 'admin', 'pw': 'password3', 'purpose': 1, 'onboarding_vlan_id': v_t2['_id']})
+    s_t2 = Switch({'desc': 'P2', 'addr': '172.16.0.12', 'user': 'admin', 'pw': 'password3', 'purpose': 1, 'onboarding_vlan_id': v_t2['_id']})
     s_t2.save()
-    s_t3 = Switch({'addr': '172.16.0.13', 'user': 'admin', 'pw': 'password4', 'purpose': 1, 'onboarding_vlan_id': v_t3['_id']})
+    s_t3 = Switch({'desc': 'P3', 'addr': '172.16.0.13', 'user': 'admin', 'pw': 'password4', 'purpose': 1, 'onboarding_vlan_id': v_t3['_id']})
     s_t3.save()
     for s in [s_core, s_t1, s_t2, s_t3]:
         for i in range(12):
