@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { Port, PortCommitConfig } from 'src/app/interfaces/port';
 import { Switch } from 'src/app/interfaces/switch';
-import { Vlan } from 'src/app/interfaces/vlan';
+import { Vlan, VlanPurposeType } from 'src/app/interfaces/vlan';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { PortService } from 'src/app/services/port.service';
 
@@ -34,10 +34,12 @@ export class PortsListComponent implements OnChanges, OnInit {
   vlanReceiveOptions: string[] = ['any', 'only tagged', 'only untagged'];
 
   vlansSelectable: any[] = [];
+  vlansOtherSelectable: any[] = [];
   vlansCommitDefaultSelectable: any[] = [];
   vlansRetreatDefaultSelectable: any[] = [];
   vlan_commit_setting: string = "auto";
   vlan_commit_config!: PortCommitConfig;
+  vlan_commit_other_vlans: string[] = [];
   vlan_retreat_setting: string = "auto";
   vlan_retreat_config!: PortCommitConfig;
 
@@ -89,13 +91,16 @@ export class PortsListComponent implements OnChanges, OnInit {
 
   refreshVlanNames() {
     let selectables: any[] = [];
+    let others: any[] = [];
     for (let i: number = 0; i < this.vlans.length; i++) {
       let vlan = this.vlans[i];
       this.vlansNames.set(vlan.id, vlan.number + ': ' + vlan.desc);
       this.vlansById.set(vlan.id, vlan);
       selectables.push({'label': vlan.number + ': ' + vlan.desc, 'value': vlan.id})
+      if (vlan.purpose == VlanPurposeType.other) others.push({'label': vlan.number + ': ' + vlan.desc, 'value': vlan.id})
     }
     this.vlansSelectable = selectables;
+    this.vlansOtherSelectable = others;
   }
 
   editDescStart(port: Port, event: any) {
@@ -168,10 +173,14 @@ export class PortsListComponent implements OnChanges, OnInit {
       receive: "any",
       force: false
     } as PortCommitConfig;
+    this.vlan_commit_other_vlans = [];
     if (port.commit_disabled) this.vlan_commit_setting = "disable";
     else if (port.commit_config) {
       this.vlan_commit_setting = "manual";
-      this.vlan_commit_config = port.commit_config;
+      if (port.switchlink) {
+        if ("other_vlans" in port.commit_config) this.vlan_commit_other_vlans = port.commit_config.other_vlans;
+      }
+      else this.vlan_commit_config = port.commit_config;
     }
     else this.vlan_commit_setting = "auto";
     this.vlan_retreat_config = {
@@ -200,6 +209,7 @@ export class PortsListComponent implements OnChanges, OnInit {
     if (this.selectedPort) {
       let commit_disabled: boolean = false;
       let commit_config: any = this.vlan_commit_config;
+      if (this.selectedPort.switchlink) commit_config = {'other_vlans': this.vlan_commit_other_vlans};
       if (this.vlan_commit_setting != 'manual') commit_config = null;
       if (this.vlan_commit_setting == 'disable') commit_disabled = true;
       let retreat_disabled: boolean = false;

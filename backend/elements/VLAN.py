@@ -45,9 +45,18 @@ class VLAN(ElementBase):
             return {'error': {'code': 1, 'desc': 'at least one IpPool is using this VLAN'}}
         if docDB.search_one('Switch', {'onboarding_vlan_id': self['_id']}) is not None:
             return {'error': {'code': 4, 'desc': 'at least one Switch is using this VLAN'}}
-        from elements import Switch
+        from elements import Switch, Port
         for switch in Switch.all():
             switch.remove_vlan(self['number'])
+        for port in Port.all():
+            if port['commit_config'] is not None or port['retreat_config'] is not None:
+                if port['commit_config'] is not None and 'vlans' in port['commit_config'] and self['_id'] in port['commit_config']['vlans']:
+                    port['commit_config']['vlans'].remove(self['_id'])
+                if port['commit_config'] is not None and 'other_vlans' in port['commit_config'] and self['_id'] in port['commit_config']['other_vlans']:
+                    port['commit_config']['other_vlans'].remove(self['_id'])
+                if port['retreat_config'] is not None and 'vlans' in port['retreat_config'] and self['_id'] in port['retreat_config']['vlans']:
+                    port['retreat_config']['vlans'].remove(self['_id'])
+                port.save()
 
     def commit_os_interface(self):
         from elements import IpPool

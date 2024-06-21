@@ -50,21 +50,18 @@
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(port, $event)"></button>
             </td>
             <td>
-                <ng-container *ngIf="!port.switchlink; else notChangeableCommitDisabled">
+                <ng-container>
                     <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editVlanConfigStart(port, $event)"></button>
                 </ng-container>
-                <ng-template #notChangeableCommitDisabled>
-                    <i *ngIf="!port.participants" class="pi pi-pencil" style="color: var(--danger-color)"></i>
-                </ng-template>
             </td>
             <td>
-                <ng-container *ngIf="selectedSwitch && selectedSwitch.purpose == 2 || !port.switchlink; else notChangeableParticipants">
+                <ng-container *ngIf="selectedSwitch && selectedSwitch.purpose == 2 && !port.switchlink; else notChangeableParticipants">
                     <button *ngIf="port.participants" pButton type="button" class="p-button-outlined p-button-success" icon="pi pi-check" (click)="editParticipants(port, false)"></button>
                     <button *ngIf="!port.participants" pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="editParticipants(port, true)"></button>
                 </ng-container>
                 <ng-template #notChangeableParticipants>
-                    <i *ngIf="port.participants" class="pi pi-check" style="color: var(--success-color)"></i>
-                    <i *ngIf="!port.participants" class="pi pi-times" style="color: var(--danger-color)"></i>
+                    <button *ngIf="port.participants" pButton type="button" class="p-button-outlined p-button-success" icon="pi pi-check" [disabled]="true"></button>
+                    <button *ngIf="!port.participants" pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" [disabled]="true"></button>
                 </ng-template>
             </td>
             <td>{{ port.type }}</td>
@@ -129,7 +126,26 @@
 <p-dialog [(visible)]="editVlanConfigDialog" (onHide)="editVlanConfigAbort()" [header]="selectedPortName" [modal]="true" [dismissableMask]="true">
     <ng-template pTemplate>
         <div class="content-row">
-            <div class="content-column">
+            <div *ngIf="selectedPort!.switchlink" class="content-column">
+                <b>Commit</b>
+                <div class="field-checkbox">
+                    <p-radioButton name="vlan_commit_setting" value="auto" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting1" />
+                    <label for="vlancommitsetting1" class="ml-2">Auto</label>
+                </div>
+                <div class="field-checkbox">
+                    <p-radioButton name="vlan_commit_setting" value="manual" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting3" />
+                    <label for="vlancommitsetting3" class="ml-2">Manual</label>
+                </div>
+                <div *ngIf="vlan_commit_setting == 'manual'" class="field">
+                    <div class="field">
+                        <span class="p-float-label">
+                            <p-multiSelect id="editCommitVlanOtherVlans" [options]="vlansOtherSelectable" [(ngModel)]="vlan_commit_other_vlans" optionLabel="label" optionValue="value" appendTo="body" />
+                            <label for="editCommitVlanOtherVlans" i18n="@@elementFieldLabelPortVlanOtherVlans">Other VLANs</label>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!selectedPort!.switchlink" class="content-column">
                 <b>Commit</b>
                 <div class="field-checkbox">
                     <p-radioButton name="vlan_commit_setting" value="auto" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting1" />

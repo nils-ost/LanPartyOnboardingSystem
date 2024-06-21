@@ -65,52 +65,54 @@ class Port(ElementBase):
                 errors['switchlink_port_id'] = {'code': 90, 'desc': f"There is no Port with id '{self['switchlink_port_id']}'"}
             elif not fromdb['switchlink']:
                 errors['switchlink_port_id'] = {'code': 93, 'desc': f"The Port '{self['switchlink_port_id']}' is not declared as a switchlink"}
-        if self['switchlink']:
-            self['commit_config'] = None
-            self['retreat_config'] = None
-            self['commit_disabled'] = False
-            self['retreat_disabled'] = False
         if self['commit_config'] is not None:
-            # enabled
-            if 'enabled' not in self['commit_config'] or self['commit_config']['enabled'] is None:
-                self['commit_config']['enabled'] = True
-            if not isinstance(self['commit_config']['enabled'], bool):
-                errors['commit_config.enabled'] = {'code': 3, 'desc': 'needs to be of type bool'}
-            # force
-            if 'force' not in self['commit_config'] or self['commit_config']['force'] is None:
-                self['commit_config']['force'] = False
-            if not isinstance(self['commit_config']['force'], bool):
-                errors['commit_config.force'] = {'code': 3, 'desc': 'needs to be of type bool'}
-            # mode
-            if 'mode' not in self['commit_config'] or self['commit_config']['mode'] is None:
-                self['commit_config']['mode'] = 'optional'
-            if not isinstance(self['commit_config']['mode'], str):
-                errors['commit_config.mode'] = {'code': 3, 'desc': 'needs to be of type str'}
-            elif self['commit_config']['mode'] not in ['disabled', 'optional', 'enabled', 'strict']:
-                valid_values = 'disabled, optional, enabled, strict'
-                errors['commit_config.mode'] = {'code': 94, 'desc': f"needs to be one of {valid_values} but is {self['commit_config']['mode']}"}
-            # receive
-            if 'receive' not in self['commit_config'] or self['commit_config']['receive'] is None:
-                self['commit_config']['receive'] = 'any'
-            if not isinstance(self['commit_config']['receive'], str):
-                errors['commit_config.receive'] = {'code': 3, 'desc': 'needs to be of type str'}
-            elif self['commit_config']['receive'] not in ['any', 'only tagged', 'only untagged']:
-                valid_values = 'any, only tagged, only untagged'
-                errors['commit_config.receive'] = {'code': 94, 'desc': f"needs to be one of {valid_values} but is {self['commit_config']['receive']}"}
-            # vlans
-            if len(self['commit_config']['vlans']) == 0:
-                errors['commit_config.vlans'] = {'code': 95, 'desc': 'at least one vlan is required'}
-            else:
-                for vlan_id in self['commit_config']['vlans']:
+            if self['switchlink']:
+                # other_vlans
+                for vlan_id in self['commit_config'].get('other_vlans', list()):
                     if docDB.get('VLAN', vlan_id) is None:
-                        errors['commit_config.vlans'] = {'code': 90, 'desc': f"There is no VLAN with id '{vlan_id}'"}
+                        errors['commit_config.other_vlans'] = {'code': 90, 'desc': f"There is no VLAN with id '{vlan_id}'"}
                         break
+            else:
+                # enabled
+                if 'enabled' not in self['commit_config'] or self['commit_config']['enabled'] is None:
+                    self['commit_config']['enabled'] = True
+                if not isinstance(self['commit_config']['enabled'], bool):
+                    errors['commit_config.enabled'] = {'code': 3, 'desc': 'needs to be of type bool'}
+                # force
+                if 'force' not in self['commit_config'] or self['commit_config']['force'] is None:
+                    self['commit_config']['force'] = False
+                if not isinstance(self['commit_config']['force'], bool):
+                    errors['commit_config.force'] = {'code': 3, 'desc': 'needs to be of type bool'}
+                # mode
+                if 'mode' not in self['commit_config'] or self['commit_config']['mode'] is None:
+                    self['commit_config']['mode'] = 'optional'
+                if not isinstance(self['commit_config']['mode'], str):
+                    errors['commit_config.mode'] = {'code': 3, 'desc': 'needs to be of type str'}
+                elif self['commit_config']['mode'] not in ['disabled', 'optional', 'enabled', 'strict']:
+                    valid_values = 'disabled, optional, enabled, strict'
+                    errors['commit_config.mode'] = {'code': 94, 'desc': f"needs to be one of {valid_values} but is {self['commit_config']['mode']}"}
+                # receive
+                if 'receive' not in self['commit_config'] or self['commit_config']['receive'] is None:
+                    self['commit_config']['receive'] = 'any'
+                if not isinstance(self['commit_config']['receive'], str):
+                    errors['commit_config.receive'] = {'code': 3, 'desc': 'needs to be of type str'}
+                elif self['commit_config']['receive'] not in ['any', 'only tagged', 'only untagged']:
+                    valid_values = 'any, only tagged, only untagged'
+                    errors['commit_config.receive'] = {'code': 94, 'desc': f"needs to be one of {valid_values} but is {self['commit_config']['receive']}"}
+                # vlans
+                if len(self['commit_config'].get('vlans', list())) == 0:
+                    errors['commit_config.vlans'] = {'code': 95, 'desc': 'at least one vlan is required'}
                 else:
-                    # deault (vlan)
-                    if 'deault' not in self['commit_config'] or self['commit_config']['deault'] is None:
-                        self['commit_config']['deault'] = self['commit_config']['vlans'][0]
-                    if docDB.get('VLAN', self['commit_config']['deault']) is None:
-                        errors['commit_config.vlans'] = {'code': 90, 'desc': f"There is no VLAN with id '{self['commit_config']['deault']}'"}
+                    for vlan_id in self['commit_config']['vlans']:
+                        if docDB.get('VLAN', vlan_id) is None:
+                            errors['commit_config.vlans'] = {'code': 90, 'desc': f"There is no VLAN with id '{vlan_id}'"}
+                            break
+                    else:
+                        # deault (vlan)
+                        if 'deault' not in self['commit_config'] or self['commit_config']['deault'] is None:
+                            self['commit_config']['deault'] = self['commit_config']['vlans'][0]
+                        if docDB.get('VLAN', self['commit_config']['deault']) is None:
+                            errors['commit_config.vlans'] = {'code': 90, 'desc': f"There is no VLAN with id '{self['commit_config']['deault']}'"}
         if self['retreat_config'] is not None:
             # enabled
             if 'enabled' not in self['retreat_config'] or self['retreat_config']['enabled'] is None:
@@ -139,7 +141,7 @@ class Port(ElementBase):
                 valid_values = 'any, only tagged, only untagged'
                 errors['retreat_config.receive'] = {'code': 94, 'desc': f"needs to be one of {valid_values} but is {self['retreat_config']['receive']}"}
             # vlans
-            if len(self['retreat_config']['vlans']) == 0:
+            if len(self['retreat_config'].get('vlans', list())) == 0:
                 errors['retreat_config.vlans'] = {'code': 95, 'desc': 'at least one vlan is required'}
             else:
                 for vlan_id in self['retreat_config']['vlans']:
@@ -161,6 +163,10 @@ class Port(ElementBase):
             self._cache['switchlink_port_id_fromdb'] = docDB.get(self.__class__.__name__, self['_id'])['switchlink_port_id']
         if self['switchlink']:
             self['participants'] = False
+            self['commit_disabled'] = False
+            self['retreat_disabled'] = False
+            if self['commit_config'] is not None and 'other_vlans' not in self['commit_config']:
+                self['commit_config'] = None
         else:
             self['switchlink_port_id'] = None
             switch = docDB.get('Switch', self['switch_id'])
@@ -168,6 +174,8 @@ class Port(ElementBase):
                 self['participants'] = False
             elif switch['purpose'] == 1:
                 self['participants'] = True
+            if self['commit_config'] is not None and 'other_vlans' in self['commit_config']:
+                self['commit_config'] = None
 
     def save_post(self):
         if self._cache['switchlink_port_id_fromdb'] is not None and not self['switchlink_port_id'] == self._cache['switchlink_port_id_fromdb']:

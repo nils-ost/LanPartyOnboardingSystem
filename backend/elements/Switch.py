@@ -414,6 +414,10 @@ class Switch(ElementBase):
                 for vlan_nb in [VLAN.get(vlan_id)['number'] for vlan_id in port['commit_config'].get('vlans', list())]:
                     if vlan_nb not in extra_vlans:
                         extra_vlans.append(vlan_nb)
+            if 'other_vlans' in port['commit_config']:
+                for vlan_nb in [VLAN.get(vlan_id)['number'] for vlan_id in port['commit_config']['other_vlans']]:
+                    if vlan_nb not in extra_vlans:
+                        extra_vlans.append(vlan_nb)
         for vlan_nb in extra_vlans:
             swi.vlanAddit(vlan=vlan_nb)
 
@@ -467,6 +471,11 @@ class Switch(ElementBase):
                     sw = Switch.get(switch_id)
                     if sw['onboarding_vlan_id'] is not None:
                         swi.vlanEdit(sw.onboarding_vlan()['number'], memberAdd=idx)
+                # add other-VLANs if present
+                if 'other_vlans' in port['commit_config']:
+                    for ovlan in port['commit_config']['other_vlans']:
+                        ovlan_nb = VLAN.get(ovlan)['number']
+                        swi.vlanEdit(ovlan_nb, memberAdd=idx)
             elif port['commit_disabled']:
                 # skip disabled ports
                 continue
