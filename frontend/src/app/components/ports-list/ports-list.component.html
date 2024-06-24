@@ -200,7 +200,7 @@
                     <p-radioButton name="vlan_retreat_setting" value="auto" [(ngModel)]="vlan_retreat_setting" inputId="vlanretreatsetting1" />
                     <label for="vlanretreatsetting1" class="ml-2">Auto</label>
                 </div>
-                <div class="field-checkbox">
+                <div class="field-checkbox" *ngIf="!selectedPort!.switchlink">
                     <p-radioButton name="vlan_retreat_setting" value="disable" [(ngModel)]="vlan_retreat_setting" inputId="vlanretreatsetting2" />
                     <label for="vlanretreatsetting2" class="ml-2">Exclude</label>
                 </div>

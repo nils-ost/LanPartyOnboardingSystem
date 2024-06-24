@@ -189,6 +189,10 @@ class Port(ElementBase):
             slp.save()
         if self._cache['switchlink_port_id_fromdb'] is not None and self['switchlink_port_id'] is None and self['switchlink']:
             self.switch().scan_devices()
+        if slp is not None and (not slp['commit_config'] == self['commit_config'] or not slp['retreat_config'] == self['retreat_config']):
+            slp['commit_config'] = self['commit_config']
+            slp['retreat_config'] = self['retreat_config']
+            slp.save()
 
     def delete_post(self):
         slp = self.switchlink_port()
