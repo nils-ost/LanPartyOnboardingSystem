@@ -50,9 +50,21 @@
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(port, $event)"></button>
             </td>
             <td>
-                <ng-container>
-                    <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editVlanConfigStart(port, $event)"></button>
-                </ng-container>
+                <div class="table-cell">
+                    <ng-container>
+                        <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editVlanConfigStart(port, $event)"></button>
+                    </ng-container>
+                    <ng-container>
+                        <i *ngIf="!port.commit_disabled && port.commit_config == null" class="pi pi-play-circle" style="color: 'var(--success-color)'" i18n-pTooltip="@@tooltipCommitAuto" pTooltip="Commit: Auto"></i>
+                        <i *ngIf="port.commit_disabled" class="pi pi-ban" style="color: 'var(--danger-color)'" i18n-pTooltip="@@tooltipCommitExclude" pTooltip="Commit: Exclude"></i>
+                        <i *ngIf="!port.commit_disabled && port.commit_config != null"class="pi pi-bullseye" style="color: 'var(--warning-color)'" i18n-pTooltip="@@tooltipCommitManual" pTooltip="Commit: Manual"></i>
+                    </ng-container>
+                    <ng-container>
+                        <i *ngIf="!port.retreat_disabled && port.retreat_config == null" class="pi pi-play-circle" style="color: 'var(--success-color)'" i18n-pTooltip="@@tooltipRetreatAuto" pTooltip="Retreat: Auto"></i>
+                        <i *ngIf="port.retreat_disabled" class="pi pi-ban" style="color: 'var(--danger-color)'" i18n-pTooltip="@@tooltipRetreatExclude" pTooltip="Retreat: Exclude"></i>
+                        <i *ngIf="!port.retreat_disabled && port.retreat_config != null"class="pi pi-bullseye" style="color: 'var(--warning-color)'" i18n-pTooltip="@@tooltipRetreatManual" pTooltip="Retreat: Manual"></i>
+                    </ng-container>
+                </div>
             </td>
             <td>
                 <ng-container *ngIf="selectedSwitch && selectedSwitch.purpose == 2 && !port.switchlink; else notChangeableParticipants">
@@ -127,14 +139,14 @@
     <ng-template pTemplate>
         <div class="content-row">
             <div *ngIf="selectedPort!.switchlink" class="content-column">
-                <b>Commit</b>
+                <b i18n="@@titlelabelCommit">Commit</b>
                 <div class="field-checkbox">
                     <p-radioButton name="vlan_commit_setting" value="auto" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting1" />
-                    <label for="vlancommitsetting1" class="ml-2">Auto</label>
+                    <label for="vlancommitsetting1" class="ml-2" i18n="@@labelVlanConfigAuto">Auto</label>
                 </div>
                 <div class="field-checkbox">
                     <p-radioButton name="vlan_commit_setting" value="manual" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting3" />
-                    <label for="vlancommitsetting3" class="ml-2">Manual</label>
+                    <label for="vlancommitsetting3" class="ml-2" i18n="@@labelVlanConfigManual">Manual</label>
                 </div>
                 <div *ngIf="vlan_commit_setting == 'manual'" class="field">
                     <div class="field">
@@ -146,18 +158,18 @@
                 </div>
             </div>
             <div *ngIf="!selectedPort!.switchlink" class="content-column">
-                <b>Commit</b>
+                <b i18n="@@titlelabelCommit">Commit</b>
                 <div class="field-checkbox">
                     <p-radioButton name="vlan_commit_setting" value="auto" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting1" />
-                    <label for="vlancommitsetting1" class="ml-2">Auto</label>
+                    <label for="vlancommitsetting1" class="ml-2" i18n="@@labelVlanConfigAuto">Auto</label>
                 </div>
                 <div class="field-checkbox">
                     <p-radioButton name="vlan_commit_setting" value="disable" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting2" />
-                    <label for="vlancommitsetting2" class="ml-2">Exclude</label>
+                    <label for="vlancommitsetting2" class="ml-2" i18n="@@labelVlanConfigExclude">Exclude</label>
                 </div>
                 <div class="field-checkbox">
                     <p-radioButton name="vlan_commit_setting" value="manual" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting3" />
-                    <label for="vlancommitsetting3" class="ml-2">Manual</label>
+                    <label for="vlancommitsetting3" class="ml-2" i18n="@@labelVlanConfigManual">Manual</label>
                 </div>
                 <div *ngIf="vlan_commit_setting == 'manual'" class="field">
                     <div class="field">
@@ -195,18 +207,18 @@
                 </div>
             </div>
             <div class="content-column">
-                <b>Retreat</b>
+                <b i18n="@@titlelabelRetreat">Retreat</b>
                 <div class="field-checkbox">
                     <p-radioButton name="vlan_retreat_setting" value="auto" [(ngModel)]="vlan_retreat_setting" inputId="vlanretreatsetting1" />
-                    <label for="vlanretreatsetting1" class="ml-2">Auto</label>
+                    <label for="vlanretreatsetting1" class="ml-2" i18n="@@labelVlanConfigAuto">Auto</label>
                 </div>
                 <div class="field-checkbox" *ngIf="!selectedPort!.switchlink">
                     <p-radioButton name="vlan_retreat_setting" value="disable" [(ngModel)]="vlan_retreat_setting" inputId="vlanretreatsetting2" />
-                    <label for="vlanretreatsetting2" class="ml-2">Exclude</label>
+                    <label for="vlanretreatsetting2" class="ml-2" i18n="@@labelVlanConfigExclude">Exclude</label>
                 </div>
                 <div class="field-checkbox">
                     <p-radioButton name="vlan_retreat_setting" value="manual" [(ngModel)]="vlan_retreat_setting" inputId="vlanretreatsetting3" />
-                    <label for="vlanretreatsetting3" class="ml-2">Manual</label>
+                    <label for="vlanretreatsetting3" class="ml-2" i18n="@@labelVlanConfigManual">Manual</label>
                 </div>
                 <div *ngIf="vlan_retreat_setting == 'manual'" class="field">
                     <div class="field">
