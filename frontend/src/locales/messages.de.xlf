@@ -155,11 +155,15 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">247</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/seats-list/seats-list.component.html</context>
@@ -859,7 +863,7 @@
         <target state="signed-off">Beschreibung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">107</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
@@ -927,7 +931,7 @@
         <target state="signed-off">SWlink Port</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">119</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSeatTableId" datatype="html">
@@ -1956,6 +1960,94 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
           <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPortManualConfig" datatype="html">
+        <source>Config</source>
+        <target state="signed-off">Konfiguration</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPortVlanOtherVlans" datatype="html">
+        <source>Other VLANs</source>
+        <target state="signed-off">Andere VLANs</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPortVlanEnabled" datatype="html">
+        <source>Enabled</source>
+        <target state="signed-off">Aktiviert</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">165</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">214</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPortVlanMode" datatype="html">
+        <source>Mode</source>
+        <target state="signed-off">Modus</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">219</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPortVlanVlans" datatype="html">
+        <source>VLANs</source>
+        <target state="signed-off">VLANs</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">225</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPortVlanDefault" datatype="html">
+        <source>Default</source>
+        <target state="signed-off">Standard</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">231</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPortVlanReceive" datatype="html">
+        <source>Receive</source>
+        <target state="signed-off">Empfang</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPortVlanForce" datatype="html">
+        <source>Force</source>
+        <target state="signed-off">Erzwingen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">242</context>
         </context-group>
       </trans-unit>
     </body>

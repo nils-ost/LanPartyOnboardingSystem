@@ -452,57 +452,60 @@ class Switch(ElementBase):
         lpos_port = Port.get_lpos()
 
         for idx in range(len(swi.ports)):
+            vlans_needed = list()
             port = Port.get_by_number(self['_id'], idx)
             if port == lpos_port:
                 # add mgmt- and play-VLAN
-                swi.vlanEdit(mgmt_vlan_nb, memberAdd=idx)
-                swi.vlanEdit(play_vlan_nb, memberAdd=idx)
+                vlans_needed.append(mgmt_vlan_nb)
+                vlans_needed.append(play_vlan_nb)
                 # add all onboarding-VLANs
                 for switch_id in switch_restart_order(self['_id']):
                     sw = Switch.get(switch_id)
                     if sw['onboarding_vlan_id'] is not None:
-                        swi.vlanEdit(sw.onboarding_vlan()['number'], memberAdd=idx)
+                        vlans_needed.append(sw.onboarding_vlan()['number'])
             elif port['switchlink']:
                 # add mgmt- and play-VLAN
-                swi.vlanEdit(mgmt_vlan_nb, memberAdd=idx)
-                swi.vlanEdit(play_vlan_nb, memberAdd=idx)
+                vlans_needed.append(mgmt_vlan_nb)
+                vlans_needed.append(play_vlan_nb)
                 # add subsequent onboarding-VLANs
                 for switch_id in switch_restart_order(port.switchlink_port().switch()):
                     sw = Switch.get(switch_id)
                     if sw['onboarding_vlan_id'] is not None:
-                        swi.vlanEdit(sw.onboarding_vlan()['number'], memberAdd=idx)
+                        vlans_needed.append(sw.onboarding_vlan()['number'])
                 # add other-VLANs if present
                 if 'other_vlans' in port['commit_config']:
                     for ovlan in port['commit_config']['other_vlans']:
                         ovlan_nb = VLAN.get(ovlan)['number']
-                        swi.vlanEdit(ovlan_nb, memberAdd=idx)
+                        vlans_needed.append(ovlan_nb)
             elif port['commit_disabled']:
                 # skip disabled ports
                 continue
             elif port['commit_config'] is not None:
                 # apply manual port configuration
-                for swi_vlan in swi.vlans:  # remove all VLANs (just in case)
-                    swi.vlanEdit(swi_vlan.id, memberRemove=idx)
                 for vlan in [VLAN.get(vlan_id) for vlan_id in port['commit_config'].get('vlans')]:  # add manual configured VLANs
-                    swi.vlanEdit(vlan['number'], memberAdd=idx)
+                    vlans_needed.append(vlan['number'])
             elif onboarding_vlan_nb is None:
                 # this is an core Switch, all not switchlinks get the play-VLAN
-                swi.vlanEdit(play_vlan_nb, memberAdd=idx)
+                vlans_needed.append(play_vlan_nb)
             elif not port['participants']:
                 # not designated to participants, gets play-VLAN but not onboarding-VLAN
-                swi.vlanEdit(play_vlan_nb, memberAdd=idx)
-                swi.vlanEdit(onboarding_vlan_nb, memberRemove=idx)
+                vlans_needed.append(play_vlan_nb)
             else:
                 for device in Device.get_by_port(port['_id']):
                     if device['ip'] is not None:
                         # a valid configured Device is connected to this Port, therefor give it access to play-VLAN
-                        swi.vlanEdit(play_vlan_nb, memberAdd=idx)
-                        swi.vlanEdit(onboarding_vlan_nb, memberRemove=idx)
+                        vlans_needed.append(play_vlan_nb)
                         break
                 else:
                     # no configured Device on this Port, connect it to the onboarding-VLAN
-                    swi.vlanEdit(play_vlan_nb, memberRemove=idx)
-                    swi.vlanEdit(onboarding_vlan_nb, memberAdd=idx)
+                    vlans_needed.append(onboarding_vlan_nb)
+
+            # Finally remove deprecated VLANs from port and add neeed ones
+            for vlan_nb in [vlan.id for vlan in swi.portVLANs(idx)]:
+                if vlan_nb not in vlans_needed:
+                    swi.vlanEdit(vlan=vlan_nb, memberRemove=idx)
+            for vlan_nb in vlans_needed:
+                swi.vlanEdit(vlan=vlan_nb, memberAdd=idx)
 
         swi.commitNeeded()
         swi.reloadAll()

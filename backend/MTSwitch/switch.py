@@ -437,6 +437,22 @@ class MikroTikSwitch():
             else:
                 self.logger.error('portEdit: vforce needs to instance of bool')
 
+    def portVLANs(self, port):
+        if isinstance(port, SwitchPort):
+            port = port.idx
+        elif not isinstance(port, int):
+            self.logger.error('portVLANs: port needs to be an instance of int or SwitchPort')
+            return
+        if port not in range(len(self.ports)):
+            self.logger.error(f'portVLANs: index {port} not in range of available ports')
+            return
+
+        result = list()
+        for vlan in self.vlans:
+            if port in vlan._member:
+                result.append(vlan)
+        return result
+
     def vlanEdit(self, vlan, isolation=None, learning=None, mirror=None, igmp=None, memberAdd=None, memberRemove=None):
         if isinstance(vlan, SwitchVLAN):
             vlan = vlan.id
