@@ -195,10 +195,12 @@ class Port(ElementBase):
             slp.save()
 
     def delete_post(self):
+        from elements import PortConfigCache
         slp = self.switchlink_port()
         if slp is not None:
             slp['switchlink_port_id'] = None
             slp.save()
+        PortConfigCache.delete_by_port(self['_id'])
 
     def vlan_ids(self):
         from elements.Switch import switch_objects

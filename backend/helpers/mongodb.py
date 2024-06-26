@@ -96,6 +96,9 @@ class mongoDB(object):
     def delete(self, where, what_id):
         self.coll(where).delete_one({'_id': what_id})
 
+    def delete_many(self, where, what):
+        self.coll(where).delete_many(what)
+
     def sum(self, where, what_field, what_filter=None):
         pipeline = list()
         if what_filter is not None:
