@@ -116,3 +116,21 @@ class Device(ElementBase):
             elif self['ip'] < ippool['range_start'] or self['ip'] > ippool['range_end']:
                 errors['ip'] = {'code': 64, 'desc': 'not in range of IpPool'}
         return errors
+
+    def save_pre(self):
+        if self['_id'] is None:
+            self._cache['port_id_fromdb'] = None
+        else:
+            self._cache['port_id_fromdb'] = docDB.get(self.__class__.__name__, self['_id'])['port_id']
+
+    def save_post(self):
+        from elements import PortConfigCache
+        if self._cache['port_id_fromdb'] is not None:
+            PortConfigCache.delete_by_port(self._cache['port_id_fromdb'])
+        if self['port_id'] is not None:
+            PortConfigCache.delete_by_port(self['port_id'])
+
+    def delete_post(self):
+        from elements import PortConfigCache
+        if self['port_id'] is not None:
+            PortConfigCache.delete_by_port(self['port_id'])

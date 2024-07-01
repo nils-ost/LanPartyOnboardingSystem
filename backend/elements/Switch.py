@@ -40,16 +40,16 @@ class Switch(ElementBase):
             self['onboarding_vlan_id'] = None
 
     def save_post(self):
+        from elements import Port
         global switch_objects
         test_suite = 'environment' in cherrypy.config and cherrypy.config['environment'] == 'test_suite'
         if not test_suite:
             switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
         self.scan_vlans()
-        if self.scan_ports() == 0:
-            from elements import Port
-            for p in docDB.search_many('Port', {'switch_id': self['_id']}):
-                port = Port(p)
-                port.save()
+        self.scan_ports()
+        for p in docDB.search_many('Port', {'switch_id': self['_id']}):
+            port = Port(p)
+            port.save()  # also automatically deletes corresponding PortConfigCache
 
     def delete_pre(self):
         if docDB.search_one('Table', {'switch_id': self['_id']}) is not None:

@@ -40,6 +40,11 @@ class VLAN(ElementBase):
                 errors['purpose'] = {'code': 12, 'desc': f"values 0 and 1 need to be unique, but element with value {self['purpose']} allready present"}
         return errors
 
+    def save_post(self):
+        from elements import Port, PortConfigCache
+        for p in Port.all():
+            PortConfigCache.delete_by_port(p['_id'])
+
     def delete_pre(self):
         if docDB.search_one('IpPool', {'vlan_id': self['_id']}) is not None:
             return {'error': {'code': 1, 'desc': 'at least one IpPool is using this VLAN'}}
@@ -57,6 +62,11 @@ class VLAN(ElementBase):
                 if port['retreat_config'] is not None and 'vlans' in port['retreat_config'] and self['_id'] in port['retreat_config']['vlans']:
                     port['retreat_config']['vlans'].remove(self['_id'])
                 port.save()
+
+    def delete_post():
+        from elements import Port, PortConfigCache
+        for p in Port.all():
+            PortConfigCache.delete_by_port(p['_id'])
 
     def commit_os_interface(self):
         from elements import IpPool

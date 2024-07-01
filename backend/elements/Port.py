@@ -178,6 +178,7 @@ class Port(ElementBase):
                 self['commit_config'] = None
 
     def save_post(self):
+        from elements import PortConfigCache
         if self._cache['switchlink_port_id_fromdb'] is not None and not self['switchlink_port_id'] == self._cache['switchlink_port_id_fromdb']:
             oslp = Port.get(self._cache['switchlink_port_id_fromdb'])
             if oslp['switchlink_port_id'] == self['_id']:
@@ -193,6 +194,7 @@ class Port(ElementBase):
             slp['commit_config'] = self['commit_config']
             slp['retreat_config'] = self['retreat_config']
             slp.save()
+        PortConfigCache.delete_by_port(self['_id'])
 
     def delete_post(self):
         from elements import PortConfigCache
