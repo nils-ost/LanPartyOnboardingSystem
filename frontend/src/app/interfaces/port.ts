@@ -7,6 +7,16 @@ export interface PortCommitConfig {
     force: boolean;
 }
 
+export interface PortConfigCache {
+    isolate: boolean;
+    vlan_ids: string[];
+    default_vlan_id: string | null;
+    enabled: boolean;
+    mode: string;
+    receive: string;
+    force: boolean;
+}
+
 export interface Port {
     id: string;
     number: number;
@@ -24,4 +34,6 @@ export interface Port {
     enabled: boolean;
     link: boolean;
     speed: string;
+    calculated_commit_config: PortConfigCache;
+    calculated_retreat_config: PortConfigCache;
 }

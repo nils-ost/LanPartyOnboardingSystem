@@ -259,10 +259,16 @@ class Port(ElementBase):
         return self.switch().scanned_port_hosts(self['number'])
 
     def json(self):
+        from elements import PortConfigCache
         result = super().json()
         result['vlan_ids'] = self.vlan_ids()
         result['type'] = self.type()
         result['enabled'] = self.enabled()
         result['link'] = self.link()
         result['speed'] = self.speed()
+        result['calculated_commit_config'] = PortConfigCache.get_by_port(port_id=self['_id'], scope=0).json()
+        result['calculated_retreat_config'] = PortConfigCache.get_by_port(port_id=self['_id'], scope=1).json()
+        for k in ['_id', 'port_id', 'scope']:
+            result['calculated_commit_config'].pop(k, None)
+            result['calculated_retreat_config'].pop(k, None)
         return result
