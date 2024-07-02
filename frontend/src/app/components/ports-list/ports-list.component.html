@@ -9,9 +9,9 @@
                 <ng-container i18n="@@elementFieldLabelPortDesc">Description</ng-container>
                 <p-sortIcon field="desc"></p-sortIcon>
             </th>
-            <th pSortableColumn="commit_disabled">
+            <th pSortableColumn="manual_config">
                 <ng-container i18n="@@elementFieldLabelPortManualConfig">Config</ng-container>
-                <p-sortIcon field="commit_disabled"></p-sortIcon>
+                <p-sortIcon field="manual_config"></p-sortIcon>
             </th>
             <th pSortableColumn="participants">
                 <ng-container i18n="@@elementFieldLabelPortParticipants">Participants</ng-container>
@@ -38,7 +38,13 @@
                 <p-sortIcon field="switchlink"></p-sortIcon>
             </th>
             <th>
-                <ng-container i18n="@@elementFieldLabelPortVlanIds">Vlans</ng-container>
+                <ng-container i18n="@@elementFieldLabelPortVlanIds">VLANs</ng-container>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelPortCommitVlanIds">Commit VLANs</ng-container>
+            </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelPortRetreatVlanIds">Retreat VLANs</ng-container>
             </th>
         </tr>
     </ng-template>
@@ -106,6 +112,12 @@
             </td>
             <td>
                 <li *ngFor="let vlan_id of port.vlan_ids">{{ vlansNames.get(vlan_id) }}</li>
+            </td>
+            <td>
+                <li *ngFor="let vlan_id of port.calculated_commit_config.vlan_ids" style="{{ port.calculated_commit_config.receive == 'only untagged' || (port.calculated_commit_config.receive == 'any' && port.calculated_commit_config.default_vlan_id == vlan_id) ? 'color: green' : 'color: red' }}">{{ vlansNames.get(vlan_id) }}</li>
+            </td>
+            <td>
+                <li *ngFor="let vlan_id of port.calculated_retreat_config.vlan_ids" style="{{ port.calculated_retreat_config.receive == 'only untagged' || (port.calculated_retreat_config.receive == 'any' && port.calculated_retreat_config.default_vlan_id == vlan_id) ? 'color: green' : 'color: red' }}">{{ vlansNames.get(vlan_id) }}</li>
             </td>
         </tr>
     </ng-template>

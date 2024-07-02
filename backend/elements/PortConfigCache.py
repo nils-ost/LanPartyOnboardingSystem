@@ -44,6 +44,8 @@ class PortConfigCache(ElementBase):
             swi = switch_objects.get(pcc.port()['switch_id'], None)
             if swi is None:
                 return
+            if not swi.connected:
+                return
             swi_port = swi.ports[pcc.port()['number']]
             pcc['enabled'] = swi_port.enabled
             pcc['mode'] = swi_port.vlan_mode
@@ -118,7 +120,7 @@ class PortConfigCache(ElementBase):
             elif manual_config is not None:
                 # apply manual Port configuration
                 take_manual_config(self, manual_config)
-            elif self.port()['onboarding_vlan_id'] is None:
+            elif self.port().switch()['onboarding_vlan_id'] is None:
                 # Port is part of a core Switch, all not switchlinks get the play-VLAN
                 for vlan in VLAN.get_by_purpose(0):
                     self['vlan_ids'].append(vlan['_id'])
