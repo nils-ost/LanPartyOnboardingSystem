@@ -3,27 +3,23 @@
     padding-bottom: 1em;
 }
 
-.field-checkbox {
-    margin-top: 0.4em;
-    padding-bottom: 0.3em;
-}
-
-.content-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 2em;
-}
-
-.content-column {
-    display: flex;
-    flex-direction: column;
-}
-
 .table-cell {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
     gap: 0.5em;
+}
+
+.table-cell-list {
+    display: flex;
+    flex-direction: column;
+
+    .vlan-t {
+        color: var(--danger-color);
+    }
+
+    .vlan-u {
+        color: var(--success-color);
+    }
 }

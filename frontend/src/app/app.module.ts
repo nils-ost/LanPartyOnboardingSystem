@@ -52,6 +52,7 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { DevicesScreenComponent } from './components/devices-screen/devices-screen.component';
 import { DevicesListComponent } from './components/devices-list/devices-list.component';
 import { SettingsScreenComponent } from './components/settings-screen/settings-screen.component';
+import { VlanConfigEditComponent } from './components/vlan-config-edit/vlan-config-edit.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { SettingsScreenComponent } from './components/settings-screen/settings-s
     LogoutComponent,
     DevicesScreenComponent,
     DevicesListComponent,
-    SettingsScreenComponent
+    SettingsScreenComponent,
+    VlanConfigEditComponent
   ],
   imports: [
     BrowserModule,

@@ -114,10 +114,14 @@
                 <li *ngFor="let vlan_id of port.vlan_ids">{{ vlansNames.get(vlan_id) }}</li>
             </td>
             <td>
-                <li *ngFor="let vlan_id of port.calculated_commit_config.vlan_ids" style="{{ port.calculated_commit_config.receive == 'only untagged' || (port.calculated_commit_config.receive == 'any' && port.calculated_commit_config.default_vlan_id == vlan_id) ? 'color: green' : 'color: red' }}">{{ vlansNames.get(vlan_id) }}</li>
+                <div class="table-cell-list">
+                    <div *ngFor="let vlan_id of port.calculated_commit_config.vlan_ids" [ngClass]="port.calculated_commit_config.receive == 'only untagged' || (port.calculated_commit_config.receive == 'any' && port.calculated_commit_config.default_vlan_id == vlan_id) ? 'vlan-u' : 'vlan-t'">{{ vlansNames.get(vlan_id) }}</div>
+                </div>
             </td>
             <td>
-                <li *ngFor="let vlan_id of port.calculated_retreat_config.vlan_ids" style="{{ port.calculated_retreat_config.receive == 'only untagged' || (port.calculated_retreat_config.receive == 'any' && port.calculated_retreat_config.default_vlan_id == vlan_id) ? 'color: green' : 'color: red' }}">{{ vlansNames.get(vlan_id) }}</li>
+                <div class="table-cell-list">
+                    <div *ngFor="let vlan_id of port.calculated_retreat_config.vlan_ids" [ngClass]="port.calculated_retreat_config.receive == 'only untagged' || (port.calculated_retreat_config.receive == 'any' && port.calculated_retreat_config.default_vlan_id == vlan_id) ? 'vlan-u' : 'vlan-t'">{{ vlansNames.get(vlan_id) }}</div>
+                </div>
             </td>
         </tr>
     </ng-template>
@@ -148,126 +152,5 @@
 </p-overlayPanel>
 
 <p-dialog [(visible)]="editVlanConfigDialog" (onHide)="editVlanConfigAbort()" [header]="selectedPortName" [modal]="true" [dismissableMask]="true">
-    <ng-template pTemplate>
-        <div class="content-row">
-            <div *ngIf="selectedPort!.switchlink" class="content-column">
-                <b i18n="@@titlelabelCommit">Commit</b>
-                <div class="field-checkbox">
-                    <p-radioButton name="vlan_commit_setting" value="auto" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting1" />
-                    <label for="vlancommitsetting1" class="ml-2" i18n="@@labelVlanConfigAuto">Auto</label>
-                </div>
-                <div class="field-checkbox">
-                    <p-radioButton name="vlan_commit_setting" value="manual" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting3" />
-                    <label for="vlancommitsetting3" class="ml-2" i18n="@@labelVlanConfigManual">Manual</label>
-                </div>
-                <div *ngIf="vlan_commit_setting == 'manual'" class="field">
-                    <div class="field">
-                        <span class="p-float-label">
-                            <p-multiSelect id="editCommitVlanOtherVlans" [options]="vlansOtherSelectable" [(ngModel)]="vlan_commit_other_vlans" optionLabel="label" optionValue="value" appendTo="body" />
-                            <label for="editCommitVlanOtherVlans" i18n="@@elementFieldLabelPortVlanOtherVlans">Other VLANs</label>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="!selectedPort!.switchlink" class="content-column">
-                <b i18n="@@titlelabelCommit">Commit</b>
-                <div class="field-checkbox">
-                    <p-radioButton name="vlan_commit_setting" value="auto" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting1" />
-                    <label for="vlancommitsetting1" class="ml-2" i18n="@@labelVlanConfigAuto">Auto</label>
-                </div>
-                <div class="field-checkbox">
-                    <p-radioButton name="vlan_commit_setting" value="disable" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting2" />
-                    <label for="vlancommitsetting2" class="ml-2" i18n="@@labelVlanConfigExclude">Exclude</label>
-                </div>
-                <div class="field-checkbox">
-                    <p-radioButton name="vlan_commit_setting" value="manual" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting3" />
-                    <label for="vlancommitsetting3" class="ml-2" i18n="@@labelVlanConfigManual">Manual</label>
-                </div>
-                <div *ngIf="vlan_commit_setting == 'manual'" class="field">
-                    <div class="field">
-                        <p-inputSwitch id="editCommitVlanEnabled" [(ngModel)]="vlan_commit_config.enabled" />
-                        <label for="editCommitVlanEnabled" i18n="@@elementFieldLabelPortVlanEnabled">Enabled</label>
-                    </div>
-                    <div class="field">
-                        <span class="p-float-label">
-                            <p-dropdown id="editCommitVlanMode" [options]="vlanModeOptions" [(ngModel)]="vlan_commit_config.mode" appendTo="body"></p-dropdown>
-                            <label for="editCommitVlanMode" i18n="@@elementFieldLabelPortVlanMode">Mode</label>
-                        </span>
-                    </div>
-                    <div class="field">
-                        <span class="p-float-label">
-                            <p-multiSelect id="editCommitVlanVlans" [options]="vlansSelectable" [(ngModel)]="vlan_commit_config.vlans" optionLabel="label" optionValue="value" (onChange)="commitVlansChanged()"  appendTo="body" />
-                            <label for="editCommitVlanVlans" i18n="@@elementFieldLabelPortVlanVlans">VLANs</label>
-                        </span>
-                    </div>
-                    <div class="field">
-                        <span class="p-float-label">
-                            <p-dropdown id="editCommitVlanDefault" [options]="vlansCommitDefaultSelectable" [(ngModel)]="vlan_commit_config.default" optionLabel="label" optionValue="value" appendTo="body"></p-dropdown>
-                            <label for="editCommitVlanDefault" i18n="@@elementFieldLabelPortVlanDefault">Default</label>
-                        </span>
-                    </div>
-                    <div class="field">
-                        <span class="p-float-label">
-                            <p-dropdown id="editCommitVlanReceive" [options]="vlanReceiveOptions" [(ngModel)]="vlan_commit_config.receive" appendTo="body"></p-dropdown>
-                            <label for="editCommitVlanReceive" i18n="@@elementFieldLabelPortVlanReceive">Receive</label>
-                        </span>
-                    </div>
-                    <div class="field">
-                        <p-inputSwitch id="editCommitVlanForce" [(ngModel)]="vlan_commit_config.force" />
-                        <label for="editCommitVlanForce" i18n="@@elementFieldLabelPortVlanForce">Force</label>
-                    </div>
-                </div>
-            </div>
-            <div class="content-column">
-                <b i18n="@@titlelabelRetreat">Retreat</b>
-                <div class="field-checkbox">
-                    <p-radioButton name="vlan_retreat_setting" value="auto" [(ngModel)]="vlan_retreat_setting" inputId="vlanretreatsetting1" />
-                    <label for="vlanretreatsetting1" class="ml-2" i18n="@@labelVlanConfigAuto">Auto</label>
-                </div>
-                <div class="field-checkbox" *ngIf="!selectedPort!.switchlink">
-                    <p-radioButton name="vlan_retreat_setting" value="disable" [(ngModel)]="vlan_retreat_setting" inputId="vlanretreatsetting2" />
-                    <label for="vlanretreatsetting2" class="ml-2" i18n="@@labelVlanConfigExclude">Exclude</label>
-                </div>
-                <div class="field-checkbox">
-                    <p-radioButton name="vlan_retreat_setting" value="manual" [(ngModel)]="vlan_retreat_setting" inputId="vlanretreatsetting3" />
-                    <label for="vlanretreatsetting3" class="ml-2" i18n="@@labelVlanConfigManual">Manual</label>
-                </div>
-                <div *ngIf="vlan_retreat_setting == 'manual'" class="field">
-                    <div class="field">
-                        <p-inputSwitch id="editRetreatVlanEnabled" [(ngModel)]="vlan_retreat_config.enabled" />
-                        <label for="editRetreatVlanEnabled" i18n="@@elementFieldLabelPortVlanEnabled">Enabled</label>
-                    </div>
-                    <div class="field">
-                        <span class="p-float-label">
-                            <p-dropdown id="editRetreatVlanMode" [options]="vlanModeOptions" [(ngModel)]="vlan_retreat_config.mode" appendTo="body"></p-dropdown>
-                            <label for="editRetreatVlanMode" i18n="@@elementFieldLabelPortVlanMode">Mode</label>
-                        </span>
-                    </div>
-                    <div class="field">
-                        <span class="p-float-label">
-                            <p-multiSelect id="editRetreatVlanVlans" [options]="vlansSelectable" [(ngModel)]="vlan_retreat_config.vlans" optionLabel="label" optionValue="value" (onChange)="retreatVlansChanged()" appendTo="body" />
-                            <label for="editRetreatVlanVlans" i18n="@@elementFieldLabelPortVlanVlans">VLANs</label>
-                        </span>
-                    </div>
-                    <div class="field">
-                        <span class="p-float-label">
-                            <p-dropdown id="editRetreatVlanDefault" [options]="vlansRetreatDefaultSelectable" [(ngModel)]="vlan_retreat_config.default" optionLabel="label" optionValue="value" appendTo="body"></p-dropdown>
-                            <label for="editRetreatVlanDefault" i18n="@@elementFieldLabelPortVlanDefault">Default</label>
-                        </span>
-                    </div>
-                    <div class="field">
-                        <span class="p-float-label">
-                            <p-dropdown id="editRetreatVlanReceive" [options]="vlanReceiveOptions" [(ngModel)]="vlan_retreat_config.receive" appendTo="body"></p-dropdown>
-                            <label for="editRetreatVlanReceive" i18n="@@elementFieldLabelPortVlanReceive">Receive</label>
-                        </span>
-                    </div>
-                    <div class="field">
-                        <p-inputSwitch id="editRetreatVlanForce" [(ngModel)]="vlan_retreat_config.force" />
-                        <label for="editRetreatVlanForce" i18n="@@elementFieldLabelPortVlanForce">Force</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <button pButton (click)="editVlanConfig()" i18n="@@buttonSave">Save</button>
-    </ng-template>
+    <app-vlan-config-edit [selectedPort]="selectedPort" [vlans]="vlans" (editedPortEvent)="editVlanConfigEnd()"></app-vlan-config-edit>
 </p-dialog>
