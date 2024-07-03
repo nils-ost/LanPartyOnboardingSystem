@@ -37,19 +37,12 @@ export class PortService {
     return this.http.patch<any>(this.portUrl + id + '/', port, {withCredentials:true});
   }
 
-  public updateCommitDisabled(id: string, disabled: boolean): Observable<any> {
+  public updateVlanConfig(id: string, commit_config: any, retreat_config: any, commit_disabled: boolean = false, retreat_disabled: boolean = false): Observable<any> {
     let port = {
-      'commit_disabled': disabled
-    }
-    return this.http.patch<any>(this.portUrl + id + '/', port, {withCredentials:true});
-  }
-
-  public updateCommitConfig(id: string, commit_config: any, retreat_config: any, commit_disabled: boolean = false, retreat_disabled: boolean = false): Observable<any> {
-    let port = {
-    'commit_disabled': commit_disabled,
-    'commit_config': commit_config,
-    'retreat_disabled': retreat_disabled,
-    'retreat_config': retreat_config
+      'commit_disabled': commit_disabled,
+      'commit_config': commit_config,
+      'retreat_disabled': retreat_disabled,
+      'retreat_config': retreat_config
     }
     return this.http.patch<any>(this.portUrl + id + '/', port, {withCredentials:true});
   }

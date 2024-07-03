@@ -88,4 +88,12 @@ export class DeviceService {
   public deleteDevice(id: string): Observable<any> {
     return this.http.delete<any>(this.deviceUrl + id + '/', {withCredentials:true});
   }
+
+  public updateVlanConfig(id: string, commit_config: any, retreat_config: any): Observable<any> {
+    let port = {
+      'commit_config': commit_config,
+      'retreat_config': retreat_config
+    }
+    return this.http.patch<any>(this.deviceUrl + id + '/', port, {withCredentials:true});
+  }
 }

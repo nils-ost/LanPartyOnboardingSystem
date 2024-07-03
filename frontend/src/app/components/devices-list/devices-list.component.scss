@@ -3,6 +3,14 @@
     padding-bottom: 1em;
 }
 
+.table-cell {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5em;
+}
+
 :host ::ng-deep .device-offline {
     background-color: rgba(255, 0, 0, 0.15) !important;
 }

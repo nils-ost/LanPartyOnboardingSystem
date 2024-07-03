@@ -18,13 +18,13 @@
             </div>
         </div>
     </div>
-    <div *ngIf="selectedPort && !selectedPort.switchlink" class="content-column">
+    <div *ngIf="(selectedPort && !selectedPort.switchlink) || selectedDevice" class="content-column">
         <b i18n="@@titlelabelCommit">Commit</b>
         <div class="field-checkbox">
             <p-radioButton name="vlan_commit_setting" value="auto" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting1" />
             <label for="vlancommitsetting1" class="ml-2" i18n="@@labelVlanConfigAuto">Auto</label>
         </div>
-        <div class="field-checkbox">
+        <div class="field-checkbox" *ngIf="selectedPort">
             <p-radioButton name="vlan_commit_setting" value="disable" [(ngModel)]="vlan_commit_setting" inputId="vlancommitsetting2" />
             <label for="vlancommitsetting2" class="ml-2" i18n="@@labelVlanConfigExclude">Exclude</label>
         </div>
