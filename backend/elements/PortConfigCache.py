@@ -60,6 +60,7 @@ class PortConfigCache(ElementBase):
                     if v is not None:
                         pcc['vlan_ids'].append(v['_id'])
 
+        device_config = None
         self['isolate'] = False
         self['vlan_ids'] = list()
         self['default_vlan_id'] = None
@@ -70,11 +71,17 @@ class PortConfigCache(ElementBase):
             self['receive'] = 'only untagged'
             manual_config = self.port()['commit_config']
             manual_disabled = self.port()['commit_disabled']
+            devices = Device.get_by_port(self['port_id'])
+            if len(devices) == 1:
+                device_config = devices[0]['commit_config']
         else:
             self['mode'] = 'optional'
             self['receive'] = 'any'
             manual_config = self.port()['retreat_config']
             manual_disabled = self.port()['retreat_disabled']
+            devices = Device.get_by_port(self['port_id'])
+            if len(devices) == 1:
+                device_config = devices[0]['retreat_config']
 
         if self['scope'] == 0:
             # commit scope
@@ -114,6 +121,9 @@ class PortConfigCache(ElementBase):
                         self['vlan_ids'].append(vlan_id)
                 # set receive mode to only tagged
                 self['receive'] = 'only tagged'
+            elif device_config:
+                # manual config on Device overwrites config of Port
+                take_manual_config(self, device_config)
             elif manual_disabled:
                 # take the current switch-port config for disabled port, to keep the config
                 take_current_config(self)
@@ -150,7 +160,10 @@ class PortConfigCache(ElementBase):
 
         else:
             # retreat scope
-            if manual_disabled:
+            if device_config:
+                # manual config on Device overwrites config of Port
+                take_manual_config(self, device_config)
+            elif manual_disabled:
                 # take the current switch-port config for disabled port, to keep the config
                 take_current_config(self)
             elif manual_config is not None:

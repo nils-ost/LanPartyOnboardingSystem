@@ -55,16 +55,19 @@ class Port(ElementBase):
         errors = dict()
         if docDB.get('Switch', self['switch_id']) is None:
             errors['switch_id'] = {'code': 90, 'desc': f"There is no Switch with id '{self['switch_id']}'"}
+
         if self['number'] < 0:
             errors['number'] = {'code': 91, 'desc': 'needs to be 0 or bigger'}
         elif docDB.search_one(self.__class__.__name__, {'switch_id': self['switch_id'], 'number': self['number'], '_id': {'$ne': self['_id']}}) is not None:
             errors['number'] = {'code': 92, 'desc': 'needs to be unique per Switch'}
+
         if self['switchlink_port_id'] is not None:
             fromdb = docDB.get('Port', self['switchlink_port_id'])
             if fromdb is None:
                 errors['switchlink_port_id'] = {'code': 90, 'desc': f"There is no Port with id '{self['switchlink_port_id']}'"}
             elif not fromdb['switchlink']:
                 errors['switchlink_port_id'] = {'code': 93, 'desc': f"The Port '{self['switchlink_port_id']}' is not declared as a switchlink"}
+
         if self['commit_config'] is not None:
             if self['switchlink']:
                 # other_vlans
@@ -108,11 +111,12 @@ class Port(ElementBase):
                             errors['commit_config.vlans'] = {'code': 90, 'desc': f"There is no VLAN with id '{vlan_id}'"}
                             break
                     else:
-                        # deault (vlan)
-                        if 'deault' not in self['commit_config'] or self['commit_config']['deault'] is None:
-                            self['commit_config']['deault'] = self['commit_config']['vlans'][0]
-                        if docDB.get('VLAN', self['commit_config']['deault']) is None:
-                            errors['commit_config.vlans'] = {'code': 90, 'desc': f"There is no VLAN with id '{self['commit_config']['deault']}'"}
+                        # default (vlan)
+                        if 'default' not in self['commit_config'] or self['commit_config']['default'] is None:
+                            self['commit_config']['default'] = self['commit_config']['vlans'][0]
+                        if docDB.get('VLAN', self['commit_config']['default']) is None:
+                            errors['commit_config.default'] = {'code': 90, 'desc': f"There is no VLAN with id '{self['commit_config']['default']}'"}
+
         if self['retreat_config'] is not None:
             # enabled
             if 'enabled' not in self['retreat_config'] or self['retreat_config']['enabled'] is None:
@@ -149,11 +153,12 @@ class Port(ElementBase):
                         errors['retreat_config.vlans'] = {'code': 90, 'desc': f"There is no VLAN with id '{vlan_id}'"}
                         break
                 else:
-                    # deault (vlan)
-                    if 'deault' not in self['retreat_config'] or self['retreat_config']['deault'] is None:
-                        self['retreat_config']['deault'] = self['retreat_config']['vlans'][0]
-                    if docDB.get('VLAN', self['retreat_config']['deault']) is None:
-                        errors['retreat_config.vlans'] = {'code': 90, 'desc': f"There is no VLAN with id '{self['retreat_config']['deault']}'"}
+                    # default (vlan)
+                    if 'default' not in self['retreat_config'] or self['retreat_config']['default'] is None:
+                        self['retreat_config']['default'] = self['retreat_config']['vlans'][0]
+                    if docDB.get('VLAN', self['retreat_config']['default']) is None:
+                        errors['retreat_config.default'] = {'code': 90, 'desc': f"There is no VLAN with id '{self['retreat_config']['default']}'"}
+
         return errors
 
     def save_pre(self):

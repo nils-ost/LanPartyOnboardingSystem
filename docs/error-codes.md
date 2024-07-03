@@ -52,11 +52,13 @@
 
 ## device
 
-  * **60***(seat_id|participant_id|ip_pool_id|port_id)*: There is no <Seat|Participant|IpPool|Port\> with id '<seat_id|participant_id|ip_pool_id|port_id\>'
+  * **60***(seat_id|participant_id|ip_pool_id|port_id|commit_config.vlans|retreat_config.vlans|commit_config.default|retreat_config.default)*: There is no <Seat|Participant|IpPool|Port|VLAN\> with id '<seat_id|participant_id|ip_pool_id|port_id|vlan_id\>'
   * **61***(ip_pool_id)*: Because Participant is set, Purpose of IpPools VLAN needs to be 0 (play)
   * **62***(ip_pool_id)*: is used as seat_IpPool on Table and not allowed to be used directly by Device
   * **63***(ip)*: can only be set if IpPool is set
   * **64***(ip)*: not in range of IpPool
+  * **65***(commit_config.mode|commit_config.receive)*: needs to be one of <list of some values\> but is <value\>
+  * **66***(commit_config.vlans)*: at least one vlan is required
 
 ## participant
 
@@ -70,7 +72,7 @@
 
 ## port
 
-  * **90***(switch_id|switchlink_port_id|commit_config.vlan)*: There is no <Switch|Port|VLAN\> with id '<switch_id|switchlink_port_id|vlan_id\>'
+  * **90***(switch_id|switchlink_port_id|commit_config.vlans|retreat_config.vlans|commit_config.default|retreat_config.default)*: There is no <Switch|Port|VLAN\> with id '<switch_id|switchlink_port_id|vlan_id\>'
   * **91***(number)*: Needs to be 0 or bigger
   * **92***(number)*: Needs to be unique per Switch
   * **93***(switchlink_port_id)*: The Port '<switchlink_port_id\>' is not declared as a switchlink
