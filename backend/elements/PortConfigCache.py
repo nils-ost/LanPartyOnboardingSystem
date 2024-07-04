@@ -109,7 +109,7 @@ class PortConfigCache(ElementBase):
                     self['default_vlan_id'] = vlan['_id']
                 # Add subsequent onboading-VLANs
                 try:
-                    for switch_id in switch_restart_order(self.port().switchlink_port().switch()):
+                    for switch_id in switch_restart_order(self.port().switch()):
                         sw = Switch.get(switch_id)
                         if sw['onboarding_vlan_id'] is not None:
                             self['vlan_ids'].append(sw['onboarding_vlan_id'])
