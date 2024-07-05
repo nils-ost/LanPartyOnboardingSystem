@@ -229,7 +229,10 @@ class Port(ElementBase):
         swi = switch_objects[self['switch_id']]
         if self['number'] > len(swi.ports):
             return None
-        vlan = VLAN.get_by_number(swi.ports[self['number']].vlan_default)
+        try:
+            vlan = VLAN.get_by_number(swi.ports[self['number']].vlan_default)
+        except Exception:
+            return None
         if vlan is None:
             return None
         return vlan['_id']
