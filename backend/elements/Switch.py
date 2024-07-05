@@ -430,6 +430,11 @@ class Switch(ElementBase):
         if not self.connected():
             return False
         swi = switch_objects[self['_id']]
+        # cache LPOS Port
+        lpos_port = Port.get_lpos()
+        lpos_port_nb = lpos_port['number'] if lpos_port['switch_id'] == self['_id'] else -1
+        # cache switchlink Ports (numbers) of this Switch
+        switchlink_nbs = [p['number'] for p in Port.get_switchlinks(switch_id=self['_id'])]
 
         for idx in range(len(swi.ports)):
             port = Port.get_by_number(self['_id'], idx)
@@ -438,10 +443,11 @@ class Switch(ElementBase):
             for idy in range(len(swi.ports)):
                 if idx == idy:
                     continue
-                if pcc['isolate']:
-                    swi.portEdit(idx, fwdNotTo=idy)
-                else:
+                # isolation of a Port needs to be ignored if the destination is LPOS or a switchlink
+                if not pcc['isolate'] or idy == lpos_port_nb or idy in switchlink_nbs:
                     swi.portEdit(idx, fwdTo=idy)
+                else:
+                    swi.portEdit(idx, fwdNotTo=idy)
 
         swi.commitNeeded()
         swi.reloadAll()
