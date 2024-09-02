@@ -9,74 +9,77 @@ def start_metrics_exporter():
 
     def metrics_exporter_function():
         import cherrypy
-        from elements import Switch
+        from elements import Participant, Device, Seat, Table
 
         class Metrics():
             @cherrypy.expose()
             def index(self):
-                swi = dict()
-                for s in Switch.all():
-                    swi[s['addr']] = dict({'desc': s['desc'], 'metrics': s.metrics()})
                 lines = list()
-                lines.append('# HELP swi_rx_bytes_total Total number of Bytes received on a switch-port')
-                lines.append('# TYPE swi_rx_bytes_total counter')
-                for addr, s in swi.items():
-                    for idx in range(len(s['metrics']['rb'])):
-                        lines.append(f'swi_rx_bytes_total{{swi_addr="{addr}",swi_desc="{s["desc"]}",port="{idx + 1}"}} {s["metrics"]["rb"][idx]}')
 
-                lines.append('# HELP swi_tx_bytes_total Total number of Bytes transmitted on a switch-port')
-                lines.append('# TYPE swi_tx_bytes_total counter')
-                for addr, s in swi.items():
-                    for idx in range(len(s['metrics']['tb'])):
-                        lines.append(f'swi_tx_bytes_total{{swi_addr="{addr}",swi_desc="{s["desc"]}",port="{idx + 1}"}} {s["metrics"]["tb"][idx]}')
+                # Participants Count
+                lines.append('# HELP participants_count Current number of Participants existing on LPOS')
+                lines.append('# TYPE participants_count gauge')
+                lines.append(f'participants_count{{}} {Participant.count()}')
 
-                lines.append('# HELP swi_rx_packets_total Total number of Packets received on a switch-port')
-                lines.append('# TYPE swi_rx_packets_total counter')
-                for addr, s in swi.items():
-                    for idx in range(len(s['metrics']['rtp'])):
-                        lines.append(f'swi_rx_packets_total{{swi_addr="{addr}",swi_desc="{s["desc"]}",port="{idx + 1}"}} {s["metrics"]["rtp"][idx]}')
+                # Participants Seated Count(Participants where seat_id != None)
+                lines.append('# HELP participants_seated Current number of Participants with assigned Seat')
+                lines.append('# TYPE participants_seated gauge')
+                filter = {'seat_id': {'$ne': None}}
+                lines.append(f'participants_seated{{}} {Participant.count(filter)}')
 
-                lines.append('# HELP swi_tx_packets_total Total number of Packets transmitted on a switch-port')
-                lines.append('# TYPE swi_tx_packets_total counter')
-                for addr, s in swi.items():
-                    for idx in range(len(s['metrics']['ttp'])):
-                        lines.append(f'swi_tx_packets_total{{swi_addr="{addr}",swi_desc="{s["desc"]}",port="{idx + 1}"}} {s["metrics"]["ttp"][idx]}')
+                # Participants Onboarded Count(Devices where seat_id != None and participant_id != None)
+                lines.append('# HELP participants_onboarded Current number of Participants where onboarding is completed')
+                lines.append('# TYPE participants_onboarded gauge')
+                filter = {'seat_id': {'$ne': None}, 'participant_id': {'$ne': None}}
+                lines.append(f'participants_onboarded{{}} {Device.count(filter)}')
 
-                lines.append('# HELP swi_rx_broadcasts_total Total number of Broadcasts received on a switch-port')
-                lines.append('# TYPE swi_rx_broadcasts_total counter')
-                for addr, s in swi.items():
-                    for idx in range(len(s['metrics']['rbp'])):
-                        lines.append(f'swi_rx_broadcasts_total{{swi_addr="{addr}",swi_desc="{s["desc"]}",port="{idx + 1}"}} {s["metrics"]["rbp"][idx]}')
+                # Participants Extra Devices Count(Devices where seat_id == None and participant_id != None)
+                lines.append('# HELP participants_extra_devices Current number of Devices that are onboarded but are not the primary Device of Participants')
+                lines.append('# TYPE participants_extra_devices gauge')
+                filter = {'seat_id': None, 'participant_id': {'$ne': None}}
+                lines.append(f'participants_extra_devices{{}} {Device.count(filter)}')
 
-                lines.append('# HELP swi_tx_broadcasts_total Total number of Broadcasts transmitted on a switch-port')
-                lines.append('# TYPE swi_tx_broadcasts_total counter')
-                for addr, s in swi.items():
-                    for idx in range(len(s['metrics']['tbp'])):
-                        lines.append(f'swi_tx_broadcasts_total{{swi_addr="{addr}",swi_desc="{s["desc"]}",port="{idx + 1}"}} {s["metrics"]["tbp"][idx]}')
+                # Devices Count
+                lines.append('# HELP devices_count Current number of Devices existing on LPOS')
+                lines.append('# TYPE devices_count gauge')
+                lines.append(f'devices_count{{}} {Device.count()}')
 
-                lines.append('# HELP swi_rx_unicasts_total Total number of Unicasts received on a switch-port')
-                lines.append('# TYPE swi_rx_unicasts_total counter')
-                for addr, s in swi.items():
-                    for idx in range(len(s['metrics']['rup'])):
-                        lines.append(f'swi_rx_unicasts_total{{swi_addr="{addr}",swi_desc="{s["desc"]}",port="{idx + 1}"}} {s["metrics"]["rup"][idx]}')
+                # Devices Managed Count(Devices where ip != None)
+                lines.append('# HELP devices_managed Current number of Devices with assigned IP in LPOS')
+                lines.append('# TYPE devices_managed gauge')
+                filter = {'ip': {'$ne': None}}
+                lines.append(f'devices_managed{{}} {Device.count(filter)}')
 
-                lines.append('# HELP swi_tx_unicasts_total Total number of Unicasts transmitted on a switch-port')
-                lines.append('# TYPE swi_tx_unicasts_total counter')
-                for addr, s in swi.items():
-                    for idx in range(len(s['metrics']['tup'])):
-                        lines.append(f'swi_tx_unicasts_total{{swi_addr="{addr}",swi_desc="{s["desc"]}",port="{idx + 1}"}} {s["metrics"]["tup"][idx]}')
+                # Seats Count
+                lines.append('# HELP seats_count Current number of Seats existing on LPOS')
+                lines.append('# TYPE seats_count gauge')
+                lines.append(f'seats_count{{}} {Seat.count()}')
 
-                lines.append('# HELP swi_rx_multicasts_total Total number of Multicasts received on a switch-port')
-                lines.append('# TYPE swi_rx_multicasts_total counter')
-                for addr, s in swi.items():
-                    for idx in range(len(s['metrics']['rmp'])):
-                        lines.append(f'swi_rx_multicasts_total{{swi_addr="{addr}",swi_desc="{s["desc"]}",port="{idx + 1}"}} {s["metrics"]["rmp"][idx]}')
+                # Tables Count
+                lines.append('# HELP tables_count Current number of Tables existing on LPOS')
+                lines.append('# TYPE tables_count gauge')
+                lines.append(f'tables_count{{}} {Table.count()}')
 
-                lines.append('# HELP swi_tx_multicasts_total Total number of Multicasts transmitted on a switch-port')
-                lines.append('# TYPE swi_tx_multicasts_total counter')
-                for addr, s in swi.items():
-                    for idx in range(len(s['metrics']['tmp'])):
-                        lines.append(f'swi_tx_multicasts_total{{swi_addr="{addr}",swi_desc="{s["desc"]}",port="{idx + 1}"}} {s["metrics"]["tmp"][idx]}')
+                # Seates on Table (per Table)
+                lines.append('# HELP table_seats Number of Seats per to Table')
+                lines.append('# TYPE table_seats gauge')
+                for table in Table.all():
+                    filter = {'table_id': table['_id']}
+                    lines.append(f'table_seats{{number="{table["number"]}",desc="{table["desc"]}"}} {Seat.count(filter)}')
+
+                # Onboarded Seats on Table (per Table)
+                lines.append('# HELP table_seats_onboarded Number of Seats, that are onboarded, per to Table')
+                lines.append('# TYPE table_seats_onboarded gauge')
+                onboarded_seat_ids = list()
+                for device in Device.all():
+                    if device['seat_id'] is not None and device['participant_id'] is not None:
+                        onboarded_seat_ids.append(device['seat_id'])
+                for table in Table.all():
+                    count = 0
+                    for seat in Seat.get_by_table(table['_id']):
+                        if seat['_id'] in onboarded_seat_ids:
+                            count += 1
+                    lines.append(f'table_seats_onboarded{{number="{table["number"]}",desc="{table["desc"]}"}} {count}')
 
                 cherrypy.response.headers['Cache-Control'] = 'no-cache'
                 cherrypy.response.headers['Content-Type'] = 'text/plain; version=0.0.4'
