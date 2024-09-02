@@ -263,6 +263,7 @@ if args.enablemetrics:
     if not config.get('enabled', False):
         config['enabled'] = True
         set_config(config, 'metrics')
+        sys.exit(1)
     sys.exit(0)
 
 if args.state:

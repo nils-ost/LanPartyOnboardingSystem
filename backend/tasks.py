@@ -53,13 +53,13 @@ def create_testdata(c):
     IpPool({'desc': 'onboarding table 3', 'mask': 24, 'vlan_id': v_t3['_id'],
             'range_start': IpPool.octetts_to_int(172, 16, 1, 61), 'range_end': IpPool.octetts_to_int(172, 16, 1, 90)}).save()
     IpPool({'desc': 'seats table 1', 'mask': 24, 'vlan_id': v_play['_id'],
-            'range_start': IpPool.octetts_to_int(192, 168, 0, 101), 'range_end': IpPool.octetts_to_int(192, 168, 0, 120)}).save()
+            'range_start': IpPool.octetts_to_int(192, 168, 0, 110), 'range_end': IpPool.octetts_to_int(192, 168, 0, 119)}).save()
     IpPool({'desc': 'seats table 2', 'mask': 24, 'vlan_id': v_play['_id'],
-            'range_start': IpPool.octetts_to_int(192, 168, 0, 121), 'range_end': IpPool.octetts_to_int(192, 168, 0, 140)}).save()
+            'range_start': IpPool.octetts_to_int(192, 168, 0, 120), 'range_end': IpPool.octetts_to_int(192, 168, 0, 129)}).save()
     IpPool({'desc': 'seats table 3', 'mask': 24, 'vlan_id': v_play['_id'],
-            'range_start': IpPool.octetts_to_int(192, 168, 0, 141), 'range_end': IpPool.octetts_to_int(192, 168, 0, 160)}).save()
+            'range_start': IpPool.octetts_to_int(192, 168, 0, 130), 'range_end': IpPool.octetts_to_int(192, 168, 0, 139)}).save()
     IpPool({'desc': 'additional play', 'mask': 24, 'vlan_id': v_play['_id'],
-            'range_start': IpPool.octetts_to_int(192, 168, 0, 161), 'range_end': IpPool.octetts_to_int(192, 168, 0, 200)}).save()
+            'range_start': IpPool.octetts_to_int(192, 168, 0, 160), 'range_end': IpPool.octetts_to_int(192, 168, 0, 200)}).save()
     if Device.get_by_mac('localhost') is None:
         Device({'mac': 'localhost'}).save()
 
