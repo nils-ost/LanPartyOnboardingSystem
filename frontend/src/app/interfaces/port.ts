@@ -30,10 +30,12 @@ export interface Port {
     commit_config: any | null;
     retreat_config: any | null;
     vlan_ids: string[];
+    default_vlan_id: string | null;
     type: string;
     enabled: boolean;
     link: boolean;
     speed: string;
+    receive: string;
     calculated_commit_config: PortConfigCache;
     calculated_retreat_config: PortConfigCache;
 }

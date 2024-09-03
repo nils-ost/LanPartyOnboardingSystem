@@ -1,3 +1,5 @@
+import { PortCommitConfig } from "./port";
+
 export interface Device {
     id: string;
     mac: string;
@@ -10,4 +12,6 @@ export interface Device {
     onboarding_blocked: boolean;
     pw_strikes: number;
     last_scan_ts: number;
+    commit_config: PortCommitConfig;
+    retreat_config: PortCommitConfig;
 }

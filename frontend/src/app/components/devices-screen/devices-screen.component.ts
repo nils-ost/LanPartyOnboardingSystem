@@ -7,6 +7,7 @@ import { Port } from 'src/app/interfaces/port';
 import { Seat } from 'src/app/interfaces/seat';
 import { Switch } from 'src/app/interfaces/switch';
 import { Table } from 'src/app/interfaces/table';
+import { Vlan } from 'src/app/interfaces/vlan';
 import { DeviceService } from 'src/app/services/device.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { IpPoolService } from 'src/app/services/ip-pool.service';
@@ -15,6 +16,7 @@ import { PortService } from 'src/app/services/port.service';
 import { SeatService } from 'src/app/services/seat.service';
 import { SwitchService } from 'src/app/services/switch.service';
 import { TableService } from 'src/app/services/table.service';
+import { VlanService } from 'src/app/services/vlan.service';
 
 @Component({
   selector: 'app-devices-screen',
@@ -29,6 +31,7 @@ export class DevicesScreenComponent implements OnInit {
   participants: Participant[] = [];
   ports: Port[] = [];
   switches: Switch[] = [];
+  vlans: Vlan[] = [];
 
   constructor(
     private errorHandler: ErrorHandlerService,
@@ -38,7 +41,8 @@ export class DevicesScreenComponent implements OnInit {
     private ippoolService: IpPoolService,
     private participantService: ParticipantService,
     private portService: PortService,
-    private switchService: SwitchService
+    private switchService: SwitchService,
+    private vlanService: VlanService
   ) { }
 
   ngOnInit(): void {
@@ -49,6 +53,7 @@ export class DevicesScreenComponent implements OnInit {
     this.refreshParticipants();
     this.refreshPorts();
     this.refreshSwitches();
+    this.refreshVlans();
   }
 
   refreshDevices() {
@@ -135,6 +140,19 @@ export class DevicesScreenComponent implements OnInit {
       .subscribe({
         next: (switches: Switch[]) => {
           this.switches = switches;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
+  refreshVlans() {
+    this.vlanService
+      .getVlans()
+      .subscribe({
+        next: (vlans: Vlan[]) => {
+          this.vlans = vlans;
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);

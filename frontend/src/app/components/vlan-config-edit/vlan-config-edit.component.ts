@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { Device } from 'src/app/interfaces/device';
 import { Port, PortCommitConfig } from 'src/app/interfaces/port';
 import { Vlan, VlanPurposeType } from 'src/app/interfaces/vlan';
+import { DeviceService } from 'src/app/services/device.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { PortService } from 'src/app/services/port.service';
 
@@ -35,7 +36,8 @@ export class VlanConfigEditComponent implements OnInit, OnChanges {
 
   constructor(
     private errorHandler: ErrorHandlerService,
-    private portService: PortService
+    private portService: PortService,
+    private deviceService: DeviceService
   ) {}
 
   ngOnInit(): void {
@@ -110,6 +112,10 @@ export class VlanConfigEditComponent implements OnInit, OnChanges {
         else this.vlan_commit_config = this.selectedPort.commit_config;
       }
     }
+    else if (this.selectedDevice && this.selectedDevice.commit_config) {
+      this.vlan_commit_setting = "manual";
+      this.vlan_commit_config = this.selectedDevice.commit_config;
+    }
     this.commitVlansChanged();
 
     // retreat
@@ -130,6 +136,10 @@ export class VlanConfigEditComponent implements OnInit, OnChanges {
         this.vlan_retreat_config = this.selectedPort.retreat_config;
       }
     }
+    else if (this.selectedDevice && this.selectedDevice.retreat_config) {
+      this.vlan_retreat_setting = "manual";
+      this.vlan_retreat_config = this.selectedDevice.retreat_config;
+    }
     this.retreatVlansChanged();
   }
 
@@ -145,10 +155,26 @@ export class VlanConfigEditComponent implements OnInit, OnChanges {
       if (this.vlan_retreat_setting != 'manual') retreat_config = null;
       if (this.vlan_retreat_setting == 'disable') retreat_disabled = true;
       this.portService
-        .updateCommitConfig(this.selectedPort.id, commit_config, retreat_config, commit_disabled, retreat_disabled)
+        .updateVlanConfig(this.selectedPort.id, commit_config, retreat_config, commit_disabled, retreat_disabled)
         .subscribe({
           next: () => {
             this.editedPortEvent.emit(null);
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+          }
+        })
+    }
+    else if (this.selectedDevice) {
+      let commit_config: any = this.vlan_commit_config;
+      if (this.vlan_commit_setting != 'manual') commit_config = null;
+      let retreat_config: any = this.vlan_retreat_config;
+      if (this.vlan_retreat_setting != 'manual') retreat_config = null;
+      this.deviceService
+        .updateVlanConfig(this.selectedDevice.id, commit_config, retreat_config)
+        .subscribe({
+          next: () => {
+            this.editedDeviceEvent.emit(null);
           },
           error: (err: HttpErrorResponse) => {
             this.errorHandler.handleError(err);
