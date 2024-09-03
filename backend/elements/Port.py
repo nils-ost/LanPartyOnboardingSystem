@@ -227,7 +227,7 @@ class Port(ElementBase):
         if self['switch_id'] not in switch_objects:
             return None
         swi = switch_objects[self['switch_id']]
-        if self['number'] > len(swi.ports):
+        if self['number'] >= len(swi.ports):
             return None
         try:
             vlan = VLAN.get_by_number(swi.ports[self['number']].vlan_default)
