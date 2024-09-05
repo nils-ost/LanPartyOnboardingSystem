@@ -11,6 +11,9 @@
       * auto (the configuration is determined by LPOS)
       * disable (the switch-Port is left untouched; not available on Device-level)
       * manual (the configuration can be set manual via the frontend)
+  * Reworked exported Metrics
+    * removed all Switch in depth metrics, as they are better delivered by SNMP
+    * added different counter metrics of LPOS objects
 
 ## v0.4.0
 

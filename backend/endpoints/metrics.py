@@ -9,17 +9,61 @@ def start_metrics_exporter():
 
     def metrics_exporter_function():
         import cherrypy
-        from elements import Participant, Device, Seat, Table
+        from elements import Participant, Device, Seat, Table, VLAN, Switch, IpPool, Port, PortConfigCache
 
         class Metrics():
             @cherrypy.expose()
             def index(self):
                 lines = list()
 
+                # ---------- Simple Counts
+
                 # Participants Count
                 lines.append('# HELP lpos_participants_count Current number of Participants existing on LPOS')
                 lines.append('# TYPE lpos_participants_count gauge')
                 lines.append(f'lpos_participants_count{{}} {Participant.count()}')
+
+                # Seats Count
+                lines.append('# HELP lpos_seats_count Current number of Seats existing on LPOS')
+                lines.append('# TYPE lpos_seats_count gauge')
+                lines.append(f'lpos_seats_count{{}} {Seat.count()}')
+
+                # Tables Count
+                lines.append('# HELP lpos_tables_count Current number of Tables existing on LPOS')
+                lines.append('# TYPE lpos_tables_count gauge')
+                lines.append(f'lpos_tables_count{{}} {Table.count()}')
+
+                # Devices Count
+                lines.append('# HELP lpos_devices_count Current number of Devices existing on LPOS')
+                lines.append('# TYPE lpos_devices_count gauge')
+                lines.append(f'lpos_devices_count{{}} {Device.count()}')
+
+                # VLAN Count
+                lines.append('# HELP lpos_vlans_count Current number of VLANs existing on LPOS')
+                lines.append('# TYPE lpos_vlans_count gauge')
+                lines.append(f'lpos_vlans_count{{}} {VLAN.count()}')
+
+                # Switch Count
+                lines.append('# HELP lpos_switches_count Current number of Switches existing on LPOS')
+                lines.append('# TYPE lpos_switches_count gauge')
+                lines.append(f'lpos_switches_count{{}} {Switch.count()}')
+
+                # IpPool Count
+                lines.append('# HELP lpos_ippools_count Current number of IpPools existing on LPOS')
+                lines.append('# TYPE lpos_ippools_count gauge')
+                lines.append(f'lpos_ippools_count{{}} {IpPool.count()}')
+
+                # Port Count
+                lines.append('# HELP lpos_ports_count Current number of Ports existing on LPOS')
+                lines.append('# TYPE lpos_ports_count gauge')
+                lines.append(f'lpos_ports_count{{}} {Port.count()}')
+
+                # PortConfigCache Count
+                lines.append('# HELP lpos_portconfigcaches_count Current number of PortConfigCaches existing on LPOS')
+                lines.append('# TYPE lpos_portconfigcaches_count gauge')
+                lines.append(f'lpos_portconfigcaches_count{{}} {PortConfigCache.count()}')
+
+                # ---------- Advanced Counts
 
                 # Participants Seated Count(Participants where seat_id != None)
                 lines.append('# HELP lpos_participants_seated Current number of Participants with assigned Seat')
@@ -39,26 +83,13 @@ def start_metrics_exporter():
                 filter = {'seat_id': None, 'participant_id': {'$ne': None}}
                 lines.append(f'lpos_participants_extra_devices{{}} {Device.count(filter)}')
 
-                # Devices Count
-                lines.append('# HELP lpos_devices_count Current number of Devices existing on LPOS')
-                lines.append('# TYPE lpos_devices_count gauge')
-                lines.append(f'lpos_devices_count{{}} {Device.count()}')
-
                 # Devices Managed Count(Devices where ip != None)
                 lines.append('# HELP lpos_devices_managed Current number of Devices with assigned IP in LPOS')
                 lines.append('# TYPE lpos_devices_managed gauge')
                 filter = {'ip': {'$ne': None}}
                 lines.append(f'lpos_devices_managed{{}} {Device.count(filter)}')
 
-                # Seats Count
-                lines.append('# HELP lpos_seats_count Current number of Seats existing on LPOS')
-                lines.append('# TYPE lpos_seats_count gauge')
-                lines.append(f'lpos_seats_count{{}} {Seat.count()}')
-
-                # Tables Count
-                lines.append('# HELP lpos_tables_count Current number of Tables existing on LPOS')
-                lines.append('# TYPE lpos_tables_count gauge')
-                lines.append(f'lpos_tables_count{{}} {Table.count()}')
+                # ---------- per Table Counts
 
                 # Seates on Table (per Table)
                 lines.append('# HELP lpos_table_seats Number of Seats per to Table')
