@@ -25,6 +25,9 @@
             <th>
                 <ng-container i18n="@@elementFieldLabelDevicePortId">Port</ng-container>
             </th>
+            <th>
+                <ng-container i18n="@@elementFieldLabelDeviceManualConfig">Config</ng-container>
+            </th>
             <th pSortableColumn="onboarding_blocked">
                 <ng-container i18n="@@elementFieldLabelOnboardingBlocked">Blocked</ng-container>
                 <p-sortIcon field="onboarding_blocked"></p-sortIcon>
@@ -41,15 +44,19 @@
     <ng-template pTemplate="body" let-device>
         <tr [ngClass]="{'device-offline': (currentTs - device.last_scan_ts) > 60}">
             <td>
-                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(device, $event)"></button>
-                {{ device.desc }}
+                <div class="table-cell">
+                    <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(device, $event)"></button>
+                    {{ device.desc }}
+                </div>
             </td>
             <td>
                 {{ device.mac }}
             </td>
             <td>
-                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editSeatStart(device, $event)"></button>
-                {{ seatsReadable.get(device.seat_id) || '---' }}
+                <div class="table-cell">
+                    <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editSeatStart(device, $event)"></button>
+                    {{ seatsReadable.get(device.seat_id) || '---' }}
+                </div>
             </td>
             <td>
                 {{ participantsReadable.get(device.participant_id) || '---' }}
@@ -62,6 +69,21 @@
             </td>
             <td>
                 {{ portsReadable.get(device.port_id) || '---' }}
+            </td>
+            <td>
+                <div class="table-cell">
+                    <ng-container>
+                        <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editVlanConfigStart(device, $event)"></button>
+                    </ng-container>
+                    <ng-container>
+                        <i *ngIf="device.commit_config == null" class="pi pi-play-circle" style="color: 'var(--success-color)'" i18n-pTooltip="@@tooltipCommitAuto" pTooltip="Commit: Auto"></i>
+                        <i *ngIf="device.commit_config != null"class="pi pi-bullseye" style="color: 'var(--warning-color)'" i18n-pTooltip="@@tooltipCommitManual" pTooltip="Commit: Manual"></i>
+                    </ng-container>
+                    <ng-container>
+                        <i *ngIf="device.retreat_config == null" class="pi pi-play-circle" style="color: 'var(--success-color)'" i18n-pTooltip="@@tooltipRetreatAuto" pTooltip="Retreat: Auto"></i>
+                        <i *ngIf="device.retreat_config != null"class="pi pi-bullseye" style="color: 'var(--warning-color)'" i18n-pTooltip="@@tooltipRetreatManual" pTooltip="Retreat: Manual"></i>
+                    </ng-container>
+                </div>
             </td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-times" (click)="setBlocked(device, true)" *ngIf="!device.onboarding_blocked"></button>
@@ -100,3 +122,7 @@
         <button pButton (click)="editSeatCheck()" i18n="@@buttonSave">Save</button>
     </ng-template>
 </p-overlayPanel>
+
+<p-dialog [(visible)]="editVlanConfigDialog" (onHide)="editVlanConfigAbort()" [header]="selectedDeviceName" [modal]="true" [dismissableMask]="true">
+    <app-vlan-config-edit [selectedDevice]="selectedDevice" [vlans]="vlans" (editedDeviceEvent)="editVlanConfigEnd()"></app-vlan-config-edit>
+</p-dialog>

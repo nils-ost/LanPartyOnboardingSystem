@@ -215,11 +215,27 @@ class Port(ElementBase):
         result = list()
         if self['switch_id'] not in switch_objects:
             return result
-        sw = switch_objects[self['switch_id']]
-        for v in sw.vlans:
+        swi = switch_objects[self['switch_id']]
+        for v in swi.vlans:
             if self['number'] in v._member:
                 result.append(VLAN.get_by_number(v.id)['_id'])
         return result
+
+    def default_vlan_id(self):
+        from elements.Switch import switch_objects
+        from elements import VLAN
+        if self['switch_id'] not in switch_objects:
+            return None
+        swi = switch_objects[self['switch_id']]
+        if self['number'] >= len(swi.ports):
+            return None
+        try:
+            vlan = VLAN.get_by_number(swi.ports[self['number']].vlan_default)
+        except Exception:
+            return None
+        if vlan is None:
+            return None
+        return vlan['_id']
 
     def type(self):
         from elements.Switch import switch_objects
@@ -257,6 +273,15 @@ class Port(ElementBase):
             return ''
         return sw.ports[self['number']].speed
 
+    def receive(self):
+        from elements.Switch import switch_objects
+        if self['switch_id'] not in switch_objects:
+            return ''
+        sw = switch_objects[self['switch_id']]
+        if self['number'] not in range(len(sw.ports)):
+            return ''
+        return sw.ports[self['number']].vlan_receive
+
     def scanned_hosts(self):
         """
         returns a list of mac addresses that are currently recognized on this switch-port
@@ -267,10 +292,12 @@ class Port(ElementBase):
         from elements import PortConfigCache
         result = super().json()
         result['vlan_ids'] = self.vlan_ids()
+        result['default_vlan_id'] = self.default_vlan_id()
         result['type'] = self.type()
         result['enabled'] = self.enabled()
         result['link'] = self.link()
         result['speed'] = self.speed()
+        result['receive'] = self.receive()
         result['calculated_commit_config'] = PortConfigCache.get_by_port(port_id=self['_id'], scope=0).json()
         result['calculated_retreat_config'] = PortConfigCache.get_by_port(port_id=self['_id'], scope=1).json()
         for k in ['_id', 'port_id', 'scope']:

@@ -8,6 +8,7 @@ import { Port } from 'src/app/interfaces/port';
 import { Seat } from 'src/app/interfaces/seat';
 import { Switch } from 'src/app/interfaces/switch';
 import { Table } from 'src/app/interfaces/table';
+import { Vlan } from 'src/app/interfaces/vlan';
 import { DeviceService } from 'src/app/services/device.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -25,6 +26,7 @@ export class DevicesListComponent implements OnChanges {
   @Input() participants: Participant[] = [];
   @Input() ports: Port[] = [];
   @Input() switches: Switch[] = [];
+  @Input() vlans: Vlan[] = [];
   @Output() editedDeviceEvent = new EventEmitter<null>();
 
   @ViewChild('editdesc') editDescDialog: any;
@@ -40,7 +42,9 @@ export class DevicesListComponent implements OnChanges {
 
   newSeatId: string | null = null;
   selectedDevice: Device | undefined = undefined;
+  selectedDeviceName: string = "";
   newDesc: string = "";
+  editVlanConfigDialog: boolean = false;
 
   constructor(
     public utils: UtilsService,
@@ -233,5 +237,24 @@ export class DevicesListComponent implements OnChanges {
       }
       this.editSeatDialog.hide();
     }
+  }
+
+  editVlanConfigStart(device: Device, event: any) {
+    this.selectedDevice = device;
+    this.selectedDeviceName = this.selectedDevice.desc + " (" + device.mac + ")"
+    this.editVlanConfigDialog = true;
+  }
+
+  editVlanConfigAbort() {
+    this.selectedDevice = undefined;
+    this.selectedDeviceName = "";
+    this.editVlanConfigDialog = false;
+  }
+
+  editVlanConfigEnd() {
+    this.selectedDevice = undefined;
+    this.selectedDeviceName = "";
+    this.editedDeviceEvent.emit();
+    this.editVlanConfigDialog = false;
   }
 }

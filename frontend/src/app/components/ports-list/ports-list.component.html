@@ -111,7 +111,9 @@
                 </ng-container>
             </td>
             <td>
-                <li *ngFor="let vlan_id of port.vlan_ids">{{ vlansNames.get(vlan_id) }}</li>
+                <div class="table-cell-list">
+                    <div *ngFor="let vlan_id of port.vlan_ids" [ngClass]="port.receive == 'only untagged' || (port.receive == 'any' && port.default_vlan_id == vlan_id) ? 'vlan-u' : 'vlan-t'">{{ vlansNames.get(vlan_id) }}</div>
+                </div>
             </td>
             <td>
                 <div class="table-cell-list">

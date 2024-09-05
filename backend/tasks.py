@@ -62,6 +62,13 @@ def create_testdata(c):
             'range_start': IpPool.octetts_to_int(192, 168, 0, 161), 'range_end': IpPool.octetts_to_int(192, 168, 0, 200)}).save()
     if Device.get_by_mac('localhost') is None:
         Device({'mac': 'localhost'}).save()
+    counter = 1
+    for s in [s_core, s_t1, s_t2, s_t3]:
+        for i in range(3, 5):
+            d = Device({'mac': f'testdevice{counter}'})
+            counter += 1
+            d.port(Port.get_by_number(switch_id=s['_id'], number=i))
+            d.save()
 
 
 @task(pre=[create_admin], name='create-nlpt')
