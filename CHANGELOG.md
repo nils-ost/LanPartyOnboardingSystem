@@ -2,10 +2,15 @@
 
 ## v0.x.0
 
-  * On Port-level, it's now possible to alter the behavior of how switch-Ports are configured during commit and retreat, the options are:
-    * auto (the configuration is determined by LPOS)
-    * disable (the switch-Port is left untouched)
-    * manual (the configuration can be set manual via the frontend)
+  * It's now possible to alter the behavior of how switch-Ports are configured during commit and retreat
+    * On Port-level:
+      * Directly on this level, via the Network->Switch-Port interface
+    * On Device-level:
+      * In the Devices interface it's possible to alter the configuration for discovered devices; this configuration is than applied to the Port where the Device is connected to
+    * The options are:
+      * auto (the configuration is determined by LPOS)
+      * disable (the switch-Port is left untouched; not available on Device-level)
+      * manual (the configuration can be set manual via the frontend)
 
 ## v0.4.0
 
