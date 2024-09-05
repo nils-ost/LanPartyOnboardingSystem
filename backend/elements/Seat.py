@@ -51,10 +51,12 @@ class Seat(ElementBase):
         errors = dict()
         if not docDB.exists('Table', self['table_id']):
             errors['table_id'] = {'code': 50, 'desc': f"There is no Table with id '{self['table_id']}'"}
-        if self['number'] < 1:
+        elif self['number'] < 1:
             errors['number'] = {'code': 51, 'desc': 'needs to be 1 or bigger'}
         elif docDB.search_one(self.__class__.__name__, {'table_id': self['table_id'], 'number': self['number'], '_id': {'$ne': self['_id']}}) is not None:
             errors['number'] = {'code': 52, 'desc': 'needs to be unique per Table'}
+        elif (self.table().seat_ip_pool()['range_start'] + self['number'] - 1) > self.table().seat_ip_pool()['range_end']:
+            errors['number'] = {'code': 54, 'desc': 'is exceeding Tables IpPool range'}
         if self['number_absolute'] is not None and self['number_absolute'] < 0:
             errors['number_absolute'] = {'code': 53, 'desc': 'needs to be 0 or bigger'}
         return errors

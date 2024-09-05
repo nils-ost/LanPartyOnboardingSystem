@@ -14,6 +14,7 @@
   * Reworked exported Metrics
     * removed all Switch in depth metrics, as they are better delivered by SNMP
     * added different counter metrics of LPOS objects
+  * Seat-number is now validated to not exceed Tables IpPool
 
 ## v0.4.0
 

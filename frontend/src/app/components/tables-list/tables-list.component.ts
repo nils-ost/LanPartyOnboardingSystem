@@ -186,6 +186,23 @@ export class TablesListComponent implements OnInit, OnChanges {
           },
           error: (err: HttpErrorResponse) => {
             this.errorHandler.handleError(err);
+            let detail: string = $localize `:@@ElementErrorGeneric:Unknown error`;
+            if (this.errorHandler.elementErrors) {
+              if (this.errorHandler.elementErrors.number) {
+                if (this.errorHandler.elementErrors.number.code == 51)
+                  detail = $localize `:@@ElementErrorCode51:Number needs to be 1 or bigger`;
+                if (this.errorHandler.elementErrors.number.code == 52)
+                  detail = $localize `:@@ElementErrorCode52:Number allready present on Table`;
+                if (this.errorHandler.elementErrors.number.code == 54)
+                  detail = $localize `:@@ElementErrorCode54:No additional Seats possible on this Table, as this would exceed IpPool range`;
+              }
+            }
+            this.messageService.add({
+              severity: 'error',
+              summary: $localize `:@@ElementErrorSummary:Error`,
+              detail: detail,
+              life: 6000
+            });
           }
         })
     }
