@@ -1,4 +1,4 @@
-<p-table [value]="devices" sortField="mac">
+<p-table [value]="devices" sortField="last_scan_ts" [sortOrder]="-1">
     <ng-template pTemplate="header">
         <tr>
             <th pSortableColumn="desc">
@@ -35,6 +35,10 @@
             <th pSortableColumn="pw_strikes">
                 <ng-container i18n="@@elementFieldLabelPwStrikes">Strikes</ng-container>
                 <p-sortIcon field="pw_strikes"></p-sortIcon>
+            </th>
+            <th pSortableColumn="last_scan_ts">
+                <ng-container i18n="@@elementFieldLabelLastScanTs">Last Discover</ng-container>
+                <p-sortIcon field="last_scan_ts"></p-sortIcon>
             </th>
             <th>
                 <ng-container i18n="@@elementFieldLabelDeviceDelete">Delete</ng-container>
@@ -91,6 +95,9 @@
             </td>
             <td>
                 {{ device.pw_strikes }}
+            </td>
+            <td>
+                {{ device.last_scan_ts * 1000 | date:'medium' }}
             </td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-times" (click)="deleteDevice(device)"></button>

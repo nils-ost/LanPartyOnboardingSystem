@@ -10,7 +10,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">114</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelDeviceMac" datatype="html">
@@ -28,7 +28,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">126</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelDeviceParticipantId" datatype="html">
@@ -80,18 +80,25 @@
           <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="elementFieldLabelLastScanTs" datatype="html">
+        <source>Last Discover</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="elementFieldLabelDeviceDelete" datatype="html">
         <source>Delete</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tooltipCommitAuto" datatype="html">
         <source>Commit: Auto</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
@@ -102,7 +109,7 @@
         <source>Commit: Manual</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
@@ -113,7 +120,7 @@
         <source>Retreat: Auto</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
@@ -124,7 +131,7 @@
         <source>Retreat: Manual</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">88</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
@@ -135,11 +142,11 @@
         <source>Save</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.html</context>

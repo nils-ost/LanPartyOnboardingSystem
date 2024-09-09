@@ -17,6 +17,7 @@
   * Seat-number is now validated to not exceed Tables IpPool
   * Adding and Deleting Seats with specific Number is now possible in frontend
   * Moved Device-Scanner to it's own Service
+  * Devices-Screen now sortable by last_scan_ts
 
 ## v0.4.0
 
