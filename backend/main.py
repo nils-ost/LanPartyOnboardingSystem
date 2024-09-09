@@ -4,7 +4,7 @@ import cherrypy_cors
 import logging
 from helpers.docdb import docDB
 from helpers.config import get_config
-from helpers.backgroundworker import device_scanner_start, device_onboarding_start
+from helpers.backgroundworker import device_onboarding_start
 from helpers.versioning import run as versioning_run
 from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint, SwitchEndpoint, OnboardingEndpoint, SettingEndpoint
 from endpoints.metrics import start_metrics_exporter
@@ -90,7 +90,6 @@ if __name__ == '__main__':
 
     docDB.wait_for_connection()
     versioning_run()
-    device_scanner_start()
     device_onboarding_start()
     start_metrics_exporter()
     cherrypy.quickstart(API(), '/', conf)

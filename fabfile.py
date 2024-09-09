@@ -17,6 +17,7 @@ haproxy_image = 'haproxytech/haproxy-alpine:latest'
 haproxy_service = 'docker.haproxy.service'
 haproxy_config = '/etc/haproxy/haproxy.cfg'
 lpos_service = 'lpos.service'
+scanner_service = 'lpos-scanner.service'
 dns_image = 'coredns/coredns:1.11.1'
 dhcp_image = 'docker.cloudsmith.io/isc/docker/kea-dhcp4:2.5.7'
 alpine_image = 'alpine'
@@ -88,7 +89,7 @@ def setup_virtualenv(c, pdir):
 
 
 def upload_project_files(c):
-    for f in ['main.py', 'cli.py', 'requirements.txt']:
+    for f in ['main.py', 'scanner.py', 'cli.py', 'requirements.txt']:
         print(f'Uploading {f}')
         c.put(os.path.join('backend', f), remote=os.path.join(project_dir, f))
     for d in ['backend/elements', 'backend/endpoints', 'backend/helpers', 'backend/MTSwitch']:
@@ -382,6 +383,7 @@ def deploy(c):
     deploy_mongodb_pre(c)
     deploy_lpos_pre(c)
 
+    systemctl_stop(c, scanner_service)
     systemctl_stop(c, lpos_service)
     systemctl_stop(c, mongodb_service)
     upload_project_files(c)
@@ -389,6 +391,7 @@ def deploy(c):
     prepare_lpos_cli(c)
     install_rsyslog(c)
     install_logrotate(c)
+    systemctl_install_service(c, 'lpos-scanner.service', scanner_service, [('__project_dir__', project_dir)])
     systemctl_install_service(c, 'lpos.service', lpos_service, [('__project_dir__', project_dir)])
     systemctl_install_service(c, 'docker.service', mongodb_service, [
         ('__execstartpre__', ''),
@@ -400,5 +403,6 @@ def deploy(c):
     c.run('systemctl daemon-reload')
     systemctl_start(c, mongodb_service)
     systemctl_start(c, lpos_service)
+    systemctl_start(c, scanner_service)
 
     deploy_mongodb_post(c)

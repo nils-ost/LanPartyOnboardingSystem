@@ -16,6 +16,7 @@
     * added different counter metrics of LPOS objects
   * Seat-number is now validated to not exceed Tables IpPool
   * Adding and Deleting Seats with specific Number is now possible in frontend
+  * Moved Device-Scanner to it's own Service
 
 ## v0.4.0
 
