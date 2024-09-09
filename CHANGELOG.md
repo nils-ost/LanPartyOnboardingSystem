@@ -15,6 +15,7 @@
     * removed all Switch in depth metrics, as they are better delivered by SNMP
     * added different counter metrics of LPOS objects
   * Seat-number is now validated to not exceed Tables IpPool
+  * Adding and Deleting Seats with specific Number is now possible in frontend
 
 ## v0.4.0
 
