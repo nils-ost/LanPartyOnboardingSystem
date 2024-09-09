@@ -33,6 +33,7 @@ export class TablesListComponent implements OnInit, OnChanges {
   delSeatsDialog: boolean = false;
   numberSeatsDialog: boolean = false;
   adddelSeatsCount: number = 0;
+  addSeatNumber: number = 0;
   numberSeatsAsc: boolean = true;
   selectedTable!: Table;
 
@@ -166,45 +167,56 @@ export class TablesListComponent implements OnInit, OnChanges {
     this.selectedTable = table;
     this.selectTableEvent.emit(table);
     this.adddelSeatsCount = 0;
+    this.addSeatNumber = 0;
     this.addSeatsDialog = true;
+  }
+
+  addSeat(number: number, pw: string, table_id: string) {
+    this.seatService
+      .createSeat(number, pw, table_id)
+      .subscribe({
+        next: (response: any) => {
+          this.editedSeatEvent.emit(null);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          let detail: string = $localize `:@@ElementErrorGeneric:Unknown error`;
+          if (this.errorHandler.elementErrors) {
+            if (this.errorHandler.elementErrors.number) {
+              if (this.errorHandler.elementErrors.number.code == 51)
+                detail = $localize `:@@ElementErrorCode51:Number needs to be 1 or bigger`;
+              if (this.errorHandler.elementErrors.number.code == 52)
+                detail = $localize `:@@ElementErrorCode52:Number allready present on Table`;
+              if (this.errorHandler.elementErrors.number.code == 54)
+                detail = $localize `:@@ElementErrorCode54:No additional Seats possible on this Table, as this would exceed IpPool range`;
+            }
+          }
+          this.messageService.add({
+            severity: 'error',
+            summary: $localize `:@@ElementErrorSummary:Error`,
+            detail: detail,
+            life: 6000
+          });
+        }
+      })
   }
 
   addSeats() {
     this.addSeatsDialog = false;
-    let maxNumber: number = 0;
-    for (let i = 0; i < this.seats.length; i++) {
-      let seat: Seat = this.seats[i];
-      if (seat.table_id == this.selectedTable.id && seat.number > maxNumber) maxNumber = seat.number;
-    }
-    for (let i = 0; i < this.adddelSeatsCount; i++) {
+    if (this.addSeatNumber > 0) {
       let pw: string = window.crypto.getRandomValues(new BigUint64Array(1))[0].toString(36).slice(0, 8);
-      this.seatService
-        .createSeat(maxNumber + 1 + i, pw, this.selectedTable.id)
-        .subscribe({
-          next: (response: any) => {
-            this.editedSeatEvent.emit(null);
-          },
-          error: (err: HttpErrorResponse) => {
-            this.errorHandler.handleError(err);
-            let detail: string = $localize `:@@ElementErrorGeneric:Unknown error`;
-            if (this.errorHandler.elementErrors) {
-              if (this.errorHandler.elementErrors.number) {
-                if (this.errorHandler.elementErrors.number.code == 51)
-                  detail = $localize `:@@ElementErrorCode51:Number needs to be 1 or bigger`;
-                if (this.errorHandler.elementErrors.number.code == 52)
-                  detail = $localize `:@@ElementErrorCode52:Number allready present on Table`;
-                if (this.errorHandler.elementErrors.number.code == 54)
-                  detail = $localize `:@@ElementErrorCode54:No additional Seats possible on this Table, as this would exceed IpPool range`;
-              }
-            }
-            this.messageService.add({
-              severity: 'error',
-              summary: $localize `:@@ElementErrorSummary:Error`,
-              detail: detail,
-              life: 6000
-            });
-          }
-        })
+      this.addSeat(this.addSeatNumber, pw, this.selectedTable.id);
+    }
+    if (this.adddelSeatsCount > 0) {
+      let maxNumber: number = 0;
+      for (let i = 0; i < this.seats.length; i++) {
+        let seat: Seat = this.seats[i];
+        if (seat.table_id == this.selectedTable.id && seat.number > maxNumber) maxNumber = seat.number;
+      }
+      for (let i = 0; i < this.adddelSeatsCount; i++) {
+        let pw: string = window.crypto.getRandomValues(new BigUint64Array(1))[0].toString(36).slice(0, 8);
+        this.addSeat(maxNumber + 1 + i, pw, this.selectedTable.id);
+      }
     }
   }
 

@@ -32,14 +32,18 @@
             <td>{{ ippoolsNames.get(table.seat_ip_pool_id) }}</td>
             <td>{{ ippoolsNames.get(table.add_ip_pool_id) }}</td>
             <td>
-                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editTable(table)"></button>
-                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="confirmDelete(table)"></button>
+                <div class="table-cell">
+                    <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editTable(table)" i18n-pTooltip="@@tooltipTableEdit" pTooltip="Edit Table"></button>
+                    <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="confirmDelete(table)" i18n-pTooltip="@@tooltipTableDelete" pTooltip="Delete Table"></button>
+                </div>
             </td>
             <td>
-                {{ seatCounts.get(table.id) || 0 }}
-                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-plus" (click)="addSeatsStart(table)"></button>
-                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-minus" (click)="delSeatsStart(table)" *ngIf="seatCounts.get(table.id) || 0 > 0"></button>
-                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-hashtag" (click)="numberSeatsStart(table)" *ngIf="absolute_seatnumbers"></button>
+                <div class="table-cell">
+                    {{ seatCounts.get(table.id) || 0 }}
+                    <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-plus" (click)="addSeatsStart(table)" i18n-pTooltip="@@tooltipSeatAdd" pTooltip="Add Seat(s)"></button>
+                    <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-minus" (click)="delSeatsStart(table)" *ngIf="seatCounts.get(table.id) || 0 > 0" i18n-pTooltip="@@tooltipSeatRemove" pTooltip="Remove Seat(s)"></button>
+                    <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-hashtag" (click)="numberSeatsStart(table)" *ngIf="absolute_seatnumbers" i18n-pTooltip="@@tooltipSeatAddAbsoluteNumber" pTooltip="Bulk Absolute numbering"></button>
+                </div>
             </td>
         </tr>
     </ng-template>
@@ -51,11 +55,19 @@
 
 <p-dialog [(visible)]="addSeatsDialog" header="Add Seats" [modal]="true" [dismissableMask]="true" *ngIf="selectedTable">
     <p>
-        How many Seats do you like to add to Table {{ selectedTable.number }}
+        <ng-container i18n="@@dialogTextAddSeatsCount">How many Seats do you like to add to Table</ng-container> {{ selectedTable.number }}
     </p>
     <div class="field">
         <span class="p-float-label">
             <p-inputNumber [(ngModel)]="adddelSeatsCount" [min]="0" (keyup.enter)="addSeats()" [showButtons]="true"></p-inputNumber>
+        </span>
+    </div>
+    <p>
+        <ng-container i18n="@@dialogTextAddSeatWithNumber">Add Seat with a specific Number to Table</ng-container> {{ selectedTable.number }}
+    </p>
+    <div class="field">
+        <span class="p-float-label">
+            <p-inputNumber [(ngModel)]="addSeatNumber" [min]="0" (keyup.enter)="addSeats()" [showButtons]="true"></p-inputNumber>
         </span>
     </div>
     <button pButton (click)="addSeats()" i18n="@@buttonCommit">Commit</button>
@@ -63,7 +75,7 @@
 
 <p-dialog [(visible)]="delSeatsDialog" header="Delete Seats" [modal]="true" [dismissableMask]="true" *ngIf="selectedTable">
     <p>
-        How many Seats do you like to delete from Table {{ selectedTable.number }}
+        <ng-container i18n="@@dialogTextDeleteSeatsCount">How many Seats do you like to delete from Table</ng-container> {{ selectedTable.number }}
     </p>
     <div class="field">
         <span class="p-float-label">
@@ -75,7 +87,7 @@
 
 <p-dialog [(visible)]="numberSeatsDialog" header="Number Seats" [modal]="true" [dismissableMask]="true" *ngIf="selectedTable">
     <p>
-        Enter the first new Seat-Number and if it should increase or decrease
+        <ng-container i18n="@@dialogTextAbsoluteNumberingSeats">Enter the first new Seat-Number and if it should increase or decrease</ng-container>
     </p>
     <div class="field">
         <p-toggleButton [(ngModel)]="numberSeatsAsc" onLabel="Increasing" offLabel="Decreasing"></p-toggleButton>

@@ -62,7 +62,7 @@ export class SeatsListComponent implements OnChanges, OnInit {
 
   ngOnChanges(): void {
     if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
-    
+
     for (let i = 0; i < this.tables.length; i++) {
       let table: Table = this.tables[i];
       this.tablesNumbers.set(table.id, table.number);
@@ -136,6 +136,24 @@ export class SeatsListComponent implements OnChanges, OnInit {
     else {
       return '';
     }
+  }
+
+  deleteSeat(seat: Seat) {
+    this.confirmationService.confirm({
+      message: 'Are you sure that you want to delete Seat ' + seat.number + ' on Table ' + this.tablesNumbers.get(seat.table_id),
+      accept: () => {
+        this.seatService
+          .deleteSeat(seat.id)
+          .subscribe({
+            next: (response: any) => {
+              this.editedSeatEvent.emit(null);
+            },
+            error: (err: HttpErrorResponse) => {
+              this.errorHandler.handleError(err);
+            }
+          })
+      }
+    });
   }
 
   deleteAbsoluteNumber(seat: Seat) {
