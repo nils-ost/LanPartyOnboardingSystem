@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { SettingService } from 'src/app/services/setting.service';
 import { Setting } from 'src/app/interfaces/setting';
+import { PortService } from 'src/app/services/port.service';
+import { PortConfigCache } from 'src/app/interfaces/port';
 
 @Component({
   selector: 'app-settings-screen',
@@ -12,12 +14,17 @@ import { Setting } from 'src/app/interfaces/setting';
 export class SettingsScreenComponent implements OnInit {
   absolute_seatnumbers: boolean = false;
   nlpt_sso: boolean = false;
+  pcc: boolean = false;
+  pcc_total: number = 0;
+  pcc_commit: number = 0;
+  pcc_retreat: number = 0;
   sso_login_url: string = "https://nlpt.online/app/event-login?redirect=";
   sso_onboarding_url: string = "https://nlpt.online/api/onboarding/2024";
 
   constructor(
     private errorHandler: ErrorHandlerService,
-    private settingService: SettingService
+    private settingService: SettingService,
+    private portService: PortService
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +57,43 @@ export class SettingsScreenComponent implements OnInit {
           this.errorHandler.handleError(err);
         }
       })
+  }
+
+  refreshPortConfigCaches() {
+    if (this.pcc) {
+      this.pcc_total = 0;
+      this.pcc_commit = 0;
+      this.pcc_retreat = 0;
+      this.portService
+        .getCaches()
+        .subscribe({
+          next: (pccs: PortConfigCache[]) => {
+            pccs.forEach((pcc) => {
+              this.pcc_total += 1;
+              if (pcc.scope == 0) this.pcc_commit += 1;
+              else this.pcc_retreat += 1;
+            })
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+          }
+        })
+    }
+  }
+
+  clearPortConfigCaches() {
+    if (this.pcc) {
+      this.portService
+        .deleteAllCaches()
+        .subscribe({
+          next: () => {
+            this.refreshPortConfigCaches();
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+          }
+        })
+    }
   }
 
   save_nlpt_sso() {

@@ -18,6 +18,7 @@
   * Adding and Deleting Seats with specific Number is now possible in frontend
   * Moved Device-Scanner to it's own Service
   * Devices-Screen now sortable by last_scan_ts
+  * ElementEndpointBase is now capable to delete all Elements at once (not just one specific)
 
 ## v0.4.0
 

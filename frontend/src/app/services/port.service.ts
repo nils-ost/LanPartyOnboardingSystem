@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Port } from '../interfaces/port';
+import { Port, PortConfigCache } from '../interfaces/port';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -10,6 +10,7 @@ import { environment } from '../../environments/environment';
 export class PortService {
 
   private portUrl = environment.apiUrl + '/port/';
+  private pccUrl = environment.apiUrl + '/portconfigcache/';
 
   constructor(
     private http: HttpClient
@@ -52,5 +53,13 @@ export class PortService {
       'switchlink_port_id': switchlink_port_id
     }
     return this.http.patch<any>(this.portUrl + id + '/', port, {withCredentials:true});
+  }
+
+  public getCaches(): Observable<PortConfigCache[]> {
+    return this.http.get<PortConfigCache[]>(this.pccUrl, {withCredentials:true})
+  }
+
+  public deleteAllCaches(): Observable<any> {
+    return this.http.delete<any>(this.pccUrl, {withCredentials:true})
   }
 }

@@ -8,6 +8,9 @@ export interface PortCommitConfig {
 }
 
 export interface PortConfigCache {
+    id: string | undefined;
+    port_id: string | undefined;
+    scope: number | undefined;
     isolate: boolean;
     vlan_ids: string[];
     default_vlan_id: string | null;

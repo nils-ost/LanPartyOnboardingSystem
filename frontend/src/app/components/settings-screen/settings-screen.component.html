@@ -37,4 +37,34 @@
     </ng-container>
 </p-panel>
 
+<p-panel header="PortConfigCache">
+    <ng-template pTemplate="icons">
+        <p-inputSwitch [(ngModel)]="pcc" (onChange)="refreshPortConfigCaches()" />&nbsp;
+        <button pButton (click)="clearPortConfigCaches()" i18n="@@buttonClear" class="p-button-danger" [disabled]="!pcc">Delete All</button>
+    </ng-template>
+
+    <ng-container *ngIf="pcc">
+        <div class="field">
+            <span class="p-float-label">
+                <input type="text" id="pcc_total" pInputText [(ngModel)]="pcc_total" [disabled]="true">
+                <label for="pcc_total" i18n="@@elementFieldLabelPccCountTotal">Total</label>
+            </span>
+        </div>
+
+        <div class="field">
+            <span class="p-float-label">
+                <input type="text" id="pcc_commit" pInputText [(ngModel)]="pcc_commit" [disabled]="true">
+                <label for="pcc_commit" i18n="@@elementFieldLabelPccCountCommit">Commit</label>
+            </span>
+        </div>
+
+        <div class="field">
+            <span class="p-float-label">
+                <input type="text" id="pcc_retreat" pInputText [(ngModel)]="pcc_retreat" [disabled]="true">
+                <label for="pcc_retreat" i18n="@@elementFieldLabelPccCountRetreat">Retreat</label>
+            </span>
+        </div>
+    </ng-container>
+</p-panel>
+
 <app-menu></app-menu>

@@ -8,7 +8,7 @@ from helpers.backgroundworker import device_onboarding_start
 from helpers.versioning import run as versioning_run
 from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint, SwitchEndpoint, OnboardingEndpoint, SettingEndpoint
 from endpoints.metrics import start_metrics_exporter
-from elements import VLAN, IpPool, Table, Seat, Participant, Device, Port
+from elements import VLAN, IpPool, Table, Seat, Participant, Device, Port, PortConfigCache
 
 logging.basicConfig(format='%(levelname)s:%(name)s:%(message)s', level='INFO')
 
@@ -27,6 +27,7 @@ class API():
         self.system = SystemEndpoint()
         self.onboarding = OnboardingEndpoint()
         self.setting = SettingEndpoint()
+        self.portconfigcache = PortConfigCacheEndpoint()
 
 
 class VLANEndpoint(ElementEndpointBase):
@@ -56,6 +57,10 @@ class DeviceEndpoint(ElementEndpointBase):
 class PortEndpoint(ElementEndpointBase):
     _element = Port
     _ro_attr = ['switchlink']
+
+
+class PortConfigCacheEndpoint(ElementEndpointBase):
+    _element = PortConfigCache
 
 
 if __name__ == '__main__':

@@ -16,8 +16,8 @@ class ElementEndpointBase():
     def index(self, element_id=None):
         if cherrypy.request.method == 'OPTIONS':
             if element_id is None:
-                cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST'
-                cherrypy_cors.preflight(allowed_methods=['GET', 'POST'])
+                cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST, DELETE'
+                cherrypy_cors.preflight(allowed_methods=['GET', 'POST', 'DELETE'])
                 return
             else:
                 el = self._element.get(element_id)
@@ -110,9 +110,12 @@ class ElementEndpointBase():
                 cherrypy.response.status = 403
                 return {'error': 'access not allowed'}
             if element_id is None:
-                cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST'
-                cherrypy.response.status = 405
-                return {'error': 'DELETE not allowed on indexes'}
+                deleted_ids = list()
+                for el in self._element.all():
+                    r = el.delete()
+                    if 'delete' in r:
+                        deleted_ids.append(r['delete'])
+                return {'deleted': deleted_ids}
             else:
                 el = self._element.get(element_id)
                 if el['_id'] is None:
@@ -124,7 +127,7 @@ class ElementEndpointBase():
                 return result
         else:
             if element_id is None:
-                cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST'
+                cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST, DELETE'
             else:
                 cherrypy.response.headers['Allow'] = 'OPTIONS, GET, PATCH, DELETE'
             cherrypy.response.status = 405
