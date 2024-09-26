@@ -86,13 +86,21 @@ class Switch(ElementBase):
     def scan_devices(self):
         global switch_objects
         global switch_macs
+        if not self.connected():
+            return False
+        swi = switch_objects[self['_id']]
+        swi.reloadPorts()
+        swi.reloadHosts()
+        return True
+
+    def map_devices(self):
+        global switch_objects
+        global switch_macs
         from elements import Device, Port
         if not self.connected():
             return 0
         new_count = 0
         swi = switch_objects[self['_id']]
-        swi.reloadPorts()
-        swi.reloadHosts()
         for port in swi.ports:
             p = Port.get_by_number(self['_id'], port.idx)
             if p is None:

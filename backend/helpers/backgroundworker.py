@@ -13,12 +13,18 @@ def device_scanner():
     time.sleep(3)
     while True:
         new_count = 0
+        connected = dict()
         for switch in Switch.all():
-            switch.scan_ports()
-            new_count += switch.scan_devices()
+            connected[switch['_id']] = switch.connected()
+            if connected[switch['_id']]:
+                switch.scan_ports()
+                switch.scan_devices()
+        for switch in Switch.all():
+            if connected[switch['_id']]:
+                new_count += switch.map_devices()
         if new_count > 0:
             print(f'Found {new_count} new Devices')
-        time.sleep(30)
+        time.sleep(15)
 
 
 def device_scanner_start():
