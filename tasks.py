@@ -49,7 +49,7 @@ def ng_build(c):
 def create_bundle(c):
     c.run('rm -rf /tmp/lpos; mkdir -p /tmp/lpos/backend')
     c.run('rm -rf backend/elements/__pycache__; rm -rf backend/endpoints/__pycache__; rm -rf backend/helpers/__pycache__; rm -rf backend/MTSwitch/__pycache__')
-    for item in ['main.py', 'cli.py', 'requirements.txt', 'elements', 'endpoints', 'helpers', 'MTSwitch', 'static']:
+    for item in ['main.py', 'scanner.py', 'cli.py', 'requirements.txt', 'elements', 'endpoints', 'helpers', 'MTSwitch', 'static']:
         c.run(f'cp -r backend/{item} /tmp/lpos/backend/')
     for item in ['fabfile.py', 'install']:
         c.run(f'cp -r {item} /tmp/lpos/')
