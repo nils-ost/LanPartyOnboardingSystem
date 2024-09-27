@@ -16,6 +16,7 @@ const routes: Routes = [
   { path: 'tables', component: TablesScreenComponent },
   { path: 'participants', component: ParticipantsScreenComponent},
   { path: 'devices', component: DevicesScreenComponent},
+  { path: 'devices/:port_id', component: DevicesScreenComponent},
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
   { path: 'onboarding', component: OnboardingComponent },

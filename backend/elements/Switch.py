@@ -488,6 +488,9 @@ class Switch(ElementBase):
         """
         Sends all required configuration made in LPOS to a (Hardware)Switch
         """
+        self['commited'] = False
+        self.save()
+
         from helpers.system import check_integrity_switch_commit
         integrity = check_integrity_switch_commit()
         if not integrity.get('code', 1) == 0:

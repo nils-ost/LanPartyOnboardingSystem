@@ -1,8 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
-import { Port, PortCommitConfig } from 'src/app/interfaces/port';
+import { Router } from '@angular/router';
+import { Port } from 'src/app/interfaces/port';
 import { Switch } from 'src/app/interfaces/switch';
-import { Vlan, VlanPurposeType } from 'src/app/interfaces/vlan';
+import { Vlan } from 'src/app/interfaces/vlan';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { PortService } from 'src/app/services/port.service';
 
@@ -33,7 +34,8 @@ export class PortsListComponent implements OnChanges, OnInit {
 
   constructor(
     private errorHandler: ErrorHandlerService,
-    private portService: PortService
+    private portService: PortService,
+    private router: Router
   ) {
     this.switchlinkOptions = [{name: 'None', code: null}];
   }
@@ -185,6 +187,10 @@ export class PortsListComponent implements OnChanges, OnInit {
       if (sw.id == id) return sw.desc;
     }
     return '';
+  }
+
+  showPortDevices(port_id: string) {
+    this.router.navigate(['/devices', port_id]);
   }
 
 }

@@ -155,11 +155,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/seats-list/seats-list.component.html</context>
@@ -863,7 +863,7 @@
         <target state="signed-off">Beschreibung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
@@ -931,7 +931,7 @@
         <target state="signed-off">SWlink Port</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">154</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSeatTableId" datatype="html">
@@ -2400,6 +2400,86 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
           <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tooltipDevicesOfPort" datatype="html">
+        <source>Show Devices connected to this Port</source>
+        <target state="signed-off">Geräte, die mit diesem Port verbunden sind, anzeigen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="buttonClear" datatype="html">
+        <source>Delete All</source>
+        <target state="signed-off">Alle löschen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPccCountTotal" datatype="html">
+        <source>Total</source>
+        <target state="signed-off">Gesamt</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPccCountCommit" datatype="html">
+        <source>Commit</source>
+        <target state="signed-off">Aufbauen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPccCountRetreat" datatype="html">
+        <source>Retreat</source>
+        <target state="signed-off">Zurücksetzen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tooltipShowPorts" datatype="html">
+        <source>Show Ports</source>
+        <target state="signed-off">Ports anzeigen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tooltipCommitSwitch" datatype="html">
+        <source>Commit Switch</source>
+        <target state="signed-off">Switch aufbauen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tooltipRetreatSwitch" datatype="html">
+        <source>Retreat Switch</source>
+        <target state="signed-off">Switch zurücksetzen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tooltipEditSwitch" datatype="html">
+        <source>Edit Switch</source>
+        <target state="signed-off">Switch bearbeiten</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tooltipDeleteSwitch" datatype="html">
+        <source>Delete Switch</source>
+        <target state="signed-off">Switch löschen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
     </body>

@@ -42,6 +42,7 @@ class SwitchEndpoint(ElementEndpointBase):
             try:
                 s.commit()
             except Exception:
+                cherrypy.response.status = 400
                 return {'error': 'commit did not work'}
 
             if s['commited']:

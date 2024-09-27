@@ -50,11 +50,11 @@
                 {{ portCount(sw.id) }}/{{ portCount(sw.id, true) }}
             </td>
             <td>
-                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-eye" (click)="showPortsList(sw)"></button>
-                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-file-import" (click)="commitSwitch(sw)"></button>
-                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-file-export" (click)="retreatSwitch(sw)"></button>
-                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editSwitch(sw)"></button>
-                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="confirmDelete(sw)"></button>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-eye" (click)="showPortsList(sw)" i18n-pTooltip="@@tooltipShowPorts" pTooltip="Show Ports"></button>
+                <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-file-import" (click)="commitSwitch(sw)" i18n-pTooltip="@@tooltipCommitSwitch" pTooltip="Commit Switch"></button>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-file-export" (click)="retreatSwitch(sw)" i18n-pTooltip="@@tooltipRetreatSwitch" pTooltip="Retreat Switch"></button>
+                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editSwitch(sw)" i18n-pTooltip="@@tooltipEditSwitch" pTooltip="Edit Switch"></button>
+                <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="confirmDelete(sw)"i18n-pTooltip="@@tooltipDeleteSwitch" pTooltip="Delete Switch"></button>
             </td>
         </tr>
     </ng-template>

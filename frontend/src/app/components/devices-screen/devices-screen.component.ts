@@ -1,5 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 import { Device } from 'src/app/interfaces/device';
 import { IpPool } from 'src/app/interfaces/ip-pool';
 import { Participant } from 'src/app/interfaces/participant';
@@ -32,6 +34,7 @@ export class DevicesScreenComponent implements OnInit {
   ports: Port[] = [];
   switches: Switch[] = [];
   vlans: Vlan[] = [];
+  portFilter: string | null = null;
 
   constructor(
     private errorHandler: ErrorHandlerService,
@@ -42,11 +45,17 @@ export class DevicesScreenComponent implements OnInit {
     private participantService: ParticipantService,
     private portService: PortService,
     private switchService: SwitchService,
-    private vlanService: VlanService
+    private vlanService: VlanService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    this.refreshDevices();
+    this.route.paramMap.subscribe({
+      next: (params => {
+        this.portFilter = params.get('port_id')
+        this.refreshDevices();
+      })
+    })
     this.refreshTables();
     this.refreshSeats();
     this.refreshIppools();
@@ -61,7 +70,15 @@ export class DevicesScreenComponent implements OnInit {
       .getDevices()
       .subscribe({
         next: (devices: Device[]) => {
-          this.devices = devices;
+          if (this.portFilter) {
+            this.devices = [];
+            for (let i = 0; i < devices.length; i++) {
+              if (devices[i].port_id == this.portFilter) this.devices.push(devices[i]);
+            }
+          }
+          else {
+            this.devices = devices;
+          }
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);

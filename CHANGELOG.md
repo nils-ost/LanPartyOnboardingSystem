@@ -1,6 +1,6 @@
 # LPOS Changelog
 
-## v0.x.0
+## v0.5.0
 
   * It's now possible to alter the behavior of how switch-Ports are configured during commit and retreat
     * On Port-level:
@@ -18,6 +18,7 @@
   * Adding and Deleting Seats with specific Number is now possible in frontend
   * Moved Device-Scanner to it's own Service
   * Devices-Screen now sortable by last_scan_ts
+  * Devices-Screen can now be filtered by a Switch-Port
   * ElementEndpointBase is now capable to delete all Elements at once (not just one specific)
 
 ## v0.4.0
