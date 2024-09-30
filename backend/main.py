@@ -56,7 +56,7 @@ class DeviceEndpoint(ElementEndpointBase):
 
 class PortEndpoint(ElementEndpointBase):
     _element = Port
-    _ro_attr = ['switchlink']
+    _ro_attr = ['switchlink', 'number_display']
 
 
 class PortConfigCacheEndpoint(ElementEndpointBase):

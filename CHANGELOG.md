@@ -1,5 +1,9 @@
 # LPOS Changelog
 
+## v0.?.0
+
+  * Switch is now able to carry a port_numbering_offset, which is used on Port to calculate a port-number to display on the Frontend
+
 ## v0.5.0
 
   * It's now possible to alter the behavior of how switch-Ports are configured during commit and retreat

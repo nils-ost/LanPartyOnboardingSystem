@@ -156,6 +156,13 @@ def run():
         for p in docDB.search_many('Port', {'commit_config': None}):
             p['commit_config'] = None
             docDB.replace('Port', p)
+    if versions_lt(db_version, '0.5.1'):
+        from elements import Switch
+        print("  Adding 'port_numbering_offset' attribute to Switches")
+        for s in docDB.search_many('Switch', {'port_numbering_offset': None}):
+            s = Switch(s)
+            s['port_numbering_offset'] = 0
+            s.save()
 
     db_defaults()
 

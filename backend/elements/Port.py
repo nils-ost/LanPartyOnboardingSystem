@@ -4,6 +4,7 @@ from elements._elementBase import ElementBase, docDB
 class Port(ElementBase):
     _attrdef = dict(
         number=ElementBase.addAttr(type=int, notnone=True),
+        number_display=ElementBase.addAttr(type=int, default=None),
         desc=ElementBase.addAttr(default='', notnone=True),
         switch_id=ElementBase.addAttr(notnone=True, fk='Switch'),
         participants=ElementBase.addAttr(type=bool, default=False, notnone=True),
@@ -166,6 +167,11 @@ class Port(ElementBase):
             self._cache['switchlink_port_id_fromdb'] = None
         else:
             self._cache['switchlink_port_id_fromdb'] = docDB.get(self.__class__.__name__, self['_id'])['switchlink_port_id']
+        if self._attr.get('number_display', None) is None:
+            offset = self.switch()._attr.get('port_numbering_offset', None)
+            if offset is None:
+                offset = 0
+            self['number_display'] = self['number'] + offset
         if self['switchlink']:
             self['participants'] = False
             self['commit_disabled'] = False

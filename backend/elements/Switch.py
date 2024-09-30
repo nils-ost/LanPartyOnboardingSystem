@@ -15,7 +15,8 @@ class Switch(ElementBase):
         pw=ElementBase.addAttr(default='', notnone=True),
         purpose=ElementBase.addAttr(type=int, default=0, notnone=True),
         commited=ElementBase.addAttr(type=bool, default=False, notnone=True),
-        onboarding_vlan_id=ElementBase.addAttr(default=None, fk='VLAN')
+        onboarding_vlan_id=ElementBase.addAttr(default=None, fk='VLAN'),
+        port_numbering_offset=ElementBase.addAttr(type=int, default=0)
     )
 
     def validate(self):
@@ -38,6 +39,8 @@ class Switch(ElementBase):
     def save_pre(self):
         if self['purpose'] == 0:
             self['onboarding_vlan_id'] = None
+        if self._attr.get('port_numbering_offset', None) is None:
+            self['port_numbering_offset'] = 0
 
     def save_post(self):
         from elements import Port
@@ -49,6 +52,7 @@ class Switch(ElementBase):
         self.scan_ports()
         for p in docDB.search_many('Port', {'switch_id': self['_id']}):
             port = Port(p)
+            port['number_display'] = port['number'] + self['port_numbering_offset']
             port.save()  # also automatically deletes corresponding PortConfigCache
 
     def delete_pre(self):
