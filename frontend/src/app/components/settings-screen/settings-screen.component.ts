@@ -3,7 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { SettingService } from 'src/app/services/setting.service';
 import { Setting } from 'src/app/interfaces/setting';
+import { Switch } from 'src/app/interfaces/switch';
 import { PortService } from 'src/app/services/port.service';
+import { SwitchService } from 'src/app/services/switch.service';
 import { PortConfigCache } from 'src/app/interfaces/port';
 
 @Component({
@@ -12,8 +14,10 @@ import { PortConfigCache } from 'src/app/interfaces/port';
   styleUrls: ['./settings-screen.component.scss']
 })
 export class SettingsScreenComponent implements OnInit {
+  switches: Switch[] = [];
   absolute_seatnumbers: boolean = false;
   nlpt_sso: boolean = false;
+  pno: boolean = False;
   pcc: boolean = false;
   pcc_total: number = 0;
   pcc_commit: number = 0;
@@ -24,7 +28,8 @@ export class SettingsScreenComponent implements OnInit {
   constructor(
     private errorHandler: ErrorHandlerService,
     private settingService: SettingService,
-    private portService: PortService
+    private portService: PortService,
+    private switchService: SwitchService
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +78,21 @@ export class SettingsScreenComponent implements OnInit {
               if (pcc.scope == 0) this.pcc_commit += 1;
               else this.pcc_retreat += 1;
             })
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+          }
+        })
+    }
+  }
+
+  refreshSwitches() {
+    if (this.pno) {
+      this.portSwitch
+        .getSwitchs()
+        .subscribe({
+          next: (switches: Switch[]) => {
+            this.switches = switches;
           },
           error: (err: HttpErrorResponse) => {
             this.errorHandler.handleError(err);
@@ -141,6 +161,12 @@ export class SettingsScreenComponent implements OnInit {
           this.errorHandler.handleError(err);
         }
       })
+  }
+
+  save_pno() {
+    for (let i = 0; i < this.switches.length(); i++) {
+      this.switchService.updatePortNumberingOffset(this.switches[i].id, this.switches[i].port_numbering_offset);
+    }
   }
 
 }

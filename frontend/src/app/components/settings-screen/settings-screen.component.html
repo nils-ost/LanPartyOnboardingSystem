@@ -67,4 +67,20 @@
     </ng-container>
 </p-panel>
 
+<p-panel header="Port Numbering Offset">
+    <ng-template pTemplate="icons">
+        <p-inputSwitch [(ngModel)]="pno" (onChange)="refreshSwitches()" />&nbsp;
+        <button pButton (click)="save_pno()" i18n="@@buttonSave">Save</button>
+    </ng-template>
+
+    <ng-container *ngIf="pno" ng-for="switches">
+        <div class="field" let-switch>
+            <span class="p-float-label">
+                <input type="text" id="pno_{{ switch.id }}" pInputText [(ngModel)]="switch.port_numbering_offset">
+                <label for="pno_{{ switch.id }}">{{ switch.desc }}</label>
+            </span>
+        </div>
+    </ng-container>
+</p-panel>
+
 <app-menu></app-menu>

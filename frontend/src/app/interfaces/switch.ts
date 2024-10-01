@@ -10,6 +10,7 @@ export interface Switch {
     connected: boolean;
     mac: string;
     known_vlans: string[];
+    port_numbering_offset: number;
 }
 
 export enum SwitchPurposeType {
