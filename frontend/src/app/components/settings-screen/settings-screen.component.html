@@ -73,13 +73,15 @@
         <button pButton (click)="save_pno()" i18n="@@buttonSave">Save</button>
     </ng-template>
 
-    <ng-container *ngIf="pno" ng-for="switches">
-        <div class="field" let-switch>
-            <span class="p-float-label">
-                <input type="text" id="pno_{{ switch.id }}" pInputText [(ngModel)]="switch.port_numbering_offset">
-                <label for="pno_{{ switch.id }}">{{ switch.desc }}</label>
-            </span>
-        </div>
+    <ng-container *ngIf="pno">
+        <ng-template ngFor let-switch [ngForOf]="switches">
+            <div class="field">
+                <span class="p-float-label">
+                    <input type="text" id="pno_{{ switch.id }}" pInputText [(ngModel)]="switch.port_numbering_offset">
+                    <label for="pno_{{ switch.id }}">{{ switch.desc }}</label>
+                </span>
+            </div>
+        </ng-template>
     </ng-container>
 </p-panel>
 

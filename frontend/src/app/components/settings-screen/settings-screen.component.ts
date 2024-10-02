@@ -17,7 +17,7 @@ export class SettingsScreenComponent implements OnInit {
   switches: Switch[] = [];
   absolute_seatnumbers: boolean = false;
   nlpt_sso: boolean = false;
-  pno: boolean = False;
+  pno: boolean = false;
   pcc: boolean = false;
   pcc_total: number = 0;
   pcc_commit: number = 0;
@@ -88,8 +88,8 @@ export class SettingsScreenComponent implements OnInit {
 
   refreshSwitches() {
     if (this.pno) {
-      this.portSwitch
-        .getSwitchs()
+      this.switchService
+        .getSwitches()
         .subscribe({
           next: (switches: Switch[]) => {
             this.switches = switches;
@@ -164,7 +164,7 @@ export class SettingsScreenComponent implements OnInit {
   }
 
   save_pno() {
-    for (let i = 0; i < this.switches.length(); i++) {
+    for (let i = 0; i < this.switches.length; i++) {
       this.switchService.updatePortNumberingOffset(this.switches[i].id, this.switches[i].port_numbering_offset);
     }
   }
