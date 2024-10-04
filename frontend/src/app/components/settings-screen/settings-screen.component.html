@@ -1,15 +1,15 @@
 
-<p-panel header="Absolute Seat Numbers">
+<p-panel i18n-header="@@settingsHeaderAbsoluteSeatNumbers" header="Absolute Seat Numbers">
     <ng-template pTemplate="icons">
         <p-inputSwitch [(ngModel)]="absolute_seatnumbers" />&nbsp;
         <button pButton (click)="save_absolute_seatnumbers()" i18n="@@buttonSave">Save</button>
     </ng-template>
 
-    <ng-container *ngIf="!absolute_seatnumbers">
+    <ng-container *ngIf="!absolute_seatnumbers" i18n="@@settingsDescriptionForDisabledASN">
         Currently absolut seatnumbering is disabled. The pariticipants need to provide a tablenumber and a seatnumber (on this table) while onboarding.
     </ng-container>
 
-    <ng-container *ngIf="absolute_seatnumbers">
+    <ng-container *ngIf="absolute_seatnumbers" i18n="@@settingsDescriptionForEnabledASN">
         The absolute seatnumbering is now enabled. Apply a individual seatnumber for every seat to satisfy integrity checks. Partisipants then use this number during onbording.
     </ng-container>
 </p-panel>
@@ -67,7 +67,7 @@
     </ng-container>
 </p-panel>
 
-<p-panel header="Port Numbering Offset">
+<p-panel i18n-header="@@settingsHeaderPortNumberingOffset" header="Port Numbering Offset">
     <ng-template pTemplate="icons">
         <p-inputSwitch [(ngModel)]="pno" (onChange)="refreshSwitches()" />&nbsp;
         <button pButton (click)="save_pno()" i18n="@@buttonSave">Save</button>

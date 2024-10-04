@@ -182,6 +182,10 @@
           <context context-type="linenumber">5</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
@@ -2480,6 +2484,38 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
           <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsHeaderAbsoluteSeatNumbers" datatype="html">
+        <source>Absolute Seat Numbers</source>
+        <target state="signed-off">Absolute Sitzplatz Nummerierung</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsDescriptionForDisabledASN" datatype="html">
+        <source>Currently absolut seatnumbering is disabled. The pariticipants need to provide a tablenumber and a seatnumber (on this table) while onboarding.</source>
+        <target state="signed-off">Derzeit is die absolute Sitzplatznummerierung deaktiviert. Teilnehmer müssen, beim Onboarding, die Tischnummer und Platznummer am Tisch angeben.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsDescriptionForEnabledASN" datatype="html">
+        <source>The absolute seatnumbering is now enabled. Apply a individual seatnumber for every seat to satisfy integrity checks. Partisipants then use this number during onbording.</source>
+        <target state="signed-off">Die absolute Sitzplatzummerierung ist aktiv. Jedem Sitzplatz muss eine individuelle Platznummer zugeordnet werden, um die Integritätsprüfung zu bestehen. Die Teilnehmer müssen dann diese Platznummer, während des Onboarding, verwenden.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsHeaderPortNumberingOffset" datatype="html">
+        <source>Port Numbering Offset</source>
+        <target state="signed-off">Port Nummerierungs-Versatz</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
     </body>

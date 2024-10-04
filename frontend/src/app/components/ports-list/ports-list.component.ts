@@ -56,7 +56,7 @@ export class PortsListComponent implements OnChanges, OnInit {
     let list: any[] = [{name: 'None', code: null}];
     for (let i = 0; i < this.ports.length; i++) {
       let port: Port = this.ports[i];
-      if (port.switchlink) {
+      if (port.switchlink && (this.selectedSwitch == undefined || this.selectedSwitch.id != port.switch_id)) {
         let element: any = {
           name: this.switchAddrById(port.switch_id) + ' (' + this.switchDescById(port.switch_id) + '): #' + port.number_display,
           code: port.id
