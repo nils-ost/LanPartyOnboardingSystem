@@ -103,7 +103,7 @@ export class DevicesListComponent implements OnChanges {
       for (let i = 0; i < this.ports.length; i++) {
         let port: Port = this.ports[i];
         let swi: Switch | undefined = switchesById.get(port.switch_id);
-        if (swi) this.portsReadable.set(port.id, swi.desc + ': #' + port.number);
+        if (swi) this.portsReadable.set(port.id, swi.desc + ': #' + port.number_display);
       }
     }
   }

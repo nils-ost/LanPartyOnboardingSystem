@@ -50,7 +50,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-port>
         <tr>
-            <td>{{ port.number }}</td>
+            <td>{{ port.number_display }}</td>
             <td>
                 {{ port.desc }}
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(port, $event)"></button>

@@ -23,6 +23,7 @@ export interface PortConfigCache {
 export interface Port {
     id: string;
     number: number;
+    number_display: number;
     desc: string;
     switch_id: string;
     participants: boolean;

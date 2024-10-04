@@ -58,7 +58,7 @@ export class PortsListComponent implements OnChanges, OnInit {
       let port: Port = this.ports[i];
       if (port.switchlink) {
         let element: any = {
-          name: this.switchAddrById(port.switch_id) + ' (' + this.switchDescById(port.switch_id) + '): ' + port.number,
+          name: this.switchAddrById(port.switch_id) + ' (' + this.switchDescById(port.switch_id) + '): #' + port.number_display,
           code: port.id
         };
         list.push(element);
@@ -148,7 +148,7 @@ export class PortsListComponent implements OnChanges, OnInit {
 
   editVlanConfigStart(port: Port, event: any) {
     this.selectedPort = port;
-    if (this.selectedSwitch) this.selectedPortName = this.selectedSwitch.desc + ": " + port.number;
+    if (this.selectedSwitch) this.selectedPortName = this.selectedSwitch.desc + ": #" + port.number_display;
     this.editVlanConfigDialog = true;
   }
 

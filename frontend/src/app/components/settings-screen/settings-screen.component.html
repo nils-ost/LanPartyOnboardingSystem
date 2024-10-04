@@ -74,14 +74,19 @@
     </ng-template>
 
     <ng-container *ngIf="pno">
-        <ng-template ngFor let-switch [ngForOf]="switches">
-            <div class="field">
-                <span class="p-float-label">
-                    <input type="text" id="pno_{{ switch.id }}" pInputText [(ngModel)]="switch.port_numbering_offset">
-                    <label for="pno_{{ switch.id }}">{{ switch.desc }}</label>
-                </span>
-            </div>
-        </ng-template>
+        <ng-container *ngIf="pno_loading">
+            <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
+        </ng-container>
+        <ng-container *ngIf="!pno_loading">
+            <ng-template ngFor let-switch [ngForOf]="switches">
+                <div class="field">
+                    <span class="p-float-label">
+                        <p-inputNumber inputId="pno_{{ switch.id }}" [(ngModel)]="switch.port_numbering_offset" [showButtons]="true"></p-inputNumber>
+                        <label for="pno_{{ switch.id }}">{{ switch.desc }}</label>
+                    </span>
+                </div>
+            </ng-template>
+        </ng-container>
     </ng-container>
 </p-panel>
 
