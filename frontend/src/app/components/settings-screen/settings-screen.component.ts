@@ -7,6 +7,9 @@ import { Switch } from 'src/app/interfaces/switch';
 import { PortService } from 'src/app/services/port.service';
 import { SwitchService } from 'src/app/services/switch.service';
 import { PortConfigCache } from 'src/app/interfaces/port';
+import { SystemService } from 'src/app/services/system.service';
+import { DeviceService } from 'src/app/services/device.service';
+import { Device } from 'src/app/interfaces/device';
 
 @Component({
   selector: 'app-settings-screen',
@@ -18,19 +21,24 @@ export class SettingsScreenComponent implements OnInit {
   absolute_seatnumbers: boolean = false;
   nlpt_sso: boolean = false;
   pno_loading: boolean = false;
+  rod_loading: boolean = false;
   pno: boolean = false;
   pcc: boolean = false;
+  rod: boolean = false;
   pcc_total: number = 0;
   pcc_commit: number = 0;
   pcc_retreat: number = 0;
+  rod_total: number = 0;
   sso_login_url: string = "https://nlpt.online/app/event-login?redirect=";
   sso_onboarding_url: string = "https://nlpt.online/api/onboarding/2024";
 
   constructor(
     private errorHandler: ErrorHandlerService,
     private settingService: SettingService,
+    private systemService: SystemService,
     private portService: PortService,
-    private switchService: SwitchService
+    private switchService: SwitchService,
+    private deviceService: DeviceService
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +95,23 @@ export class SettingsScreenComponent implements OnInit {
     }
   }
 
+  refreshDevices() {
+    this.rod_loading = true;
+    if (this.rod) {
+      this.deviceService
+        .getDevices()
+        .subscribe({
+          next: (devices: Device[]) => {
+            this.rod_total = devices.length;
+            this.rod_loading = false;
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+          }
+        })
+    }
+  }
+
   refreshSwitches() {
     this.pno_loading = true;
     if (this.pno) {
@@ -111,6 +136,21 @@ export class SettingsScreenComponent implements OnInit {
         .subscribe({
           next: () => {
             this.refreshPortConfigCaches();
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+          }
+        })
+    }
+  }
+
+  clearDevices() {
+    if (this.rod) {
+      this.systemService
+        .execRemoveOfflineDevices()
+        .subscribe({
+          next: () => {
+            this.refreshDevices();
           },
           error: (err: HttpErrorResponse) => {
             this.errorHandler.handleError(err);

@@ -327,3 +327,22 @@ def check_integrity_haproxy_commit():
         if not r.get('code', 1) == 0:
             return r
     return {'code': 0, 'desc': 'check ok'}
+
+
+def remove_offline_devices():
+    """
+    removes all, as offline marked, Devices that do not have a commit-/retreat-config or description
+
+    :returns: count of deleted Devices
+    :rtype: int
+    """
+    from elements import Device
+    import time
+    deleted_count = 0
+    ts = int(time.time()) - 60
+    for d in Device.all():
+        if d['last_scan_ts'] < ts and d['commit_config'] is None and d['retreat_config'] is None and d['desc'].strip() == '':
+            if not d['onboarding_blocked'] and d['seat_id'] is None and d['participant_id'] is None and d['ip_pool_id'] is None and d['ip'] is None:
+                d.delete()
+                deleted_count += 1
+    return deleted_count

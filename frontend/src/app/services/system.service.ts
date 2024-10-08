@@ -58,4 +58,8 @@ export class SystemService {
   public execCommitHaproxy(): Observable<any> {
     return this.http.post<any>(this.systemUrl + 'commit_haproxy/', {}, {withCredentials:true});
   }
+
+  public execRemoveOfflineDevices(): Observable<any> {
+    return this.http.post<any>(this.systemUrl + 'remove_offline_devices/', {}, {withCredentials:true});
+  }
 }

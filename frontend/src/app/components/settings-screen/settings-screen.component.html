@@ -90,4 +90,25 @@
     </ng-container>
 </p-panel>
 
+<p-panel i18n-header="@@settingsHeaderRemoveOfflineDevices" header="Devices">
+    <ng-template pTemplate="icons">
+        <p-inputSwitch [(ngModel)]="rod" (onChange)="refreshDevices()" />&nbsp;
+        <button pButton (click)="clearDevices()" i18n="@@buttonClearROD" class="p-button-danger" [disabled]="!rod">Remove All Offline</button>
+    </ng-template>
+
+    <ng-container *ngIf="rod">
+        <ng-container *ngIf="rod_loading">
+            <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
+        </ng-container>
+        <ng-container *ngIf="!rod_loading">
+            <div class="field">
+                <span class="p-float-label">
+                    <input type="text" id="rod_total" pInputText [(ngModel)]="rod_total" [disabled]="true">
+                    <label for="rod_total" i18n="@@elementFieldLabelRodTotal">Devices Count</label>
+                </span>
+            </div>
+        </ng-container>
+    </ng-container>
+</p-panel>
+
 <app-menu></app-menu>

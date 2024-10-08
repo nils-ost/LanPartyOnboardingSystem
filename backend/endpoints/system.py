@@ -391,3 +391,34 @@ class SystemEndpoint():
             cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
             cherrypy.response.status = 405
             return {'error': 'method not allowed'}
+
+    @cherrypy.expose()
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
+    def remove_offline_devices(self):
+        if cherrypy.request.method == 'OPTIONS':
+            cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
+            cherrypy_cors.preflight(allowed_methods=['POST'])
+            return
+
+        cookie = cherrypy.request.cookie.get('LPOSsession')
+        if cookie:
+            session = Session.get(cookie.value)
+        else:
+            session = Session.get(None)
+        if len(session.validate_base()) > 0:
+            cherrypy.response.status = 401
+            return {'error': 'not authorized'}
+        elif not session.admin():
+            cherrypy.response.status = 403
+            return {'error': 'access not allowed'}
+
+        if cherrypy.request.method == 'POST':
+            from helpers.system import remove_offline_devices
+            deleted_count = remove_offline_devices()
+            cherrypy.response.status = 201
+            return {'code': 0, 'desc': 'done', 'count': deleted_count}
+        else:
+            cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
+            cherrypy.response.status = 405
+            return {'error': 'method not allowed'}
