@@ -69,6 +69,11 @@ def create_testdata(c):
             counter += 1
             d.port(Port.get_by_number(switch_id=s['_id'], number=i))
             d.save()
+    for i in range(3):  # to have one port with multiple devices
+        d = Device({'mac': f'testdevice{counter}'})
+        counter += 1
+        d.port(Port.get_by_number(switch_id=s_core['_id'], number=6))
+        d.save()
 
 
 @task(pre=[create_admin], name='create-nlpt')

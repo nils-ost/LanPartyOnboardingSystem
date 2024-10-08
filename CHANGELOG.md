@@ -3,6 +3,7 @@
 ## v0.?.0
 
   * Switch is now able to carry a port_numbering_offset, which is used on Port to calculate a port-number to display on the Frontend
+  * Bugfix: With multiple Devices on a Port, if only a single Device does have a manual config, this is applied now in PortConfigCache
 
 ## v0.5.0
 

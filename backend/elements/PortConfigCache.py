@@ -72,16 +72,24 @@ class PortConfigCache(ElementBase):
             manual_config = self.port()['commit_config']
             manual_disabled = self.port()['commit_disabled']
             devices = Device.get_by_port(self['port_id'])
-            if len(devices) == 1:
-                device_config = devices[0]['commit_config']
+            for d in devices:
+                if device_config is None and d['commit_config'] is not None:
+                    device_config = d['commit_config']
+                elif device_config is not None and d['commit_config'] is not None:
+                    device_config = None  # Device based commit_config can't be determined definitely, therefore don't apply any
+                    break
         else:
             self['mode'] = 'optional'
             self['receive'] = 'any'
             manual_config = self.port()['retreat_config']
             manual_disabled = self.port()['retreat_disabled']
             devices = Device.get_by_port(self['port_id'])
-            if len(devices) == 1:
-                device_config = devices[0]['retreat_config']
+            for d in devices:
+                if device_config is None and d['retreat_config'] is not None:
+                    device_config = d['retreat_config']
+                elif device_config is not None and d['retreat_config'] is not None:
+                    device_config = None  # Device based retreat_config can't be determined definitely, therefore don't apply any
+                    break
 
         if self['scope'] == 0:
             # commit scope
