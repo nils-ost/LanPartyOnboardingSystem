@@ -47,11 +47,11 @@
         <target state="signed-off">Wert bereits in Benutzung, muss eindeutig sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.ts</context>
-          <context context-type="linenumber">268</context>
+          <context context-type="linenumber">103</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">276</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
@@ -123,11 +123,11 @@
         <target state="signed-off">Speichern</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.html</context>
@@ -155,11 +155,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">152</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/seats-list/seats-list.component.html</context>
@@ -387,7 +387,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.ts</context>
-          <context context-type="linenumber">250</context>
+          <context context-type="linenumber">260</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-list/tables-list.component.ts</context>
@@ -415,7 +415,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.ts</context>
-          <context context-type="linenumber">257</context>
+          <context context-type="linenumber">267</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-list/tables-list.component.ts</context>
@@ -811,7 +811,7 @@
         <target state="signed-off">dieser Login Name wird bereits von einem anderen Teilnehmer verwendet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode70Summary" datatype="html">
@@ -819,7 +819,7 @@
         <target state="signed-off">nicht gefunden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.ts</context>
-          <context context-type="linenumber">260</context>
+          <context context-type="linenumber">268</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode70" datatype="html">
@@ -827,7 +827,7 @@
         <target state="signed-off">kein Sitzplatz mit dieser ID gefunden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.ts</context>
-          <context context-type="linenumber">261</context>
+          <context context-type="linenumber">269</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode2SummaryOnParticipant" datatype="html">
@@ -835,7 +835,7 @@
         <target state="signed-off">Sitzplatz ist nicht verfügbar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.ts</context>
-          <context context-type="linenumber">267</context>
+          <context context-type="linenumber">275</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonCreateMultiple" datatype="html">
@@ -867,7 +867,7 @@
         <target state="signed-off">Beschreibung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
@@ -935,7 +935,7 @@
         <target state="signed-off">SWlink Port</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">154</context>
+          <context context-type="linenumber">161</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSeatTableId" datatype="html">
@@ -1203,7 +1203,7 @@
         <target state="signed-off">Switch kann nicht gelöscht werden. Es gibt mindestens einen Tisch der diesen Switch verwendet.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.ts</context>
-          <context context-type="linenumber">253</context>
+          <context context-type="linenumber">263</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelTableDesc" datatype="html">
@@ -1691,7 +1691,7 @@
         <target state="signed-off">Beschreibung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
@@ -1711,7 +1711,7 @@
         <target state="signed-off">Sitzplatz</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
@@ -2123,11 +2123,11 @@
         <target state="signed-off">Zurücksetzen: Manuell</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tooltipRetreatAuto" datatype="html">
@@ -2135,11 +2135,11 @@
         <target state="signed-off">Zurücksetzen: Automatisch</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tooltipRetreatExclude" datatype="html">
@@ -2147,7 +2147,7 @@
         <target state="signed-off">Zurücksetzen: Ausschließen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tooltipCommitAuto" datatype="html">
@@ -2155,11 +2155,11 @@
         <target state="signed-off">Aufbauen: Automatisch</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tooltipCommitExclude" datatype="html">
@@ -2167,7 +2167,7 @@
         <target state="signed-off">Aufbauen: Ausschließen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">72</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tooltipCommitManual" datatype="html">
@@ -2175,11 +2175,11 @@
         <target state="signed-off">Aufbauen: Manuell</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tooltipAdminPrivilegesRevoke" datatype="html">
@@ -2411,7 +2411,7 @@
         <target state="signed-off">Geräte, die mit diesem Port verbunden sind, anzeigen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ports-list/ports-list.component.html</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">110</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonClear" datatype="html">
@@ -2516,6 +2516,38 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
           <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tooltipDeviceRemovePort" datatype="html">
+        <source>Unlink Port from Device</source>
+        <target state="signed-off">Port-Verknüpfung von Gerät lösen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/devices-list/devices-list.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsHeaderRemoveOfflineDevices" datatype="html">
+        <source>Devices</source>
+        <target state="signed-off">Geräte</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="buttonClearROD" datatype="html">
+        <source>Remove All Offline</source>
+        <target state="signed-off">Alle offline entfernen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelRodTotal" datatype="html">
+        <source>Devices Count</source>
+        <target state="signed-off">Geräte Anzahl</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">107</context>
         </context-group>
       </trans-unit>
     </body>
