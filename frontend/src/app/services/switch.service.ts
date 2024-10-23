@@ -33,6 +33,11 @@ export class SwitchService {
     return this.http.patch<any>(this.switchUrl + id + '/', sw, {withCredentials:true});
   }
 
+  public dummySave(id: string): Observable<any> {
+    let sw = {'id': id};
+    return this.http.patch<any>(this.switchUrl + id + '/', sw, {withCredentials:true});
+  }
+
   public updatePortNumberingOffset(id: string, pno: number): Observable<any> {
     let sw = {'id': id, 'port_numbering_offset': pno};
     return this.http.patch<any>(this.switchUrl + id + '/', sw, {withCredentials:true});

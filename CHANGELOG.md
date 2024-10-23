@@ -7,6 +7,7 @@
   * It's now possible to remove all offline Devices, that are not referenced by anything, with one click
   * There is now a button, in Devices list, to remove the attched Port from Device
   * Device description is now displayed in PortList, if Port does not have a description
+  * Before opening PortList of Switch, the current Port-states are fetched from hardware
 
 ## v0.5.0
 

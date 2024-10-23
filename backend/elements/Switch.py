@@ -48,8 +48,9 @@ class Switch(ElementBase):
         test_suite = 'environment' in cherrypy.config and cherrypy.config['environment'] == 'test_suite'
         if not test_suite:
             switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
-        self.scan_vlans()
-        self.scan_ports()
+        if self.connected():
+            self.scan_vlans()
+            self.scan_ports()
         for p in docDB.search_many('Port', {'switch_id': self['_id']}):
             port = Port(p)
             port['number_display'] = port['number'] + self['port_numbering_offset']
@@ -175,7 +176,7 @@ class Switch(ElementBase):
             return 0
         new_count = 0
         swi = switch_objects[self['_id']]
-        swi.reloadVlans()
+        swi.reloadPorts()
         for port in swi.ports:
             p = Port.get_by_number(self['_id'], port.idx)
             if p is None:

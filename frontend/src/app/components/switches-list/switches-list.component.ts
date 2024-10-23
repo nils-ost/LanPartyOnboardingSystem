@@ -231,6 +231,16 @@ export class SwitchesListComponent implements OnChanges {
   }
 
   showPortsList(sw: Switch) {
+    this.switchService
+      .dummySave(sw.id)
+      .subscribe({
+        next: (response: any) => {
+          this.editedSwitchEvent.emit(null);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
     this.selectedSwitch = sw;
     this.portsListDialog = true;
   }
