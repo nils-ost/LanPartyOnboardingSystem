@@ -7,6 +7,7 @@ import { Participant } from 'src/app/interfaces/participant';
 import { Port } from 'src/app/interfaces/port';
 import { Seat } from 'src/app/interfaces/seat';
 import { Switch } from 'src/app/interfaces/switch';
+import { System } from 'src/app/interfaces/system';
 import { Table } from 'src/app/interfaces/table';
 import { Vlan } from 'src/app/interfaces/vlan';
 import { DeviceService } from 'src/app/services/device.service';
@@ -19,6 +20,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./devices-list.component.scss']
 })
 export class DevicesListComponent implements OnChanges {
+  @Input() system?: System;
   @Input() devices: Device[] = [];
   @Input() tables: Table[] = [];
   @Input() seats: Seat[] = [];
@@ -45,6 +47,7 @@ export class DevicesListComponent implements OnChanges {
   selectedDeviceName: string = "";
   newDesc: string = "";
   editVlanConfigDialog: boolean = false;
+  absolute_seatnumbers: boolean = false;
 
   constructor(
     public utils: UtilsService,
@@ -56,7 +59,9 @@ export class DevicesListComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (('tables' in changes || 'seats' in changes) && this.tables.length > 0 && this.seats.length > 0) {
+    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
+
+    if (('tables' in changes || 'seats' in changes || 'system' in changes) && this.tables.length > 0 && this.seats.length > 0) {
       let tablesById: Map<string, Table> = new Map<string, Table>;
       let newList: any[] = [];
       newList.push({name: '--null--', code: null});
@@ -65,7 +70,11 @@ export class DevicesListComponent implements OnChanges {
         let seat: Seat = this.seats[i];
         let table: Table | undefined = tablesById.get(seat.table_id);
         if (table) {
-          let name: string = table.number + '(' + table.desc + ')' + ': #' + seat.number;
+          let name: string = '';
+          if (table.desc != '') name += table.desc;
+          else name += table.number;
+          name += ': #' + seat.number;
+          if (this.absolute_seatnumbers) name = seat.number_absolute + ' (' + name + ')';
           this.seatsReadable.set(seat.id, name);
           newList.push({name: name, code: seat.id});
         }

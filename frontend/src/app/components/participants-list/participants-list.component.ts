@@ -6,6 +6,7 @@ import { Participant } from 'src/app/interfaces/participant';
 import { Seat } from 'src/app/interfaces/seat';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { ParticipantService } from 'src/app/services/participant.service';
+import { System } from 'src/app/interfaces/system';
 
 @Component({
   selector: 'app-participants-list',
@@ -13,6 +14,7 @@ import { ParticipantService } from 'src/app/services/participant.service';
   styleUrls: ['./participants-list.component.scss']
 })
 export class ParticipantsListComponent implements OnChanges {
+  @Input() system?: System;
   @Input() participants!: Participant[];
   @Input() seats!: Seat[];
   @Input() tables!: Table[];
@@ -31,6 +33,7 @@ export class ParticipantsListComponent implements OnChanges {
   seatsOptions: any[] = [];
   tablesById: Map<string, Table> = new Map<string, Table>;
   seatsNames: Map<string, string> = new Map<string, string>;
+  absolute_seatnumbers: boolean = false;
 
   constructor(
     private messageService: MessageService,
@@ -40,6 +43,7 @@ export class ParticipantsListComponent implements OnChanges {
   ) {}
 
   ngOnChanges(): void {
+    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
     let maxTable: number = 0;
     for (let i = 0; i < this.tables.length; i++) {
       let table: Table = this.tables[i];
@@ -61,9 +65,13 @@ export class ParticipantsListComponent implements OnChanges {
           let seat: Seat = this.seats[i];
           let table: Table | undefined = this.tablesById.get(seat.table_id);
           if (table && table.number == ti && seat.number == si) {
-            let desc: string = table.number + ' (' + table.desc + '): #' + seat.number;
-            list.push({name: desc, code: seat.id});
-            this.seatsNames.set(seat.id, desc);
+            let name: string = '';
+            if (table.desc != '') name += table.desc;
+            else name += table.number;
+            name += ': #' + seat.number;
+            if (this.absolute_seatnumbers) name = seat.number_absolute + ' (' + name + ')';
+            list.push({name: name, code: seat.id});
+            this.seatsNames.set(seat.id, name);
           }
         }
       }
