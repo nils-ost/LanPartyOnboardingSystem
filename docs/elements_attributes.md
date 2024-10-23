@@ -18,6 +18,7 @@ Note: for switchlink Ports only the attribute `other_vlans` is available, for no
 
 ### possible attributes in dict()
 
+  * **device_desc** *(str)*: if connected device does have a description, it is stored here
   * **other_vlans** *(list(str))*: list of VlanIds (of purpose other) that are added to switchlink Port on commit (besides the required VLANs for this switchlink)
   * **vlans** *(list(str))*: list of VlanIds this Port has access to. Must contain at least one VlanId
   * **default** *(str)*: defines the VLAN(tag) that is given to untagged traffic on this port. If it is not explicitly set, the first entry of vlans is assigned

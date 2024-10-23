@@ -5,6 +5,7 @@ class PortConfigCache(ElementBase):
     _attrdef = dict(
         port_id=ElementBase.addAttr(notnone=True, fk='Port'),
         scope=ElementBase.addAttr(type=int, notnone=True),
+        device_desc=ElementBase.addAttr(default='', notnone=True),
         isolate=ElementBase.addAttr(type=bool, default=False, notnone=True),
         vlan_ids=ElementBase.addAttr(type=list, default=list(), notnone=True),
         default_vlan_id=ElementBase.addAttr(default=None, fk='VLAN'),
@@ -75,9 +76,13 @@ class PortConfigCache(ElementBase):
             for d in devices:
                 if device_config is None and d['commit_config'] is not None:
                     device_config = d['commit_config']
+                    self['device_desc'] = d['desc']
                 elif device_config is not None and d['commit_config'] is not None:
                     device_config = None  # Device based commit_config can't be determined definitely, therefore don't apply any
+                    self['device_desc'] = ''
                     break
+                if self['device_desc'] == '':
+                    self['device_desc'] = d['desc']
         else:
             self['mode'] = 'optional'
             self['receive'] = 'any'
@@ -87,9 +92,13 @@ class PortConfigCache(ElementBase):
             for d in devices:
                 if device_config is None and d['retreat_config'] is not None:
                     device_config = d['retreat_config']
+                    self['device_desc'] = d['desc']
                 elif device_config is not None and d['retreat_config'] is not None:
                     device_config = None  # Device based retreat_config can't be determined definitely, therefore don't apply any
+                    self['device_desc'] = ''
                     break
+                if self['device_desc'] == '':
+                    self['device_desc'] = d['desc']
 
         if self['scope'] == 0:
             # commit scope

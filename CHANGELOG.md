@@ -6,6 +6,7 @@
   * Bugfix: With multiple Devices on a Port, if only a single Device does have a manual config, this is applied now in PortConfigCache
   * It's now possible to remove all offline Devices, that are not referenced by anything, with one click
   * There is now a button, in Devices list, to remove the attched Port from Device
+  * Device description is now displayed in PortList, if Port does not have a description
 
 ## v0.5.0
 

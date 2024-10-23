@@ -52,8 +52,15 @@
         <tr>
             <td>{{ port.number_display }}</td>
             <td>
-                {{ port.desc }}
-                <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(port, $event)"></button>
+                <div class="table-cell">
+                    <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-pencil" (click)="editDescStart(port, $event)"></button>
+                    <div *ngIf="port.desc != ''">
+                        {{ port.desc }}
+                    </div>
+                    <div class="device-desc" *ngIf="port.desc == '' && port.calculated_commit_config.device_desc != ''">
+                        {{ port.calculated_commit_config.device_desc }}
+                    </div>
+                </div>
             </td>
             <td>
                 <div class="table-cell">

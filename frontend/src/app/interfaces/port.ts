@@ -11,6 +11,7 @@ export interface PortConfigCache {
     id: string | undefined;
     port_id: string | undefined;
     scope: number | undefined;
+    device_desc: string;
     isolate: boolean;
     vlan_ids: string[];
     default_vlan_id: string | null;

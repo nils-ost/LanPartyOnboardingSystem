@@ -9,6 +9,10 @@
     justify-content: flex-start;
     align-items: center;
     gap: 0.5em;
+
+    .device-desc {
+        color: var(--success-color);
+    }
 }
 
 .table-cell-list {
