@@ -239,6 +239,19 @@ export class DevicesListComponent implements OnChanges {
     }
   }
 
+  removePort(device: Device) {
+    this.deviceService
+      .removePort(device.id)
+      .subscribe({
+        next: (response: any) => {
+          this.editedDeviceEvent.emit(null);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
+  }
+
   editVlanConfigStart(device: Device, event: any) {
     this.selectedDevice = device;
     this.selectedDeviceName = this.selectedDevice.desc + " (" + device.mac + ")"

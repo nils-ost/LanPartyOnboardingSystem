@@ -5,6 +5,7 @@
   * Switch is now able to carry a port_numbering_offset, which is used on Port to calculate a port-number to display on the Frontend
   * Bugfix: With multiple Devices on a Port, if only a single Device does have a manual config, this is applied now in PortConfigCache
   * It's now possible to remove all offline Devices, that are not referenced by anything, with one click
+  * There is now a button, in Devices list, to remove the attched Port from Device
 
 ## v0.5.0
 

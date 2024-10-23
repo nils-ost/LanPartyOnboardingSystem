@@ -85,6 +85,14 @@ export class DeviceService {
     return this.http.patch<any>(this.deviceUrl + id + '/', device, {withCredentials:true});
   }
 
+  public removePort(id: string): Observable<any> {
+    let device = {
+      'id': id,
+      'port_id': null
+    }
+    return this.http.patch<any>(this.deviceUrl + id + '/', device, {withCredentials:true});
+  }
+
   public deleteDevice(id: string): Observable<any> {
     return this.http.delete<any>(this.deviceUrl + id + '/', {withCredentials:true});
   }

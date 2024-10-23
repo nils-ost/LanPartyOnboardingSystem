@@ -72,7 +72,10 @@
                 {{ utils.ip_int_to_str(device.ip) }}
             </td>
             <td>
-                {{ portsReadable.get(device.port_id) || '---' }}
+                <div class="table-cell">
+                    <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="removePort(device)" i18n-pTooltip="@@tooltipDeviceRemovePort" pTooltip="Unlink Port from Device"></button>
+                    {{ portsReadable.get(device.port_id) || '---' }}
+                </div>
             </td>
             <td>
                 <div class="table-cell">
