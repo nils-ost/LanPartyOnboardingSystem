@@ -209,6 +209,10 @@ class Device(ElementBase):
             self._cache['port_id_fromdb'] = None
         else:
             self._cache['port_id_fromdb'] = docDB.get(self.__class__.__name__, self['_id'])['port_id']
+        if self['desc'] == '' and self['participant_id'] is not None:
+            self['desc'] = self.participant()['name']
+            if self['seat_id'] is None:
+                self['desc'] += ' (+)'
 
     def save_post(self):
         from elements import PortConfigCache
