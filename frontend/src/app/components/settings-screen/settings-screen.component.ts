@@ -10,6 +10,7 @@ import { PortConfigCache } from 'src/app/interfaces/port';
 import { SystemService } from 'src/app/services/system.service';
 import { DeviceService } from 'src/app/services/device.service';
 import { Device } from 'src/app/interfaces/device';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-settings-screen',
@@ -29,6 +30,8 @@ export class SettingsScreenComponent implements OnInit {
   pcc_commit: number = 0;
   pcc_retreat: number = 0;
   rod_total: number = 0;
+  rod_offline: number = 0;
+  rod_port: number = 0;
   sso_login_url: string = "https://nlpt.online/app/event-login?redirect=";
   sso_onboarding_url: string = "https://nlpt.online/api/onboarding/2024";
 
@@ -103,6 +106,14 @@ export class SettingsScreenComponent implements OnInit {
         .subscribe({
           next: (devices: Device[]) => {
             this.rod_total = devices.length;
+            this.rod_offline = 0;
+            this.rod_port = 0;
+            let currentTs = Math.floor(Date.now() / 1000);
+            for (let i = 0; i < devices.length; i++) {
+              let device: Device = devices[i];
+              if ((currentTs - device.last_scan_ts) > 60) this.rod_offline++;
+              if (device.port_id != null) this.rod_port++;
+            }
             this.rod_loading = false;
           },
           error: (err: HttpErrorResponse) => {
@@ -145,12 +156,39 @@ export class SettingsScreenComponent implements OnInit {
   }
 
   clearDevices() {
+    this.rod_loading = true;
     if (this.rod) {
       this.systemService
         .execRemoveOfflineDevices()
         .subscribe({
           next: () => {
             this.refreshDevices();
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+          }
+        })
+    }
+  }
+
+  clearDevicesPorts() {
+    this.rod_loading = true;
+    if (this.rod) {
+      this.deviceService
+        .getDevices()
+        .subscribe({
+          next: (devices: Device[]) => {
+            for (let i = 0; i < devices.length; i++) {
+              let device: Device = devices[i];
+              if (device.port_id != null) {
+                this.deviceService.removePort(device.id).subscribe({next: () => {},
+                  error: (err: HttpErrorResponse) => {
+                    this.errorHandler.handleError(err);
+                  }
+                })
+              }
+            }
+            timer(1000).subscribe(() => { this.refreshDevices() });
           },
           error: (err: HttpErrorResponse) => {
             this.errorHandler.handleError(err);

@@ -1,5 +1,9 @@
 # LPOS Changelog
 
+## v0.7.0
+
+  * Settings screen does now have a button to remove all links between Devices and Ports
+
 ## v0.6.0
 
   * Switch is now able to carry a port_numbering_offset, which is used on Port to calculate a port-number to display on the Frontend

@@ -93,7 +93,6 @@
 <p-panel i18n-header="@@settingsHeaderRemoveOfflineDevices" header="Devices">
     <ng-template pTemplate="icons">
         <p-inputSwitch [(ngModel)]="rod" (onChange)="refreshDevices()" />&nbsp;
-        <button pButton (click)="clearDevices()" i18n="@@buttonClearROD" class="p-button-danger" [disabled]="!rod">Remove All Offline</button>
     </ng-template>
 
     <ng-container *ngIf="rod">
@@ -106,6 +105,22 @@
                     <input type="text" id="rod_total" pInputText [(ngModel)]="rod_total" [disabled]="true">
                     <label for="rod_total" i18n="@@elementFieldLabelRodTotal">Devices Count</label>
                 </span>
+            </div>
+
+            <div class="field">
+                <span class="p-float-label">
+                    <input type="text" id="rod_offline" pInputText [(ngModel)]="rod_offline" [disabled]="true">
+                    <label for="rod_offline" i18n="@@elementFieldLabelRodOffline">Offline Devices</label>
+                </span>
+                <button pButton (click)="clearDevices()" i18n="@@buttonClearROD" class="p-button-danger" [disabled]="!rod">Remove All Offline</button>
+            </div>
+
+            <div class="field">
+                <span class="p-float-label">
+                    <input type="text" id="rod_port" pInputText [(ngModel)]="rod_port" [disabled]="true">
+                    <label for="rod_port" i18n="@@elementFieldLabelRodPort">Devices with Port</label>
+                </span>
+                <button pButton (click)="clearDevicesPorts()" i18n="@@buttonClearDevicesPorts" class="p-button-danger" [disabled]="!rod">Remove Ports</button>
             </div>
         </ng-container>
     </ng-container>
