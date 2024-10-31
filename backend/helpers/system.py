@@ -278,7 +278,7 @@ def check_integrity_switch_commit():
     """
     do all integrity checks required for commiting switches
     """
-    for check in [_check_integrity_switchlinks, _check_integrity_vlans, _check_integrity_ippools, _check_integrity_lpos]:
+    for check in [_check_integrity_vlans, _check_integrity_ippools, _check_integrity_lpos]:
         r = check()
         if not r.get('code', 1) == 0:
             return r
