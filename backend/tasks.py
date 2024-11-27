@@ -106,3 +106,34 @@ def create_nlpt_testdata(c):
     s_t4.save()
     if Device.get_by_mac('localhost') is None:
         Device({'mac': 'localhost'}).save()
+
+
+@task(name='reset-switch', aliases=['rs', ])
+def reset_switch(c):
+    from MTSwitch import MikroTikSwitch
+    addr = input('Addr: ').strip()
+    user = input('User (admin): ').strip()
+    if user == '':
+        user = 'admin'
+    pw = input('PW: ').strip()
+    s = MikroTikSwitch(addr, user, pw)
+    if s.connected:
+        vlan_ids = list()
+        for vlan in s.vlans:
+            vlan_ids.append(vlan.id)
+        if 1 not in vlan_ids:
+            s.vlanAdd(1)
+        else:
+            vlan_ids.remove(1)
+        for port in s.ports:
+            s.portEdit(port, enabled=True, vmode='optional', vreceive='any', vdefault=1, vforce=False)
+            for p in range(len(s.ports)):
+                if p == port.idx:
+                    continue
+                s.portEdit(port, fwdTo=p)
+            s.vlanEdit(1, memberAdd=port)
+        for v in vlan_ids:
+            s.vlanRemove(v)
+        s.commitAll()
+    else:
+        print(f'No connection to: {addr}')
