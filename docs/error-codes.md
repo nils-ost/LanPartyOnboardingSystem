@@ -80,6 +80,10 @@
   * **94***(commit_config.mode|commit_config.receive)*: needs to be one of <list of some values\> but is <value\>
   * **95***(commit_config.vlans)*: at least one vlan is required
 
+## setting
+
+  * **100***(type)*: needs to be one of: ['str', 'int', 'bool']
+
 # element delete error-codes
 
   * **1**: at least one IpPool is using this <element_type\>

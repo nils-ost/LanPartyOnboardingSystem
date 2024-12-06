@@ -8,3 +8,4 @@ from .Device import Device
 from .Session import Session
 from .Port import Port
 from .PortConfigCache import PortConfigCache
+from .Setting import Setting

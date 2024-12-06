@@ -170,4 +170,8 @@ def run():
 
 
 def db_defaults():
-    pass
+    from elements import Participant
+    if Participant.count() == 0:
+        p = Participant({'login': 'admin', 'pw': 'password', 'admin': True})
+        p.save()
+        print('Versioning detected no user, therefore created a default admin user')
