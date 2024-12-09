@@ -129,12 +129,15 @@ def run():
     import sys
     from helpers.docdb import docDB
     from helpers.version import version as current_version
-    db_version = docDB.get_setting('version')
+    from elements import Setting
+    db_version = Setting.value('version')
+    if db_version == '0.0.0' and docDB.exists('settings', 'version'):
+        db_version = docDB.search_one('settings', 'version').get('value', '0.0.0')
     if db_version is None:
         # new install nothing todo
         print('Versioning detected a new install!')
         db_defaults()
-        docDB.set_setting('version', current_version)
+        Setting.set('version', current_version)
         return
     if versions_eq(db_version, current_version):
         # nothing todo allready the desired version
@@ -163,10 +166,19 @@ def run():
             s = Switch(s)
             s['port_numbering_offset'] = 0
             s.save()
+    if versions_lt(db_version, '0.6.1'):
+        from elements import Setting
+        print('  Migrating settings to Setting-Element')
+        for s in docDB.search_many('settings', {}):
+            k = s.get('_id')
+            v = s.get('value')
+            if k is not None and v is not None:
+                Setting.set(k, v)
+        docDB.clear('settings')
 
     db_defaults()
 
-    docDB.set_setting('version', current_version)
+    Setting.set('version', current_version)
 
 
 def db_defaults():

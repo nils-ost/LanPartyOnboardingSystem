@@ -3,7 +3,6 @@ import json
 import time
 import logging
 import subprocess
-from helpers.docdb import docDB
 from helpers.config import get_config
 
 config = get_config('haproxy')
@@ -180,11 +179,12 @@ class LPOSHAproxy(_BaseHAproxy):
         self.container_running()
 
     def set_ms_redirect_url(self):
+        from elements import Setting
         if self.container_id is None and not self.container_running():
             self.logger.warning("container not started or can't be found")
             return
         s, url = self._get_api_session()
-        lpos_domain = 'http://' + '.'.join([docDB.get_setting('subdomain'), docDB.get_setting('domain')])
+        lpos_domain = 'http://' + '.'.join([Setting.value('subdomain'), Setting.value('domain')])
         self.logger.info(f'setting ms_redirect_url to {lpos_domain}')
         r = s.get(f'{url}/v2/services/haproxy/configuration/http_request_rules?parent_type=frontend&parent_name=fe_lpos')
         if r.status_code > 300:
@@ -236,10 +236,11 @@ class SSOHAproxy(_BaseHAproxy):
     def setup_sso_ip(self):
         from urllib.parse import urlparse
         from helpers.client import nslookup
+        from elements import Setting
         if self.container_id is None and not self.container_running():
             self.logger.warning("container not started or can't be found")
             return
-        domain = urlparse(docDB.get_setting('sso_login_url')).netloc
+        domain = urlparse(Setting.value('sso_login_url')).netloc
         self.logger.info(f"adding configuration to proxy SSO logins on '{domain}' from onboarding networks to the internet")
         domain_ip = nslookup(domain)
         s, url = self._get_api_session()

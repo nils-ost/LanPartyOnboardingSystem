@@ -27,8 +27,8 @@ class bcolors:
 
 
 def version():
-    from helpers.docdb import docDB
-    return docDB.get_setting('version')
+    from elements import Setting
+    return Setting.value('version')
 
 
 def state():
@@ -96,55 +96,55 @@ def create_admin():
 
 
 def set_os_nw_interface():
-    from helpers.docdb import docDB
+    from elements import Setting
     iname = input('Enter name of network interface to be used for VLANs on this machine: ').strip()
-    docDB.set_setting('os_nw_interface', iname)
+    Setting.set('os_nw_interface', iname)
 
 
 def set_domain():
-    from helpers.docdb import docDB
+    from elements import Setting
     domain = input('Enter domain of local network: ').strip().strip('.')
-    docDB.set_setting('domain', domain)
+    Setting.set('domain', domain)
 
 
 def set_subdomain():
-    from helpers.docdb import docDB
+    from elements import Setting
     subdomain = input('Enter subdomain name of LPOS (without domain of local network): ').strip().strip('.')
-    docDB.set_setting('subdomain', subdomain)
+    Setting.set('subdomain', subdomain)
 
 
 def set_dhcpip():
-    from helpers.docdb import docDB
+    from elements import Setting
     dhcpip = input('Enter IP the DHCP-Server should get in the play-network: ').strip().strip('.')
-    docDB.set_setting('play_dhcp', dhcpip)
+    Setting.set('play_dhcp', dhcpip)
 
 
 def set_gateway():
-    from helpers.docdb import docDB
+    from elements import Setting
     gateway = input('Enter IP of gateway to the internet for the play-network: ').strip().strip('.')
-    docDB.set_setting('play_gateway', gateway)
+    Setting.set('play_gateway', gateway)
 
 
 def set_upstream():
-    from helpers.docdb import docDB
+    from elements import Setting
     upstream = input('Enter IP of upstream DNS-Server: ').strip().strip('.')
-    docDB.set_setting('upstream_dns', upstream)
+    Setting.set('upstream_dns', upstream)
 
 
 def set_sso_login_url():
-    from helpers.docdb import docDB
-    if current_url := docDB.get_setting('sso_login_url') is not None:
+    from elements import Setting
+    if current_url := not Setting.value('sso_login_url') == '':
         print(f'Current vlue: {current_url}')
     url = input('Enter the URL the client is redirected to, for SSO Login. Be aware, that to this URL the callback URL is automatically appended: ').strip()
-    docDB.set_setting('sso_login_url', url)
+    Setting.set('sso_login_url', url)
 
 
 def set_sso_onboarding_url():
-    from helpers.docdb import docDB
-    if current_url := docDB.get_setting('sso_onboarding_url') is not None:
+    from elements import Setting
+    if current_url := not Setting.value('sso_onboarding_url') == '':
         print(f'Current vlue: {current_url}')
     url = input('Enter the URL of SSO system, to fetch participant data: ').strip()
-    docDB.set_setting('sso_onboarding_url', url)
+    Setting.set('sso_onboarding_url', url)
 
 
 def clearDB(force=False):

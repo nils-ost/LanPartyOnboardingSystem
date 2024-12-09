@@ -10,6 +10,8 @@ class SettingEndpoint():
     _restrict_write = True  # if set to True only admin Participants are allowed to use writing methods
     _ro_attr = list()  # List of attribute-names, that are allways read-only
     user_readable = ['domain', 'subdomain', 'absolute_seatnumbers', 'nlpt_sso', 'sso_login_url']
+    admin_writeable = ['os_nw_interface', 'play_dhcp', 'play_gateway', 'upstream_dns', 'domain', 'subdomain', 'absolute_seatnumbers', 'nlpt_sso',
+                       'sso_login_url', 'sso_onboarding_url']
 
     @cherrypy.expose()
     @cherrypy.tools.json_in()
@@ -17,16 +19,16 @@ class SettingEndpoint():
     def index(self, element_id=None):
         if cherrypy.request.method == 'OPTIONS':
             if element_id is None:
-                cherrypy.response.headers['Allow'] = 'OPTIONS, GET, DELETE'
-                cherrypy_cors.preflight(allowed_methods=['GET', 'DELETE'])
+                cherrypy.response.headers['Allow'] = 'OPTIONS, GET'
+                cherrypy_cors.preflight(allowed_methods=['GET'])
                 return
             else:
                 el = self._element.get(element_id)
                 if el['_id'] is None:
                     cherrypy.response.status = 404
                     return {'error': f'id {element_id} not found'}
-                cherrypy.response.headers['Allow'] = 'OPTIONS, GET, PATCH, DELETE'
-                cherrypy_cors.preflight(allowed_methods=['GET', 'PATCH', 'DELETE'])
+                cherrypy.response.headers['Allow'] = 'OPTIONS, GET, PATCH'
+                cherrypy_cors.preflight(allowed_methods=['GET', 'PATCH'])
                 return
 
         cookie = cherrypy.request.cookie.get('LPOSsession')
@@ -58,7 +60,7 @@ class SettingEndpoint():
                 cherrypy.response.status = 403
                 return {'error': 'access not allowed'}
             if element_id is None:
-                cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST'
+                cherrypy.response.headers['Allow'] = 'OPTIONS, GET'
                 cherrypy.response.status = 405
                 return {'error': 'PATCH not allowed on indexes'}
             else:
@@ -66,6 +68,10 @@ class SettingEndpoint():
                 if el['_id'] is None:
                     cherrypy.response.status = 404
                     return {'error': f'id {element_id} not found'}
+                if element_id not in self.admin_writeable:
+                    cherrypy.response.headers['Allow'] = 'OPTIONS, GET'
+                    cherrypy.response.status = 405
+                    return {'error': f'{element_id} is read-only'}
                 attr = cherrypy.request.json
                 if not isinstance(attr, dict):
                     cherrypy.response.status = 400
@@ -80,30 +86,10 @@ class SettingEndpoint():
                 else:
                     cherrypy.response.status = 201
                 return result
-        elif cherrypy.request.method == 'DELETE':
-            if self._restrict_write and not admin:
-                cherrypy.response.status = 403
-                return {'error': 'access not allowed'}
-            if element_id is None:
-                deleted_ids = list()
-                for el in self._element.all():
-                    r = el.delete()
-                    if 'delete' in r:
-                        deleted_ids.append(r['delete'])
-                return {'deleted': deleted_ids}
-            else:
-                el = self._element.get(element_id)
-                if el['_id'] is None:
-                    cherrypy.response.status = 404
-                    return {'error': f'id {element_id} not found'}
-                result = el.delete()
-                if 'deleted' not in result:
-                    cherrypy.response.status = 400
-                return result
         else:
             if element_id is None:
-                cherrypy.response.headers['Allow'] = 'OPTIONS, GET, DELETE'
+                cherrypy.response.headers['Allow'] = 'OPTIONS, GET'
             else:
-                cherrypy.response.headers['Allow'] = 'OPTIONS, GET, PATCH, DELETE'
+                cherrypy.response.headers['Allow'] = 'OPTIONS, GET, PATCH'
             cherrypy.response.status = 405
             return {'error': 'method not allowed'}

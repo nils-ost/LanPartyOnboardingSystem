@@ -1,7 +1,8 @@
 import cherrypy
 import cherrypy_cors
 from elements import Session
-from helpers.system import get_commited, get_open_commits, get_use_absolute_seatnumbers, get_use_nlpt_sso
+from helpers.system import get_open_commits
+from elements import Setting
 from helpers.version import version
 
 
@@ -24,11 +25,11 @@ class SystemEndpoint():
                 session = Session.get(None)
             if len(session.validate_base()) == 0 and session.admin():
                 # these are for admins only
-                result['commited'] = get_commited()
+                result['commited'] = Setting.value('system_commited')
                 result['open_commits'] = True if get_open_commits() > 0 else False
 
-            result['seatnumbers_absolute'] = get_use_absolute_seatnumbers()
-            result['nlpt_sso'] = get_use_nlpt_sso()
+            result['seatnumbers_absolute'] = Setting.value('absolute_seatnumbers')
+            result['nlpt_sso'] = Setting.value('nlpt_sso')
             result['version'] = version
             return result
         else:
@@ -377,7 +378,7 @@ class SystemEndpoint():
             result = check_integrity_haproxy_commit()
             if result.get('code', 1) == 0:
                 from helpers.haproxy import ssoHAproxy, lposHAproxy
-                if get_use_nlpt_sso():
+                if Setting.value('nlpt_sso'):
                     ssoHAproxy.start_container()
                     ssoHAproxy.wait_for_running()
                     ssoHAproxy.setup_sso_ip()

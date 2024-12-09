@@ -1,22 +1,11 @@
 from helpers.docdb import docDB
+from elements import Setting
 from datetime import datetime
 import psutil
 
 
 # time (in seconds) a previous integrity check is considered still as valid
 check_max_diff = 30
-
-
-def get_commited():
-    result = docDB.get_setting('system_commited')
-    if result is None:
-        return False
-    else:
-        return result
-
-
-def set_commited(state):
-    docDB.set_setting('system_commited', state)
 
 
 def get_open_commits():
@@ -26,33 +15,9 @@ def get_open_commits():
     return result
 
 
-def get_use_absolute_seatnumbers():
-    result = docDB.get_setting('absolute_seatnumbers')
-    if result is None:
-        return False
-    else:
-        return result
-
-
-def set_use_absolute_seatnumbers(state):
-    docDB.set_setting('absolute_seatnumbers', state)
-
-
-def get_use_nlpt_sso():
-    result = docDB.get_setting('nlpt_sso')
-    if result is None:
-        return False
-    else:
-        return result
-
-
-def set_use_nlpt_sso(state):
-    docDB.set_setting('nlpt_sso', state)
-
-
 def _check_integrity_switchlinks():
-    last_check = docDB.get_setting('integrity_switchlinks')
-    if last_check is not None and (last_check + check_max_diff) >= datetime.now().timestamp():
+    last_check = Setting.value('integrity_switchlinks')
+    if not last_check < 1 and (last_check + check_max_diff) >= datetime.now().timestamp():
         return {'code': 0, 'desc': 'check ok'}
     # Testing, that all Ports marked as switchlink do have a switchlink_port_id filled in,
     # all ports are only used once a switchlink_port_id and corresponding Ports reflect each other
@@ -96,13 +61,13 @@ def _check_integrity_switchlinks():
     if len(not_reflecting) > 0:
         return {'code': 4, 'desc': f'the following ports are not reflected by their switchlink targets: {not_reflecting}', 'not_reflecting': not_reflecting}
 
-    docDB.set_setting('integrity_switchlinks', datetime.now().timestamp())
+    Setting.set('integrity_switchlinks', datetime.now().timestamp())
     return {'code': 0, 'desc': 'check ok'}
 
 
 def _check_integrity_vlans():
-    last_check = docDB.get_setting('integrity_vlans')
-    if last_check is not None and (last_check + check_max_diff) >= datetime.now().timestamp():
+    last_check = Setting.value('integrity_vlans')
+    if not last_check < 1 and (last_check + check_max_diff) >= datetime.now().timestamp():
         return {'code': 0, 'desc': 'check ok'}
     from elements import VLAN
     # check mgmt VLAN is present
@@ -115,13 +80,13 @@ def _check_integrity_vlans():
     if len(play_vlan) == 0:
         return {'code': 12, 'desc': 'play-VLAN is missing'}
 
-    docDB.set_setting('integrity_vlans', datetime.now().timestamp())
+    Setting.set('integrity_vlans', datetime.now().timestamp())
     return {'code': 0, 'desc': 'check ok'}
 
 
 def _check_integrity_ippools():
-    last_check = docDB.get_setting('integrity_ippools')
-    if last_check is not None and (last_check + check_max_diff) >= datetime.now().timestamp():
+    last_check = Setting.value('integrity_ippools')
+    if not last_check < 1 and (last_check + check_max_diff) >= datetime.now().timestamp():
         return {'code': 0, 'desc': 'check ok'}
     required_integrity = _check_integrity_vlans()
     if not required_integrity.get('code', 1) == 0:
@@ -148,13 +113,13 @@ def _check_integrity_ippools():
         if not len(ob_pool) == 1:
             return {'code': 14, 'desc': f"IpPool for onboarding VLAN '{ob_vlan['number']}: {ob_vlan['desc']}' is missing"}
 
-    docDB.set_setting('integrity_ippools', datetime.now().timestamp())
+    Setting.set('integrity_ippools', datetime.now().timestamp())
     return {'code': 0, 'desc': 'check ok'}
 
 
 def _check_integrity_tables():
-    last_check = docDB.get_setting('integrity_tables')
-    if last_check is not None and (last_check + check_max_diff) >= datetime.now().timestamp():
+    last_check = Setting.value('integrity_tables')
+    if not last_check < 1 and (last_check + check_max_diff) >= datetime.now().timestamp():
         return {'code': 0, 'desc': 'check ok'}
     required_integrity = _check_integrity_ippools()
     if not required_integrity.get('code', 1) == 0:
@@ -169,7 +134,7 @@ def _check_integrity_tables():
             return {'code': 15, 'desc': f"no Seats present for Table '{table['number']}: {table['desc']}'"}
 
         # check if all seats have a number_absolute, if this setting is enabled
-        if get_use_absolute_seatnumbers():
+        if Setting.value('absolute_seatnumbers'):
             for seat in table_seats:
                 if seat['number_absolute'] is None:
                     return {'code': 18, 'desc': f"Seat {seat['number']} of Table '{table['number']}: {table['desc']}' is missing number_absolute"}
@@ -185,13 +150,13 @@ def _check_integrity_tables():
         if (ob_pool['range_end'] + 1 - ob_pool['range_start']) < (nb_seats / 2 + 5):
             return {'code': 17, 'desc': f"not enough IPs in onboarding-IpPool '{ob_pool['desc']}' for Table '{table['number']}: {table['desc']}'"}
 
-    docDB.set_setting('integrity_tables', datetime.now().timestamp())
+    Setting.set('integrity_tables', datetime.now().timestamp())
     return {'code': 0, 'desc': 'check ok'}
 
 
 def _check_integrity_lpos():
-    last_check = docDB.get_setting('integrity_lpos')
-    if last_check is not None and (last_check + check_max_diff) >= datetime.now().timestamp():
+    last_check = Setting.value('integrity_lpos')
+    if not last_check < 1 and (last_check + check_max_diff) >= datetime.now().timestamp():
         return {'code': 0, 'desc': 'check ok'}
     required_integrity = _check_integrity_ippools()
     if not required_integrity.get('code', 1) == 0:
@@ -222,17 +187,17 @@ def _check_integrity_lpos():
     if not (lpos_ip & mask) == (mgmt_ippool['range_start'] & mask):
         return {'code': 8, 'desc': 'IP of LPOS server is not in the same subnet as mgmt-IpPool'}
 
-    docDB.set_setting('integrity_lpos', datetime.now().timestamp())
+    Setting.set('integrity_lpos', datetime.now().timestamp())
     return {'code': 0, 'desc': 'check ok'}
 
 
 def _check_interity_settings():
-    last_check = docDB.get_setting('integrity_settings')
+    last_check = Setting.value('integrity_settings')
     if last_check is not None and (last_check + check_max_diff) >= datetime.now().timestamp():
         return {'code': 0, 'desc': 'check ok'}
 
-    iname = docDB.get_setting('os_nw_interface')
-    if iname is None:
+    iname = Setting.value('os_nw_interface')
+    if iname == '':
         return {'code': 9, 'desc': "setting 'os_nw_interface' is not defined, but it's needed"}
     # check if it's a valid name and can be found in psutil
     for name in psutil.net_if_addrs().keys():
@@ -242,18 +207,23 @@ def _check_interity_settings():
         return {'code': 10, 'desc': f"invalid hw-interface name '{iname}'"}
 
     for setting in ['domain', 'subdomain', 'upstream_dns', 'play_gateway', 'play_dhcp']:
-        if docDB.get_setting(setting) is None:
+        if Setting.value(setting) == '':
             return {'code': 9, 'desc': f"setting '{setting}' is not defined, but it's needed"}
 
-    if get_use_nlpt_sso():
-        if not get_use_absolute_seatnumbers():
+    for setting in ['domain', 'subdomain']:
+        s = Setting.value(setting)
+        if s.startswith('.') or s.endswith('.'):
+            return {'code': 20, 'desc': f"setting '{setting}' is not allowed to start or end with . (dot)"}
+
+    if Setting.value('nlpt_sso'):
+        if not Setting.value('absolute_seatnumbers'):
             return {'code': 19, 'desc': 'nlpt_sso is enabled but absolute_seatnumbers is disabled'}
-        if docDB.get_setting('sso_login_url') is None:
+        if Setting.value('sso_login_url') == '':
             return {'code': 9, 'desc': "setting 'sso_login_url' is not defined, but it's needed"}
-        if docDB.get_setting('sso_onboarding_url') is None:
+        if Setting.value('sso_onboarding_url') == '':
             return {'code': 9, 'desc': "setting 'sso_onboarding_url' is not defined, but it's needed"}
 
-    docDB.set_setting('integrity_settings', datetime.now().timestamp())
+    Setting.set('integrity_settings', datetime.now().timestamp())
     return {'code': 0, 'desc': 'check ok'}
 
 

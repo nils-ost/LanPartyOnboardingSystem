@@ -11,20 +11,31 @@ class Setting(ElementBase):
     _valid_types = {
         'str': str,
         'int': int,
+        'float': float,
         'bool': bool
     }
 
     _defaults = {
-        'os_nw_interface':      {'type': 'str',  'value': '',    'desc': 'Identifier of Network-Interface to attach LPOS-VLANs to'},
-        'play_dhcp':            {'type': 'str',  'value': '',    'desc': "IP used for LPOS's DHCP-Server in the Play-Network"},
-        'play_gateway':         {'type': 'str',  'value': '',    'desc': 'IP of the Gateway/Router in Play-Network, thst is promoted to the Participants'},
-        'upstream_dns':         {'type': 'str',  'value': '',    'desc': 'DNS Server that is promoted to the Participants'},
-        'domain':               {'type': 'str',  'value': '',    'desc': '(Search-)Domain used in the Play-Network'},
-        'subdomain':            {'type': 'str',  'value': '',    'desc': 'Subdomain used for presenting LPOS, Domain is extended to this string'},
-        'absolute_seatnumbers': {'type': 'bool', 'value': False, 'desc': 'Whether to use absolute numbering for Seats'},
-        'nlpt_sso':             {'type': 'bool', 'value': False, 'desc': 'Whether to use nlpt.online login for onboarding, or lokal onboarding credentials'},
-        'sso_login_url':        {'type': 'str',  'value': '',    'desc': 'URL to receive SSO-User-Login token from external system'},
-        'sso_onboarding_url':   {'type': 'str',  'value': '',    'desc': 'URL to receive SSO-onboarding information from external system'}
+        'version':               {'type': 'str',   'value': '0.0.0', 'desc': 'Running version of LPOS'},
+        'system_commited':       {'type': 'bool',  'value': False,   'desc': 'Indicates whether all parts of the system are commited'},
+        'os_nw_interface':       {'type': 'str',   'value': '',      'desc': 'Identifier of Network-Interface to attach LPOS-VLANs to'},
+        'play_dhcp':             {'type': 'str',   'value': '',      'desc': "IP used for LPOS's DHCP-Server in the Play-Network"},
+        'play_gateway':          {'type': 'str',   'value': '',
+                                  'desc': 'IP of the Gateway/Router in Play-Network, thst is promoted to the Participants'},
+        'upstream_dns':          {'type': 'str',   'value': '',      'desc': 'DNS Server that is promoted to the Participants'},
+        'domain':                {'type': 'str',   'value': '',      'desc': '(Search-)Domain used in the Play-Network'},
+        'subdomain':             {'type': 'str',   'value': '',      'desc': 'Subdomain used for presenting LPOS, Domain is extended to this string'},
+        'absolute_seatnumbers':  {'type': 'bool',  'value': False,   'desc': 'Whether to use absolute numbering for Seats'},
+        'nlpt_sso':              {'type': 'bool',  'value': False,
+                                  'desc': 'Whether to use nlpt.online login for onboarding, or lokal onboarding credentials'},
+        'sso_login_url':         {'type': 'str',   'value': '',      'desc': 'URL to receive SSO-User-Login token from external system'},
+        'sso_onboarding_url':    {'type': 'str',   'value': '',      'desc': 'URL to receive SSO-onboarding information from external system'},
+        'integrity_switchlinks': {'type': 'float', 'value': 0.0,     'desc': 'Timestamp of last successful switchlinks integrity-check'},
+        'integrity_vlans':       {'type': 'float', 'value': 0.0,     'desc': 'Timestamp of last successful vlans integrity-check'},
+        'integrity_ippools':     {'type': 'float', 'value': 0.0,     'desc': 'Timestamp of last successful ippools integrity-check'},
+        'integrity_tables':      {'type': 'float', 'value': 0.0,     'desc': 'Timestamp of last successful tables integrity-check'},
+        'integrity_lpos':        {'type': 'float', 'value': 0.0,     'desc': 'Timestamp of last successful lpos integrity-check'},
+        'integrity_settings':    {'type': 'float', 'value': 0.0,     'desc': 'Timestamp of last successful settings integrity-check'}
     }
 
     @classmethod
@@ -52,7 +63,7 @@ class Setting(ElementBase):
         return result
 
     @classmethod
-    def get_v(cls, key):
+    def value(cls, key):
         c = cls.get(key)
         if c is None:
             return None
@@ -60,7 +71,7 @@ class Setting(ElementBase):
             return c['value']
 
     @classmethod
-    def set_v(cls, key, value):
+    def set(cls, key, value):
         c = cls.get(key)
         if c is None:
             attr = dict()

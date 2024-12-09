@@ -1,6 +1,7 @@
 import json
 import subprocess
 from elements._elementBase import ElementBase, docDB
+from elements import Setting
 
 
 class VLAN(ElementBase):
@@ -69,8 +70,8 @@ class VLAN(ElementBase):
             PortConfigCache.delete_by_port(p['_id'])
 
     def commit_os_interface(self):
-        from elements import IpPool
-        from helpers.system import check_integrity_vlan_interface_commit, get_use_nlpt_sso
+        from elements import IpPool, Setting
+        from helpers.system import check_integrity_vlan_interface_commit
         from helpers.haproxy import ssoHAproxy, lposHAproxy
         integrity = check_integrity_vlan_interface_commit()
         if not integrity.get('code', 1) == 0:
@@ -86,7 +87,7 @@ class VLAN(ElementBase):
             return False  # no needed pool defined
         pool = pool[0]
 
-        iname = docDB.get_setting('os_nw_interface')
+        iname = Setting.value('os_nw_interface')
         dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
 
         if not 0 == subprocess.call(f'{dcmd} network ls | grep lpos-ipvlan{self["number"]}', shell=True):
@@ -99,7 +100,7 @@ class VLAN(ElementBase):
             lposHAproxy.attach_ipvlan(f"lpos-ipvlan{self['number']}", IpPool.get_lpos()['range_start'])
         else:
             lposHAproxy.attach_ipvlan(f"lpos-ipvlan{self['number']}", pool['range_start'] + 1)
-            if get_use_nlpt_sso():
+            if Setting.value('nlpt_sso'):
                 ssoHAproxy.attach_ipvlan(f"lpos-ipvlan{self['number']}", pool['range_start'] + 4)
 
         return True
@@ -130,8 +131,8 @@ class VLAN(ElementBase):
         return True
 
     def commit_dns_server(self):
-        from elements import IpPool
-        from helpers.system import check_integrity_vlan_dns_commit, get_use_nlpt_sso
+        from elements import Setting, IpPool
+        from helpers.system import check_integrity_vlan_dns_commit
         integrity = check_integrity_vlan_dns_commit()
         if not integrity.get('code', 1) == 0:
             return False  # integrity check failed, can't continue
@@ -152,7 +153,7 @@ class VLAN(ElementBase):
 
         if not 0 == subprocess.call(f'{dcmd} ps --format=\u007b\u007b.Names\u007d\u007d | grep lpos-ipvlan{self["number"]}-dns', shell=True):
             # DNS-Server not yet started, configuring and starting it
-            lpos_domain = '.'.join([docDB.get_setting('subdomain'), docDB.get_setting('domain')])
+            lpos_domain = '.'.join([Setting.value('subdomain'), Setting.value('domain')])
             lpos_ip = IpPool.int_to_dotted(pool['range_start'] + 1)
             dns_ip = IpPool.int_to_dotted(pool['range_start'] + 2)
             ssoproxy_ip = IpPool.int_to_dotted(pool['range_start'] + 4)
@@ -162,9 +163,9 @@ class VLAN(ElementBase):
                 f'{lpos_ip}  {lpos_domain} www.{lpos_domain}',
                 f'{lpos_ip}  www.msftconnecttest.com',
                 '131.107.255.255  dns.msftncsi.com']
-            if get_use_nlpt_sso():
+            if Setting.value('nlpt_sso'):
                 from urllib.parse import urlparse
-                sso_domain = urlparse(docDB.get_setting('sso_login_url')).netloc
+                sso_domain = urlparse(Setting.value('sso_login_url')).netloc
                 hosts.append(f'{ssoproxy_ip} {sso_domain}')
             open('/tmp/hosts', 'w').write('\n'.join(hosts))
 
@@ -231,12 +232,12 @@ class VLAN(ElementBase):
         if self['purpose'] == 0:
             # specialties for play vlan
             import re
-            dhcp_ip = docDB.get_setting('play_dhcp')
+            dhcp_ip = Setting.value('play_dhcp')
             dhcp4_conf.update({'renew-timer': 1800, 'rebind-timer': 2700, 'valid-lifetime': 3600})
             dhcp4_conf['reservation-mode'] = 'global'
             dhcp4_conf['reservations'] = list()
-            dhcp4_conf['option-data'].append({'name': 'domain-name-servers', 'data': docDB.get_setting('upstream_dns')})
-            dhcp4_conf['option-data'].append({'name': 'routers', 'data': docDB.get_setting('play_gateway')})
+            dhcp4_conf['option-data'].append({'name': 'domain-name-servers', 'data': Setting.value('upstream_dns')})
+            dhcp4_conf['option-data'].append({'name': 'routers', 'data': Setting.value('play_gateway')})
             # iterate over all play-pools
             for pool in IpPool.get_by_vlan(self['_id']):
                 # if pool is additional-pool, add it to the available ranges
@@ -264,7 +265,7 @@ class VLAN(ElementBase):
             lpos_ip = IpPool.int_to_dotted(pool['range_start'] + 1)
             dns_ip = IpPool.int_to_dotted(pool['range_start'] + 2)
             dhcp_ip = IpPool.int_to_dotted(pool['range_start'] + 3)
-            lpos_domain = '.'.join([docDB.get_setting('subdomain'), docDB.get_setting('domain')])
+            lpos_domain = '.'.join([Setting.value('subdomain'), Setting.value('domain')])
             dhcp4_conf.update({'renew-timer': 10, 'rebind-timer': 20, 'valid-lifetime': 30})
             dhcp4_conf['lease-database']['lfc-interval'] = 60
             dhcp4_conf['subnet4'].append({'subnet': subnet, 'pools': [{'pool': range}]})

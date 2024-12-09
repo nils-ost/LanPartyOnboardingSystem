@@ -138,8 +138,8 @@ def switches_commit():
     if len(fails) > 0:
         return {'code': 4, 'desc': 'not all Switches could be commited', 'failed': fails}
     else:
-        from helpers.system import set_commited
-        set_commited(True)
+        from elements import Setting
+        Setting.set('system_commited', True)
         return {'code': 0, 'desc': 'done'}
 
 
@@ -211,6 +211,6 @@ def switches_retreat():
     if len(fails) > 0:
         return {'code': 4, 'desc': 'not all Switches could be retreated', 'failed': fails}
     else:
-        from helpers.system import set_commited
-        set_commited(False)
+        from elements import Setting
+        Setting.set('system_commited', False)
         return {'code': 0, 'desc': 'done'}

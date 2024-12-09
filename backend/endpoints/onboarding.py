@@ -3,7 +3,7 @@ import cherrypy_cors
 from elements import Device, Table, Seat, Participant, IpPool
 from helpers.backgroundworker import device_onboarding_schedule
 from helpers.client import get_client_ip, get_client_mac
-from helpers.system import get_use_absolute_seatnumbers, get_use_nlpt_sso, docDB
+from elements import Setting
 
 
 def possible_tables(device):
@@ -45,14 +45,14 @@ class OnboardingEndpoint():
 
         if cherrypy.request.method == 'GET':
             cherrypy.response.status = 201
-            if get_use_nlpt_sso():
-                return {'login_url': docDB.get_setting('sso_login_url')}
+            if Setting.value('nlpt_sso'):
+                return {'login_url': Setting.value('sso_login_url')}
             return {'tables': possible_tables(device)}
 
         elif cherrypy.request.method == 'POST':
             attr = cherrypy.request.json
-            absSeatNumbers = get_use_absolute_seatnumbers()
-            nlpt_sso = get_use_nlpt_sso()
+            absSeatNumbers = Setting.value('absolute_seatnumbers')
+            nlpt_sso = Setting.value('nlpt_sso')
             if not isinstance(attr, dict):
                 cherrypy.response.status = 400
                 return {'error': {'code': 2, 'desc': 'Submitted data need to be of type dict'}}

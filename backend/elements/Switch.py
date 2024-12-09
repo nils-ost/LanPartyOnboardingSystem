@@ -374,8 +374,8 @@ class Switch(ElementBase):
         self['commited'] = False
         self.save()
         if self.count() == docDB.count(self.__class__.__name__, {'commited': False}):
-            from helpers.system import set_commited
-            set_commited(False)
+            from elements import Setting
+            Setting.set('system_commited', False)
 
     def _commit_vlans(self):
         """
@@ -512,8 +512,8 @@ class Switch(ElementBase):
         self['commited'] = True
         self.save()
         if self.count() == docDB.count(self.__class__.__name__, {'commited': True}):
-            from helpers.system import set_commited
-            set_commited(True)
+            from elements import Setting
+            Setting.set('system_commited', True)
 
     def json(self):
         result = super().json()

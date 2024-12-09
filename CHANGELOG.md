@@ -4,6 +4,9 @@
 
   * Settings screen does now have a button to remove all links between Devices and Ports
   * Bugfix: Commiting a single Switch now leaves out the switchlinks-integrity check, which makes it possible to commit without all Switches running
+  * New Setting-Element to unify settings handling
+    * New corresponding Endpoint
+  * TODO: rework endpoint->system->index
 
 ## v0.6.0
 
