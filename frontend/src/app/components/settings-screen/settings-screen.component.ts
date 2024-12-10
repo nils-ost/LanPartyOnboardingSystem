@@ -26,6 +26,7 @@ export class SettingsScreenComponent implements OnInit {
   pno: boolean = false;
   pcc: boolean = false;
   rod: boolean = false;
+  settings: boolean = false;
   pcc_total: number = 0;
   pcc_commit: number = 0;
   pcc_retreat: number = 0;
@@ -34,6 +35,8 @@ export class SettingsScreenComponent implements OnInit {
   rod_port: number = 0;
   sso_login_url: string = "https://nlpt.online/app/event-login?redirect=";
   sso_onboarding_url: string = "https://nlpt.online/api/onboarding/2024";
+  settings_ro: Setting[] = [];
+  settings_rw: Setting[] = [];
 
   constructor(
     private errorHandler: ErrorHandlerService,
@@ -53,6 +56,8 @@ export class SettingsScreenComponent implements OnInit {
       .getSettings()
       .subscribe({
         next: (settings: Setting[]) => {
+          this.settings_ro = [];
+          this.settings_rw = [];
           for (let s of settings) {
             switch (s.id) {
               case "absolute_seatnumbers":
@@ -62,10 +67,14 @@ export class SettingsScreenComponent implements OnInit {
                 this.nlpt_sso = s.value;
                 break;
               case "sso_login_url":
-                this.sso_login_url = s.value;
+                if (s.value != '') this.sso_login_url = s.value;
                 break;
               case "sso_onboarding_url":
-                this.sso_onboarding_url = s.value;
+                if (s.value != '') this.sso_onboarding_url = s.value;
+                break;
+              default:
+                if (s.ro) this.settings_ro.push(s);
+                else this.settings_rw.push(s);
                 break;
             }
           }
@@ -194,6 +203,21 @@ export class SettingsScreenComponent implements OnInit {
             this.errorHandler.handleError(err);
           }
         })
+    }
+  }
+
+  save_settings() {
+    if (this.settings) {
+      for (let s of this.settings_rw) {
+        this.settingService
+          .updateSetting(s.id, s.value)
+          .subscribe({
+            next: () => {},
+            error: (err: HttpErrorResponse) => {
+              this.errorHandler.handleError(err);
+            }
+          })
+      }
     }
   }
 

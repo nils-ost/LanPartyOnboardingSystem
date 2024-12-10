@@ -131,7 +131,7 @@ def run():
     from helpers.version import version as current_version
     from elements import Setting
     db_version = Setting.value('version')
-    if db_version == '0.0.0' and docDB.exists('settings', 'version'):
+    if db_version is None and docDB.exists('settings', 'version'):
         db_version = docDB.search_one('settings', 'version').get('value', '0.0.0')
     if db_version is None:
         # new install nothing todo

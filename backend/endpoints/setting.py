@@ -45,7 +45,9 @@ class SettingEndpoint():
             if element_id is not None:
                 el = self._element.get(element_id)
                 if el['_id'] is not None and (admin or el['_id'] in self.user_readable):
-                    return el.json()
+                    result = el.json()
+                    result['ro'] = True if not admin or element_id not in self.admin_writeable else False
+                    return result
                 else:
                     cherrypy.response.status = 404
                     return {'error': f'id {element_id} not found'}
@@ -53,7 +55,9 @@ class SettingEndpoint():
                 result = list()
                 for el in self._element.all():
                     if admin or el['_id'] in self.user_readable:
-                        result.append(el.json())
+                        r = el.json()
+                        r['ro'] = True if not admin or el['_id'] not in self.admin_writeable else False
+                        result.append(r)
                 return result
         elif cherrypy.request.method == 'PATCH':
             if self._restrict_write and not admin:

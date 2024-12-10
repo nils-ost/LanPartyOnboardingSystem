@@ -16,7 +16,7 @@ class Setting(ElementBase):
     }
 
     _defaults = {
-        'version':               {'type': 'str',   'value': '0.0.0', 'desc': 'Running version of LPOS'},
+        'version':               {'type': 'str',   'value': None,    'desc': 'Running version of LPOS'},
         'system_commited':       {'type': 'bool',  'value': False,   'desc': 'Indicates whether all parts of the system are commited'},
         'os_nw_interface':       {'type': 'str',   'value': '',      'desc': 'Identifier of Network-Interface to attach LPOS-VLANs to'},
         'play_dhcp':             {'type': 'str',   'value': '',      'desc': "IP used for LPOS's DHCP-Server in the Play-Network"},
@@ -92,4 +92,4 @@ class Setting(ElementBase):
 
     def save_pre(self):
         if self['_id'] in self._defaults:
-            self['desc'] = self._defaults['desc']
+            self['desc'] = self._defaults[self['_id']]['desc']
