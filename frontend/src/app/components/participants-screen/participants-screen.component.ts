@@ -7,8 +7,6 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { ParticipantService } from 'src/app/services/participant.service';
 import { SeatService } from 'src/app/services/seat.service';
 import { TableService } from 'src/app/services/table.service';
-import { SystemService } from 'src/app/services/system.service';
-import { System } from 'src/app/interfaces/system';
 
 @Component({
   selector: 'app-participants-screen',
@@ -16,7 +14,6 @@ import { System } from 'src/app/interfaces/system';
   styleUrls: ['./participants-screen.component.scss']
 })
 export class ParticipantsScreenComponent implements OnInit {
-  system!: System;
   participants: Participant[] = [];
   seats: Seat[] = [];
   tables: Table[] = [];
@@ -30,28 +27,13 @@ export class ParticipantsScreenComponent implements OnInit {
     private errorHandler: ErrorHandlerService,
     private participantService: ParticipantService,
     private seatService: SeatService,
-    private tableService: TableService,
-    private systemService: SystemService
+    private tableService: TableService
   ) { }
 
   ngOnInit(): void {
-    this.refreshSystem();
     this.refreshParticipants();
     this.refreshSeats();
     this.refreshTables();
-  }
-
-  refreshSystem() {
-    this.systemService
-      .getSystem()
-      .subscribe({
-        next: (system: System) => {
-          this.system = system;
-        },
-        error: (err: HttpErrorResponse) => {
-          this.errorHandler.handleError(err);
-        }
-      })
   }
 
   refreshParticipants() {

@@ -1,12 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { Onboarding } from 'src/app/interfaces/onboarding';
-import { System } from 'src/app/interfaces/system';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { OnboardingService } from 'src/app/services/onboarding.service';
 import { OnlineCheckService } from 'src/app/services/online-check.service';
+import { SettingService } from 'src/app/services/setting.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
@@ -14,8 +14,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './onboarding.component.html',
   styleUrls: ['./onboarding.component.scss']
 })
-export class OnboardingComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() system?: System;
+export class OnboardingComponent implements OnInit, OnDestroy {
   @Output() onboardingChangeEvent = new EventEmitter<Onboarding | undefined>;
 
   refreshOnboardingTimer = timer(5000, 5000);
@@ -35,18 +34,15 @@ export class OnboardingComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private errorHandler: ErrorHandlerService,
+    private settingService: SettingService,
     private onboardingService: OnboardingService,
     private onlineCheckService: OnlineCheckService,
     public utils: UtilsService
   ) {}
 
   ngOnInit(): void {
+    this.absolute_seatnumbers = this.settingService.getValue('absolute_seatnumbers');
     this.refreshOnboarding();
-    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
-  }
-
-  ngOnChanges(): void {
-    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
   }
 
   ngOnDestroy(): void {

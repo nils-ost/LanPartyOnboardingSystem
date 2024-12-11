@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { Device } from 'src/app/interfaces/device';
 import { IpPool } from 'src/app/interfaces/ip-pool';
@@ -7,11 +7,11 @@ import { Participant } from 'src/app/interfaces/participant';
 import { Port } from 'src/app/interfaces/port';
 import { Seat } from 'src/app/interfaces/seat';
 import { Switch } from 'src/app/interfaces/switch';
-import { System } from 'src/app/interfaces/system';
 import { Table } from 'src/app/interfaces/table';
 import { Vlan } from 'src/app/interfaces/vlan';
 import { DeviceService } from 'src/app/services/device.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { SettingService } from 'src/app/services/setting.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
@@ -19,8 +19,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './devices-list.component.html',
   styleUrls: ['./devices-list.component.scss']
 })
-export class DevicesListComponent implements OnChanges {
-  @Input() system?: System;
+export class DevicesListComponent implements OnInit, OnChanges {
   @Input() devices: Device[] = [];
   @Input() tables: Table[] = [];
   @Input() seats: Seat[] = [];
@@ -51,6 +50,7 @@ export class DevicesListComponent implements OnChanges {
 
   constructor(
     public utils: UtilsService,
+    private settingService: SettingService,
     private errorHandler: ErrorHandlerService,
     private confirmationService: ConfirmationService,
     private deviceService: DeviceService
@@ -58,9 +58,11 @@ export class DevicesListComponent implements OnChanges {
     this.currentTs = Math.floor(Date.now() / 1000);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
+  ngOnInit(): void {
+    this.absolute_seatnumbers = this.settingService.getValue('absolute_seatnumbers');
+  }
 
+  ngOnChanges(changes: SimpleChanges): void {
     if (('tables' in changes || 'seats' in changes || 'system' in changes) && this.tables.length > 0 && this.seats.length > 0) {
       let tablesById: Map<string, Table> = new Map<string, Table>;
       let newList: any[] = [];

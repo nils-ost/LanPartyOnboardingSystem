@@ -13,8 +13,6 @@ import { Seat } from 'src/app/interfaces/seat';
 import { SeatService } from 'src/app/services/seat.service';
 import { Participant } from 'src/app/interfaces/participant';
 import { ParticipantService } from 'src/app/services/participant.service';
-import { SystemService } from 'src/app/services/system.service';
-import { System } from 'src/app/interfaces/system';
 
 @Component({
   selector: 'app-tables-screen',
@@ -23,7 +21,6 @@ import { System } from 'src/app/interfaces/system';
 })
 export class TablesScreenComponent implements OnInit {
   @ViewChild('createtable') createTableDialog: any;
-  system!: System;
   vlans: Vlan[] = [];
   switches: Switch[] = [];
   ippools: IpPool[] = [];
@@ -35,7 +32,6 @@ export class TablesScreenComponent implements OnInit {
 
   constructor(
     private errorHandler: ErrorHandlerService,
-    private systemService: SystemService,
     private vlanService: VlanService,
     private switchService: SwitchService,
     private ippoolService: IpPoolService,
@@ -45,26 +41,12 @@ export class TablesScreenComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.refreshSystem();
     this.refreshVlans();
     this.refreshSwitches();
     this.refreshIpPools();
     this.refreshTables();
     this.refreshSeats();
     this.refreshParticipants();
-  }
-
-  refreshSystem() {
-    this.systemService
-      .getSystem()
-      .subscribe({
-        next: (system: System) => {
-          this.system = system;
-        },
-        error: (err: HttpErrorResponse) => {
-          this.errorHandler.handleError(err);
-        }
-      })
   }
 
   refreshVlans() {

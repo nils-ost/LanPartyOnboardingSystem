@@ -1,14 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
 import { Device } from 'src/app/interfaces/device';
 import { IpPool } from 'src/app/interfaces/ip-pool';
 import { Participant } from 'src/app/interfaces/participant';
 import { Port } from 'src/app/interfaces/port';
 import { Seat } from 'src/app/interfaces/seat';
 import { Switch } from 'src/app/interfaces/switch';
-import { System } from 'src/app/interfaces/system';
 import { Table } from 'src/app/interfaces/table';
 import { Vlan } from 'src/app/interfaces/vlan';
 import { DeviceService } from 'src/app/services/device.service';
@@ -18,7 +16,6 @@ import { ParticipantService } from 'src/app/services/participant.service';
 import { PortService } from 'src/app/services/port.service';
 import { SeatService } from 'src/app/services/seat.service';
 import { SwitchService } from 'src/app/services/switch.service';
-import { SystemService } from 'src/app/services/system.service';
 import { TableService } from 'src/app/services/table.service';
 import { VlanService } from 'src/app/services/vlan.service';
 
@@ -28,7 +25,6 @@ import { VlanService } from 'src/app/services/vlan.service';
   styleUrls: ['./devices-screen.component.scss']
 })
 export class DevicesScreenComponent implements OnInit {
-  system!: System;
   devices: Device[] = [];
   tables: Table[] = [];
   seats: Seat[] = [];
@@ -49,7 +45,6 @@ export class DevicesScreenComponent implements OnInit {
     private portService: PortService,
     private switchService: SwitchService,
     private vlanService: VlanService,
-    private systemService: SystemService,
     private route: ActivatedRoute
   ) { }
 
@@ -60,7 +55,6 @@ export class DevicesScreenComponent implements OnInit {
         this.refreshDevices();
       })
     })
-    this.refreshSystem();
     this.refreshTables();
     this.refreshSeats();
     this.refreshIppools();
@@ -68,19 +62,6 @@ export class DevicesScreenComponent implements OnInit {
     this.refreshPorts();
     this.refreshSwitches();
     this.refreshVlans();
-  }
-
-  refreshSystem() {
-    this.systemService
-      .getSystem()
-      .subscribe({
-        next: (system: System) => {
-          this.system = system;
-        },
-        error: (err: HttpErrorResponse) => {
-          this.errorHandler.handleError(err);
-        }
-      })
   }
 
   refreshDevices() {

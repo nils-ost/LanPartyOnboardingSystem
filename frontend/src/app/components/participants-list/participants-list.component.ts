@@ -1,20 +1,19 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'src/app/interfaces/table';
 import { Participant } from 'src/app/interfaces/participant';
 import { Seat } from 'src/app/interfaces/seat';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { ParticipantService } from 'src/app/services/participant.service';
-import { System } from 'src/app/interfaces/system';
+import { SettingService } from 'src/app/services/setting.service';
 
 @Component({
   selector: 'app-participants-list',
   templateUrl: './participants-list.component.html',
   styleUrls: ['./participants-list.component.scss']
 })
-export class ParticipantsListComponent implements OnChanges {
-  @Input() system?: System;
+export class ParticipantsListComponent implements OnInit, OnChanges {
   @Input() participants!: Participant[];
   @Input() seats!: Seat[];
   @Input() tables!: Table[];
@@ -37,13 +36,17 @@ export class ParticipantsListComponent implements OnChanges {
 
   constructor(
     private messageService: MessageService,
+    private settingService: SettingService,
     private confirmationService: ConfirmationService,
     private errorHandler: ErrorHandlerService,
     private participantService: ParticipantService
   ) {}
 
+  ngOnInit(): void {
+    this.absolute_seatnumbers = this.settingService.getValue('absolute_seatnumbers');
+  }
+
   ngOnChanges(): void {
-    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
     let maxTable: number = 0;
     for (let i = 0; i < this.tables.length; i++) {
       let table: Table = this.tables[i];

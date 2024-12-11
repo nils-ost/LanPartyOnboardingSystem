@@ -4,11 +4,11 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { IpPool } from 'src/app/interfaces/ip-pool';
 import { Seat } from 'src/app/interfaces/seat';
 import { Switch } from 'src/app/interfaces/switch';
-import { System } from 'src/app/interfaces/system';
 import { Table } from 'src/app/interfaces/table';
 import { Vlan } from 'src/app/interfaces/vlan';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { SeatService } from 'src/app/services/seat.service';
+import { SettingService } from 'src/app/services/setting.service';
 import { TableService } from 'src/app/services/table.service';
 
 @Component({
@@ -17,7 +17,6 @@ import { TableService } from 'src/app/services/table.service';
   styleUrls: ['./tables-list.component.scss']
 })
 export class TablesListComponent implements OnInit, OnChanges {
-  @Input() system?: System;
   @Input() tables!: Table[];
   @Input() ippools!: IpPool[];
   @Input() switches!: Switch[];
@@ -43,6 +42,7 @@ export class TablesListComponent implements OnInit, OnChanges {
 
   constructor(
     private messageService: MessageService,
+    private settingService: SettingService,
     private confirmationService: ConfirmationService,
     private errorHandler: ErrorHandlerService,
     private tableService: TableService,
@@ -50,7 +50,7 @@ export class TablesListComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
+    this.absolute_seatnumbers = this.settingService.getValue('absolute_seatnumbers');
   }
 
   ngOnChanges(): void {
@@ -72,7 +72,6 @@ export class TablesListComponent implements OnInit, OnChanges {
       if (storedVal) newVal = storedVal + 1;
       this.seatCounts.set(table_id, newVal);
     }
-    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
   }
 
   selectTable(selection: Table | undefined) {

@@ -12,7 +12,6 @@ import { IpPoolService } from 'src/app/services/ip-pool.service';
 import { Port } from 'src/app/interfaces/port';
 import { PortService } from 'src/app/services/port.service';
 import { SystemService } from 'src/app/services/system.service';
-import { System } from 'src/app/interfaces/system';
 
 @Component({
   selector: 'app-network-screen',
@@ -29,7 +28,6 @@ export class NetworkScreenComponent implements OnInit, OnDestroy {
   switches: Switch[] = [];
   ippools: IpPool[] = [];
   ports: Port[] = [];
-  system!: System;
   commit_all: boolean = false;
   retreat_all: boolean = false;
 
@@ -44,7 +42,6 @@ export class NetworkScreenComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.refreshSystem();
     this.refreshVlans();
     this.refreshSwitches();
     this.refreshIpPools();
@@ -109,19 +106,6 @@ export class NetworkScreenComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (ports: Port[]) => {
           this.ports = ports;
-        },
-        error: (err: HttpErrorResponse) => {
-          this.errorHandler.handleError(err);
-        }
-      })
-  }
-
-  refreshSystem() {
-    this.systemService
-      .getSystem()
-      .subscribe({
-        next: (system: System) => {
-          this.system = system;
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);

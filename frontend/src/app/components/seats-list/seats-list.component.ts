@@ -9,7 +9,7 @@ import { Participant } from 'src/app/interfaces/participant';
 import { ParticipantService } from 'src/app/services/participant.service';
 import { IpPool } from 'src/app/interfaces/ip-pool';
 import { UtilsService } from 'src/app/services/utils.service';
-import { System } from 'src/app/interfaces/system';
+import { SettingService } from 'src/app/services/setting.service';
 
 @Component({
   selector: 'app-seats-list',
@@ -17,7 +17,6 @@ import { System } from 'src/app/interfaces/system';
   styleUrls: ['./seats-list.component.scss']
 })
 export class SeatsListComponent implements OnChanges, OnInit {
-  @Input() system?: System;
   @Input() tables!: Table[];
   @Input() seats!: Seat[];
   @Input() ippools!: IpPool[];
@@ -47,6 +46,7 @@ export class SeatsListComponent implements OnChanges, OnInit {
 
   constructor(
     private messageService: MessageService,
+    private settingService: SettingService,
     private confirmationService: ConfirmationService,
     private errorHandler: ErrorHandlerService,
     private seatService: SeatService,
@@ -57,12 +57,10 @@ export class SeatsListComponent implements OnChanges, OnInit {
   ngOnInit(): void {
     this.multiSortMeta.push({field: 'table', order: 1});
     this.multiSortMeta.push({field: 'seatNumber', order: 1});
-    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
+    this.absolute_seatnumbers = this.settingService.getValue('absolute_seatnumbers');
   }
 
   ngOnChanges(): void {
-    if (this.system) this.absolute_seatnumbers = this.system.seatnumbers_absolute;
-
     for (let i = 0; i < this.tables.length; i++) {
       let table: Table = this.tables[i];
       this.tablesNumbers.set(table.id, table.number);

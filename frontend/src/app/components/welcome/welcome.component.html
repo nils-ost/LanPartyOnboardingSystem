@@ -11,7 +11,7 @@
             <p-button *ngIf="onboarding.ip && !onboarding.done && !login && false" i18n-label label="Create Account" styleClass="p-button-secondary" icon="pi pi-file-import" iconPos="left"></p-button>
         </div>
 
-        <app-onboarding [system]="system" (onboardingChangeEvent)="onboardingChanged($event)"></app-onboarding>
+        <app-onboarding (onboardingChangeEvent)="onboardingChanged($event)"></app-onboarding>
     </div>
 
     <div class="column-spacer"></div>

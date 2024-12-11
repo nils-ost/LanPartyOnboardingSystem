@@ -1,42 +1,9 @@
 import cherrypy
 import cherrypy_cors
-from elements import Session
-from helpers.system import get_open_commits
-from elements import Setting
-from helpers.version import version
+from elements import Session, Setting
 
 
 class SystemEndpoint():
-    @cherrypy.expose()
-    @cherrypy.tools.json_in()
-    @cherrypy.tools.json_out()
-    def index(self):
-        if cherrypy.request.method == 'OPTIONS':
-            cherrypy.response.headers['Allow'] = 'OPTIONS, GET'
-            cherrypy_cors.preflight(allowed_methods=['GET'])
-            return
-        elif cherrypy.request.method == 'GET':
-            result = dict()
-
-            cookie = cherrypy.request.cookie.get('LPOSsession')
-            if cookie:
-                session = Session.get(cookie.value)
-            else:
-                session = Session.get(None)
-            if len(session.validate_base()) == 0 and session.admin():
-                # these are for admins only
-                result['commited'] = Setting.value('system_commited')
-                result['open_commits'] = True if get_open_commits() > 0 else False
-
-            result['seatnumbers_absolute'] = Setting.value('absolute_seatnumbers')
-            result['nlpt_sso'] = Setting.value('nlpt_sso')
-            result['version'] = version
-            return result
-        else:
-            cherrypy.response.headers['Allow'] = 'OPTIONS, GET'
-            cherrypy.response.status = 405
-            return {'error': 'method not allowed'}
-
     @cherrypy.expose()
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
