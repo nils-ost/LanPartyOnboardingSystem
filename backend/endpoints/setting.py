@@ -11,7 +11,8 @@ class SettingEndpoint():
     _ro_attr = list()  # List of attribute-names, that are allways read-only
     user_readable = ['domain', 'subdomain', 'absolute_seatnumbers', 'nlpt_sso', 'sso_login_url']
     admin_writeable = ['os_nw_interface', 'play_dhcp', 'play_gateway', 'upstream_dns', 'domain', 'subdomain', 'absolute_seatnumbers', 'nlpt_sso',
-                       'sso_login_url', 'sso_onboarding_url']
+                       'sso_login_url', 'sso_onboarding_url', 'server_port', 'metrics_enabled', 'metrics_port',
+                       'haproxy_api_host', 'haproxy_api_port', 'haproxy_api_user', 'haproxy_api_pw']
 
     @cherrypy.expose()
     @cherrypy.tools.json_in()

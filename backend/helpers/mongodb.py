@@ -1,23 +1,29 @@
 from pymongo import MongoClient, errors as mongo_errors
 from bson.objectid import ObjectId
-from helpers.config import get_config
 import multiprocessing
+import os
 import sys
 
 _mongoDB = dict()
-config = get_config('mongodb')
+
+
+def _config():
+    host = os.environ.get('MONGO_HOST', '127.0.0.1')
+    port = int(os.environ.get('MONGO_PORT', 27017))
+    db = os.environ.get('MONGO_DB', 'LPOS')
+    return {'host': host, 'port': port, 'database': db}
 
 
 class mongoDB(object):
     _conn = dict()
 
     def __init__(self):
-        mongoClient = MongoClient(host=config['host'], port=int(config['port']), serverSelectionTimeoutMS=500)
-        mongoDB._conn[multiprocessing.current_process().name] = mongoClient.get_database(config['database'])
+        mongoClient = MongoClient(host=_config()['host'], port=int(_config()['port']), serverSelectionTimeoutMS=500)
+        mongoDB._conn[multiprocessing.current_process().name] = mongoClient.get_database(_config()['database'])
 
     def wait_for_connection(self):
         first = True
-        mongoClient = MongoClient(host=config['host'], port=config['port'], serverSelectionTimeoutMS=2000)
+        mongoClient = MongoClient(host=_config()['host'], port=_config()['port'], serverSelectionTimeoutMS=2000)
         while True:
             try:
                 mongoClient.server_info()
@@ -33,7 +39,7 @@ class mongoDB(object):
 
     def is_connected(self):
         try:
-            mongoClient = MongoClient(host=config['host'], port=config['port'], serverSelectionTimeoutMS=1000)
+            mongoClient = MongoClient(host=_config()['host'], port=_config()['port'], serverSelectionTimeoutMS=1000)
             mongoClient.server_info()
             return True
         except Exception:

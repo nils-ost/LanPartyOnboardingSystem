@@ -1,10 +1,10 @@
-from helpers.config import get_config
 from multiprocessing import Process
 
 metrics_exporter_process = None
 
 
 def start_metrics_exporter():
+    from elements import Setting
     global metrics_exporter_process
 
     def metrics_exporter_function():
@@ -116,11 +116,11 @@ def start_metrics_exporter():
                 cherrypy.response.headers['Content-Type'] = 'text/plain; version=0.0.4'
                 return '\n'.join(lines)
 
-        config = get_config('metrics')
-        cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': config['port']})
+        metrics_port = Setting.value('metrics_port')
+        cherrypy.config.update({'server.socket_host': '0.0.0.0', 'server.socket_port': metrics_port})
         cherrypy.quickstart(Metrics(), '/metrics')
 
-    config = get_config('metrics')
-    if config['enabled'] and metrics_exporter_process is None:
+    metrics_enabled = Setting.value('metrics_enabled')
+    if metrics_enabled and metrics_exporter_process is None:
         metrics_exporter_process = Process(target=metrics_exporter_function, daemon=True)
         metrics_exporter_process.start()

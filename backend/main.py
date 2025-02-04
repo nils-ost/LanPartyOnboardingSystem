@@ -3,12 +3,11 @@ import cherrypy
 import cherrypy_cors
 import logging
 from helpers.docdb import docDB
-from helpers.config import get_config
 from helpers.backgroundworker import device_onboarding_start
 from helpers.versioning import run as versioning_run
 from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint, SwitchEndpoint, OnboardingEndpoint, SettingEndpoint
 from endpoints.metrics import start_metrics_exporter
-from elements import VLAN, IpPool, Table, Seat, Participant, Device, Port, PortConfigCache
+from elements import Setting, VLAN, IpPool, Table, Seat, Participant, Device, Port, PortConfigCache
 
 logging.basicConfig(format='%(levelname)s:%(name)s:%(message)s', level='INFO')
 
@@ -84,11 +83,11 @@ if __name__ == '__main__':
             'tools.staticdir.abs_index': True
         }
     }
-    config = get_config('server')
+    listen_port = Setting.value('server_port')
     cherrypy_cors.install()
     cherrypy.config.update({
         'server.socket_host': '0.0.0.0',
-        'server.socket_port': config['port'],
+        'server.socket_port': listen_port,
         'cors.expose.on': True,
         'tools.response_headers.on': True,
         'tools.response_headers.headers': [('Access-Control-Allow-Origin', 'http://localhost:4200/'), ('Access-Control-Allow-Credentials', 'true')]})

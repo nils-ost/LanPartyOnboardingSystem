@@ -37,6 +37,7 @@ export class SettingsScreenComponent implements OnInit {
   sso_onboarding_url: string = "https://nlpt.online/api/onboarding/2024";
   settings_ro: Setting[] = [];
   settings_rw: Setting[] = [];
+  settings_haproxy: string[] = ['haproxy_api_host', 'haproxy_api_port', 'haproxy_api_user', 'haproxy_api_pw'];
 
   constructor(
     private errorHandler: ErrorHandlerService,
@@ -77,6 +78,7 @@ export class SettingsScreenComponent implements OnInit {
                 else this.settings_rw.push(s);
                 break;
             }
+          this.settings_rw = this.settings_rw.sort((a, b) => (a.id > b.id) ? 1 : ((a.id < b.id) ? -1 : 0));
           }
         },
         error: (err: HttpErrorResponse) => {

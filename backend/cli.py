@@ -8,7 +8,6 @@ from datetime import datetime
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 parser = argparse.ArgumentParser(description='LPOS CLI')
-parser.add_argument('--config', dest='config', action='store_true', default=False, help='Returns current configuration')
 parser.add_argument('--enablemetrics', dest='enablemetrics', action='store_true', default=False, help='If set the LPOS metrics endpoint is set to enabled')
 parser.add_argument('--state', '-s', dest='state', action='store_true', default=False, help='If set the state of LPOS stack is displayed')
 parser.add_argument('--start', dest='start', action='store_true', default=False, help='If set LPOS stack is started')
@@ -156,7 +155,6 @@ def clearDB(force=False):
 
 def createBackup():
     from helpers.docdb import docDB
-    from helpers.config import get_config
     from helpers.version import version
     import zipfile
     path = input('Where do you like to store the backup?: ')
@@ -173,9 +171,6 @@ def createBackup():
     })
 
     with zipfile.ZipFile(backup_file, mode='w') as zf:
-        with zf.open('config.json', 'w') as f:
-            f.write(json.dumps(get_config(), indent=2).encode('utf-8'))
-
         for coll in [c['name'] for c in docDB.conn().list_collections()]:
             elements = list()
             for element in docDB.conn().get_collection(coll).find({}):
@@ -193,7 +188,6 @@ def restoreBackup():
     import zipfile
     from helpers.version import version
     from helpers.versioning import versions_gt
-    from helpers.config import reload_config
     from helpers.docdb import docDB
     backup_file = input('Path to backup-file: ').strip()
     if not os.path.isfile(backup_file):
@@ -212,12 +206,6 @@ def restoreBackup():
             print(f"Version of backup ({metadata['version']}) is bigger than the currently installed version ({version})! Can't restore backup!")
             return
 
-        clearDB(force=True)
-        with zf.open('config.json', 'r') as f:
-            with open('config.json', 'wb') as out:
-                out.write(f.read())
-        reload_config()
-        docDB.reset_connections()
         clearDB(force=True)
 
         for coll in metadata.get('db', dict()).keys():
@@ -252,17 +240,10 @@ commands = [
     ('Exit', exit)
 ]
 
-if args.config:
-    from helpers.config import get_config
-    print(json.dumps(get_config(), indent=2))
-    sys.exit(0)
-
 if args.enablemetrics:
-    from helpers.config import get_config, set_config
-    config = get_config('metrics')
-    if not config.get('enabled', False):
-        config['enabled'] = True
-        set_config(config, 'metrics')
+    from elements import Setting
+    if not Setting.value('metrics_enabled'):
+        Setting.set('metrics_enabled', True)
         sys.exit(1)
     sys.exit(0)
 

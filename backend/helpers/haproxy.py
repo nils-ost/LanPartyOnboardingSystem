@@ -3,9 +3,8 @@ import json
 import time
 import logging
 import subprocess
-from helpers.config import get_config
+from elements import Setting
 
-config = get_config('haproxy')
 ssoproxycfg = """
 global
         log /dev/log    local0
@@ -171,10 +170,10 @@ class LPOSHAproxy(_BaseHAproxy):
         self.logger = logging.getLogger('LPOS - HAproxy')
         self._container_search_name = 'haproxy'
         self.config = {
-            'host': config['host'],
-            'api_port': config['api_port'],
-            'api_user': config['api_user'],
-            'api_pw': config['api_pw']
+            'host': Setting.value('haproxy_api_host'),
+            'api_port': Setting.value('haproxy_api_port'),
+            'api_user': Setting.value('haproxy_api_user'),
+            'api_pw': Setting.value('haproxy_api_pw')
         }
         self.container_running()
 
