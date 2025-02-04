@@ -167,6 +167,7 @@ def run():
             s['port_numbering_offset'] = 0
             s.save()
     if versions_lt(db_version, '0.6.1'):
+        import os
         from elements import Setting
         print('  Migrating settings to Setting-Element')
         for s in docDB.search_many('settings', {}):
@@ -175,6 +176,30 @@ def run():
             if k is not None and v is not None:
                 Setting.set(k, v)
         docDB.clear('settings')
+        if os.path.isfile('config.json'):
+            import json
+            print('  Migrating configs to Setting-Element')
+            config = json.load(open('config.json', 'r'))
+            if 'port' in config.get('server', dict()):
+                Setting.set('server_port', config['server']['port'])
+            if 'metrics' in config:
+                if 'enabled' in config['metrics']:
+                    Setting.set('metrics_enabled', config['metrics']['enabled'])
+                if 'port' in config['metrics']:
+                    Setting.set('metrics_port', config['metrics']['port'])
+            if 'haproxy' in config:
+                if 'host' in config['haproxy']:
+                    Setting.set('haproxy_api_host', config['haproxy']['host'])
+                if 'api_port' in config['haproxy']:
+                    Setting.set('haproxy_api_port', config['haproxy']['api_port'])
+                if 'api_user' in config['haproxy']:
+                    Setting.set('haproxy_api_user', config['haproxy']['api_user'])
+                if 'api_pw' in config['haproxy']:
+                    Setting.set('haproxy_api_pw', config['haproxy']['api_pw'])
+            try:
+                os.remove('config.json')
+            except Exception:
+                pass
 
     db_defaults()
 
