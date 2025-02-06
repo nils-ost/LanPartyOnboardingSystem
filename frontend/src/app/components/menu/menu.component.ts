@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Router } from "@angular/router"
 
@@ -7,114 +7,117 @@ import { Router } from "@angular/router"
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent {
-  dockItems: MenuItem[] = [];
+export class MenuComponent implements OnInit, OnChanges{
+  @Input() missingLogin: boolean = false;
+  menuItems: MenuItem[] = [];
 
   constructor(
     private router: Router
   ) { }
 
-  ngOnInit() {
-    this.dockItems = [
-      {
-        label: 'Home',
-        tooltipOptions: {
-          tooltipLabel: 'Home',
-          tooltipPosition: 'top',
-          positionTop: 0,
-          positionLeft: 15,
-          showDelay: 100
-        },
-        icon: 'pi-home',
-        command: () => {
-          this.router.navigate(['/welcome']);
+  ngOnChanges(changes: SimpleChanges): void {
+    this.selectMenu();
+  }
+
+  ngOnInit(): void {
+    this.selectMenu();
+  }
+
+  selectMenu() {
+    if (this.missingLogin)
+      this.menuItems = [
+        {
+          tooltipOptions: {
+            tooltipLabel: 'Login',
+            tooltipPosition: 'top',
+            showDelay: 100
+          },
+          icon: 'pi pi-sign-in',
+          command: () => {
+            this.router.navigate(['/login']);
+          }
         }
-      },
-      {
-        label: 'Network',
-        tooltipOptions: {
-          tooltipLabel: 'Network',
-          tooltipPosition: 'top',
-          positionTop: 0,
-          positionLeft: 15,
-          showDelay: 100
+      ]
+    else
+      this.menuItems = [
+        {
+          tooltipOptions: {
+            tooltipLabel: 'Home',
+            tooltipPosition: 'top',
+            showDelay: 100
+          },
+          icon: 'pi pi-home',
+          command: () => {
+            this.router.navigate(['/welcome']);
+          }
         },
-        icon: 'pi-sitemap',
-        command: () => {
-          this.router.navigate(['/network']);
-        }
-      },
-      {
-        label: 'Tables',
-        tooltipOptions: {
-          tooltipLabel: 'Tables',
-          tooltipPosition: 'top',
-          positionTop: 0,
-          positionLeft: 15,
-          showDelay: 100
+        {
+          tooltipOptions: {
+            tooltipLabel: 'Network',
+            tooltipPosition: 'top',
+            showDelay: 100
+          },
+          icon: 'pi pi-sitemap',
+          command: () => {
+            this.router.navigate(['/network']);
+          }
         },
-        icon: 'pi-th-large',
-        command: () => {
-          this.router.navigate(['/tables']);
-        }
-      },
-      {
-        label: 'Participants',
-        tooltipOptions: {
-          tooltipLabel: 'Participants',
-          tooltipPosition: 'top',
-          positionTop: 0,
-          positionLeft: 15,
-          showDelay: 100
+        {
+          tooltipOptions: {
+            tooltipLabel: 'Tables',
+            tooltipPosition: 'top',
+            showDelay: 100
+          },
+          icon: 'pi pi-th-large',
+          command: () => {
+            this.router.navigate(['/tables']);
+          }
         },
-        icon: 'pi-users',
-        command: () => {
-          this.router.navigate(['/participants']);
-        }
-      },
-      {
-        label: 'Devices',
-        tooltipOptions: {
-          tooltipLabel: 'Devices',
-          tooltipPosition: 'top',
-          positionTop: 0,
-          positionLeft: 15,
-          showDelay: 100
+        {
+          tooltipOptions: {
+            tooltipLabel: 'Participants',
+            tooltipPosition: 'top',
+            showDelay: 100
+          },
+          icon: 'pi pi-users',
+          command: () => {
+            this.router.navigate(['/participants']);
+          }
         },
-        icon: 'pi-desktop',
-        command: () => {
-          this.router.navigate(['/devices']);
-        }
-      },
-      {
-        label: 'Settings',
-        tooltipOptions: {
-          tooltipLabel: 'Settings',
-          tooltipPosition: 'top',
-          positionTop: 0,
-          positionLeft: 15,
-          showDelay: 100
+        {
+          tooltipOptions: {
+            tooltipLabel: 'Devices',
+            tooltipPosition: 'top',
+            showDelay: 100
+          },
+          icon: 'pi pi-desktop',
+          command: () => {
+            this.router.navigate(['/devices']);
+          }
         },
-        icon: 'pi-cog',
-        command: () => {
-          this.router.navigate(['/settings']);
-        }
-      },
-      {
-        label: 'Logout',
-        tooltipOptions: {
-          tooltipLabel: 'Logout',
-          tooltipPosition: 'top',
-          positionTop: 0,
-          positionLeft: 15,
-          showDelay: 100
+        {
+          tooltipOptions: {
+            tooltipLabel: 'Settings',
+            tooltipPosition: 'top',
+            showDelay: 100
+          },
+          icon: 'pi pi-cog',
+          command: () => {
+            this.router.navigate(['/settings']);
+          }
         },
-        icon: 'pi-sign-out',
-        command: () => {
-          this.router.navigate(['/logout']);
+        {
+          tooltipOptions: {
+            tooltipLabel: 'Logout',
+            tooltipPosition: 'top',
+            showDelay: 100
+          },
+          icon: 'pi pi-sign-out',
+          command: () => {
+            this.router.navigate(['/logout']);
+          }
         }
-      }
-    ];
+      ];
   }
 
 }

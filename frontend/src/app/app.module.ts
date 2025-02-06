@@ -16,7 +16,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PanelModule } from 'primeng/panel';
 import { ToastModule } from 'primeng/toast';
 import { MessagesModule } from 'primeng/messages';
-import { DockModule } from 'primeng/dock';
+import { SpeedDialModule } from 'primeng/speeddial';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -101,7 +101,7 @@ import { VlanConfigEditComponent } from './components/vlan-config-edit/vlan-conf
     PanelModule,
     ToastModule,
     MessagesModule,
-    DockModule,
+    SpeedDialModule,
     CheckboxModule,
     ToggleButtonModule,
     RadioButtonModule,

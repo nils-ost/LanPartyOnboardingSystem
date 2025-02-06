@@ -42,10 +42,6 @@ export class WelcomeComponent implements OnInit, OnChanges {
     this.onboarding = newOnboarding;
   }
 
-  gotoLogin() {
-    this.router.navigate(['/login']);
-  }
-
   gotoDE() {
     window.location.href = '/de/';
   }

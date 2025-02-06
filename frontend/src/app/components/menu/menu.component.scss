@@ -1,8 +1,21 @@
+:host ::ng-deep .p-speeddial-direction-left {
+    right: 1rem;
+    bottom: 1rem;
 
-::ng-deep .p-tooltip.p-tooltip-top .p-tooltip-arrow {
-    border: 0;
-}
+    .p-speeddial-button {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
 
-::ng-deep .p-dock {
-    position: fixed !important;
+    .p-speeddial-action {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-left: 0.35rem;
+        margin-right: 0.35rem;
+        text-decoration: none;
+    }
+
+    .p-speeddial-action-icon {
+        font-size: 0.9rem;
+    }
 }

@@ -9,6 +9,8 @@
     * New corresponding Endpoint, that is now use by Frontend
     * New section in Settings-Screen to be able to modify all settings
   * Reworked System-Endpoint to not expose settings indirectly
+  * New menu, that is less prominent and does not overlay other parts of application
+  * Moved login-button on Onboarding screen to the menu, to reduce user irritation
 
 ## v0.6.0
 
