@@ -36,6 +36,7 @@ class MikroTikSwitch():
         self.model = 'generic'
         self.identity = ''
         self.mac_addr = ''
+        self.mgmt_vlan = None
         self.ports = list()
         self.vlans = list()
         self._host = host
@@ -110,6 +111,9 @@ class MikroTikSwitch():
         self.loadPortsVlan()
 
     def loadSystem(self, response=None):
+        """
+        reads: id, mac, avln
+        """
         if response is None:
             r = self.getData('sys.b')
             if len(r) == 0:
@@ -129,6 +133,9 @@ class MikroTikSwitch():
         self._commitUnregister('system')
 
     def loadPorts(self, response=None):
+        """
+        reads: sfpo, prt
+        """
         if response is None:
             self.ports = list()
             r = self.getData('link.b')
@@ -145,6 +152,9 @@ class MikroTikSwitch():
         self._commitUnregister('ports')
 
     def reloadPorts(self, response=None):
+        """
+        reads: lnk, en, nm, spd
+        """
         if response is None:
             r = self.getData('link.b')
         else:
@@ -169,6 +179,9 @@ class MikroTikSwitch():
         self._commitUnregister('ports')
 
     def loadIsolation(self, response=None):
+        """
+        reads: fp*
+        """
         if response is None:
             r = self.getData('fwd.b')
         else:
@@ -190,6 +203,9 @@ class MikroTikSwitch():
         self._commitUnregister('isolation')
 
     def loadHosts(self, response=None):
+        """
+        reads: prt, adr
+        """
         if response is None:
             r = self.getData('!dhost.b')
         else:
@@ -210,6 +226,9 @@ class MikroTikSwitch():
         self.loadHosts(response)
 
     def loadVlans(self, response=None):
+        """
+        reads: vid, piso, lrn, mrr, igmp, mbr
+        """
         if response is None:
             r = self.getData('vlan.b')
         else:
@@ -235,6 +254,9 @@ class MikroTikSwitch():
         self._commitUnregister('vlans')
 
     def loadPortsVlan(self, response=None):
+        """
+        reads: fvid, vlan, vlni, dvid
+        """
         if response is None:
             r = self.getData('fwd.b')
         else:
@@ -611,6 +633,18 @@ class MikroTikSwitchCRS328(MikroTikSwitch):
         self._commitUnregister('ports')
 
 
+class MikroTikSwitchCSS318(MikroTikSwitch):
+    def loadPorts(self):
+        self.ports = list()
+        r = self.getData('link.b')
+        for t in ['gbe'] * int(r.get('sfpo', '0'), 16) + ['sfp+'] * int(r.get('sfp', '0'), 16):
+            p = SwitchPort()
+            p.type = t
+            self.ports.append(p)
+        super().loadPorts(r)
+        self._commitUnregister('ports')
+
+
 class MikroTikSwitchCSS326(MikroTikSwitch):
     def loadPorts(self):
         self.ports = list()
@@ -686,6 +720,7 @@ model_mapping = {
     'generic': MikroTikSwitch,
     'CRS309-1G-8S+': MikroTikSwitchCRS309,
     'CRS328-24P-4S+': MikroTikSwitchCRS328,
+    'CSS318-16G-2S+': MikroTikSwitchCSS318,
     'CSS326-24G-2S+': MikroTikSwitchCSS326,
     'CSS610-8G-2S+': MikroTikSwitchCSS610
 }
