@@ -13,7 +13,7 @@ mongodb_image = 'mongo:4.4'
 mongodb_service = 'docker.mongodb.service'
 mongoexporter_image = 'bitnami/mongodb-exporter:0.30.0'
 mongoexporter_service = 'docker.mongoexporter.service'
-haproxy_image = 'haproxytech/haproxy-alpine:latest'
+haproxy_image = 'haproxytech/haproxy-alpine:2.9.6'
 haproxy_service = 'docker.haproxy.service'
 haproxy_config = '/etc/haproxy/haproxy.cfg'
 lpos_service = 'lpos.service'
@@ -239,21 +239,21 @@ def deploy_haproxy(c):
     docker_pull(c, haproxy_image)
     systemctl_stop(c, haproxy_service)
 
-    lpos_config = c.run('lpos --config', warn=True, hide=True)
-    if not lpos_config.ok:
-        print("LPOS not installed, can't setup HAproxy")
+    lpos_port = c.run('lpos --port', warn=True, hide=True)
+    if not lpos_port.ok:
+        print("LPOS not installed or running, can't setup HAproxy")
         return
-    lpos_config = json.loads(lpos_config.stdout)
-    if int(lpos_config['server']['port']) == 80:
+    lpos_port = lpos_port.stdout.strip()
+    if int(lpos_port) == 80:
         print("LPOS allready occupying port 80, can't setup HAproxy")
         return
     c.run(f'mkdir -p {os.path.dirname(haproxy_config)}', hide=True)
     c.put('install/haproxy.cfg', remote=haproxy_config)
-    c.run(f"sed -i 's/local_lpos host.docker.internal:[0-9]*/local_lpos host.docker.internal:{lpos_config['server']['port']}/' {haproxy_config}")
+    c.run(f"sed -i 's/local_lpos host.docker.internal:[0-9]*/local_lpos host.docker.internal:{lpos_port}/' {haproxy_config}")
 
     systemctl_install_service(c, 'docker.service', haproxy_service, [
         ('__execstartpre__', '\\n'.join([
-            'ExecStartPre=/usr/bin/docker run --rm --name copier-haproxy -v %n:/app -d alpine sleep 3',
+            f'ExecStartPre=/usr/bin/docker run --rm --name copier-haproxy -v %n:/app -d {alpine_image} sleep 3',
             f'ExecStartPre=/usr/bin/docker cp {haproxy_config} copier-haproxy:/app/'])),
         ('__additional__', '--cap-add=NET_ADMIN --add-host=host.docker.internal:host-gateway --sysctl net.ipv4.ip_unprivileged_port_start=0'),
         ('__storage__', '%n:/usr/local/etc/haproxy/'),

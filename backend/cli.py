@@ -8,6 +8,7 @@ from datetime import datetime
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 parser = argparse.ArgumentParser(description='LPOS CLI')
+parser.add_argument('--port', dest='port', action='store_true', default=False, help='If set the LPOS server_port is returned (used by fab installer)')
 parser.add_argument('--enablemetrics', dest='enablemetrics', action='store_true', default=False, help='If set the LPOS metrics endpoint is set to enabled')
 parser.add_argument('--state', '-s', dest='state', action='store_true', default=False, help='If set the state of LPOS stack is displayed')
 parser.add_argument('--start', dest='start', action='store_true', default=False, help='If set LPOS stack is started')
@@ -239,6 +240,11 @@ commands = [
     ('Restore Backup', restoreBackup),
     ('Exit', exit)
 ]
+
+if args.port:
+    from elements import Setting
+    print(Setting.value('server_port'))
+    sys.exit(0)
 
 if args.enablemetrics:
     from elements import Setting

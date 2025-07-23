@@ -17,7 +17,7 @@ def start_development(c):
         cmd = [
             'sudo docker run --name dev-haproxy --rm --cap-add=NET_ADMIN',
             '--add-host=host.docker.internal:host-gateway --sysctl net.ipv4.ip_unprivileged_port_start=0',
-            '-v dev-haproxy:/usr/local/etc/haproxy/ -p 80:80 -p 8404:8404 -p 5555:5555 -d haproxytech/haproxy-alpine:latest'
+            '-v dev-haproxy:/usr/local/etc/haproxy/ -p 80:80 -p 8404:8404 -p 5555:5555 -d haproxytech/haproxy-alpine:2.9.6'
         ]
         c.run(' '.join(cmd))
 
