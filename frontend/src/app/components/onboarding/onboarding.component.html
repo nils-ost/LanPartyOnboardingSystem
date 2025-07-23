@@ -14,7 +14,7 @@
             {{ utils.ip_int_to_str(onboarding.ip) }}
         </div>
         <div *ngIf="onboarding.done && !doneOnline" class="ip_reloadinfo" i18n="@@onboardingIpReloadinfo">
-            Your onboarding is completed! It now takes up to two minutes till your PC assigns it's final IP. Refresh this page to test if the assignment is done.
+            Your onboarding is completed! It now takes up to two minutes till your PC assigns it's final IP. Please stand by, this screen will automatically refresh, when the assignment is done.
         </div>
         <div *ngIf="onboarding.done && !doneOnline" class="ip_reloadinfo" i18n="@@onboardingIpReloadinfo2">
             If you don't like to wait that long, you can open Windows-Commandprompt (Win+R) and type 'ipconfig /renew' this should assign your play-IP immediately.

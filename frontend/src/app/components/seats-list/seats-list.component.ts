@@ -10,6 +10,7 @@ import { ParticipantService } from 'src/app/services/participant.service';
 import { IpPool } from 'src/app/interfaces/ip-pool';
 import { UtilsService } from 'src/app/services/utils.service';
 import { SettingService } from 'src/app/services/setting.service';
+import { Setting } from 'src/app/interfaces/setting';
 
 @Component({
   selector: 'app-seats-list',
@@ -57,7 +58,10 @@ export class SeatsListComponent implements OnChanges, OnInit {
   ngOnInit(): void {
     this.multiSortMeta.push({field: 'table', order: 1});
     this.multiSortMeta.push({field: 'seatNumber', order: 1});
-    this.absolute_seatnumbers = this.settingService.getValue('absolute_seatnumbers');
+    this.settingService.getSetting('absolute_seatnumbers').subscribe({
+        next: (setting: Setting) => {this.absolute_seatnumbers = setting.value;},
+        error: (err: HttpErrorResponse) => {this.errorHandler.handleError(err);}
+    })
   }
 
   ngOnChanges(): void {

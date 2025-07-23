@@ -7,6 +7,7 @@ import { Seat } from 'src/app/interfaces/seat';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { ParticipantService } from 'src/app/services/participant.service';
 import { SettingService } from 'src/app/services/setting.service';
+import { Setting } from 'src/app/interfaces/setting';
 
 @Component({
   selector: 'app-participants-list',
@@ -43,7 +44,10 @@ export class ParticipantsListComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    this.absolute_seatnumbers = this.settingService.getValue('absolute_seatnumbers');
+    this.settingService.getSetting('absolute_seatnumbers').subscribe({
+        next: (setting: Setting) => {this.absolute_seatnumbers = setting.value;},
+        error: (err: HttpErrorResponse) => {this.errorHandler.handleError(err);}
+    })
   }
 
   ngOnChanges(): void {

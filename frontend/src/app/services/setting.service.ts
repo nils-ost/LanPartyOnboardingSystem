@@ -31,20 +31,4 @@ export class SettingService {
     this.cache.delete(id);
     return this.http.patch<Setting>(this.settingUrl + id + '/', setting, {withCredentials:true});
   }
-
-  public getValue(setting_id: string): any {
-    let value: any | undefined = this.cache.get(setting_id);
-    if (value == undefined) {
-      this.getSetting(setting_id).subscribe({
-        next: (setting: Setting) => {
-          this.cache.set(setting_id, setting.value);
-          return setting.value;
-        },
-        error: (err: HttpErrorResponse) => {
-          this.errorHandler.handleError(err);
-        }
-      })
-    }
-    else return value;
-  }
 }

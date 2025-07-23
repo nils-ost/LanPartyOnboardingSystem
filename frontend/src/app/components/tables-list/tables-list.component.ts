@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output, OnChanges, OnInit } from '@angu
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { IpPool } from 'src/app/interfaces/ip-pool';
 import { Seat } from 'src/app/interfaces/seat';
+import { Setting } from 'src/app/interfaces/setting';
 import { Switch } from 'src/app/interfaces/switch';
 import { Table } from 'src/app/interfaces/table';
 import { Vlan } from 'src/app/interfaces/vlan';
@@ -50,7 +51,10 @@ export class TablesListComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    this.absolute_seatnumbers = this.settingService.getValue('absolute_seatnumbers');
+    this.settingService.getSetting('absolute_seatnumbers').subscribe({
+        next: (setting: Setting) => {this.absolute_seatnumbers = setting.value;},
+        error: (err: HttpErrorResponse) => {this.errorHandler.handleError(err);}
+    })
   }
 
   ngOnChanges(): void {

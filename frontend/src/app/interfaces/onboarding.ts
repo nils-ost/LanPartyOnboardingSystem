@@ -3,5 +3,6 @@ export interface Onboarding {
     tables?: number[],
     participant?: string,
     done?: boolean,
-    login_url?: string
+    login_url?: string,
+    online?: boolean
 }

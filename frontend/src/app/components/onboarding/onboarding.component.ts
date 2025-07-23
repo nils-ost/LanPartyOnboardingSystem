@@ -3,9 +3,9 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { Message } from 'primeng/api';
 import { Subscription, timer } from 'rxjs';
 import { Onboarding } from 'src/app/interfaces/onboarding';
+import { Setting } from 'src/app/interfaces/setting';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { OnboardingService } from 'src/app/services/onboarding.service';
-import { OnlineCheckService } from 'src/app/services/online-check.service';
 import { SettingService } from 'src/app/services/setting.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -36,12 +36,14 @@ export class OnboardingComponent implements OnInit, OnDestroy {
     private errorHandler: ErrorHandlerService,
     private settingService: SettingService,
     private onboardingService: OnboardingService,
-    private onlineCheckService: OnlineCheckService,
     public utils: UtilsService
   ) {}
 
   ngOnInit(): void {
-    this.absolute_seatnumbers = this.settingService.getValue('absolute_seatnumbers');
+    this.settingService.getSetting('absolute_seatnumbers').subscribe({
+        next: (setting: Setting) => {this.absolute_seatnumbers = setting.value;},
+        error: (err: HttpErrorResponse) => {this.errorHandler.handleError(err);}
+    })
     this.refreshOnboarding();
   }
 
@@ -114,7 +116,6 @@ export class OnboardingComponent implements OnInit, OnDestroy {
           }
         })
     }
-    else console.log('missing something');
   }
 
   sendParticipantConfirmation(selection: boolean) {
@@ -142,7 +143,6 @@ export class OnboardingComponent implements OnInit, OnDestroy {
   }
 
   onlineCheck() {
-    console.log('online check called')
     if (this.onlineCheckTimerSubscription == undefined) {
       this.doneOnline = false;
       this.onlineCheckTimerSubscription = this.onlineCheckTimer.subscribe(() => this.onlineCheck());
@@ -150,12 +150,13 @@ export class OnboardingComponent implements OnInit, OnDestroy {
       return;
     }
     console.log('executing online check')
-    this.onlineCheckService
-      .execute()
+    this.onboardingService.getOnboarding()
       .subscribe({
-        next: () => {
-          this.onlineCheckTimerSubscription?.unsubscribe();
-          this.doneOnline = true;
+        next: (onboarding: Onboarding) => {
+            if(onboarding.online == true) {
+                this.onlineCheckTimerSubscription?.unsubscribe();
+                this.doneOnline = true;
+            }
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);

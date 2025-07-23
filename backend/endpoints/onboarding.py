@@ -37,8 +37,8 @@ class OnboardingEndpoint():
             ip = IpPool.octetts_to_int(*[int(o) for o in get_client_ip().split('.')])
             cherrypy.response.status = 201
             if not device['ip'] == ip:
-                return {'done': True, 'ip': device['ip']}
-            return {'ip': ip}
+                return {'done': True, 'ip': device['ip'], 'online': False}
+            return {'ip': ip, 'online': True}
         if device['onboarding_blocked']:
             cherrypy.response.status = 400
             return {'error': {'code': 7, 'desc': 'device is blocked for onboarding'}}
