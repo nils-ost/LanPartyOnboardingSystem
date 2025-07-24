@@ -58,7 +58,8 @@
             </td>
             <td>
                 <div class="table-cell">
-                    <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="deleteParticipant(participant)"></button>
+                    <button pButton type="button" class="p-button-outlined p-button-danger" icon="pi pi-trash" (click)="deleteParticipant(participant)" i18n-pTooltip="@@tooltipParticipantDelete" pTooltip="delete Participant"></button>
+                    <button pButton type="button" class="p-button-outlined p-button-warning" icon="pi pi-eject" (click)="offboardParticipant(participant)" *ngIf="participant.seat_id" i18n-pTooltip="@@tooltipParticipantOffboard" pTooltip="execute Offboarding for Participant"></button>
                 </div>
             </td>
         </tr>

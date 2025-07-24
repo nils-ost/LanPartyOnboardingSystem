@@ -53,6 +53,7 @@ export class OnboardingComponent implements OnInit, OnDestroy {
 
   disableAutoRefresh() {
     this.refreshOnboardingTimerSubscription?.unsubscribe();
+    this.onlineCheckTimerSubscription?.unsubscribe();
   }
 
   refreshOnboarding() {

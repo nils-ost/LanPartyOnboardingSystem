@@ -92,6 +92,10 @@ export class ParticipantService {
     return this.http.patch<any>(this.participantUrl + id + '/', participant, {withCredentials:true});
   }
 
+  public offboardParticipant(id: string): Observable<any> {
+    return this.http.put<any>(this.participantUrl + 'offboard/' + id + '/', {}, {withCredentials:true});
+  }
+
   public deleteParticipant(id: string): Observable<any> {
     return this.http.delete<any>(this.participantUrl + id + '/', {withCredentials:true});
   }

@@ -32,7 +32,7 @@ class SwitchEndpoint(ElementEndpointBase):
         if cherrypy.request.method == 'POST':
             if element_id is None:
                 cherrypy.response.status = 404
-                return {'error': 'need a Swith ID for a Switch to be commited'}
+                return {'error': 'need a Switch ID for a Switch to be commited'}
 
             s = Switch.get(element_id)
             if s['_id'] is None:

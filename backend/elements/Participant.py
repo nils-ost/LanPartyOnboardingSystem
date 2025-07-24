@@ -1,5 +1,4 @@
 from elements._elementBase import ElementBase, docDB
-from elements import Session, Device
 
 
 class Participant(ElementBase):
@@ -35,11 +34,23 @@ class Participant(ElementBase):
             return result
         return None
 
+    def delete_pre(self):
+        self.offboard()
+
     def delete_post(self):
-        for s in [Session(s) for s in docDB.search_many('Session', {'participant_id': self['_id']})]:
-            s.delete()
-        for d in [Device(d) for d in docDB.search_many('Device', {'participant_id': self['_id']})]:
-            d['participant_id'] = None
-            d['ip_pool_id'] = None
-            d['ip'] = None
-            d.save()
+        from elements import Session
+        if self['_id'] is not None:
+            for s in [Session(s) for s in docDB.search_many('Session', {'participant_id': self['_id']})]:
+                s.delete()
+
+    def offboard(self):
+        from elements import Device
+        if self['_id'] is not None:
+            for d in [Device(d) for d in docDB.search_many('Device', {'participant_id': self['_id']})]:
+                d.delete()
+        if self['seat_id'] is not None:
+            d = Device.get_by_seat(self['seat_id'])
+            if d is not None:
+                d.delete()
+            self['seat_id'] = None
+            self.save()

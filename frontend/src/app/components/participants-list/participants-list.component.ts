@@ -198,6 +198,24 @@ export class ParticipantsListComponent implements OnInit, OnChanges {
     this.selectedParticipant = undefined;
   }
 
+  offboardParticipant(participant: Participant) {
+    this.confirmationService.confirm({
+      message: 'Are you sure that you want to offboard Participant ' + participant.name,
+      accept: () => {
+        this.participantService
+          .offboardParticipant(participant.id)
+          .subscribe({
+            next: (response: any) => {
+              this.editedParticipantEvent.emit(null);
+            },
+            error: (err: HttpErrorResponse) => {
+              this.errorHandler.handleError(err);
+            }
+          })
+      }
+    });
+  }
+
   deleteParticipant(participant: Participant) {
     this.confirmationService.confirm({
       message: 'Are you sure that you want to delete Participant ' + participant.name,

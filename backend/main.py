@@ -5,9 +5,9 @@ import logging
 from helpers.docdb import docDB
 from helpers.backgroundworker import device_onboarding_start
 from helpers.versioning import run as versioning_run
-from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint, SwitchEndpoint, OnboardingEndpoint, SettingEndpoint
+from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint, SwitchEndpoint, OnboardingEndpoint, SettingEndpoint, ParticipantEndpoint
 from endpoints.metrics import start_metrics_exporter
-from elements import Setting, VLAN, IpPool, Table, Seat, Participant, Device, Port, PortConfigCache
+from elements import Setting, VLAN, IpPool, Table, Seat, Device, Port, PortConfigCache
 
 logging.basicConfig(format='%(levelname)s:%(name)s:%(message)s', level='INFO')
 
@@ -43,10 +43,6 @@ class TableEndpoint(ElementEndpointBase):
 
 class SeatEndpoint(ElementEndpointBase):
     _element = Seat
-
-
-class ParticipantEndpoint(ElementEndpointBase):
-    _element = Participant
 
 
 class DeviceEndpoint(ElementEndpointBase):

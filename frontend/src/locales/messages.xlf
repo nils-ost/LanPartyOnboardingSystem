@@ -161,19 +161,19 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.html</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.html</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.html</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">101</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.html</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-screen/participants-screen.component.html</context>
@@ -971,84 +971,84 @@
         <source>Your Device is not yet known. Please stand by, this screen will automatically refresh, when your Device is ready for Onboarding.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">171</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode7" datatype="html">
         <source>Your Device is blocked for onboarding. Please contact an admin.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">172</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode8" datatype="html">
         <source>Invalid Table number. Please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">173</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode9" datatype="html">
         <source>Invalid Seat number. Please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">174</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode10" datatype="html">
         <source>This Seat is allready taken. Please try again or contact an admin.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode11" datatype="html">
         <source>Wrong password. Please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">176</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode12" datatype="html">
         <source>This Seat is not associated to a Participant. Please contact an admin.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">177</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode13" datatype="html">
         <source>Something went wrong. Please try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">178</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode14" datatype="html">
         <source>Please contact an admin.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">179</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode15" datatype="html">
         <source>Invalid Login on SSO provider.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">180</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode16" datatype="html">
         <source>You are sitting on the wrong Table. Please contact an admin.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">181</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCodeFallback" datatype="html">
         <source>Unknown error. Please contact an admin.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">183</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelParticipantName" datatype="html">
@@ -1059,7 +1059,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-screen/participants-screen.component.html</context>
@@ -1074,7 +1074,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.html</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelParticipantAdmin" datatype="html">
@@ -1092,7 +1092,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.html</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelParticipantSeatId" datatype="html">
@@ -1103,7 +1103,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.html</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">110</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tooltipAdminPrivilegesRevoke" datatype="html">
@@ -1120,6 +1120,20 @@
           <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="tooltipParticipantDelete" datatype="html">
+        <source>delete Participant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tooltipParticipantOffboard" datatype="html">
+        <source>execute Offboarding for Participant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="ElementErrorCode2" datatype="html">
         <source>value allready in use, needs to be unique</source>
         <context-group purpose="location">
@@ -1128,7 +1142,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.ts</context>
-          <context context-type="linenumber">283</context>
+          <context context-type="linenumber">301</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
@@ -1158,21 +1172,21 @@
         <source>not found</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.ts</context>
-          <context context-type="linenumber">275</context>
+          <context context-type="linenumber">293</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode70" datatype="html">
         <source>there is no Seat with this ID</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.ts</context>
-          <context context-type="linenumber">276</context>
+          <context context-type="linenumber">294</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode2SummaryOnParticipant" datatype="html">
         <source>Seat not available</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.ts</context>
-          <context context-type="linenumber">282</context>
+          <context context-type="linenumber">300</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonCreateMultiple" datatype="html">
