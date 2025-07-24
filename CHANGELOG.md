@@ -2,15 +2,20 @@
 
 ## v0.7.0
 
-  * Settings screen does now have a button to remove all links between Devices and Ports
-  * Bugfix: Commiting a single Switch now leaves out the switchlinks-integrity check, which makes it possible to commit without all Switches running
-  * New Setting-Element to unify settings handling
-    * Moved all settings and config variables to this Element
-    * New corresponding Endpoint, that is now use by Frontend
-    * New section in Settings-Screen to be able to modify all settings
-  * Reworked System-Endpoint to not expose settings indirectly
+  * added support for Switch-Model CSS318-16G-2S+
+  * During Onboarding with absSeatNumbers, the connected Switch (of Device) is now validated to Seat's Table-Number. To avoid Participants sitting on the wrong Table.
+  * It's now possible to offboard a Participant, to freeup Seat (and be able to use it again for another Participant)
   * New menu, that is less prominent and does not overlay other parts of application
   * Moved login-button on Onboarding screen to the menu, to reduce user irritation
+  * Settings screen does now have a button to remove all links between Devices and Ports
+  * New Setting-Element to unify settings handling
+    * Moved all settings and config variables to this Element
+    * New corresponding Endpoint, that is now used by Frontend
+    * New section in Settings-Screen to be able to modify all settings
+  * Reworked System-Endpoint to not expose settings indirectly
+  * Bugfix: HAproxy auto-config (dataplane-access) is now possible again, by fixing HAproxy version to 2.9.6
+  * Bugfix: Commiting a single Switch now leaves out the switchlinks-integrity check, which makes it possible to commit without all Switches running
+  * Bugfix: Online-Check is now done trough LPOS itself to avoid rate-limits by external services
 
 ## v0.6.0
 
