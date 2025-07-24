@@ -177,6 +177,7 @@ export class OnboardingComponent implements OnInit, OnDestroy {
     if (error.code === 13) msg = $localize `:@@OnboardingErrorCode13:Something went wrong. Please try again.`;
     if (error.code === 14) msg = $localize `:@@OnboardingErrorCode14:Please contact an admin.`;
     if (error.code === 15) msg = $localize `:@@OnboardingErrorCode15:Invalid Login on SSO provider.`;
+    if (error.code === 16) msg = $localize `:@@OnboardingErrorCode16:You are sitting on the wrong Table. Please contact an admin.`;
 
     if (msg === "") msg = $localize `:@@OnboardingErrorCodeFallback:Unknown error. Please contact an admin.`;
     this.errorMsg = [

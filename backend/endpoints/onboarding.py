@@ -97,6 +97,9 @@ class OnboardingEndpoint():
             if seat is None:
                 cherrypy.response.status = 400
                 return {'error': {'code': 9, 'desc': 'invalid seat number'}}
+            if absSeatNumbers and seat.table()['number'] not in possible_tables(device):
+                cherrypy.response.status = 400
+                return {'error': {'code': 16, 'desc': 'you are on the wrong table'}}
             if Device.get_by_seat(seat['_id']) is not None:
                 cherrypy.response.status = 400
                 return {'error': {'code': 10, 'desc': 'seat is allready taken'}}

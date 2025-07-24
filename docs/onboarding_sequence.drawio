@@ -1,296 +1,299 @@
-<mxfile host="65bd71144e">
-    <diagram id="kgpKYQtTHZ0yAKxKKP6v" name="Page-1">
-        <mxGraphModel dx="942" dy="656" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="3nuBFxr9cyL0pnOWT2aG-1" value="client" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
-                    <mxGeometry x="160" y="20" width="100" height="890" as="geometry"/>
-                </mxCell>
-                <mxCell id="3nuBFxr9cyL0pnOWT2aG-2" value="" style="points=[];perimeter=orthogonalPerimeter;rounded=0;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-1" vertex="1">
-                    <mxGeometry x="45" y="70" width="10" height="790" as="geometry"/>
-                </mxCell>
-                <mxCell id="3nuBFxr9cyL0pnOWT2aG-3" value="dispatch" style="verticalAlign=bottom;startArrow=oval;endArrow=block;startSize=8;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-1" target="3nuBFxr9cyL0pnOWT2aG-2" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="-15" y="70" as="sourcePoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="21" value="User get's info, that he needs&lt;br&gt;to login at nlpt.online, by&lt;br&gt;clicking the provided link" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="3nuBFxr9cyL0pnOWT2aG-1" vertex="1">
-                    <mxGeometry x="-140" y="140" width="180" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="24" value="GET &lt;login_url&gt;" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;labelBackgroundColor=none;entryX=-0.09;entryY=-0.001;entryDx=0;entryDy=0;entryPerimeter=0;" parent="3nuBFxr9cyL0pnOWT2aG-1" target="3" edge="1">
-                    <mxGeometry x="-0.6847" y="1" relative="1" as="geometry">
-                        <mxPoint x="55" y="190.0000000000001" as="sourcePoint"/>
-                        <mxPoint x="225" y="190.0000000000001" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="140" y="190"/>
-                        </Array>
-                        <mxPoint as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="3nuBFxr9cyL0pnOWT2aG-5" value="backend" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
-                    <mxGeometry x="340" y="20" width="100" height="870" as="geometry"/>
-                </mxCell>
-                <mxCell id="3nuBFxr9cyL0pnOWT2aG-6" value="" style="points=[];perimeter=orthogonalPerimeter;rounded=0;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" vertex="1">
-                    <mxGeometry x="45" y="80" width="10" height="760" as="geometry"/>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-9" value="fail (Device blocked)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="120" as="sourcePoint"/>
-                        <mxPoint x="-125" y="120" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="120"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="tQeH7LjwM1ND7gvQPNjV-2" value="{&quot;ip&quot;: num}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="100" as="sourcePoint"/>
-                        <mxPoint x="-125" y="100" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="100"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="18" value="if nlpt-sso is enabled" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" vertex="1">
-                    <mxGeometry x="60" y="120" width="130" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="3nuBFxr9cyL0pnOWT2aG-9" value="{&quot;tables&quot;: [list of numbers]}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="220" as="sourcePoint"/>
-                        <mxPoint x="-125" y="220" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="220"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="jsbS36TXrQa4jQ_E_NbG-5" value="POST /onboarding/ {&quot;table&quot;: num,&#10;&quot;seat&quot;: num, &quot;pw&quot;: str}" style="verticalAlign=bottom;endArrow=block;entryX=0;entryY=0;shadow=0;strokeWidth=1;labelBackgroundColor=none;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="-125" y="270.0000000000001" as="sourcePoint"/>
-                        <mxPoint x="45" y="270.0000000000001" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-40" y="270"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="tQeH7LjwM1ND7gvQPNjV-4" value="{&quot;ip&quot;: num}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="360" as="sourcePoint"/>
-                        <mxPoint x="-125" y="360" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="360"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-11" value="fail (Device blocked)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="380" as="sourcePoint"/>
-                        <mxPoint x="-125" y="380" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="380"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-3" value="fail (invalid Table)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="540" as="sourcePoint"/>
-                        <mxPoint x="-125" y="540" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="540"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-5" value="fail (not available)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="560" as="sourcePoint"/>
-                        <mxPoint x="-125" y="560" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="560"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-6" value="fail (invalid pw)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="620" as="sourcePoint"/>
-                        <mxPoint x="-125" y="620" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="620"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="jsbS36TXrQa4jQ_E_NbG-7" value="{&quot;participant&quot;: str}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="670" as="sourcePoint"/>
-                        <mxPoint x="-125" y="670" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="670"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-12" value="PUT /onboarding/  {&quot;choice&quot;: bool}" style="verticalAlign=bottom;endArrow=block;entryX=0;entryY=0;shadow=0;strokeWidth=1;labelBackgroundColor=none;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="-125" y="700.0000000000001" as="sourcePoint"/>
-                        <mxPoint x="45" y="700.0000000000001" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-40" y="700"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-15" value="fail (missing steps)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="720.0000000000001" as="sourcePoint"/>
-                        <mxPoint x="-125" y="720.0000000000001" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="720.0000000000001"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-16" value="fail (contact admin)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="770" as="sourcePoint"/>
-                        <mxPoint x="-125" y="770" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="770"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="tQeH7LjwM1ND7gvQPNjV-5" value="{&quot;done&quot;: true, &quot;ip&quot;: num}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="830" as="sourcePoint"/>
-                        <mxPoint x="-125" y="830" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="830"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-10" value="if Device's onboarding_blocked is True" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" vertex="1">
-                    <mxGeometry x="60" y="360" width="220" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="42" value="if nlpt-sso is enabled" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" vertex="1">
-                    <mxGeometry x="60" y="380" width="130" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="43" value="GET &lt;onboarding_url&gt;?token=str" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;labelBackgroundColor=none;exitX=1;exitY=0.253;exitDx=0;exitDy=0;exitPerimeter=0;" parent="3nuBFxr9cyL0pnOWT2aG-5" target="3" edge="1">
-                    <mxGeometry x="0.3052" relative="1" as="geometry">
-                        <mxPoint x="55.15999999999997" y="400.0000000000001" as="sourcePoint"/>
-                        <mxPoint x="224.83000000000004" y="400.6300000000001" as="targetPoint"/>
-                        <Array as="points"/>
-                        <mxPoint as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="47" value="{&quot;participant&quot;: str}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="45" y="490" as="sourcePoint"/>
-                        <mxPoint x="-125" y="490" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="-20" y="490"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="3nuBFxr9cyL0pnOWT2aG-8" value="GET /onboarding/" style="verticalAlign=bottom;endArrow=block;entryX=0;entryY=0;shadow=0;strokeWidth=1;" parent="1" source="3nuBFxr9cyL0pnOWT2aG-2" target="3nuBFxr9cyL0pnOWT2aG-6" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="315" y="100" as="sourcePoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-8" value="if Device's onboarding_blocked is True" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="120" width="220" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="tQeH7LjwM1ND7gvQPNjV-1" value="if Device's IP is not None" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="100" width="150" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="2" value="nlpt.online" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
-                    <mxGeometry x="710" y="20" width="100" height="460" as="geometry"/>
-                </mxCell>
-                <mxCell id="3" value="" style="points=[];perimeter=orthogonalPerimeter;rounded=0;shadow=0;strokeWidth=1;" parent="2" vertex="1">
-                    <mxGeometry x="45" y="190" width="10" height="240" as="geometry"/>
-                </mxCell>
-                <mxCell id="20" value="{&quot;login_url&quot;: str}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;exitX=0;exitY=0.08;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="3nuBFxr9cyL0pnOWT2aG-6" target="3nuBFxr9cyL0pnOWT2aG-2" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="370" y="160" as="sourcePoint"/>
-                        <mxPoint x="220" y="160" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="315" y="160"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="tQeH7LjwM1ND7gvQPNjV-6" value="tells onboarding is completed&lt;br&gt;and shows IP device got" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="30" y="850" width="170" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-7" value="asks if Participant has&lt;br&gt;returned name" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="70" y="690" width="130" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="jsbS36TXrQa4jQ_E_NbG-2" value="chooses Table-number&lt;br&gt;enters Seat-number&lt;br&gt;enters Seat-pw" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="240" width="140" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="38" value="executes Participant login&lt;br&gt;generates auth-token" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="770" y="210" width="160" height="110" as="geometry"/>
-                </mxCell>
-                <mxCell id="jsbS36TXrQa4jQ_E_NbG-1" value="based on Device-Port determines possible Tables" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="220" width="280" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="tQeH7LjwM1ND7gvQPNjV-3" value="if Device's IP is not None" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="360" width="150" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-1" value="based on Device-Port determines possible Tables" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="520" width="280" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-2" value="if Table-num not in possible Tables" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="540" width="200" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-4" value="if Seat allready taken" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="560" width="130" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="jsbS36TXrQa4jQ_E_NbG-6" value="if pw not matches Seat-pw:&lt;br&gt;&amp;nbsp;- Device's pw_strikes is incremented&lt;br&gt;&amp;nbsp;- if Device's pw_strikes is &amp;gt;= 3:&lt;br&gt;&amp;nbsp; &amp;nbsp; - set Device's onboarding_blocked to True" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="580" width="250" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="jsbS36TXrQa4jQ_E_NbG-8" value="else:&lt;br&gt;&amp;nbsp;- sets claiming_device_id to id of current device&lt;br&gt;&amp;nbsp;- determines Participant-name" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="640" width="270" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-14" value="if Device ID can't be found in Seat claiming_device_id" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="720" width="300" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-13" value="if choice is False:&lt;br&gt;&amp;nbsp;- set Device's onboarding_blocked to True&lt;br&gt;&amp;nbsp;- clears Seat's claiming_device_id" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="740" width="240" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="b2adAcD6MRQU1rEZWvd0-17" value="if choice is True:&lt;br&gt;&amp;nbsp;- saves Seat ID as Device's seat_id&lt;br&gt;&amp;nbsp;- clears Seat's claiming_device_id&lt;br&gt;&amp;nbsp;- configures and resets Switch-Port" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="790" width="210" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="39" value="redirect to LPOS?token=str" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;entryX=1.224;entryY=0.207;entryDx=0;entryDy=0;entryPerimeter=0;exitX=-0.205;exitY=0.062;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" edge="1">
-                    <mxGeometry x="0.6925" relative="1" as="geometry">
-                        <mxPoint x="752.95" y="320.90999999999997" as="sourcePoint"/>
-                        <mxPoint x="217.24" y="319.9999999999999" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="540" y="320.61"/>
-                        </Array>
-                        <mxPoint as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="41" value="POST /onboarding/ {&quot;token&quot;: str}" style="verticalAlign=bottom;endArrow=block;entryX=-0.033;entryY=0.244;shadow=0;strokeWidth=1;labelBackgroundColor=none;exitX=1;exitY=0.253;exitDx=0;exitDy=0;exitPerimeter=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="215" y="359.99999999999994" as="sourcePoint"/>
-                        <mxPoint x="384.6700000000001" y="360.63000000000005" as="targetPoint"/>
-                        <Array as="points"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="40" value="displays &quot;please standby&quot;&lt;br&gt;extracts token from URL" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="40" y="320.61" width="160" height="39.39" as="geometry"/>
-                </mxCell>
-                <mxCell id="45" value="determines User corresponding to Token" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="770" y="420" width="240" height="20" as="geometry"/>
-                </mxCell>
-                <mxCell id="46" value="if nlpt-sso is enabled:&lt;br&gt;&amp;nbsp;- Creates participant if not exists&lt;br&gt;&amp;nbsp;- Links Participant and Seat&lt;br&gt;&amp;nbsp;- sets claiming_device_id to id of current device" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="440" width="280" height="70" as="geometry"/>
-                </mxCell>
-                <mxCell id="44" value="{&quot;name&quot;: str, &quot;username&quot;: str, &quot;seat&quot;: num}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;exitX=0.033;exitY=0.376;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" edge="1">
-                    <mxGeometry x="-0.0009" relative="1" as="geometry">
-                        <mxPoint x="755.3299999999999" y="440.4" as="sourcePoint"/>
-                        <mxPoint x="395" y="440" as="targetPoint"/>
-                        <Array as="points">
-                            <mxPoint x="630" y="440"/>
-                        </Array>
-                        <mxPoint as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
+<mxfile host="Electron" modified="2025-07-24T19:23:07.379Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.1.0 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" version="24.1.0" etag="qbEMvmdfDNvsIyxNZ_-s" type="device">
+  <diagram id="kgpKYQtTHZ0yAKxKKP6v" name="Page-1">
+    <mxGraphModel dx="1430" dy="785" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="3nuBFxr9cyL0pnOWT2aG-1" value="client" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="20" width="100" height="920" as="geometry" />
+        </mxCell>
+        <mxCell id="3nuBFxr9cyL0pnOWT2aG-2" value="" style="points=[];perimeter=orthogonalPerimeter;rounded=0;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-1" vertex="1">
+          <mxGeometry x="45" y="70" width="10" height="830" as="geometry" />
+        </mxCell>
+        <mxCell id="3nuBFxr9cyL0pnOWT2aG-3" value="dispatch" style="verticalAlign=bottom;startArrow=oval;endArrow=block;startSize=8;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-1" target="3nuBFxr9cyL0pnOWT2aG-2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-15" y="70" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="21" value="User get&#39;s info, that he needs&lt;br&gt;to login at nlpt.online, by&lt;br&gt;clicking the provided link" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="3nuBFxr9cyL0pnOWT2aG-1" vertex="1">
+          <mxGeometry x="-140" y="140" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="24" value="GET &lt;login_url&gt;" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;labelBackgroundColor=none;entryX=-0.09;entryY=-0.001;entryDx=0;entryDy=0;entryPerimeter=0;" parent="3nuBFxr9cyL0pnOWT2aG-1" target="3" edge="1">
+          <mxGeometry x="-0.6847" y="1" relative="1" as="geometry">
+            <mxPoint x="55" y="190.0000000000001" as="sourcePoint" />
+            <mxPoint x="225" y="190.0000000000001" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="140" y="190" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tQeH7LjwM1ND7gvQPNjV-6" value="tells onboarding is completed&lt;br&gt;and shows IP device got" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="3nuBFxr9cyL0pnOWT2aG-1" vertex="1">
+          <mxGeometry x="-130" y="860" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-7" value="asks if Participant has&lt;br&gt;returned name" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="3nuBFxr9cyL0pnOWT2aG-1" vertex="1">
+          <mxGeometry x="-90" y="700" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3nuBFxr9cyL0pnOWT2aG-5" value="backend" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
+          <mxGeometry x="340" y="20" width="100" height="890" as="geometry" />
+        </mxCell>
+        <mxCell id="3nuBFxr9cyL0pnOWT2aG-6" value="" style="points=[];perimeter=orthogonalPerimeter;rounded=0;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" vertex="1">
+          <mxGeometry x="45" y="80" width="10" height="790" as="geometry" />
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-9" value="fail (Device blocked)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="120" as="sourcePoint" />
+            <mxPoint x="-125" y="120" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tQeH7LjwM1ND7gvQPNjV-2" value="{&quot;ip&quot;: num}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="100" as="sourcePoint" />
+            <mxPoint x="-125" y="100" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="100" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="18" value="if nlpt-sso is enabled" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" vertex="1">
+          <mxGeometry x="60" y="120" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="3nuBFxr9cyL0pnOWT2aG-9" value="{&quot;tables&quot;: [list of numbers]}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="220" as="sourcePoint" />
+            <mxPoint x="-125" y="220" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jsbS36TXrQa4jQ_E_NbG-5" value="POST /onboarding/ {&quot;table&quot;: num,&#xa;&quot;seat&quot;: num, &quot;pw&quot;: str}" style="verticalAlign=bottom;endArrow=block;entryX=0;entryY=0;shadow=0;strokeWidth=1;labelBackgroundColor=none;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-125" y="270.0000000000001" as="sourcePoint" />
+            <mxPoint x="45" y="270.0000000000001" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-40" y="270" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tQeH7LjwM1ND7gvQPNjV-4" value="{&quot;ip&quot;: num}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="360" as="sourcePoint" />
+            <mxPoint x="-125" y="360" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-11" value="fail (Device blocked)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="380" as="sourcePoint" />
+            <mxPoint x="-125" y="380" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="380" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-3" value="fail (invalid Table)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="529" as="sourcePoint" />
+            <mxPoint x="-125" y="529" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="529" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-5" value="fail (not available)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="550" as="sourcePoint" />
+            <mxPoint x="-125" y="550" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="550" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-6" value="fail (invalid pw)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="649.31" as="sourcePoint" />
+            <mxPoint x="-125" y="649.31" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="649.31" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jsbS36TXrQa4jQ_E_NbG-7" value="{&quot;participant&quot;: str}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="699.31" as="sourcePoint" />
+            <mxPoint x="-125" y="699.31" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="699.31" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-12" value="PUT /onboarding/  {&quot;choice&quot;: bool}" style="verticalAlign=bottom;endArrow=block;entryX=0;entryY=0;shadow=0;strokeWidth=1;labelBackgroundColor=none;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-125" y="729.3100000000001" as="sourcePoint" />
+            <mxPoint x="45" y="729.3100000000001" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-40" y="729.31" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-15" value="fail (missing steps)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="749.3100000000001" as="sourcePoint" />
+            <mxPoint x="-125" y="749.3100000000001" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="749.3100000000001" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-16" value="fail (contact admin)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;dashed=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="799.31" as="sourcePoint" />
+            <mxPoint x="-125" y="799.31" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="799.31" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tQeH7LjwM1ND7gvQPNjV-5" value="{&quot;done&quot;: true, &quot;ip&quot;: num,&#xa;&quot;online&quot;: false}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="859.31" as="sourcePoint" />
+            <mxPoint x="-125" y="859.31" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="859.31" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-10" value="if Device&#39;s onboarding_blocked is True" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" vertex="1">
+          <mxGeometry x="60" y="360" width="220" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="42" value="if nlpt-sso is enabled" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" vertex="1">
+          <mxGeometry x="60" y="380" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="43" value="GET &lt;onboarding_url&gt;?token=str" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;labelBackgroundColor=none;exitX=1;exitY=0.253;exitDx=0;exitDy=0;exitPerimeter=0;" parent="3nuBFxr9cyL0pnOWT2aG-5" target="3" edge="1">
+          <mxGeometry x="0.3052" relative="1" as="geometry">
+            <mxPoint x="55.15999999999997" y="400.0000000000001" as="sourcePoint" />
+            <mxPoint x="224.83000000000004" y="400.6300000000001" as="targetPoint" />
+            <Array as="points" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="47" value="{&quot;participant&quot;: str}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;" parent="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="45" y="580" as="sourcePoint" />
+            <mxPoint x="-125" y="580" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="580" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3nuBFxr9cyL0pnOWT2aG-8" value="GET /onboarding/" style="verticalAlign=bottom;endArrow=block;entryX=0;entryY=0;shadow=0;strokeWidth=1;" parent="1" source="3nuBFxr9cyL0pnOWT2aG-2" target="3nuBFxr9cyL0pnOWT2aG-6" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="315" y="100" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-8" value="if Device&#39;s onboarding_blocked is True" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="120" width="220" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tQeH7LjwM1ND7gvQPNjV-1" value="if Device&#39;s IP is not None" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="100" width="150" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="2" value="nlpt.online" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
+          <mxGeometry x="710" y="20" width="100" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="" style="points=[];perimeter=orthogonalPerimeter;rounded=0;shadow=0;strokeWidth=1;" parent="2" vertex="1">
+          <mxGeometry x="45" y="190" width="10" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="20" value="{&quot;login_url&quot;: str}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;exitX=0;exitY=0.08;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="3nuBFxr9cyL0pnOWT2aG-6" target="3nuBFxr9cyL0pnOWT2aG-2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="370" y="160" as="sourcePoint" />
+            <mxPoint x="220" y="160" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="315" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jsbS36TXrQa4jQ_E_NbG-2" value="chooses Table-number&lt;br&gt;enters Seat-number&lt;br&gt;enters Seat-pw" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="240" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="38" value="executes Participant login&lt;br&gt;generates auth-token" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="770" y="210" width="160" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="jsbS36TXrQa4jQ_E_NbG-1" value="based on Device-Port determines possible Tables" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="220" width="280" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tQeH7LjwM1ND7gvQPNjV-3" value="if Device&#39;s IP is not None" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="360" width="150" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-1" value="based on Device-Port determines possible Tables" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="509.99999999999994" width="280" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-2" value="if Table-num (or Seat.Table_num) not in possible Tables" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="530" width="320" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-4" value="if Seat allready taken" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="550" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="jsbS36TXrQa4jQ_E_NbG-6" value="if pw not matches Seat-pw:&lt;br&gt;&amp;nbsp;- Device&#39;s pw_strikes is incremented&lt;br&gt;&amp;nbsp;- if Device&#39;s pw_strikes is &amp;gt;= 3:&lt;br&gt;&amp;nbsp; &amp;nbsp; - set Device&#39;s onboarding_blocked to True" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="609.31" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jsbS36TXrQa4jQ_E_NbG-8" value="else:&lt;br&gt;&amp;nbsp;- sets claiming_device_id to id of current device&lt;br&gt;&amp;nbsp;- determines Participant-name" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="669.31" width="270" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-14" value="if Device ID can&#39;t be found in Seat claiming_device_id" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="749.31" width="300" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-13" value="if choice is False:&lt;br&gt;&amp;nbsp;- set Device&#39;s onboarding_blocked to True&lt;br&gt;&amp;nbsp;- clears Seat&#39;s claiming_device_id" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="769.31" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b2adAcD6MRQU1rEZWvd0-17" value="if choice is True:&lt;br&gt;&amp;nbsp;- saves Seat ID as Device&#39;s seat_id&lt;br&gt;&amp;nbsp;- clears Seat&#39;s claiming_device_id&lt;br&gt;&amp;nbsp;- configures and resets Switch-Port" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="819.31" width="210" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="39" value="redirect to LPOS?token=str" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;entryX=1.224;entryY=0.207;entryDx=0;entryDy=0;entryPerimeter=0;exitX=-0.205;exitY=0.062;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" edge="1">
+          <mxGeometry x="0.6925" relative="1" as="geometry">
+            <mxPoint x="752.95" y="320.90999999999997" as="sourcePoint" />
+            <mxPoint x="217.24" y="319.9999999999999" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="540" y="320.61" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="41" value="POST /onboarding/ {&quot;token&quot;: str}" style="verticalAlign=bottom;endArrow=block;entryX=-0.033;entryY=0.244;shadow=0;strokeWidth=1;labelBackgroundColor=none;exitX=1;exitY=0.253;exitDx=0;exitDy=0;exitPerimeter=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="215" y="359.99999999999994" as="sourcePoint" />
+            <mxPoint x="384.6700000000001" y="360.63000000000005" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="40" value="displays &quot;please standby&quot;&lt;br&gt;extracts token from URL" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="320.61" width="160" height="39.39" as="geometry" />
+        </mxCell>
+        <mxCell id="45" value="determines User corresponding to Token" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="770" y="420" width="240" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="46" value="if nlpt-sso is enabled:&lt;br&gt;&amp;nbsp;- Creates participant if not exists&lt;br&gt;&amp;nbsp;- Links Participant and Seat&lt;br&gt;&amp;nbsp;- sets claiming_device_id to id of current device" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="440" width="280" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="44" value="{&quot;name&quot;: str, &quot;username&quot;: str, &quot;seat&quot;: num}" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;exitX=0.033;exitY=0.376;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" edge="1">
+          <mxGeometry x="-0.0009" relative="1" as="geometry">
+            <mxPoint x="755.3299999999999" y="440.4" as="sourcePoint" />
+            <mxPoint x="395" y="440" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="630" y="440" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BW9i9znOI3RUb6Z0B-kE-47" value="if nlpt-sso is enabled" style="rounded=0;whiteSpace=wrap;html=1;align=left;autosize=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="580" width="130" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
 </mxfile>

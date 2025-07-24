@@ -1037,11 +1037,18 @@
           <context context-type="linenumber">179</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="OnboardingErrorCode16" datatype="html">
+        <source>You are sitting on the wrong Table. Please contact an admin.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="OnboardingErrorCodeFallback" datatype="html">
         <source>Unknown error. Please contact an admin.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">182</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelParticipantName" datatype="html">
