@@ -1,0 +1,15 @@
+/var/log/lpos.log {
+  rotate 7
+  daily
+  compress
+  missingok
+  notifempty
+}
+
+/var/log/lpos-scanner.log {
+  rotate 7
+  daily
+  compress
+  missingok
+  notifempty
+}

@@ -1,0 +1,18 @@
+[Unit]
+Description=LanPartyOnboardingSystem - DeviceScanner
+
+[Service]
+Type=exec
+
+Restart=always
+RestartSec=5
+
+ExecStart={{ project_dir }}/venv/bin/python {{ project_dir }}/scanner.py
+WorkingDirectory={{ project_dir }}
+KillSignal=SIGINT
+
+StandardInput=null
+SyslogIdentifier=lpos-ds
+
+[Install]
+WantedBy=multi-user.target

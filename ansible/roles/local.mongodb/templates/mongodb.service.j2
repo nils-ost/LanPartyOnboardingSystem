@@ -1,0 +1,22 @@
+[Unit]
+Description={{ mongodb_image }} (inside Docker)
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=exec
+
+TimeoutStartSec=20
+Restart=always
+RestartSec=5
+
+ExecStartPre=-/usr/bin/docker stop %n
+ExecStartPre=-/usr/bin/docker rm %n
+__execstartpre__
+ExecStart=/usr/bin/docker run --rm --name %n \
+    -v {{ mongodb_volume_dir }}:/data/db \
+    -p 27017:27017 \
+    {{ mongodb_image }}
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,55 @@
+---
+- name: pull image
+  docker_image:
+    name: '{{ mongodb_image }}'
+    source: pull
+
+- name: create direcorys
+  ansible.builtin.file:
+    path: '{{ item }}'
+    state: directory
+    mode: '0755'
+  loop:
+    - '{{ mongodb_volume_dir }}'
+    - '{{ mongodb_backup_dir }}'
+
+- name: check if mongodb needs backup
+  ansible.builtin.command: systemctl is-active {{ mongodb_service_name }}
+  ignore_errors: true
+  register: mongodb_needs_backup
+  changed_when: false
+  failed_when: false
+
+- name: create mongodb backup
+  ansible.builtin.command: docker exec -t {{ mongodb_service_name }} /bin/sh -c "mongodump --forceTableScan -o /backup; tar cfz /backup.tar.gz /backup; rm -rf /backup"
+  when: mongodb_needs_backup.rc == 0
+  changed_when: false
+
+- name: export mongodb backup
+  ansible.builtin.command: docker cp {{ mongodb_service_name }}:/backup.tar.gz {{ mongodb_backup_dir }}/mongodb-{{ now(utc=true,fmt='%Y-%m-%dT%H:%M:%S') }}.tar.gz
+  when: mongodb_needs_backup.rc == 0
+  changed_when: false
+
+- name: stop mongodb service, if running
+  ansible.builtin.systemd_service:
+    name: '{{ mongodb_service_name }}'
+    state: stopped
+  ignore_errors: true
+
+- name: copy mongodb service file
+  template:
+    src: templates/mongodb.service.j2
+    dest: '/etc/systemd/system/{{ mongodb_service_name }}'
+    owner: root
+    group: root
+    mode: '0644'
+  register: mongodb_service_file
+
+- name: force systemd to reread configs
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  when: mongodb_service_file.changed
+
+- name: queue handler to start mongodb service
+  ansible.builtin.command: /bin/true
+  notify: start mongodb service

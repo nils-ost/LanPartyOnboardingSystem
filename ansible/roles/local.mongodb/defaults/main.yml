@@ -1,0 +1,5 @@
+---
+mongodb_image: 'mongo:4.4'
+mongodb_volume_dir: '/var/data/mongodb'
+mongodb_backup_dir: '/var/backup'
+mongodb_service_name: 'docker.mongodb.service'
