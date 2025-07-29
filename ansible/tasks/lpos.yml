@@ -1,0 +1,120 @@
+---
+- name: install lpos dependencies
+  apt:
+    name:
+      - rsync
+      - rsyslog
+      - python3
+      - virtualenv
+      - git
+    state: present
+
+- name: pull lpos docker images
+  docker_image:
+    name: '{{ item }}'
+    source: pull
+  loop:
+    - '{{ alpine_image }}'
+    - '{{ dns_image }}'
+    - '{{ dhcp_image }}'
+  register: lpos_docker_images
+
+- name: create project direcory
+  ansible.builtin.file:
+    path: '{{ project_dir }}'
+    state: directory
+    mode: '0755'
+
+- name: upload project files
+  ansible.posix.synchronize:
+    src: '{{ item }}'
+    dest: '{{ project_dir }}'
+    recursive: true
+    rsync_opts:
+      - "--exclude='*.pyc'"
+      - "--exclude='*__pycache__'"
+  loop:
+    - '../backend/main.py'
+    - '../backend/scanner.py'
+    - '../backend/cli.py'
+    - '../backend/requirements.txt'
+    - '../backend/elements'
+    - '../backend/endpoints'
+    - '../backend/helpers'
+    - '../backend/MTSwitch'
+    - '../backend/static'
+  register: project_files
+
+- name: setup virtualenv
+  ansible.builtin.command: virtualenv -p /usr/bin/python3 {{ [project_dir, 'venv'] | path_join }}
+  when: project_files.changed
+
+- name: install virtualenv requirements
+  ansible.builtin.command: "{{ [project_dir, 'venv/bin/pip'] | path_join }} install -r {{ [project_dir, 'requirements.txt'] | path_join }}"
+  when: project_files.changed
+
+- name: prepare lpos cli
+  ansible.builtin.copy:
+    content: "#!/bin/bash\n{{ [project_dir, 'venv/bin/python'] | path_join }} {{ [project_dir, 'cli.py'] | path_join }} $*"
+    dest: /usr/bin/lpos
+    mode: '0755'
+
+- name: configure rsyslog
+  ansible.builtin.copy:
+    src: files/rsyslog.conf
+    dest: /etc/rsyslog.d/lpos.conf
+  register: rsyslog_config
+
+- name: restart rsyslog service
+  ansible.builtin.systemd_service:
+    name: 'rsyslog'
+    state: restarted
+  when: rsyslog_config.changed
+
+- name: configure logrotate
+  ansible.builtin.copy:
+    src: files/logrotate
+    dest: /etc/logrotate.d/lpos
+    mode: '0644'
+
+- name: copy lpos service file
+  template:
+    src: templates/lpos.service.j2
+    dest: '/etc/systemd/system/{{ lpos_service_name }}'
+    owner: root
+    group: root
+    mode: '0644'
+  register: lpos_service_file
+
+- name: copy lpos-scanner service file
+  template:
+    src: templates/lpos-scanner.service.j2
+    dest: '/etc/systemd/system/{{ scanner_service_name }}'
+    owner: root
+    group: root
+    mode: '0644'
+  register: scanner_service_file
+
+- name: force systemd to reread configs
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  when: lpos_service_file.changed or scanner_service_file.changed
+
+- name: restart lpos services
+  ansible.builtin.systemd_service:
+    name: '{{ item }}'
+    state: restarted
+  ignore_errors: true
+  loop:
+    - '{{ scanner_service_name }}'
+    - '{{ lpos_service_name }}'
+  when: project_files.changed or lpos_docker_images.changed or lpos_service_file.changed or scanner_service_file.changed
+
+- name: ensure lpos services are started and enabled
+  ansible.builtin.systemd_service:
+    name: '{{ item }}'
+    state: started
+    enabled: true
+  loop:
+    - '{{ lpos_service_name }}'
+    - '{{ scanner_service_name }}'

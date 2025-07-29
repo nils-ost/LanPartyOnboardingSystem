@@ -1,0 +1,16 @@
+- name: Setup LPOS main stack
+  hosts: lpos
+  become: true
+
+  roles:
+    - geerlingguy.docker
+
+  tasks:
+    - include_tasks: tasks/mongodb.yml
+    - include_tasks: tasks/lpos.yml
+    - include_tasks: tasks/haproxy.yml
+
+    - name: prune docker images
+      ansible.builtin.command: docker image prune -f
+      register: prune_result
+      changed_when: not prune_result.stdout.strip().endswith('0B')

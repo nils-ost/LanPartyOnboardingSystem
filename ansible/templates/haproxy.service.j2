@@ -13,7 +13,7 @@ RestartSec=5
 ExecStartPre=-/usr/bin/docker stop %n
 ExecStartPre=-/usr/bin/docker rm %n
 ExecStartPre=/usr/bin/docker run --rm --name copier-haproxy -v %n:/app -d {{ alpine_image }} sleep 3
-ExecStartPre=/usr/bin/docker cp {{ [haproxy_config_path, 'haproxy.cfg'] | path_join }} copier-haproxy:/app/
+ExecStartPre=/usr/bin/docker cp {{ [haproxy_config_dir, 'haproxy.cfg'] | path_join }} copier-haproxy:/app/
 ExecStart=/usr/bin/docker run --rm --name %n \
     --cap-add=NET_ADMIN --add-host=host.docker.internal:host-gateway --sysctl net.ipv4.ip_unprivileged_port_start=0 \
     -v %n:/usr/local/etc/haproxy/ \
