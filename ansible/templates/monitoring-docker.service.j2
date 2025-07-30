@@ -14,9 +14,9 @@ ExecStartPre=-/usr/bin/docker stop %n
 ExecStartPre=-/usr/bin/docker rm %n
 __execstartpre__
 ExecStart=/usr/bin/docker run --rm --name %n \
-    -v {{ mongodb_volume_dir }}:/data/db \
-    -p 127.0.0.1:27017:27017 \
-    {{ mongodb_image }}
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -p 9323:8000 \
+    {{ monitoring_docker_image }}
 
 [Install]
 WantedBy=default.target

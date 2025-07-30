@@ -9,6 +9,8 @@
     - include_tasks: tasks/mongodb.yml
     - include_tasks: tasks/lpos.yml
     - include_tasks: tasks/haproxy.yml
+    - include_tasks: tasks/monitoring.yml
+      when: enable_monitoring | bool
 
     - name: prune docker images
       ansible.builtin.command: docker image prune -f

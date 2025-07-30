@@ -1,0 +1,33 @@
+---
+- name: pull docker images for monitoring
+  docker_image:
+    name: '{{ item }}'
+    source: pull
+  loop:
+    - '{{ monitoring_docker_image }}'
+
+- name: copy monitoring-docker service file
+  template:
+    src: templates/monitoring-docker.service.j2
+    dest: '/etc/systemd/system/{{ monitoring_docker_service_name }}'
+    owner: root
+    group: root
+    mode: '0644'
+  register: monitoring_docker_service_file
+
+- name: force systemd to reread configs
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  when: monitoring_docker_service_file.changed
+
+- name: restart monitoring-docker service
+  ansible.builtin.systemd_service:
+    name: '{{ monitoring_docker_service_name }}'
+    state: restarted
+  when: monitoring_docker_service_file.changed
+
+- name: start monitoring-docker service
+  ansible.builtin.systemd_service:
+    name: '{{ monitoring_docker_service_name }}'
+    state: started
+    enabled: true
