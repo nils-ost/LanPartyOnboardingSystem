@@ -1,5 +1,5 @@
 [Unit]
-Description={{ mongodb_image }} (inside Docker)
+Description={{ mongodb_exporter_image }} (inside Docker)
 After=docker.service
 Requires=docker.service
 
@@ -14,9 +14,9 @@ ExecStartPre=-/usr/bin/docker stop %n
 ExecStartPre=-/usr/bin/docker rm %n
 __execstartpre__
 ExecStart=/usr/bin/docker run --rm --name %n \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -p 9323:8000 \
-    {{ monitoring_docker_image }}
+    --link {{ mongodb_service_name }} \
+    -p 9216:9216 \
+    {{ mongodb_exporter_image }} --mongodb.uri=mongodb://{{ mongodb_service_name }}:27017/admin --discovering-mode
 
 [Install]
 WantedBy=default.target

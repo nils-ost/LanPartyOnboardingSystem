@@ -4,30 +4,61 @@
     name: '{{ item }}'
     source: pull
   loop:
-    - '{{ monitoring_docker_image }}'
+    - '{{ docker_exporter_image }}'
+    - '{{ mongodb_exporter_image }}'
 
-- name: copy monitoring-docker service file
+- name: install prometheus-node-exporter
+  apt:
+    name:
+      - prometheus-node-exporter
+    state: present
+
+- name: enable LPOS monitoring endpoint
+  ansible.builtin.command: lpos --enablemetrics
+  ignore_errors: true
+  register: lpos_endpoint
+  changed_when: lpos_endpoint.rc == 1
+
+- name: copy docker-exporter service file
   template:
-    src: templates/monitoring-docker.service.j2
-    dest: '/etc/systemd/system/{{ monitoring_docker_service_name }}'
+    src: templates/docker-exporter.service.j2
+    dest: '/etc/systemd/system/{{ docker_exporter_service_name }}'
     owner: root
     group: root
     mode: '0644'
-  register: monitoring_docker_service_file
+  register: docker_exporter_service_file
+
+- name: copy mongodb-exporter service file
+  template:
+    src: templates/mongodb-exporter.service.j2
+    dest: '/etc/systemd/system/{{ mongodb_exporter_service_name }}'
+    owner: root
+    group: root
+    mode: '0644'
+  register: mongodb_exporter_service_file
 
 - name: force systemd to reread configs
   ansible.builtin.systemd_service:
     daemon_reload: true
-  when: monitoring_docker_service_file.changed
+  when: docker_exporter_service_file.changed or mongodb_exporter_service_file.changed
 
-- name: restart monitoring-docker service
+- name: restart docker-exporter service
   ansible.builtin.systemd_service:
-    name: '{{ monitoring_docker_service_name }}'
+    name: '{{ docker_exporter_service_name }}'
     state: restarted
-  when: monitoring_docker_service_file.changed
+  when: docker_exporter_service_file.changed
 
-- name: start monitoring-docker service
+- name: restart mongodb-exporter service
   ansible.builtin.systemd_service:
-    name: '{{ monitoring_docker_service_name }}'
+    name: '{{ mongodb_exporter_service_name }}'
+    state: restarted
+  when: mongodb_exporter_service_file.changed
+
+- name: ensure exporter services are started and enabled
+  ansible.builtin.systemd_service:
+    name: '{{ item }}'
     state: started
     enabled: true
+  loop:
+    - '{{ docker_exporter_service_name }}'
+    - '{{ mongodb_exporter_service_name }}'
