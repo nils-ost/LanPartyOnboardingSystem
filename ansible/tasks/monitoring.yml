@@ -19,6 +19,13 @@
   register: lpos_endpoint
   changed_when: lpos_endpoint.rc == 1
 
+- name: restart lpos service
+  ansible.builtin.systemd_service:
+    name: '{{ lpos_service_name }}'
+    state: restarted
+  ignore_errors: true
+  when: lpos_endpoint.changed
+
 - name: copy docker-exporter service file
   template:
     src: templates/docker-exporter.service.j2

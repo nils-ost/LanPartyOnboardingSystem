@@ -1,0 +1,12 @@
+---
+- name: install ansible apt dependencies
+  apt:
+    name:
+      - python3
+      - pip
+    state: present
+
+- name: install ansible pip dependencies
+  ansible.builtin.pip:
+    name:
+      - requests

@@ -6,6 +6,7 @@
     - geerlingguy.docker
 
   tasks:
+    - include_tasks: tasks/ansiblerequirements.yml
     - include_tasks: tasks/mongodb.yml
     - include_tasks: tasks/lpos.yml
     - include_tasks: tasks/haproxy.yml
