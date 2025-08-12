@@ -1,5 +1,5 @@
 -r backend/requirements.txt
--r install/requirements.txt
+ansible
 bpython
 coverage
 invoke

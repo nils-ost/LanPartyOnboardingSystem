@@ -1,5 +1,9 @@
 # LPOS Changelog
 
+## v0.8.0
+
+  * moved installer from fabric to ansible
+
 ## v0.7.0
 
   * added support for Switch-Model CSS318-16G-2S+
