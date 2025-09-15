@@ -102,6 +102,7 @@ class Switch(ElementBase):
         global switch_objects
         global switch_macs
         from elements import Device, Port
+        from helpers.backgroundworker import port_onboarding_schedule
         if not self.connected():
             return 0
         new_count = 0
@@ -112,6 +113,7 @@ class Switch(ElementBase):
                 continue
             switchlink = False
             for host in port.hosts:
+                send_port_update = None
                 if host in switch_macs:
                     switchlink = True
                     continue  # this host is a switch, switches are not handled here
@@ -132,12 +134,17 @@ class Switch(ElementBase):
                     try:
                         other_port = switch_objects[other_port['switch_id']].ports[other_port['number']]
                         if host not in other_port.hosts or len(port.hosts) <= len(other_port.hosts):
+                            send_port_update = other_port['_id']
                             device.port(p)
                     except Exception:
                         pass
                 if device is not None:
                     device['last_scan_ts'] = int(datetime.now().timestamp())
                     device.save()  # generic save for everything happend above
+                    if send_port_update is not None:
+                        # Port of Device changed, reconfigure old an new Port on switch
+                        port_onboarding_schedule(send_port_update)
+                        port_onboarding_schedule(device['port_id'])
             if not switchlink == p['switchlink'] and p['switchlink_port_id'] is None:
                 p['switchlink'] = switchlink
                 p.save()
