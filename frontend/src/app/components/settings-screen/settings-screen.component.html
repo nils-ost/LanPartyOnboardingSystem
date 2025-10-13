@@ -138,6 +138,14 @@
                 </span>
                 <button pButton (click)="clearDevicesPorts()" i18n="@@buttonClearDevicesPorts" class="p-button-danger" [disabled]="!rod">Remove Ports</button>
             </div>
+
+            <div class="field">
+                <span class="p-float-label">
+                    <input type="text" id="rod_wodesc" pInputText [(ngModel)]="rod_wodesc" [disabled]="true">
+                    <label for="rod_wodesc" i18n="@@elementFieldLabelRodWoDesc">Devices without Description</label>
+                </span>
+                <button pButton (click)="clearDevicesWoDesc()" i18n="@@buttonClearRODwoDesc" class="p-button-danger" [disabled]="!rod">Remove without Description</button>
+            </div>
         </ng-container>
     </ng-container>
 </p-panel>
