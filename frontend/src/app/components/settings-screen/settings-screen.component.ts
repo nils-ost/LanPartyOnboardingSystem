@@ -33,6 +33,7 @@ export class SettingsScreenComponent implements OnInit {
   rod_total: number = 0;
   rod_offline: number = 0;
   rod_port: number = 0;
+  rod_wodesc: number = 0;
   sso_login_url: string = "https://nlpt.online/app/event-login?redirect=";
   sso_onboarding_url: string = "https://nlpt.online/api/onboarding/2024";
   settings_ro: Setting[] = [];
@@ -119,11 +120,13 @@ export class SettingsScreenComponent implements OnInit {
             this.rod_total = devices.length;
             this.rod_offline = 0;
             this.rod_port = 0;
+            this.rod_wodesc = 0;
             let currentTs = Math.floor(Date.now() / 1000);
             for (let i = 0; i < devices.length; i++) {
               let device: Device = devices[i];
               if ((currentTs - device.last_scan_ts) > 60) this.rod_offline++;
               if (device.port_id != null) this.rod_port++;
+              if (device.desc == '') this.rod_wodesc++;
             }
             this.rod_loading = false;
           },
@@ -193,6 +196,32 @@ export class SettingsScreenComponent implements OnInit {
               let device: Device = devices[i];
               if (device.port_id != null) {
                 this.deviceService.removePort(device.id).subscribe({next: () => {},
+                  error: (err: HttpErrorResponse) => {
+                    this.errorHandler.handleError(err);
+                  }
+                })
+              }
+            }
+            timer(1000).subscribe(() => { this.refreshDevices() });
+          },
+          error: (err: HttpErrorResponse) => {
+            this.errorHandler.handleError(err);
+          }
+        })
+    }
+  }
+
+  clearDevicesWoDesc() {
+    this.rod_loading = true;
+    if (this.rod) {
+      this.deviceService
+        .getDevices()
+        .subscribe({
+          next: (devices: Device[]) => {
+            for (let i = 0; i < devices.length; i++) {
+              let device: Device = devices[i];
+              if (device.desc == '') {
+                this.deviceService.deleteDevice(device.id).subscribe({next: () => {},
                   error: (err: HttpErrorResponse) => {
                     this.errorHandler.handleError(err);
                   }

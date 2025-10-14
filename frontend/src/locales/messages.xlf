@@ -1551,6 +1551,20 @@
           <context context-type="linenumber">139</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="elementFieldLabelRodWoDesc" datatype="html">
+        <source>Devices without Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">145</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="buttonClearRODwoDesc" datatype="html">
+        <source>Remove without Description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="elementFieldLabelSwitchDesc" datatype="html">
         <source>Description</source>
         <context-group purpose="location">
