@@ -1,7 +1,6 @@
 import json
 import subprocess
 from elements._elementBase import ElementBase, docDB
-from elements import Setting
 
 
 class VLAN(ElementBase):
@@ -202,7 +201,7 @@ class VLAN(ElementBase):
         return True
 
     def commit_dhcp_server(self):
-        from elements import IpPool
+        from elements import Setting, IpPool
         from helpers.system import check_integrity_vlan_dhcp_commit
         integrity = check_integrity_vlan_dhcp_commit()
         if not integrity.get('code', 1) == 0:
