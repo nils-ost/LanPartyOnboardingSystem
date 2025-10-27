@@ -53,6 +53,11 @@ class Device(ElementBase):
             return result
         return None
 
+    def __repr__(self):
+        if not self['desc'] == '':
+            return f"{self['mac']} ({self['desc']})"
+        return f"{self['mac']}"
+
     def validate(self):
         errors = dict()
         if self['port_id'] is not None and docDB.get('Port', self['port_id']) is None:

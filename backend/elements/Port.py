@@ -52,6 +52,11 @@ class Port(ElementBase):
         else:
             return [cls(p) for p in docDB.search_many(cls.__name__, {'switchlink': True, 'switch_id': switch_id})]
 
+    def __repr__(self):
+        if not self.switch()['desc'] == '':
+            return f"{self.switch()['desc']}#{self['number_display']}"
+        return f"{self.switch()['addr']}#{self['number_display']}"
+
     def validate(self):
         errors = dict()
         if docDB.get('Switch', self['switch_id']) is None:

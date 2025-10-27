@@ -7,7 +7,7 @@ Type=exec
 Restart=always
 RestartSec=5
 
-ExecStart={{ project_dir }}/venv/bin/python {{ project_dir }}/main.py
+ExecStart={{ project_dir }}/venv/bin/python -u {{ project_dir }}/main.py
 WorkingDirectory={{ project_dir }}
 KillSignal=SIGINT
 

@@ -1,3 +1,4 @@
+import logging
 import cherrypy
 from datetime import datetime
 from elements._elementBase import ElementBase, docDB
@@ -103,6 +104,7 @@ class Switch(ElementBase):
         global switch_macs
         from elements import Device, Port
         from helpers.backgroundworker import port_onboarding_schedule
+        logger = logging.getLogger('Switch - map_devices')
         if not self.connected():
             return 0
         new_count = 0
@@ -119,30 +121,38 @@ class Switch(ElementBase):
                     continue  # this host is a switch, switches are not handled here
                 device = Device.get_by_mac(host)
                 if device is None and not p['switchlink']:
+                    # new Device detected on this Port
                     device = Device({'mac': host, 'port_id': p['_id']})
                     new_count += 1
+                    logger.info(f'{repr(device)} first encounter on Port {repr(p)}')
                 elif device is None:
                     # skip as this is a switchlink port and regular devices are not connected on switchlink ports
                     pass
                 elif p['switchlink'] and device['port_id'] is not None and device.port() == p:
                     # remove the port from this device as the current port is a switchlink port, those do not connect devices
                     device['port_id'] = None
+                    logger.info(f'{repr(device)} removed Port {repr(p)} as this is a switchlink port')
                 elif not p['switchlink'] and device['port_id'] is None:
+                    # Device was known, but not connected to a Port yet
                     device.port(p)
+                    logger.info(f'{repr(device)} assigend to Port {repr(p)}')
                 elif not p['switchlink'] and device['port_id'] is not None and not device.port() == p:
+                    # Device was connected to a different Port
                     other_port = device.port()
+                    logger.info(f'{repr(device)} switched Port from {repr(other_port)} to {repr(p)}')
                     try:
                         other_port = switch_objects[other_port['switch_id']].ports[other_port['number']]
                         if host not in other_port.hosts or len(port.hosts) <= len(other_port.hosts):
                             send_port_update = other_port['_id']
                             device.port(p)
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.error(f'{repr(e)}')
                 if device is not None:
                     device['last_scan_ts'] = int(datetime.now().timestamp())
                     device.save()  # generic save for everything happend above
                     if send_port_update is not None:
                         # Port of Device changed, reconfigure old an new Port on switch
+                        logger.info(f'{repr(device)} switched Port ... sending updates to HWSwitches')
                         port_onboarding_schedule(send_port_update)
                         port_onboarding_schedule(device['port_id'])
             if not switchlink == p['switchlink'] and p['switchlink_port_id'] is None:
