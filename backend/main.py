@@ -9,7 +9,7 @@ from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint, Switch
 from endpoints.metrics import start_metrics_exporter
 from elements import Setting, VLAN, IpPool, Table, Seat, Device, Port, PortConfigCache
 
-logging.basicConfig(format='%(asctime)s [%(name)-20s] %(levelname)-8s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S+%z', level='INFO')
+logging.basicConfig(format='%(asctime)s [%(name)-20s] %(levelname)-8s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
 logger = logging.getLogger('main')
 
 

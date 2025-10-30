@@ -58,7 +58,7 @@ class MikroTikSwitch():
         self.connected = True
         try:
             url = f'http://{self._host}/{doc}'
-            self.logger.info(f'getData:{url}')
+            self.logger.debug(f'getData:{url}')
             r = self._conn.get(url, timeout=0.1)
             self.logger.debug(f'getData:{r.text}')
             if toJson:
@@ -87,7 +87,7 @@ class MikroTikSwitch():
     def loadModel(self):
         r = self.getData('sys.b')
         if len(r) == 0:
-            self.logger.error("loadModel: Couldn't fetch data")
+            self.logger.error(f"loadModel ({self._host}): Couldn't fetch data")
             return
 
         model = r.get('brd')
@@ -95,11 +95,11 @@ class MikroTikSwitch():
             model = r.get('i07')
         if model is None:
             model = ''
-            self.logger.error("loadModel: Couldn't identify model")
+            self.logger.error(f"loadModel ({self._host}): Couldn't identify model")
         model = asciiToStr(model)
 
         if model not in model_mapping:
-            self.logger.info(f"loadModel: Model '{model}' not in mapping, falling back to 'generic'")
+            self.logger.warning(f"loadModel ({self._host}): Model '{model}' not in mapping, falling back to 'generic'")
         if not model == self.model and model in model_mapping:
             self.model = model
             self.__class__ = model_mapping[model]
@@ -117,7 +117,7 @@ class MikroTikSwitch():
         if response is None:
             r = self.getData('sys.b')
             if len(r) == 0:
-                self.logger.error("loadSystem: Couldn't fetch data")
+                self.logger.error(f"loadSystem ({self._host}): Couldn't fetch data")
                 return
         else:
             r = response
@@ -147,7 +147,7 @@ class MikroTikSwitch():
             r = response
 
         if not len(self.ports) == int(r.get('prt', '0'), 16):
-            self.logger.error("loadPorts: Detected port-count doesn't match reported port-count")
+            self.logger.error(f"loadPorts ({self._host}): Detected port-count doesn't match reported port-count")
         self.reloadPorts(r)
         self._commitUnregister('ports')
 
@@ -171,7 +171,7 @@ class MikroTikSwitch():
             self.ports[idx].name = asciiToStr(r.get('nm', list())[idx])
             spd = r.get('spd', list())[idx]
             if spd not in self.speed_mapping:
-                self.logger.warning(f"loadPorts: Detected speed {spd} can't be found in speed_mapping, replacing it by None")
+                self.logger.warning(f"loadPorts ({self._host}): Detected speed {spd} can't be found in speed_mapping, replacing it by None")
                 spd = None
             else:
                 spd = self.speed_mapping[spd]
@@ -266,12 +266,12 @@ class MikroTikSwitch():
         for idx in range(len(self.ports)):
             mode = r.get('vlan', list())[idx]
             if mode not in self.vlan_mode_mapping:
-                self.logger.warning(f"loadPortsVlan: Detected vlan_mode {mode} can't be found in vlan_mode_mapping")
+                self.logger.warning(f"loadPortsVlan ({self._host}): Detected vlan_mode {mode} can't be found in vlan_mode_mapping")
             else:
                 self.ports[idx].vlan_mode = self.vlan_mode_mapping[mode]
             receive = r.get('vlni', list())[idx]
             if receive not in self.vlan_receive_mapping:
-                self.logger.warning(f"loadPortsVlan: Detected vlan_receive {receive} can't be found in vlan_receive_mapping")
+                self.logger.warning(f"loadPortsVlan ({self._host}): Detected vlan_receive {receive} can't be found in vlan_receive_mapping")
             else:
                 self.ports[idx].vlan_receive = self.vlan_receive_mapping[receive]
             self.ports[idx].vlan_default = int(r.get('dvid', list())[idx], 16)
@@ -358,13 +358,16 @@ class MikroTikSwitch():
         fvid = ''
         for port in self.ports:
             if port.vlan_mode not in self.vlan_mode_mapping_reverse:
-                self.logger.error(f'commitPortsVlan: vlan_mode {port.vlan_mode} of Port {port.idx} not found in vlan_mode_mapping_reverse. Assumeing 0x02')
+                self.logger.error(
+                    f'commitPortsVlan ({self._host}): vlan_mode {port.vlan_mode} of Port {port.idx} not found in vlan_mode_mapping_reverse. Assuming 0x02')
                 r['vlan'].append('0x02')
             else:
                 r['vlan'].append(self.vlan_mode_mapping_reverse[port.vlan_mode])
             if port.vlan_receive not in self.vlan_receive_mapping_reverse:
-                self.logger.error(
-                    f'commitPortsVlan: vlan_receive {port.vlan_receive} of Port {port.idx} not found in vlan_receive_mapping_reverse. Assumeing 0x02')
+                msg = ' '.join([
+                    f'commitPortsVlan ({self._host}): vlan_receive {port.vlan_receive} of Port {port.idx}',
+                    'not found in vlan_receive_mapping_reverse. Assuming 0x02'])
+                self.logger.error(msg)
                 r['vlni'].append('0x02')
             else:
                 r['vlni'].append(self.vlan_receive_mapping_reverse[port.vlan_receive])
@@ -401,10 +404,10 @@ class MikroTikSwitch():
         if isinstance(port, SwitchPort):
             port = port.idx
         elif not isinstance(port, int):
-            self.logger.error('portEdit: port needs to be an instance of int or SwitchPort')
+            self.logger.error(f'portEdit ({self._host}): port needs to be an instance of int or SwitchPort')
             return
         if port not in range(len(self.ports)):
-            self.logger.error(f'portEdit: index {port} not in range of available ports')
+            self.logger.error(f'portEdit ({self._host}): index {port} not in range of available ports')
             return
         if enabled is not None:
             if isinstance(enabled, bool):
@@ -412,7 +415,7 @@ class MikroTikSwitch():
                     self.ports[port].enabled = enabled
                     self._commitRegister('ports')
             else:
-                self.logger.error('portEdit: enabled needs to be instance of bool')
+                self.logger.error(f'portEdit ({self._host}): enabled needs to be instance of bool')
         if fwdTo is not None:
             if self.ports[port].fwdTo(fwdTo):
                 self._commitRegister('isolation')
@@ -427,7 +430,7 @@ class MikroTikSwitch():
                     self.ports[port].vlan_mode = vmode
                     self._commitRegister('portsvlan')
             else:
-                self.logger.error(f'portEdit: unknown vmode {vmode}')
+                self.logger.error(f'portEdit ({self._host}): unknown vmode {vmode}')
         if vreceive is not None:
             if vreceive in self.vlan_receive_mapping:
                 vreceive = self.vlan_receive_mapping[vreceive]
@@ -436,7 +439,7 @@ class MikroTikSwitch():
                     self.ports[port].vlan_receive = vreceive
                     self._commitRegister('portsvlan')
             else:
-                self.logger.error(f'portEdit: unknown vreceive {vreceive}')
+                self.logger.error(f'portEdit ({self._host}): unknown vreceive {vreceive}')
         if vdefault is not None:
             if vdefault == 1:
                 if not self.ports[port].vlan_default == 1:
@@ -450,23 +453,23 @@ class MikroTikSwitch():
                             self._commitRegister('portsvlan')
                         break
                 else:
-                    self.logger.error(f'portEdit: unknown vdefault {vdefault}')
+                    self.logger.error(f'portEdit ({self._host}): unknown vdefault {vdefault}')
         if vforce is not None:
             if isinstance(vforce, bool):
                 if not vforce == self.ports[port].vlan_force:
                     self.ports[port].vlan_force = vforce
                     self._commitRegister('portsvlan')
             else:
-                self.logger.error('portEdit: vforce needs to instance of bool')
+                self.logger.error(f'portEdit ({self._host}): vforce needs to instance of bool')
 
     def portVLANs(self, port):
         if isinstance(port, SwitchPort):
             port = port.idx
         elif not isinstance(port, int):
-            self.logger.error('portVLANs: port needs to be an instance of int or SwitchPort')
+            self.logger.error(f'portVLANs ({self._host}): port needs to be an instance of int or SwitchPort')
             return
         if port not in range(len(self.ports)):
-            self.logger.error(f'portVLANs: index {port} not in range of available ports')
+            self.logger.error(f'portVLANs ({self._host}): index {port} not in range of available ports')
             return
 
         result = list()
@@ -479,13 +482,13 @@ class MikroTikSwitch():
         if isinstance(vlan, SwitchVLAN):
             vlan = vlan.id
         elif not isinstance(vlan, int):
-            self.logger.error('vlanEdit: vlan needs to be an instance of int or SwitchVLAN')
+            self.logger.error(f'vlanEdit ({self._host}): vlan needs to be an instance of int or SwitchVLAN')
             return
         for idx in range(len(self.vlans)):
             if vlan == self.vlans[idx].id:
                 break
         else:
-            self.logger.error(f'vlanEdit: unknown vlan {vlan}')
+            self.logger.error(f'vlanEdit ({self._host}): unknown vlan {vlan}')
             return
         if isolation is not None:
             if isinstance(isolation, bool):
@@ -493,28 +496,28 @@ class MikroTikSwitch():
                     self.vlans[idx].isolation = isolation
                     self._commitRegister('vlans')
             else:
-                self.logger.error('vlanEdit: isolation needs to be an instance bool')
+                self.logger.error(f'vlanEdit ({self._host}): isolation needs to be an instance bool')
         if learning is not None:
             if isinstance(learning, bool):
                 if not learning == self.vlans[idx].learning:
                     self.vlans[idx].learning = learning
                     self._commitRegister('vlans')
             else:
-                self.logger.error('vlanEdit: learning needs to be an instance bool')
+                self.logger.error(f'vlanEdit ({self._host}): learning needs to be an instance bool')
         if mirror is not None:
             if isinstance(mirror, bool):
                 if not mirror == self.vlans[idx].mirror:
                     self.vlans[idx].mirror = mirror
                     self._commitRegister('vlans')
             else:
-                self.logger.error('vlanEdit: mirror needs to be an instance bool')
+                self.logger.error(f'vlanEdit ({self._host}): mirror needs to be an instance bool')
         if igmp is not None:
             if isinstance(igmp, bool):
                 if not igmp == self.vlans[idx].igmp:
                     self.vlans[idx].igmp = igmp
                     self._commitRegister('vlans')
             else:
-                self.logger.error('vlanEdit: igmp needs to be an instance bool')
+                self.logger.error(f'vlanEdit ({self._host}): igmp needs to be an instance bool')
         if memberAdd is not None:
             if self.vlans[idx].memberAdd(memberAdd):
                 self._commitRegister('vlans')
@@ -526,7 +529,7 @@ class MikroTikSwitch():
         if isinstance(vlan, SwitchVLAN):
             for v in self.vlans:
                 if v.id == vlan.id:
-                    self.logger.error(f'vlanAdd: vlan with id {vlan.id} allready present')
+                    self.logger.error(f'vlanAdd ({self._host}): vlan with id {vlan.id} allready present')
                     break
             else:
                 self.vlans.append(vlan)
@@ -534,7 +537,7 @@ class MikroTikSwitch():
         elif isinstance(vlan, int):
             for v in self.vlans:
                 if v.id == vlan:
-                    self.logger.error(f'vlanAdd: vlan with id {vlan} allready present')
+                    self.logger.error(f'vlanAdd ({self._host}): vlan with id {vlan} allready present')
                     break
             else:
                 v = SwitchVLAN()
@@ -543,7 +546,7 @@ class MikroTikSwitch():
                 self._commitRegister('vlans')
                 self.vlanEdit(vlan, isolation=isolation, learning=learning, mirror=mirror, igmp=igmp, memberAdd=memberAdd, memberRemove=memberRemove)
         else:
-            self.logger.error('vlanAdd: vlan needs to be an instance of int or SwitchVLAN')
+            self.logger.error(f'vlanAdd ({self._host}): vlan needs to be an instance of int or SwitchVLAN')
 
     def vlanAddit(self, vlan, isolation=None, learning=None, mirror=None, igmp=None, memberAdd=None, memberRemove=None):
         """
@@ -552,7 +555,7 @@ class MikroTikSwitch():
         if isinstance(vlan, SwitchVLAN):
             vlan = vlan.id
         elif not isinstance(vlan, int):
-            self.logger.error('vlanAddit: vlan needs to be an instance of int or SwitchVLAN')
+            self.logger.error(f'vlanAddit ({self._host}): vlan needs to be an instance of int or SwitchVLAN')
             return
         for idx in range(len(self.vlans)):
             if vlan == self.vlans[idx].id:
@@ -565,7 +568,7 @@ class MikroTikSwitch():
         if isinstance(vlan, SwitchVLAN):
             vlan = vlan.id
         elif not isinstance(vlan, int):
-            self.logger.error('vlanRemove: vlan needs to be an instance of int or SwitchVLAN')
+            self.logger.error(f'vlanRemove ({self._host}): vlan needs to be an instance of int or SwitchVLAN')
             return
         for idx in range(len(self.vlans)):
             if self.vlans[idx].id == vlan:
@@ -583,7 +586,7 @@ class MikroTikSwitch():
         elif isinstance(vlan, SwitchVLAN):
             vlan = vlan.id
         elif not isinstance(vlan, int):
-            self.logger.error('setMgmtVlan: vlan needs to be an instance of int, SwitchVLAN or None')
+            self.logger.error(f'setMgmtVlan ({self._host}): vlan needs to be an instance of int, SwitchVLAN or None')
             return
         for idx in range(len(self.vlans)):
             if self.vlans[idx].id == vlan:
@@ -591,7 +594,7 @@ class MikroTikSwitch():
                 self._commitRegister('system')
                 break
         else:
-            self.logger.error(f'setMgmtVlan: vlan with id {vlan} is not present')
+            self.logger.error(f'setMgmtVlan ({self._host}): vlan with id {vlan} is not present')
 
 
 class MikroTikSwitchCRS309(MikroTikSwitch):
@@ -708,11 +711,11 @@ class MikroTikSwitchCSS610(MikroTikSwitch):
 
     def vlanEdit(self, vlan, isolation=None, learning=None, mirror=None, igmp=None, memberAdd=None, memberRemove=None):
         if isolation is not None:
-            self.logger.warning('vlanEdit: switch-model does not support vlan-isolation')
+            self.logger.warning(f'vlanEdit ({self._host}): switch-model does not support vlan-isolation')
         if learning is not None:
-            self.logger.warning('vlanEdit: switch-model does not support vlan-learning')
+            self.logger.warning(f'vlanEdit ({self._host}): switch-model does not support vlan-learning')
         if mirror is not None:
-            self.logger.warning('vlanEdit: switch-model does not support vlan-mirroring')
+            self.logger.warning(f'vlanEdit ({self._host}): switch-model does not support vlan-mirroring')
         super().vlanEdit(vlan=vlan, isolation=None, learning=None, mirror=None, igmp=igmp, memberAdd=memberAdd, memberRemove=memberRemove)
 
 
