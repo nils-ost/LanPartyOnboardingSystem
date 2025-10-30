@@ -128,7 +128,7 @@ class Switch(ElementBase):
                 elif device is None:
                     # skip as this is a switchlink port and regular devices are not connected on switchlink ports
                     pass
-                elif p['switchlink'] and device['port_id'] is not None and device.port() == p:
+                elif p['switchlink'] and device['port_id'] is not None and device['port_id'] == p['_id']:
                     # remove the port from this device as the current port is a switchlink port, those do not connect devices
                     device['port_id'] = None
                     logger.info(f'{repr(device)} removed Port {repr(p)} as this is a switchlink port')
@@ -136,14 +136,14 @@ class Switch(ElementBase):
                     # Device was known, but not connected to a Port yet
                     device.port(p)
                     logger.info(f'{repr(device)} assigend to Port {repr(p)}')
-                elif not p['switchlink'] and device['port_id'] is not None and not device.port() == p:
+                elif not p['switchlink'] and device['port_id'] is not None and not device['port_id'] == p['_id']:
                     # Device was connected to a different Port
-                    other_port = device.port()
-                    logger.info(f'{repr(device)} switched Port from {repr(other_port)} to {repr(p)}')
+                    old_port = device.port()
+                    logger.info(f'{repr(device)} switched Port from {repr(old_port)} to {repr(p)}')
                     try:
-                        other_port = switch_objects[other_port['switch_id']].ports[other_port['number']]
-                        if host not in other_port.hosts or len(port.hosts) <= len(other_port.hosts):
-                            send_port_update = other_port['_id']
+                        hw_port = switch_objects[old_port['switch_id']].ports[old_port['number']]
+                        if host not in hw_port.hosts or len(port.hosts) <= len(hw_port.hosts):
+                            send_port_update = old_port['_id']
                             device.port(p)
                     except Exception as e:
                         logger.error(f'{repr(e)}')

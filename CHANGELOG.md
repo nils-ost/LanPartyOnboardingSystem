@@ -7,6 +7,7 @@
   * os_interfaces, dns-, dhcp- and haproxy-servers are commited automatically on system-boot if the integrity is ensured
   * enhanced logging of of scanner service
   * moved installer from fabric to ansible
+  * Bugfix: Port changes weren't detected by scanner
 
 ## v0.7.0
 
