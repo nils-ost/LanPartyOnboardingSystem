@@ -4,6 +4,8 @@
 
   * if a Device changes Port, the Switch of old and new Port are commited automatically
   * Settings panel is now able to remove all Devices without a description
+  * os_interfaces, dns-, dhcp- and haproxy-servers are commited automatically on system-boot if the integrity is ensured
+  * enhanced logging of of scanner service
   * moved installer from fabric to ansible
 
 ## v0.7.0
