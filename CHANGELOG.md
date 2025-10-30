@@ -8,6 +8,7 @@
   * enhanced logging of of scanner service
   * moved installer from fabric to ansible
   * Bugfix: Port changes weren't detected by scanner
+  * Bugfix: scanner couldn't update HWswitches on Port-changes, due to not having a onboarding worker
 
 ## v0.7.0
 
