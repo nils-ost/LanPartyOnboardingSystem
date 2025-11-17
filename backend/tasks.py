@@ -1,4 +1,5 @@
 from invoke import task
+import json
 
 
 @task(name='coverage')
@@ -111,13 +112,56 @@ def create_nlpt_testdata(c):
 @task(name='reset-switch', aliases=['rs', ])
 def reset_switch(c):
     from MTSwitch import MikroTikSwitch
-    addr = input('Addr: ').strip()
-    user = input('User (admin): ').strip()
-    if user == '':
-        user = 'admin'
-    pw = input('PW: ').strip()
-    s = MikroTikSwitch(addr, user, pw)
-    if s.connected:
+
+    def connect(switches):
+        result = list()
+        idx = 0
+        for addr, attr in switches.items():
+            user, pw = attr
+            s = MikroTikSwitch(addr, user, pw)
+            print(f'{idx} {addr} {s.connected}')
+            result.append(s)
+            idx += 1
+        print(f'{idx} => new switch')
+        print(f'{idx + 1} => just save and quit')
+        return result
+
+    def add(defaults):
+        from elements import IpPool
+        if 'ip' not in defaults or 'mask' not in defaults:
+            addr = input('IP: ').strip()
+            if input('set Subnet as default? (Y/n): ').strip() in ['y', '']:
+                mask = input('subnet prefix (24): ').strip()
+                if mask == '':
+                    mask = 24
+                defaults['mask'] = int(mask)
+                defaults['ip'] = IpPool.dotted_to_int(addr)
+                defaults['ip'] = defaults['ip'] & ((2 ** defaults['mask'] - 1) << (32 - defaults['mask']))
+                print(f"added {IpPool.int_to_dotted(defaults['ip'])}/{defaults['mask']} as default Subnet")
+        else:
+            if input(f"Use default subnet {IpPool.int_to_dotted(defaults['ip'])}/{defaults['mask']}? (Y/n): ").strip() in ['y', '']:
+                addr = IpPool.int_to_dotted(defaults['ip'] + int(input('IP offset: ').strip()))
+                print(f'Using IP: {addr}')
+            else:
+                addr = input('IP: ').strip()
+
+        user = input(f"User ({defaults.get('user', 'admin')}): ").strip()
+        if user == '':
+            user = defaults.get('user', 'admin')
+        else:
+            if input('Use as default? (Y/n): ').strip() in ['y', '']:
+                defaults['user'] = user
+
+        if 'pw' in defaults and input('Use default password? (Y/n): ').strip() in ['y', '']:
+            pw = defaults['pw']
+        else:
+            pw = input('Password: ').strip()
+            if input('Use as default? (Y/n): ').strip() in ['y', '']:
+                defaults['pw'] = pw
+
+        return [addr, [user, pw]]
+
+    def reset(s):
         vlan_ids = list()
         for vlan in s.vlans:
             vlan_ids.append(vlan.id)
@@ -135,5 +179,30 @@ def reset_switch(c):
         for v in vlan_ids:
             s.vlanRemove(v)
         s.commitAll()
-    else:
-        print(f'No connection to: {addr}')
+
+    try:
+        config = json.load(open('switch_reset_config.json', 'r'))
+    except Exception:
+        config = dict()
+    if 'defaults' not in config:
+        config['defaults'] = dict()
+    if 'switches' not in config:
+        config['switches'] = dict()
+
+    if len(config['switches']) == 0:
+        addr, attr = add(config['defaults'])
+        config['switches'][addr] = attr
+
+    while True:
+        switches = connect(config['switches'])
+        selection = int(input('Select: ').strip())
+        if selection == len(switches):
+            addr, attr = add(config['defaults'])
+            config['switches'][addr] = attr
+            continue
+        if selection > len(switches) or selection < 0:
+            break
+        reset(switches[selection])
+        break
+
+    open('switch_reset_config.json', 'w').write(json.dumps(config, indent=2))

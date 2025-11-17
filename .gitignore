@@ -9,3 +9,4 @@ backend/.coverage
 backend/coverage_html_report/
 backend/static/ang
 *.run
+backend/switch_reset_config.json
