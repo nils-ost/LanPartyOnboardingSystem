@@ -64,17 +64,19 @@ export class TableCreaditComponent implements OnChanges{
       if (ippool.vlan_id == play_vlan_id)
         list.push({name: ippool.desc, code: ippool.id});
     }
-    this.ippoolsOptions = list;
+    this.ippoolsOptions = list.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   refreshSwitchesOptions() {
     let list: any[] = [];
     for (let i = 0; i < this.switches.length; i++) {
       let sw: Switch = this.switches[i];
-      if (sw.purpose = SwitchPurposeType.mixed || sw.purpose == SwitchPurposeType.participants)
-        list.push({name: sw.addr + ' (' + sw.desc + ')', code: sw.id});
+      if (sw.purpose = SwitchPurposeType.mixed || sw.purpose == SwitchPurposeType.participants) {
+        if (sw.desc != '') list.push({name: sw.desc + ' (' + sw.addr + ')', code: sw.id});
+        else list.push({name: sw.addr, code: sw.id});
+      }
     }
-    this.switchesOptions = list;
+    this.switchesOptions = list.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   commitTable() {

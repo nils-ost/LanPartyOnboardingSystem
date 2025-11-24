@@ -64,7 +64,9 @@ export class TablesListComponent implements OnInit, OnChanges {
     }
     for (let i = 0; i < this.switches.length; i++) {
       let sw = this.switches[i];
-      this.switchesNames.set(sw.id, sw.addr);
+      let swName: string = sw.addr;
+      if (sw.desc != '') swName = sw.desc + ' (' + sw.addr + ')';
+      this.switchesNames.set(sw.id, swName);
     }
     for (let i = 0; i < this.tables.length; i++) {
       this.seatCounts.set(this.tables[i].id, 0);
