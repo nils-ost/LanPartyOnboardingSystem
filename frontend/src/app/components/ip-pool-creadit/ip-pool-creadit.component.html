@@ -7,6 +7,14 @@
 
 <div class="field">
     <span class="p-float-label">
+        <p-dropdown id="ippoolvlanid" [options]="vlansOptions" [(ngModel)]="vlan_id" optionLabel="name" optionValue="code" appendTo="body" (onChange)="vlanChanged()" [ngClass]="{'ng-invalid ng-dirty': vlan_id_error}"></p-dropdown>
+        <label for="ippoolvlanid" i18n="@@elementFieldLabelIpPoolVlanId">VLAN</label>
+    </span>
+    <small *ngIf="vlan_id_error" class="p-error block">{{ vlan_id_error }}</small>
+</div>
+
+<div class="field">
+    <span class="p-float-label">
         <p-inputNumber inputId="ippoolmask" [(ngModel)]="mask" [min]="8" [max]="30" [showButtons]="true" [ngClass]="{'ng-invalid ng-dirty': mask_error}"></p-inputNumber>
         <label for="ippoolmask" i18n="@@elementFieldLabelIpPoolMask">Mask</label>
     </span>
@@ -33,14 +41,6 @@
         <label for="ippoolrangeend" i18n="@@elementFieldLabelIpPoolRangeEnd">Range End</label>
     </span>
     <small *ngIf="range_end_error" class="p-error block">{{ range_end_error }}</small>
-</div>
-
-<div class="field">
-    <span class="p-float-label">
-        <p-dropdown id="ippoolvlanid" [options]="vlansOptions" [(ngModel)]="vlan_id" optionLabel="name" optionValue="code" appendTo="body" [ngClass]="{'ng-invalid ng-dirty': vlan_id_error}"></p-dropdown>
-        <label for="ippoolvlanid" i18n="@@elementFieldLabelIpPoolVlanId">VLAN</label>
-    </span>
-    <small *ngIf="vlan_id_error" class="p-error block">{{ vlan_id_error }}</small>
 </div>
 
 <div class="field">
