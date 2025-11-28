@@ -6,6 +6,7 @@ import { Vlan, VlanPurposeType } from 'src/app/interfaces/vlan';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { IpPoolService } from 'src/app/services/ip-pool.service';
 import { SettingService } from 'src/app/services/setting.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-ip-pool-creadit',
@@ -45,7 +46,8 @@ export class IpPoolCreaditComponent implements OnChanges {
   constructor(
     private errorHandler: ErrorHandlerService,
     private ippoolService: IpPoolService,
-    private settingService: SettingService
+    private settingService: SettingService,
+    private utils: UtilsService
   ) {
     this.fillRangeFields();
     this.settingService.getSettings().subscribe({
@@ -76,34 +78,13 @@ export class IpPoolCreaditComponent implements OnChanges {
     this.refreshVlansOptions();
   }
 
-  int_to_octetts(addr: number): number[] {
-    let list: number[] = [];
-    let hex = addr.toString(16);
-    if (hex.length < 8) hex = '0' + hex;
-    list.push(parseInt(hex.slice(0, 2), 16));
-    list.push(parseInt(hex.slice(2, 4), 16));
-    list.push(parseInt(hex.slice(4, 6), 16));
-    list.push(parseInt(hex.slice(6, 8), 16));
-    return list;
-  }
-
-  octetts_to_int(oct: number[]): number {
-    let hex = '';
-    for (let i = 0; i < oct.length; i++) {
-      let ohex = oct[i].toString(16);
-      if (ohex.length < 2) ohex = '0' + ohex;
-      hex = hex + ohex;
-    }
-    return parseInt(hex, 16);
-  }
-
   fillRangeFields() {
-    let range_start_octetts: number[] = this.int_to_octetts(this.range_start);
+    let range_start_octetts: number[] = this.utils.ip_int_to_octetts(this.range_start);
     this.range_start_oct1 = range_start_octetts[0];
     this.range_start_oct2 = range_start_octetts[1];
     this.range_start_oct3 = range_start_octetts[2];
     this.range_start_oct4 = range_start_octetts[3];
-    let range_end_octetts: number[] = this.int_to_octetts(this.range_end);
+    let range_end_octetts: number[] = this.utils.ip_int_to_octetts(this.range_end);
     this.range_end_oct1 = range_end_octetts[0];
     this.range_end_oct2 = range_end_octetts[1];
     this.range_end_oct3 = range_end_octetts[2];
@@ -127,14 +108,13 @@ export class IpPoolCreaditComponent implements OnChanges {
   vlanChanged() {
     if (this.vlan_id && !this.ippool) {
       let purpose: VlanPurposeType | undefined = this.vlansToPurpose.get(this.vlan_id);
-      if (purpose) {
+      if (purpose != undefined) {
         let ip: number | null | undefined = this.defaultVlanIp.get(purpose);
         let mask_len: number | undefined = this.defaultVlanMask.get(purpose);
         if (ip && mask_len) {
-          let mask: number = (((2 ** mask_len) - 1) << (32 - mask_len)) >>>0;;
           let range_max: number  = (2 ** (32 - mask_len)) - 2;
-          this.range_start = ((ip & mask) >>>0) + 1;
-          this.range_end = ((ip & mask) >>>0) + range_max;
+          this.range_start = this.utils.ip_apply_mask(ip, mask_len) + 1;
+          this.range_end = this.utils.ip_apply_mask(ip, mask_len) + range_max;
           this.mask = mask_len;
           this.fillRangeFields();
         }
@@ -143,22 +123,17 @@ export class IpPoolCreaditComponent implements OnChanges {
   }
 
   commitIpPool() {
-    this.range_start = this.octetts_to_int([this.range_start_oct1, this.range_start_oct2, this.range_start_oct3, this.range_start_oct4]);
-    this.range_end = this.octetts_to_int([this.range_end_oct1, this.range_end_oct2, this.range_end_oct3, this.range_end_oct4]);
+    this.range_start = this.utils.ip_octetts_to_int([this.range_start_oct1, this.range_start_oct2, this.range_start_oct3, this.range_start_oct4]);
+    this.range_end = this.utils.ip_octetts_to_int([this.range_end_oct1, this.range_end_oct2, this.range_end_oct3, this.range_end_oct4]);
     if (this.ippool) this.editIpPool();
     else {
       let purpose: VlanPurposeType | undefined = this.vlansToPurpose.get(this.vlan_id);
       if (purpose && !this.defaultVlanIp.get(purpose)) {
-        let mask: number = (((2 ** this.mask) - 1) << (32 - this.mask)) >>>0;
-        let ip: number = (this.range_start & mask) >>>0;
-        console.log(this.range_start);
-        console.log(mask);
-        console.log(ip);
         let setting: string = '';
         if (purpose.valueOf() == VlanPurposeType.play.valueOf()) setting = 'play_vlan_def_';
         if (purpose.valueOf() == VlanPurposeType.mgmt.valueOf()) setting = 'mgmt_vlan_def_';
         if (purpose.valueOf() == VlanPurposeType.onboarding.valueOf()) setting = 'ob_vlan_def_';
-        this.settingService.updateSetting(setting + 'ip', ip).subscribe();
+        this.settingService.updateSetting(setting + 'ip', this.utils.ip_apply_mask(this.range_start, this.mask)).subscribe();
         this.settingService.updateSetting(setting + 'mask', this.mask).subscribe();
       }
       this.createIpPool()

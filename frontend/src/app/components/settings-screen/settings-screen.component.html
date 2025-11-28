@@ -1,8 +1,8 @@
 
-<p-panel i18n-header="@@settingsHeaderSettings" header="Settings">
+<p-panel header="Settings" i18n-header="@@settingsHeaderSettings">
     <ng-template pTemplate="icons">
         <p-inputSwitch [(ngModel)]="settings" />&nbsp;
-        <button pButton (click)="save_settings()" i18n="@@buttonSave">Save</button>
+        <button pButton (click)="save_settings()" i18n="@@buttonSave" [disabled]="!settings">Save</button>
     </ng-template>
 
     <ng-container *ngIf="settings">
@@ -15,7 +15,7 @@
     </ng-container>
 </p-panel>
 
-<p-panel i18n-header="@@settingsHeaderAbsoluteSeatNumbers" header="Absolute Seat Numbers">
+<p-panel header="Absolute Seat Numbers" i18n-header="@@settingsHeaderAbsoluteSeatNumbers">
     <ng-template pTemplate="icons">
         <p-inputSwitch [(ngModel)]="absolute_seatnumbers" />&nbsp;
         <button pButton (click)="save_absolute_seatnumbers()" i18n="@@buttonSave">Save</button>
@@ -33,7 +33,7 @@
 <p-panel header="NLPT-SSO">
     <ng-template pTemplate="icons">
         <p-inputSwitch [(ngModel)]="nlpt_sso" />&nbsp;
-        <button pButton (click)="save_nlpt_sso()" i18n="@@buttonSave">Save</button>
+        <button pButton (click)="save_nlpt_sso()" i18n="@@buttonSave" [disabled]="!nlpt_sso">Save</button>
     </ng-template>
 
     <ng-container *ngIf="nlpt_sso">
@@ -48,6 +48,58 @@
             <span class="p-float-label">
                 <input type="text" id="ssoonboardingurl" pInputText [(ngModel)]="sso_onboarding_url">
                 <label for="ssoonboardingurl" i18n="@@elementFieldLabelSettingsSoonboardingurl">SSO Onboarding URL</label>
+            </span>
+        </div>
+    </ng-container>
+</p-panel>
+
+<p-panel header="Default IP ranges for IpPools (per VLAN purpose)">
+    <ng-template pTemplate="icons">
+        <p-inputSwitch [(ngModel)]="vlan_def_ips" (onChange)="fillVlanDefIps()" />&nbsp;
+        <button pButton (click)="save_vlan_def_ips()" i18n="@@buttonSave" [disabled]="!vlan_def_ips">Save</button>
+    </ng-template>
+
+    <ng-container *ngIf="vlan_def_ips">
+        <div class="field flex-row">
+            <span class="p-float-label">
+                <p-inputNumber inputId="obvlandefip" [(ngModel)]="ob_vlan_def_ip_oct1" [min]="1" [max]="255" (onInput)="ob_vlan_def_ip_saved = false"></p-inputNumber>.
+                <p-inputNumber [(ngModel)]="ob_vlan_def_ip_oct2" [min]="0" [max]="255" (onInput)="ob_vlan_def_ip_saved = false"></p-inputNumber>.
+                <p-inputNumber [(ngModel)]="ob_vlan_def_ip_oct3" [min]="0" [max]="255" (onInput)="ob_vlan_def_ip_saved = false"></p-inputNumber>.
+                <p-inputNumber [(ngModel)]="ob_vlan_def_ip_oct4" [min]="0" [max]="255" (onInput)="ob_vlan_def_ip_saved = false"></p-inputNumber>
+                <label for="obvlandefip" i18n="@@elementFieldLabelObVlanDefIp">Onboarding VLAN default IP</label>
+            </span>
+            <span class="p-float-label">
+                /<p-inputNumber inputId="obvlandefmask" [(ngModel)]="ob_vlan_def_mask" [min]="1" [max]="31" (onInput)="ob_vlan_def_ip_saved = false"></p-inputNumber>
+                <label for="obvlandefmask" i18n="@@elementFieldLabelObVlanDefMask">Onboarding VLAN default Mask</label>
+                &nbsp;<span class="pi pi-verified" style="color: 'var(--success-color)'" *ngIf="ob_vlan_def_ip_saved"></span>
+            </span>
+        </div>
+        <div class="field flex-row">
+            <span class="p-float-label">
+                <p-inputNumber inputId="playvlandefip" [(ngModel)]="play_vlan_def_ip_oct1" [min]="1" [max]="255" (onInput)="play_vlan_def_ip_saved = false"></p-inputNumber>.
+                <p-inputNumber [(ngModel)]="play_vlan_def_ip_oct2" [min]="0" [max]="255" (onInput)="play_vlan_def_ip_saved = false"></p-inputNumber>.
+                <p-inputNumber [(ngModel)]="play_vlan_def_ip_oct3" [min]="0" [max]="255" (onInput)="play_vlan_def_ip_saved = false"></p-inputNumber>.
+                <p-inputNumber [(ngModel)]="play_vlan_def_ip_oct4" [min]="0" [max]="255" (onInput)="play_vlan_def_ip_saved = false"></p-inputNumber>
+                <label for="playvlandefip" i18n="@@elementFieldLabelPlayVlanDefIp">Play VLAN default IP</label>
+            </span>
+            <span class="p-float-label">
+                /<p-inputNumber inputId="playvlandefmask" [(ngModel)]="play_vlan_def_mask" [min]="1" [max]="31" (onInput)="play_vlan_def_ip_saved = false"></p-inputNumber>
+                <label for="playvlandefmask" i18n="@@elementFieldLabelPlayVlanDefMask">Play VLAN default Mask</label>
+                &nbsp;<span class="pi pi-verified" style="color: 'var(--success-color)'" *ngIf="play_vlan_def_ip_saved"></span>
+            </span>
+        </div>
+        <div class="field flex-row">
+            <span class="p-float-label">
+                <p-inputNumber inputId="mgmtvlandefip" [(ngModel)]="mgmt_vlan_def_ip_oct1" [min]="1" [max]="255" (onInput)="mgmt_vlan_def_ip_saved = false"></p-inputNumber>.
+                <p-inputNumber [(ngModel)]="mgmt_vlan_def_ip_oct2" [min]="0" [max]="255" (onInput)="mgmt_vlan_def_ip_saved = false"></p-inputNumber>.
+                <p-inputNumber [(ngModel)]="mgmt_vlan_def_ip_oct3" [min]="0" [max]="255" (onInput)="mgmt_vlan_def_ip_saved = false"></p-inputNumber>.
+                <p-inputNumber [(ngModel)]="mgmt_vlan_def_ip_oct4" [min]="0" [max]="255" (onInput)="mgmt_vlan_def_ip_saved = false"></p-inputNumber>
+                <label for="mgmtvlandefip" i18n="@@elementFieldLabelMgmtVlanDefIp">Mgmt VLAN default IP</label>
+            </span>
+            <span class="p-float-label">
+                /<p-inputNumber inputId="mgmtvlandefmask" [(ngModel)]="mgmt_vlan_def_mask" [min]="1" [max]="31" (onInput)="mgmt_vlan_def_ip_saved = false"></p-inputNumber>
+                <label for="mgmtvlandefmask" i18n="@@elementFieldLabelMgmtVlanDefMask">Mgmt VLAN default Mask</label>
+                &nbsp;<span class="pi pi-verified" style="color: 'var(--success-color)'" *ngIf="mgmt_vlan_def_ip_saved"></span>
             </span>
         </div>
     </ng-container>
@@ -83,10 +135,10 @@
     </ng-container>
 </p-panel>
 
-<p-panel i18n-header="@@settingsHeaderPortNumberingOffset" header="Port Numbering Offset">
+<p-panel header="Port Numbering Offset" i18n-header="@@settingsHeaderPortNumberingOffset">
     <ng-template pTemplate="icons">
         <p-inputSwitch [(ngModel)]="pno" (onChange)="refreshSwitches()" />&nbsp;
-        <button pButton (click)="save_pno()" i18n="@@buttonSave">Save</button>
+        <button pButton (click)="save_pno()" i18n="@@buttonSave" [disabled]="!pno">Save</button>
     </ng-template>
 
     <ng-container *ngIf="pno">
@@ -106,7 +158,7 @@
     </ng-container>
 </p-panel>
 
-<p-panel i18n-header="@@settingsHeaderRemoveOfflineDevices" header="Devices">
+<p-panel header="Devices" i18n-header="@@settingsHeaderRemoveOfflineDevices">
     <ng-template pTemplate="icons">
         <p-inputSwitch [(ngModel)]="rod" (onChange)="refreshDevices()" />&nbsp;
     </ng-template>

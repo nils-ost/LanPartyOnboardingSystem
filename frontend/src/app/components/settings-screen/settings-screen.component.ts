@@ -11,6 +11,7 @@ import { SystemService } from 'src/app/services/system.service';
 import { DeviceService } from 'src/app/services/device.service';
 import { Device } from 'src/app/interfaces/device';
 import { timer } from 'rxjs';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-settings-screen',
@@ -40,13 +41,37 @@ export class SettingsScreenComponent implements OnInit {
   settings_rw: Setting[] = [];
   settings_haproxy: string[] = ['haproxy_api_host', 'haproxy_api_port', 'haproxy_api_user', 'haproxy_api_pw'];
 
+  vlan_def_ips: boolean = false;
+  play_vlan_def_ip: number | null = null;
+  play_vlan_def_mask: number = 24;
+  mgmt_vlan_def_ip: number | null = null;
+  mgmt_vlan_def_mask: number = 24;
+  ob_vlan_def_ip: number | null = null;
+  ob_vlan_def_mask: number = 24;
+  play_vlan_def_ip_oct1: number | undefined;
+  play_vlan_def_ip_oct2: number | undefined;
+  play_vlan_def_ip_oct3: number | undefined;
+  play_vlan_def_ip_oct4: number | undefined;
+  mgmt_vlan_def_ip_oct1: number | undefined;
+  mgmt_vlan_def_ip_oct2: number | undefined;
+  mgmt_vlan_def_ip_oct3: number | undefined;
+  mgmt_vlan_def_ip_oct4: number | undefined;
+  ob_vlan_def_ip_oct1: number | undefined;
+  ob_vlan_def_ip_oct2: number | undefined;
+  ob_vlan_def_ip_oct3: number | undefined;
+  ob_vlan_def_ip_oct4: number | undefined;
+  play_vlan_def_ip_saved: boolean = false;
+  mgmt_vlan_def_ip_saved: boolean = false;
+  ob_vlan_def_ip_saved: boolean = false;
+
   constructor(
     private errorHandler: ErrorHandlerService,
     private settingService: SettingService,
     private systemService: SystemService,
     private portService: PortService,
     private switchService: SwitchService,
-    private deviceService: DeviceService
+    private deviceService: DeviceService,
+    private utils: UtilsService
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +98,24 @@ export class SettingsScreenComponent implements OnInit {
                 break;
               case "sso_onboarding_url":
                 if (s.value != '') this.sso_onboarding_url = s.value;
+                break;
+              case "play_vlan_def_ip":
+                this.play_vlan_def_ip = s.value;
+                break;
+              case "play_vlan_def_mask":
+                this.play_vlan_def_mask = s.value;
+                break;
+              case "mgmt_vlan_def_ip":
+                this.mgmt_vlan_def_ip = s.value;
+                break;
+              case "mgmt_vlan_def_mask":
+                this.mgmt_vlan_def_mask = s.value;
+                break;
+              case "ob_vlan_def_ip":
+                this.ob_vlan_def_ip = s.value;
+                break;
+              case "ob_vlan_def_mask":
+                this.ob_vlan_def_mask = s.value;
                 break;
               default:
                 if (s.ro) this.settings_ro.push(s);
@@ -151,6 +194,44 @@ export class SettingsScreenComponent implements OnInit {
             this.errorHandler.handleError(err);
           }
         })
+    }
+  }
+
+  fillVlanDefIps() {
+    if (this.vlan_def_ips) {
+      this.play_vlan_def_ip_oct1 = undefined;
+      this.play_vlan_def_ip_oct2 = undefined;
+      this.play_vlan_def_ip_oct3 = undefined;
+      this.play_vlan_def_ip_oct4 = undefined;
+      this.mgmt_vlan_def_ip_oct1 = undefined;
+      this.mgmt_vlan_def_ip_oct2 = undefined;
+      this.mgmt_vlan_def_ip_oct3 = undefined;
+      this.mgmt_vlan_def_ip_oct4 = undefined;
+      this.ob_vlan_def_ip_oct1 = undefined;
+      this.ob_vlan_def_ip_oct2 = undefined;
+      this.ob_vlan_def_ip_oct3 = undefined;
+      this.ob_vlan_def_ip_oct4 = undefined;
+      if (this.play_vlan_def_ip) {
+        let octetts: number[] = this.utils.ip_int_to_octetts(this.play_vlan_def_ip);
+        this.play_vlan_def_ip_oct1 = octetts[0];
+        this.play_vlan_def_ip_oct2 = octetts[1];
+        this.play_vlan_def_ip_oct3 = octetts[2];
+        this.play_vlan_def_ip_oct4 = octetts[3];
+      }
+      if (this.mgmt_vlan_def_ip) {
+        let octetts: number[] = this.utils.ip_int_to_octetts(this.mgmt_vlan_def_ip);
+        this.mgmt_vlan_def_ip_oct1 = octetts[0];
+        this.mgmt_vlan_def_ip_oct2 = octetts[1];
+        this.mgmt_vlan_def_ip_oct3 = octetts[2];
+        this.mgmt_vlan_def_ip_oct4 = octetts[3];
+      }
+      if (this.ob_vlan_def_ip) {
+        let octetts: number[] = this.utils.ip_int_to_octetts(this.ob_vlan_def_ip);
+        this.ob_vlan_def_ip_oct1 = octetts[0];
+        this.ob_vlan_def_ip_oct2 = octetts[1];
+        this.ob_vlan_def_ip_oct3 = octetts[2];
+        this.ob_vlan_def_ip_oct4 = octetts[3];
+      }
     }
   }
 
@@ -308,6 +389,41 @@ export class SettingsScreenComponent implements OnInit {
             this.errorHandler.handleError(err);
           }
         });
+    }
+  }
+
+  save_vlan_def_ips() {
+    if (this.vlan_def_ips) {
+      if (!this.play_vlan_def_ip_saved && this.play_vlan_def_ip_oct1 != undefined && this.play_vlan_def_ip_oct2 != undefined && this.play_vlan_def_ip_oct3 != undefined && this.play_vlan_def_ip_oct4 != undefined) {
+        let ip: number = this.utils.ip_octetts_to_int([this.play_vlan_def_ip_oct1, this.play_vlan_def_ip_oct2, this.play_vlan_def_ip_oct3, this.play_vlan_def_ip_oct4]);
+        this.settingService.updateSetting('play_vlan_def_ip', ip).subscribe({
+          next: () => {
+            this.play_vlan_def_ip = ip;
+            this.play_vlan_def_ip_saved = true;
+          }
+        });
+        this.settingService.updateSetting('play_vlan_def_mask', this.play_vlan_def_mask).subscribe();
+      }
+      if (!this.mgmt_vlan_def_ip_saved && this.mgmt_vlan_def_ip_oct1 != undefined && this.mgmt_vlan_def_ip_oct2 != undefined && this.mgmt_vlan_def_ip_oct3 != undefined && this.mgmt_vlan_def_ip_oct4 != undefined) {
+        let ip: number = this.utils.ip_octetts_to_int([this.mgmt_vlan_def_ip_oct1, this.mgmt_vlan_def_ip_oct2, this.mgmt_vlan_def_ip_oct3, this.mgmt_vlan_def_ip_oct4]);
+        this.settingService.updateSetting('mgmt_vlan_def_ip', ip).subscribe({
+          next: () => {
+            this.mgmt_vlan_def_ip = ip;
+            this.mgmt_vlan_def_ip_saved = true;
+          }
+        });
+        this.settingService.updateSetting('mgmt_vlan_def_mask', this.mgmt_vlan_def_mask).subscribe();
+      }
+      if (!this.ob_vlan_def_ip_saved && this.ob_vlan_def_ip_oct1 != undefined && this.ob_vlan_def_ip_oct2 != undefined && this.ob_vlan_def_ip_oct3 != undefined && this.ob_vlan_def_ip_oct4 != undefined) {
+        let ip: number = this.utils.ip_octetts_to_int([this.ob_vlan_def_ip_oct1, this.ob_vlan_def_ip_oct2, this.ob_vlan_def_ip_oct3, this.ob_vlan_def_ip_oct4]);
+        this.settingService.updateSetting('ob_vlan_def_ip', ip).subscribe({
+          next: () => {
+            this.ob_vlan_def_ip = ip;
+            this.ob_vlan_def_ip_saved = true;
+          }
+        });
+        this.settingService.updateSetting('ob_vlan_def_mask', this.ob_vlan_def_mask).subscribe();
+      }
     }
   }
 

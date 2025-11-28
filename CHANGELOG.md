@@ -3,6 +3,7 @@
 ## v0.9.0
 
   * the first IP-Range, that is created for a VLAN-purpose, is saved as default for this purpose. If another IpPool for this VLAN-purpose is created, this default range is prefilled in the interface.
+    * also a option on settings screen exists, to modify those default_ips
   * optimized naming and sorting of Switches an IpPools on TablesScreen
   * smartified invoker for resetting switchtches
 
