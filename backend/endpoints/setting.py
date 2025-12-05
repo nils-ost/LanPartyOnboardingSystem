@@ -11,7 +11,7 @@ class SettingEndpoint():
     _ro_attr = list()  # List of attribute-names, that are allways read-only
     user_readable = ['domain', 'subdomain', 'absolute_seatnumbers', 'nlpt_sso', 'sso_login_url']
     admin_writeable = ['os_nw_interface', 'play_dhcp', 'play_gateway', 'upstream_dns', 'domain', 'subdomain', 'absolute_seatnumbers', 'nlpt_sso',
-                       'sso_login_url', 'sso_onboarding_url', 'server_port', 'metrics_enabled', 'metrics_port',
+                       'sso_ip_overwrite', 'sso_login_url', 'sso_onboarding_url', 'server_port', 'metrics_enabled', 'metrics_port',
                        'haproxy_api_host', 'haproxy_api_port', 'haproxy_api_user', 'haproxy_api_pw',
                        'play_vlan_def_ip', 'play_vlan_def_mask', 'mgmt_vlan_def_ip', 'mgmt_vlan_def_mask', 'ob_vlan_def_ip', 'ob_vlan_def_mask']
 

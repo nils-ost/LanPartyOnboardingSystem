@@ -7,7 +7,7 @@
         <target state="signed-off">darf nicht leer sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">199</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
@@ -19,19 +19,19 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">126</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">137</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/vlan-creadit/vlan-creadit.component.ts</context>
@@ -59,11 +59,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">138</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/vlan-creadit/vlan-creadit.component.ts</context>
@@ -83,7 +83,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/vlan-creadit/vlan-creadit.component.ts</context>
@@ -175,6 +175,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
         <context-group purpose="location">
@@ -187,7 +191,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
@@ -279,7 +283,7 @@
         <target state="signed-off">Maske</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">19</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pools-list/ip-pools-list.component.html</context>
@@ -291,7 +295,7 @@
         <target state="signed-off">VLAN</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pools-list/ip-pools-list.component.html</context>
@@ -303,7 +307,7 @@
         <target state="signed-off">Wert muss zwischen 8 und 30 sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">160</context>
+          <context context-type="linenumber">183</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode31" datatype="html">
@@ -311,7 +315,7 @@
         <target state="signed-off">fällt nicht in den IP Bereich</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelIpPoolRangeStart" datatype="html">
@@ -319,7 +323,7 @@
         <target state="signed-off">Bereich Start</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">30</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pools-list/ip-pools-list.component.html</context>
@@ -331,7 +335,7 @@
         <target state="signed-off">Bereich Ende</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pools-list/ip-pools-list.component.html</context>
@@ -343,11 +347,11 @@
         <target state="signed-off">Bereich Start muss kleiner als Bereich Ende sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">164</context>
+          <context context-type="linenumber">187</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">193</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode33" datatype="html">
@@ -355,11 +359,11 @@
         <target state="signed-off">überlappt mit bestehendem IpPool</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">188</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">194</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode34" datatype="html">
@@ -367,11 +371,11 @@
         <target state="signed-off">ungültige IP</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">189</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">195</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode35" datatype="html">
@@ -379,7 +383,7 @@
         <target state="signed-off">VLAN mit dieser ID nicht gefunden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">200</context>
         </context-group>
       </trans-unit>
       <trans-unit id="DeleteErrorGeneric" datatype="html">
@@ -395,7 +399,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-list/tables-list.component.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/vlans-list/vlans-list.component.ts</context>
@@ -423,7 +427,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-list/tables-list.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/vlans-list/vlans-list.component.ts</context>
@@ -1275,7 +1279,7 @@
         <target state="signed-off">muss größer oder gleich Null sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">129</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode41" datatype="html">
@@ -1283,15 +1287,15 @@
         <target state="signed-off">Element mit dieser ID nicht gefunden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">139</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">146</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode42" datatype="html">
@@ -1299,7 +1303,7 @@
         <target state="signed-off">Zweck des Switch muss 1 (participants) oder 2 (mixed) sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode43" datatype="html">
@@ -1307,11 +1311,11 @@
         <target state="signed-off">VLAN des IpPool muss den Zweck 0 (play/seats) haben</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">140</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode44" datatype="html">
@@ -1319,7 +1323,7 @@
         <target state="signed-off">bereits als Zusätzlicher IpPool bei einem anderen Tisch in Verwendung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">141</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode45" datatype="html">
@@ -1327,11 +1331,11 @@
         <target state="signed-off">IpPool für Sitzplätze und Zusätzlicher IpPool können nicht identisch sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">148</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode46" datatype="html">
@@ -1339,7 +1343,7 @@
         <target state="signed-off">bereits als IpPool für Sitzplätze bei einem anderen Tisch in Verwendung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">149</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonCommit" datatype="html">
@@ -1363,7 +1367,7 @@
         <target state="signed-off">Tisch kann nicht gelöscht werden. Es gibt mindestens einen Sitzplatz an diesem Tisch.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-list/tables-list.component.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="DeleteErrorCode1OnVlan" datatype="html">
@@ -1471,11 +1475,11 @@
         <target state="signed-off">Bereich Start und Ende müssen gleich sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode37" datatype="html">
@@ -1483,7 +1487,7 @@
         <target state="signed-off">Zweck des VLAN muss 0 (play) sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">201</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode39" datatype="html">
@@ -1491,7 +1495,7 @@
         <target state="signed-off">es ist nur ein IpPool pro VLAN, mit diesem Zweck, erlaubt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">202</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode36" datatype="html">
@@ -1499,7 +1503,7 @@
         <target state="signed-off">es existiert bereits ein LPOS IpPool, es ist nur einer erlaubt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">205</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemCheckIntegrityStartedSummary" datatype="html">
@@ -1956,7 +1960,7 @@
       </trans-unit>
       <trans-unit id="elementFieldLabelSettingSsologinurl" datatype="html">
         <source>SSO Login URL</source>
-        <target state="signed-off">URL SSO Anmeldung</target>
+        <target state="signed-off">SSO Anmelde URL</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
           <context context-type="linenumber">43</context>
@@ -1964,7 +1968,7 @@
       </trans-unit>
       <trans-unit id="elementFieldLabelSettingsSoonboardingurl" datatype="html">
         <source>SSO Onboarding URL</source>
-        <target state="signed-off">URL SSO Onboarding</target>
+        <target state="signed-off">SSO Onboarding URL</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
           <context context-type="linenumber">50</context>
@@ -2351,7 +2355,7 @@
         <target state="signed-off">Unbekannter Fehler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-list/tables-list.component.ts</context>
-          <context context-type="linenumber">186</context>
+          <context context-type="linenumber">188</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode51" datatype="html">
@@ -2359,7 +2363,7 @@
         <target state="signed-off">Nummer muss größer als 0 sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-list/tables-list.component.ts</context>
-          <context context-type="linenumber">190</context>
+          <context context-type="linenumber">192</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode52" datatype="html">
@@ -2367,7 +2371,7 @@
         <target state="signed-off">Nummer bereits vergeben an Tisch</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-list/tables-list.component.ts</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">194</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode54" datatype="html">
@@ -2375,7 +2379,7 @@
         <target state="signed-off">Es sind keine weiteren Sitzplätze möglich an diesem Tisch, da dies den IpPool überschreiten würde</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-list/tables-list.component.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorSummary" datatype="html">
@@ -2383,7 +2387,7 @@
         <target state="signed-off">Fehler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-list/tables-list.component.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">201</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPortCommitVlanIds" datatype="html">
@@ -2423,7 +2427,7 @@
         <target state="signed-off">Alle löschen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">120</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPccCountTotal" datatype="html">
@@ -2431,7 +2435,7 @@
         <target state="signed-off">Gesamt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPccCountCommit" datatype="html">
@@ -2439,7 +2443,7 @@
         <target state="signed-off">Aufbauen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPccCountRetreat" datatype="html">
@@ -2447,7 +2451,7 @@
         <target state="signed-off">Zurücksetzen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">141</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tooltipShowPorts" datatype="html">
@@ -2507,7 +2511,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="settingsDescriptionForEnabledASN" datatype="html">
-        <source>The absolute seatnumbering is now enabled. Apply a individual seatnumber for every seat to satisfy integrity checks. Partisipants then use this number during onbording.</source>
+        <source>The absolute seatnumbering is now enabled. Apply a individual seatnumber for every seat to satisfy integrity checks. Participants then use this number during onbording.</source>
         <target state="signed-off">Die absolute Sitzplatzummerierung ist aktiv. Jedem Sitzplatz muss eine individuelle Platznummer zugeordnet werden, um die Integritätsprüfung zu bestehen. Die Teilnehmer müssen dann diese Platznummer, während des Onboarding, verwenden.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
@@ -2519,7 +2523,7 @@
         <target state="signed-off">Port Nummerierungs-Versatz</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tooltipDeviceRemovePort" datatype="html">
@@ -2535,7 +2539,7 @@
         <target state="signed-off">Geräte</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">170</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonClearROD" datatype="html">
@@ -2543,7 +2547,7 @@
         <target state="signed-off">Alle offline entfernen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">192</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelRodTotal" datatype="html">
@@ -2551,7 +2555,7 @@
         <target state="signed-off">Geräte Anzahl</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">183</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelRodOffline" datatype="html">
@@ -2559,7 +2563,7 @@
         <target state="signed-off">Geräte die offline sind</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">190</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelRodPort" datatype="html">
@@ -2567,7 +2571,7 @@
         <target state="signed-off">Geräte mit Port verknüpft</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">198</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonClearDevicesPorts" datatype="html">
@@ -2575,7 +2579,7 @@
         <target state="signed-off">Verknüpfung lösen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">200</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settingsHeaderSettings" datatype="html">
@@ -2615,7 +2619,7 @@
         <target state="signed-off">Geräte ohne Beschreibung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">206</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonClearRODwoDesc" datatype="html">
@@ -2623,7 +2627,71 @@
         <target state="signed-off">ohne Beschreibung entfernen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">208</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelSettingsSooIpOverwrite" datatype="html">
+        <source>SSO IP</source>
+        <target state="signed-off">SSO Server IP</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelSettingsSooIpOverwriteEnabled" datatype="html">
+        <source>SSO IP Overwrite</source>
+        <target state="signed-off">SSO IP überschreiben</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelObVlanDefIp" datatype="html">
+        <source>Onboarding VLAN default IP</source>
+        <target state="signed-off">vorbefüllte IP für Onboarding VLANs</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelObVlanDefMask" datatype="html">
+        <source>Onboarding VLAN default Mask</source>
+        <target state="signed-off">vorbefüllte Maske für Onboarding VLANs</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPlayVlanDefIp" datatype="html">
+        <source>Play VLAN default IP</source>
+        <target state="signed-off">vorbefüllte IP für Play VLANs</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPlayVlanDefMask" datatype="html">
+        <source>Play VLAN default Mask</source>
+        <target state="signed-off">vorbefüllte Maske für Play VLANs</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelMgmtVlanDefIp" datatype="html">
+        <source>Mgmt VLAN default IP</source>
+        <target state="signed-off">vorbefüllte IP für Mgmt VLANs</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelMgmtVlanDefMask" datatype="html">
+        <source>Mgmt VLAN default Mask</source>
+        <target state="signed-off">vorbefüllte Maske für Mgmt VLANs</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">110</context>
         </context-group>
       </trans-unit>
     </body>

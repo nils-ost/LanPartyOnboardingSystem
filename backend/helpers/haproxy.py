@@ -241,7 +241,10 @@ class SSOHAproxy(_BaseHAproxy):
             return
         domain = urlparse(Setting.value('sso_login_url')).netloc
         self.logger.info(f"adding configuration to proxy SSO logins on '{domain}' from onboarding networks to the internet")
-        domain_ip = nslookup(domain)
+        domain_ip = Setting.value('sso_ip_overwrite')
+        if domain_ip is None:
+            domain_ip = nslookup(domain)
+        self.logger.info(f"forwarding SSO logins to '{domain_ip}'")
         s, url = self._get_api_session()
 
         backends = ['be_sso', 'be_sso_ssl']

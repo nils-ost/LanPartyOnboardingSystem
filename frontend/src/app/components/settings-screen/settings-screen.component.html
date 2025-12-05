@@ -26,14 +26,14 @@
     </ng-container>
 
     <ng-container *ngIf="absolute_seatnumbers" i18n="@@settingsDescriptionForEnabledASN">
-        The absolute seatnumbering is now enabled. Apply a individual seatnumber for every seat to satisfy integrity checks. Partisipants then use this number during onbording.
+        The absolute seatnumbering is now enabled. Apply a individual seatnumber for every seat to satisfy integrity checks. Participants then use this number during onbording.
     </ng-container>
 </p-panel>
 
 <p-panel header="NLPT-SSO">
     <ng-template pTemplate="icons">
         <p-inputSwitch [(ngModel)]="nlpt_sso" />&nbsp;
-        <button pButton (click)="save_nlpt_sso()" i18n="@@buttonSave" [disabled]="!nlpt_sso">Save</button>
+        <button pButton (click)="save_nlpt_sso()" i18n="@@buttonSave">Save</button>
     </ng-template>
 
     <ng-container *ngIf="nlpt_sso">
@@ -48,6 +48,15 @@
             <span class="p-float-label">
                 <input type="text" id="ssoonboardingurl" pInputText [(ngModel)]="sso_onboarding_url">
                 <label for="ssoonboardingurl" i18n="@@elementFieldLabelSettingsSoonboardingurl">SSO Onboarding URL</label>
+            </span>
+        </div>
+        <div class="field">
+            <p-checkbox id="ssoipoverwriteenabled" [binary]="true" [(ngModel)]="sso_ip_overwrite_enabled" label="SSO IP Overwrite" i18n-label="@@elementFieldLabelSettingsSooIpOverwriteEnabled" />
+        </div>
+        <div class="field" *ngIf="sso_ip_overwrite_enabled">
+            <span class="p-float-label">
+                <input type="text" id="ssoipoverwrite" pInputText [(ngModel)]="sso_ip_overwrite">
+                <label for="ssoipoverwrite" i18n="@@elementFieldLabelSettingsSooIpOverwrite">SSO IP</label>
             </span>
         </div>
     </ng-container>

@@ -37,6 +37,8 @@ class Setting(ElementBase):
                                   'desc': 'Whether to use nlpt.online login for onboarding, or lokal onboarding credentials'},
         'sso_login_url':         {'type': 'str',   'value': '',          'desc': 'URL to receive SSO-User-Login token from external system'},
         'sso_onboarding_url':    {'type': 'str',   'value': '',          'desc': 'URL to receive SSO-onboarding information from external system'},
+        'sso_ip_overwrite':      {'type': 'str',   'value': None,
+                                  'desc': 'Option to skip nslookup of SSO-IP and feed haproxy with this value, if value is None nslookup is executed'},
         'play_vlan_def_ip':      {'type': 'int',   'value': None,        'desc': 'default network IP used for new IpPools in play VLAN'},
         'play_vlan_def_mask':    {'type': 'int',   'value': 24,          'desc': 'default network mask used for new IpPools in play VLAN'},
         'mgmt_vlan_def_ip':      {'type': 'int',   'value': None,        'desc': 'default network IP used for new IpPools in mgmt VLAN'},

@@ -37,6 +37,8 @@ export class SettingsScreenComponent implements OnInit {
   rod_wodesc: number = 0;
   sso_login_url: string = "https://nlpt.online/app/event-login?redirect=";
   sso_onboarding_url: string = "https://nlpt.online/api/onboarding/2024";
+  sso_ip_overwrite: string | null = null;
+  sso_ip_overwrite_enabled: boolean = false;
   settings_ro: Setting[] = [];
   settings_rw: Setting[] = [];
   settings_haproxy: string[] = ['haproxy_api_host', 'haproxy_api_port', 'haproxy_api_user', 'haproxy_api_pw'];
@@ -98,6 +100,10 @@ export class SettingsScreenComponent implements OnInit {
                 break;
               case "sso_onboarding_url":
                 if (s.value != '') this.sso_onboarding_url = s.value;
+                break;
+              case "sso_ip_overwrite":
+                this.sso_ip_overwrite = s.value;
+                this.sso_ip_overwrite_enabled = this.sso_ip_overwrite != null;
                 break;
               case "play_vlan_def_ip":
                 this.play_vlan_def_ip = s.value;
@@ -347,7 +353,17 @@ export class SettingsScreenComponent implements OnInit {
                     .updateSetting("sso_onboarding_url", this.sso_onboarding_url)
                     .subscribe({
                       next: () => {
-                        this.refreshSettings();
+                        if (this.sso_ip_overwrite_enabled == false || this.sso_ip_overwrite == '') this.sso_ip_overwrite = null;
+                        this.settingService
+                          .updateSetting("sso_ip_overwrite", this.sso_ip_overwrite)
+                          .subscribe({
+                            next: () => {
+                              this.refreshSettings();
+                            },
+                            error: (err: HttpErrorResponse) => {
+                              this.errorHandler.handleError(err);
+                            }
+                          })
                       },
                       error: (err: HttpErrorResponse) => {
                         this.errorHandler.handleError(err);
