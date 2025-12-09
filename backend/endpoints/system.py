@@ -13,7 +13,7 @@ class SystemEndpoint():
             cherrypy_cors.preflight(allowed_methods=['GET'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(Session.cookie_name)
         if cookie:
             session = Session.get(cookie.value)
         else:
@@ -48,7 +48,7 @@ class SystemEndpoint():
             cherrypy_cors.preflight(allowed_methods=['POST'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(Session.cookie_name)
         if cookie:
             session = Session.get(cookie.value)
         else:
@@ -83,7 +83,7 @@ class SystemEndpoint():
             cherrypy_cors.preflight(allowed_methods=['POST'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(Session.cookie_name)
         if cookie:
             session = Session.get(cookie.value)
         else:
@@ -118,7 +118,7 @@ class SystemEndpoint():
             cherrypy_cors.preflight(allowed_methods=['POST'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(Session.cookie_name)
         if cookie:
             session = Session.get(cookie.value)
         else:
@@ -153,7 +153,7 @@ class SystemEndpoint():
             cherrypy_cors.preflight(allowed_methods=['POST'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(Session.cookie_name)
         if cookie:
             session = Session.get(cookie.value)
         else:
@@ -188,7 +188,7 @@ class SystemEndpoint():
             cherrypy_cors.preflight(allowed_methods=['POST'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(Session.cookie_name)
         if cookie:
             session = Session.get(cookie.value)
         else:
@@ -223,7 +223,7 @@ class SystemEndpoint():
             cherrypy_cors.preflight(allowed_methods=['POST'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(Session.cookie_name)
         if cookie:
             session = Session.get(cookie.value)
         else:
@@ -258,7 +258,7 @@ class SystemEndpoint():
             cherrypy_cors.preflight(allowed_methods=['POST'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(Session.cookie_name)
         if cookie:
             session = Session.get(cookie.value)
         else:
@@ -293,7 +293,7 @@ class SystemEndpoint():
             cherrypy_cors.preflight(allowed_methods=['POST'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(Session.cookie_name)
         if cookie:
             session = Session.get(cookie.value)
         else:
@@ -328,7 +328,7 @@ class SystemEndpoint():
             cherrypy_cors.preflight(allowed_methods=['POST'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(Session.cookie_name)
         if cookie:
             session = Session.get(cookie.value)
         else:
@@ -369,7 +369,7 @@ class SystemEndpoint():
             cherrypy_cors.preflight(allowed_methods=['POST'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(Session.cookie_name)
         if cookie:
             session = Session.get(cookie.value)
         else:

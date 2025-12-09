@@ -1,11 +1,12 @@
 import cherrypy
 import cherrypy_cors
-from endpoints import ElementEndpointBase
+from noapiframe import ElementEndpointBase
 from elements import Session, Switch
 
 
 class SwitchEndpoint(ElementEndpointBase):
     _element = Switch
+    _session_cls = Session
     _ro_attr = ['commited']
 
     @cherrypy.expose()
@@ -17,11 +18,11 @@ class SwitchEndpoint(ElementEndpointBase):
             cherrypy_cors.preflight(allowed_methods=['POST'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(self._session_cls.cookie_name)
         if cookie:
-            session = Session.get(cookie.value)
+            session = self._session_cls.get(cookie.value)
         else:
-            session = Session.get(None)
+            session = self._session_cls.get(None)
         if len(session.validate_base()) > 0:
             cherrypy.response.status = 401
             return {'error': 'not authorized'}
@@ -65,11 +66,11 @@ class SwitchEndpoint(ElementEndpointBase):
             cherrypy_cors.preflight(allowed_methods=['POST'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(self._session_cls.cookie_name)
         if cookie:
-            session = Session.get(cookie.value)
+            session = self._session_cls.get(cookie.value)
         else:
-            session = Session.get(None)
+            session = self._session_cls.get(None)
         if len(session.validate_base()) > 0:
             cherrypy.response.status = 401
             return {'error': 'not authorized'}

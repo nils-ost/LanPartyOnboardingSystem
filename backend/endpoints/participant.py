@@ -1,11 +1,12 @@
 import cherrypy
 import cherrypy_cors
-from endpoints import ElementEndpointBase
+from noapiframe import ElementEndpointBase
 from elements import Participant, Session
 
 
 class ParticipantEndpoint(ElementEndpointBase):
     _element = Participant
+    _session_cls = Session
 
     @cherrypy.expose()
     @cherrypy.tools.json_in()
@@ -16,11 +17,11 @@ class ParticipantEndpoint(ElementEndpointBase):
             cherrypy_cors.preflight(allowed_methods=['PUT'])
             return
 
-        cookie = cherrypy.request.cookie.get('LPOSsession')
+        cookie = cherrypy.request.cookie.get(self._session_cls.cookie_name)
         if cookie:
-            session = Session.get(cookie.value)
+            session = self._session_cls.get(cookie.value)
         else:
-            session = Session.get(None)
+            session = self._session_cls.get(None)
         if len(session.validate_base()) > 0:
             cherrypy.response.status = 401
             return {'error': 'not authorized'}

@@ -42,7 +42,7 @@ def state():
         if present:
             active = subprocess.call(f'systemctl is-active {service}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0
         if service == 'docker.mongodb.service':
-            from helpers.docdb import docDB
+            from noapiframe import docDB
             connected = docDB.is_connected()
 
         state = 'locally ' if present else 'remotely '
@@ -150,12 +150,12 @@ def set_sso_onboarding_url():
 def clearDB(force=False):
     if not force and not input('Wipe all data on database? (y/N): ').strip() == 'y':
         return
-    from helpers.docdb import docDB
+    from noapiframe import docDB
     docDB.clear()
 
 
 def createBackup():
-    from helpers.docdb import docDB
+    from noapiframe import docDB
     from helpers.version import version
     import zipfile
     path = input('Where do you like to store the backup?: ')
@@ -189,7 +189,7 @@ def restoreBackup():
     import zipfile
     from helpers.version import version
     from helpers.versioning import versions_gt
-    from helpers.docdb import docDB
+    from noapiframe import docDB
     backup_file = input('Path to backup-file: ').strip()
     if not os.path.isfile(backup_file):
         print('Invalid file-backup_file!')

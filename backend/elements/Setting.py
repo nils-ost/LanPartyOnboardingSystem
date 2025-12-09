@@ -1,20 +1,7 @@
-from elements._elementBase import ElementBase, docDB
+from noapiframe.elements import SettingBase
 
 
-class Setting(ElementBase):
-    _attrdef = dict(
-        type=ElementBase.addAttr(default='str', notnone=True),
-        value=ElementBase.addAttr(type=object, default=None),
-        desc=ElementBase.addAttr(default='', notnone=True)
-    )
-
-    _valid_types = {
-        'str': str,
-        'int': int,
-        'float': float,
-        'bool': bool
-    }
-
+class Setting(SettingBase):
     _defaults = {
         'version':               {'type': 'str',   'value': None,        'desc': 'Running version of LPOS'},
         'server_port':           {'type': 'int',   'value': 8000,        'desc': 'Port the Backend should be listening on'},
@@ -52,59 +39,3 @@ class Setting(ElementBase):
         'integrity_lpos':        {'type': 'float', 'value': 0.0,         'desc': 'Timestamp of last successful lpos integrity-check'},
         'integrity_settings':    {'type': 'float', 'value': 0.0,         'desc': 'Timestamp of last successful settings integrity-check'}
     }
-
-    @classmethod
-    def all(cls):
-        result = list()
-        keys = list()
-        for element in docDB.search_many(cls.__name__, {}):
-            result.append(cls(element))
-            keys.append(element['_id'])
-        for k in cls._defaults.keys():
-            if k not in keys:
-                result.append(cls.get(k))
-        return result
-
-    @classmethod
-    def get(cls, id):
-        result = cls()
-        result._attr['_id'] = id
-        fromdb = docDB.get(cls.__name__, id)
-        if fromdb is not None:
-            result._attr = fromdb
-        elif id in cls._defaults:
-            result._attr = cls._defaults[id]
-            result._attr['_id'] = id
-        return result
-
-    @classmethod
-    def value(cls, key):
-        c = cls.get(key)
-        if c is None:
-            return None
-        else:
-            return c['value']
-
-    @classmethod
-    def set(cls, key, value):
-        c = cls.get(key)
-        if c is None:
-            attr = dict()
-            if key in cls._defaults:
-                attr = cls._defaults[key]
-            c = cls(attr)
-        c['_id'] = key
-        c['value'] = value
-        return c.save()
-
-    def validate(self):
-        errors = dict()
-        if self['type'] not in self._valid_types.keys():
-            errors['type'] = {'code': 100, 'desc': f'needs to be one of: {list(self._valid_types.keys())}'}
-        elif not isinstance(self['value'], self._valid_types[self['type']]) and self['value'] is not None:
-            errors['value'] = {'code': 3, 'desc': f"needs to be of type {self._valid_types[self['type']]} or None"}
-        return errors
-
-    def save_pre(self):
-        if self['_id'] in self._defaults:
-            self['desc'] = self._defaults[self['_id']]['desc']

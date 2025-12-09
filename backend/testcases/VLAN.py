@@ -1,5 +1,5 @@
 import unittest
-from helpers.docdb import docDB
+from noapiframe import docDB
 from elements import VLAN
 from testcases._wrapper import ApiTestBase, setUpModule, tearDownModule
 

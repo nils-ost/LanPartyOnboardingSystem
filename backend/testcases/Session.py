@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime
-from helpers.docdb import docDB
+from noapiframe import docDB
 from elements import Session, Participant
 from testcases._wrapper import setUpModule, tearDownModule, ApiBase
 

@@ -1,6 +1,6 @@
 import json
 import subprocess
-from elements._elementBase import ElementBase, docDB
+from noapiframe import ElementBase, docDB
 
 
 class VLAN(ElementBase):

@@ -1,10 +1,29 @@
 # element save/create error-codes
 
-## generic
+## generic - from noAPIframe
 
-  * **1**: marked as not to be None
-  * **2**: marked as unique, but element with value <value\> allready present
-  * **3**: needs to be of type <type\> [or None]
+  * **1**: *[ElementBase]* marked as not to be None
+  * **2**: *[ElementBase]* marked as unique, but element with value "<value\>" allready present
+  * **3**: *[ElementBase]* needs to be of type <type\>[ or None]
+  * **4**: *[ElementBase]* there is no <element-name\> with id '<element-id\>'
+  * **5**: *[any]* needs to be one of: <list-of-valid-values\>
+  * **6**: *[any]* not allowed to be empty
+  * **7**: *[any]* generic range error like: needs do be bigger/smaller/in range...
+
+## Session(Base) - from noAPIframe
+
+*reserved range **1x** for individual errors*
+
+  * **4**: *(user_id)* there is no User with id '<element-id\>'
+  * **10**: *(till)* needs to be in the future
+  * **11**: *(ip)* does not match with the IP of request
+
+## Setting(Base) - from noAPIframe
+
+*reserved range **2x** for individual errors*
+
+  * **3**: *(value)* needs to be of type <choosen-type\> or None
+  * **5**: *(type)* needs to be one of: [str, int, float, bool]
 
 ## vlan
 
@@ -65,12 +84,6 @@
 
   * **70***(seat_id)*: There is no Seat with id '<seat_id\>'
 
-## session
-
-  * **80***(participant_id)*: There is no Participant with id '<participant_id\>'
-  * **81***(till)*: needs to be in the future
-  * **82***(ip)*: does not match with the IP of request
-
 ## port
 
   * **90***(switch_id|switchlink_port_id|commit_config.vlans|retreat_config.vlans|commit_config.default|retreat_config.default)*: There is no <Switch|Port|VLAN\> with id '<switch_id|switchlink_port_id|vlan_id\>'
@@ -79,10 +92,6 @@
   * **93***(switchlink_port_id)*: The Port '<switchlink_port_id\>' is not declared as a switchlink
   * **94***(commit_config.mode|commit_config.receive)*: needs to be one of <list of some values\> but is <value\>
   * **95***(commit_config.vlans)*: at least one vlan is required
-
-## setting
-
-  * **100***(type)*: needs to be one of: ['str', 'int', 'bool']
 
 # element delete error-codes
 

@@ -7,7 +7,7 @@ from elements import Setting
 
 
 def possible_tables(device):
-    from helpers.docdb import docDB
+    from noapiframe import docDB
     result = list()
     if device['port_id'] is None:
         return result

@@ -1,7 +1,7 @@
 import logging
 import cherrypy
 from datetime import datetime
-from elements._elementBase import ElementBase, docDB
+from noapiframe import ElementBase, docDB
 from MTSwitch import MikroTikSwitch
 
 switch_objects = dict()

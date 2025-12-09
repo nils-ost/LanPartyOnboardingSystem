@@ -127,7 +127,7 @@ def test_compares():
 
 def run():
     import sys
-    from helpers.docdb import docDB
+    from noapiframe import docDB
     from helpers.version import version as current_version
     from elements import Setting
     db_version = Setting.value('version')

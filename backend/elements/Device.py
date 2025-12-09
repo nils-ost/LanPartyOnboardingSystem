@@ -1,4 +1,4 @@
-from elements._elementBase import ElementBase, docDB
+from noapiframe import ElementBase, docDB
 
 
 class Device(ElementBase):

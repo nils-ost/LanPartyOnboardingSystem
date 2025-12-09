@@ -2,12 +2,13 @@ import os
 import cherrypy
 import cherrypy_cors
 import logging
-from helpers.docdb import docDB
+from noapiframe import docDB, ElementEndpointBase
+from noapiframe.endpoints import LoginEndpointBase, SettingEndpointBase
 from helpers.backgroundworker import device_onboarding_start
 from helpers.versioning import run as versioning_run
-from endpoints import ElementEndpointBase, LoginEndpoint, SystemEndpoint, SwitchEndpoint, OnboardingEndpoint, SettingEndpoint, ParticipantEndpoint
+from endpoints import SystemEndpoint, SwitchEndpoint, OnboardingEndpoint, ParticipantEndpoint
 from endpoints.metrics import start_metrics_exporter
-from elements import Setting, VLAN, IpPool, Table, Seat, Device, Port, PortConfigCache
+from elements import Session, Setting, VLAN, IpPool, Table, Seat, Device, Port, PortConfigCache
 
 logging.basicConfig(format='%(asctime)s [%(name)-20s] %(levelname)-8s %(message)s', datefmt='%Y-%m-%dT%H:%M:%S%z', level='INFO')
 logger = logging.getLogger('main')
@@ -30,33 +31,55 @@ class API():
         self.portconfigcache = PortConfigCacheEndpoint()
 
 
+class LoginEndpoint(LoginEndpointBase):
+    _session_cls = Session
+
+
+class SettingEndpoint(SettingEndpointBase):
+    _session_cls = Session
+    _setting_cls = Setting
+    _all_readable = ['domain', 'subdomain', 'absolute_seatnumbers', 'nlpt_sso', 'sso_login_url']
+    _admin_writeable = ['os_nw_interface', 'play_dhcp', 'play_gateway', 'upstream_dns', 'domain', 'subdomain', 'absolute_seatnumbers', 'nlpt_sso',
+                        'sso_ip_overwrite', 'sso_login_url', 'sso_onboarding_url', 'server_port', 'metrics_enabled', 'metrics_port',
+                        'haproxy_api_host', 'haproxy_api_port', 'haproxy_api_user', 'haproxy_api_pw',
+                        'play_vlan_def_ip', 'play_vlan_def_mask', 'mgmt_vlan_def_ip', 'mgmt_vlan_def_mask', 'ob_vlan_def_ip', 'ob_vlan_def_mask']
+
+
 class VLANEndpoint(ElementEndpointBase):
+    _session_cls = Session
     _element = VLAN
 
 
 class IpPoolEndpoint(ElementEndpointBase):
+    _session_cls = Session
     _element = IpPool
 
 
 class TableEndpoint(ElementEndpointBase):
+    _session_cls = Session
     _element = Table
 
 
 class SeatEndpoint(ElementEndpointBase):
+    _session_cls = Session
     _element = Seat
 
 
 class DeviceEndpoint(ElementEndpointBase):
+    _session_cls = Session
     _element = Device
 
 
 class PortEndpoint(ElementEndpointBase):
+    _session_cls = Session
     _element = Port
     _ro_attr = ['switchlink', 'number_display']
 
 
 class PortConfigCacheEndpoint(ElementEndpointBase):
+    _session_cls = Session
     _element = PortConfigCache
+    _ro_all = True
 
 
 if __name__ == '__main__':
