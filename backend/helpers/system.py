@@ -99,14 +99,6 @@ def _check_integrity_ippools():
     if len(mgmt_ippool) == 0:
         return {'code': 6, 'desc': 'IpPool for mgmt-VLAN is missing'}
 
-    # check IpPool for play-VLAN is present
-    play_vlan = VLAN.get_by_purpose(0)[0]
-    for pool in IpPool.get_by_vlan(play_vlan['_id']):
-        if pool['lpos']:
-            break
-    else:
-        return {'code': 13, 'desc': 'no IpPool is defined as LPOS'}
-
     # check IpPool for all onboarding-VLANs are present
     for ob_vlan in VLAN.get_by_purpose(2):
         ob_pool = IpPool.get_by_vlan(ob_vlan['_id'])
@@ -208,6 +200,11 @@ def _check_interity_settings():
 
     for setting in ['domain', 'subdomain', 'upstream_dns', 'play_gateway', 'play_dhcp']:
         if Setting.value(setting) == '':
+            return {'code': 9, 'desc': f"setting '{setting}' is not defined, but it's needed"}
+
+    for setting in ['play_ip']:
+        s = Setting.value(setting)
+        if s is None or s == 0:
             return {'code': 9, 'desc': f"setting '{setting}' is not defined, but it's needed"}
 
     for setting in ['domain', 'subdomain']:

@@ -118,7 +118,7 @@ if __name__ == '__main__':
     start_metrics_exporter()
 
     try:
-        from helpers.system import check_integrity, check_integrity_haproxy_commit
+        from helpers.system import check_integrity
         from helpers.vlanmgmt import vlan_os_interfaces_commit, vlan_dns_server_commit, vlan_dhcp_server_commit
         from helpers.haproxy import ssoHAproxy, lposHAproxy
         if not check_integrity().get('code', 1) == 0:
@@ -129,8 +129,6 @@ if __name__ == '__main__':
             raise Exception('vlan dns server commit failed')
         if not vlan_dhcp_server_commit().get('code', 1) == 0:
             raise Exception('vlan dhcp server commit failed')
-        if not check_integrity_haproxy_commit().get('code', 1) == 0:
-            raise Exception('haproxy integrity check failed')
         if Setting.value('nlpt_sso'):
             ssoHAproxy.start_container()
             ssoHAproxy.wait_for_running()

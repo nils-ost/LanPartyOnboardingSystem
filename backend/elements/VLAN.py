@@ -96,7 +96,7 @@ class VLAN(ElementBase):
 
         # depending on the vlan-purpose configure haproxy(s)
         if self['purpose'] == 0:
-            lposHAproxy.attach_ipvlan(f"lpos-ipvlan{self['number']}", IpPool.get_lpos()['range_start'])
+            lposHAproxy.attach_ipvlan(f"lpos-ipvlan{self['number']}", Setting.value('play_ip'))
         else:
             lposHAproxy.attach_ipvlan(f"lpos-ipvlan{self['number']}", pool['range_start'] + 1)
             if Setting.value('nlpt_sso'):

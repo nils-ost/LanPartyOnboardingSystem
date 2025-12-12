@@ -13,6 +13,7 @@ class Setting(SettingBase):
         'haproxy_api_pw':        {'type': 'str',   'value': 'adminpwd',  'desc': 'Password used to login to haproxy API'},
         'system_commited':       {'type': 'bool',  'value': False,       'desc': 'Indicates whether all parts of the system are commited'},
         'os_nw_interface':       {'type': 'str',   'value': '',          'desc': 'Identifier of Network-Interface to attach LPOS-VLANs to'},
+        'play_ip':               {'type': 'int',   'value': None,        'desc': 'IP in play network for http connections of LPOS'},
         'play_dhcp':             {'type': 'str',   'value': '',          'desc': "IP used for LPOS's DHCP-Server in the Play-Network"},
         'play_gateway':          {'type': 'str',   'value': '',
                                   'desc': 'IP of the Gateway/Router in Play-Network, that is promoted to the Participants'},

@@ -131,7 +131,6 @@
   * **10**: invalid hw-interface name '<name\>'
   * **11**: invalid path '<path\>'
   * **12**: play-VLAN is missing
-  * **13**: no IpPool is defined as LPOS
   * **14**: IpPool for onboarding VLAN '<number\>: <desc\>' is missing
   * **15**: no Seats present for Table '<number\>: <desc\>'
   * **16**: not enough IPs in play-IpPool '<desc\>' for Table '<number\>: <desc\>'
