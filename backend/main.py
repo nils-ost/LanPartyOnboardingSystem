@@ -1,4 +1,3 @@
-import os
 import cherrypy
 import cherrypy_cors
 import logging
@@ -83,26 +82,7 @@ class PortConfigCacheEndpoint(ElementEndpointBase):
 
 
 if __name__ == '__main__':
-    conf = {
-        '/': {
-            'tools.staticdir.root': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static'),
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'ang/en',
-            'tools.staticdir.index': 'index.html'
-        },
-        '/de': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'ang/de',
-            'tools.staticdir.index': 'index.html',
-            'tools.staticdir.abs_index': True
-        },
-        '/en': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'ang/en',
-            'tools.staticdir.index': 'index.html',
-            'tools.staticdir.abs_index': True
-        }
-    }
+    conf = {}
     listen_port = Setting.value('server_port')
     cherrypy_cors.install()
     cherrypy.config.update({

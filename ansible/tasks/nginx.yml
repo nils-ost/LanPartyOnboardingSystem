@@ -1,0 +1,51 @@
+---
+- name: pull nginx docker images
+  docker_image:
+    name: '{{ item }}'
+    source: pull
+  loop:
+    - '{{ nginx_image }}'
+
+- name: copy nginx service file
+  template:
+    src: templates/nginx.service.j2
+    dest: '/etc/systemd/system/{{ nginx_service_name }}'
+    owner: root
+    group: root
+    mode: '0644'
+  register: nginx_service_file
+
+- name: force systemd to reread configs
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  when: nginx_service_file.changed
+
+- name: create nginx config direcory
+  ansible.builtin.file:
+    path: '{{ nginx_config_dir }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: copy nginx config
+  template:
+    src: templates/nginx.conf.j2
+    dest: "{{ [nginx_config_dir, 'default.conf'] | path_join }}"
+    owner: root
+    group: root
+    mode: '0644'
+  register: nginx_config
+
+- name: restart nginx service
+  ansible.builtin.systemd_service:
+    name: '{{ nginx_service_name }}'
+    state: restarted
+  ignore_errors: true
+  when: nginx_config.changed or nginx_service_file.changed
+
+- name: ensure nginx service is started and enabled
+  ansible.builtin.systemd_service:
+    name: '{{ nginx_service_name }}'
+    state: started
+    enabled: true

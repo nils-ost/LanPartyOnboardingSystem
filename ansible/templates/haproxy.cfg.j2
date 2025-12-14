@@ -39,13 +39,19 @@ frontend fe_lpos
         bind :80
         acl is_ms_redirect_url path /redirect
         http-request redirect location http://dummy/ code 301 if is_ms_redirect_url  # domain needs to be dynamic somehow
-        default_backend be_lpos
+        use_backend lpos_be if { path /api } || { path_beg /api/ }
+        default_backend lpos_fe
 
 
-backend be_lpos
+backend lpos_be
         option forwardfor # sets X-Forwarded-For
+        http-request replace-path /api(/)?(.*) /\2
+        server local_lpos_backend host.docker.internal:{{ lpos_port.stdout }} check
 
-        server local_lpos host.docker.internal:{{ lpos_port.stdout }} check
+
+backend lpos_fe
+        http-request set-path /en/ if { url / }
+        server docker_lpos_frontend host.docker.internal:8080 check
 
 
 frontend stats

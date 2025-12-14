@@ -2,6 +2,7 @@
 
 ## v0.9.0
 
+  * frontend is now delivered through an nginx instance, whith makes the stack more versatile regarding dependencies
   * migrated elements and endpoints to use noAPIframe library, as this enables some nice features on API with future-proof development
   * the first IP-Range, that is created for a VLAN-purpose, is saved as default for this purpose. If another IpPool for this VLAN-purpose is created, this default range is prefilled in the interface.
     * also a option on settings screen exists, to modify those default_ips

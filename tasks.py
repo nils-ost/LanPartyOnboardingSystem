@@ -46,6 +46,7 @@ def ng_build(c):
     c.run('rm -rf backend/static/ang')
     c.run('cd frontend; ng build --output-path ../backend/static/ang')
     c.run('cp backend/static/connecttest.txt backend/static/ang/en')
+    c.run('cp backend/static/connecttest.txt backend/static/ang/de')
 
 
 @task(pre=[ng_build], name='create-bundle')

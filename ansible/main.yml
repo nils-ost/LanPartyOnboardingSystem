@@ -12,6 +12,7 @@
     - include_tasks: tasks/ansiblerequirements.yml
     - include_tasks: tasks/mongodb.yml
     - include_tasks: tasks/lpos.yml
+    - include_tasks: tasks/nginx.yml
     - include_tasks: tasks/haproxy.yml
     - include_tasks: tasks/monitoring.yml
       when: enable_monitoring | bool

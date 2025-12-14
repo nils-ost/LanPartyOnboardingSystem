@@ -1,0 +1,22 @@
+[Unit]
+Description={{ nginx_image }} (inside Docker)
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=exec
+
+TimeoutStartSec=20
+Restart=always
+RestartSec=5
+
+ExecStartPre=-/usr/bin/docker stop %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStart=/usr/bin/docker run --rm --name %n \
+    -v {{ project_dir }}/static/ang:/usr/share/nginx/html:ro \
+    -v {{ nginx_config_dir }}:/etc/nginx/conf.d:ro \
+    -p 8080:80 \
+    {{ nginx_image }}
+
+[Install]
+WantedBy=default.target
