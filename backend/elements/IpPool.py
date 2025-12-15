@@ -7,7 +7,6 @@ class IpPool(ElementBase):
         mask=ElementBase.addAttr(type=int, default=24, notnone=True),
         range_start=ElementBase.addAttr(type=int, notnone=True),
         range_end=ElementBase.addAttr(type=int, notnone=True),
-        lpos=ElementBase.addAttr(type=bool, default=False, notnone=True),
         vlan_id=ElementBase.addAttr(notnone=True, fk='VLAN')
     )
 
@@ -18,12 +17,6 @@ class IpPool(ElementBase):
             r = cls()
             r._attr = fromdb
             result.append(r)
-        return result
-
-    @classmethod
-    def get_lpos(cls):
-        result = cls()
-        result._attr = docDB.search_one(cls.__name__, {'lpos': True})
         return result
 
     def octetts_to_int(oct1, oct2, oct3, oct4):
@@ -86,9 +79,6 @@ class IpPool(ElementBase):
         if not self['range_end'] >= self['range_start']:
             errors['range_start'] = {'code': 32, 'desc': 'range_start needs to be smaller than or equal to range_end'}
             errors['range_end'] = {'code': 32, 'desc': 'range_start needs to be smaller than or equal to range_end'}
-        elif self['lpos'] and not self['range_start'] == self['range_end']:
-            errors['range_start'] = {'code': 38, 'desc': 'range_start and range_end need to be equal'}
-            errors['range_end'] = {'code': 38, 'desc': 'range_start and range_end need to be equal'}
         else:
             if docDB.search_one(self.__class__.__name__, {
                     'range_start': {'$lte': self['range_end']}, 'range_end': {'$gte': self['range_end']}, '_id': {'$ne': self['_id']}}):
@@ -104,12 +94,8 @@ class IpPool(ElementBase):
             vlan = VLAN.get(self['vlan_id'])
             if vlan is None:
                 errors['vlan_id'] = {'code': 35, 'desc': f"There is no VLAN with id '{self['vlan_id']}'"}
-            elif self['lpos'] and not vlan['purpose'] == 0:
-                errors['vlan_id'] = {'code': 37, 'desc': 'Purpose of VLAN needs to be 0 (play)'}
             elif vlan['purpose'] in [1, 2] and docDB.search_one(self.__class__.__name__, {'vlan_id': self['vlan_id'], '_id': {'$ne': self['_id']}}):
                 errors['vlan_id'] = {'code': 39, 'desc': f"Only one IpPool for VLAN with purpose of '{vlan['purpose']}' is allowed"}
-        if self['lpos'] and docDB.search_one(self.__class__.__name__, {'lpos': True, '_id': {'$ne': self['_id']}}):
-            errors['lpos'] = {'code': 36, 'desc': 'Only allowed once'}
         return errors
 
     def delete_pre(self):
