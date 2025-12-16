@@ -15,6 +15,22 @@
     </ng-container>
 </p-panel>
 
+<p-panel header="Play Network Settings" i18n-header="@@settingsHeaderPlayNetworkSettings">
+    <ng-template pTemplate="icons">
+        <p-inputSwitch [(ngModel)]="settingsPlayNw" />&nbsp;
+        <button pButton (click)="save_settingsPlayNw()" i18n="@@buttonSave" [disabled]="!settingsPlayNw">Save</button>
+    </ng-template>
+
+    <ng-container *ngIf="settingsPlayNw">
+        <div class="field" *ngFor="let setting of settings_play_nw">
+            <span class="p-float-label">
+                <input type="text" id="{{ setting.id }}" pInputText [(ngModel)]="setting.value" pTooltip="{{ setting.desc }}">
+                <label for="{{ setting.id }}">{{ setting.id }}</label>
+            </span>
+        </div>
+    </ng-container>
+</p-panel>
+
 <p-panel header="Absolute Seat Numbers" i18n-header="@@settingsHeaderAbsoluteSeatNumbers">
     <ng-template pTemplate="icons">
         <p-inputSwitch [(ngModel)]="absolute_seatnumbers" />&nbsp;

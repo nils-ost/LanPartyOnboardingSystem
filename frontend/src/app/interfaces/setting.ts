@@ -3,5 +3,6 @@ export interface Setting {
     type: string;
     value: any;
     desc: string;
+    order: number;
     ro: boolean;
 }

@@ -28,6 +28,7 @@ export class SettingsScreenComponent implements OnInit {
   pcc: boolean = false;
   rod: boolean = false;
   settings: boolean = false;
+  settingsPlayNw: boolean = false;
   pcc_total: number = 0;
   pcc_commit: number = 0;
   pcc_retreat: number = 0;
@@ -41,7 +42,7 @@ export class SettingsScreenComponent implements OnInit {
   sso_ip_overwrite_enabled: boolean = false;
   settings_ro: Setting[] = [];
   settings_rw: Setting[] = [];
-  settings_haproxy: string[] = ['haproxy_api_host', 'haproxy_api_port', 'haproxy_api_user', 'haproxy_api_pw'];
+  settings_play_nw: Setting[] = [];
 
   vlan_def_ips: boolean = false;
   play_vlan_def_ip: number | null = null;
@@ -125,6 +126,7 @@ export class SettingsScreenComponent implements OnInit {
                 break;
               default:
                 if (s.ro) this.settings_ro.push(s);
+                else if (20 <= s.order && s.order < 30) this.settings_play_nw.push(s);
                 else this.settings_rw.push(s);
                 break;
             }
@@ -327,6 +329,21 @@ export class SettingsScreenComponent implements OnInit {
   save_settings() {
     if (this.settings) {
       for (let s of this.settings_rw) {
+        this.settingService
+          .updateSetting(s.id, s.value)
+          .subscribe({
+            next: () => {},
+            error: (err: HttpErrorResponse) => {
+              this.errorHandler.handleError(err);
+            }
+          })
+      }
+    }
+  }
+
+  save_settingsPlayNw() {
+    if (this.settings) {
+      for (let s of this.settings_play_nw) {
         this.settingService
           .updateSetting(s.id, s.value)
           .subscribe({
