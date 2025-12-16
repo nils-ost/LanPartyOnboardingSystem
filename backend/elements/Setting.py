@@ -2,6 +2,14 @@ from noapiframe.elements import SettingBase
 
 
 class Setting(SettingBase):
+    _valid_types = {
+        'str': str,
+        'int': int,
+        'float': float,
+        'bool': bool,
+        'ip': int
+    }
+
     _defaults = {
         'version':               {'order': 0,  'type': 'str',   'value': None,        'desc': 'Running version of LPOS'},
         'system_commited':       {'order': 0,  'type': 'bool',  'value': False,       'desc': 'Indicates whether all parts of the system are commited'},
@@ -20,7 +28,7 @@ class Setting(SettingBase):
         'metrics_enabled':       {'order': 11, 'type': 'bool',  'value': False,       'desc': 'Whether to start the Metrics-Endpoint or not'},
         'metrics_port':          {'order': 12, 'type': 'int',   'value': 8001,        'desc': 'Port that should be used for Metrics-Endpoint'},
         'absolute_seatnumbers':  {'order': 13, 'type': 'bool',  'value': False,       'desc': 'Whether to use absolute numbering for Seats'},
-        'play_ip':               {'order': 20, 'type': 'int',   'value': None,        'desc': 'IP in play network for http connections of LPOS'},
+        'play_ip':               {'order': 20, 'type': 'ip',    'value': None,        'desc': 'IP in play network for http connections of LPOS'},
         'play_dhcp':             {'order': 21, 'type': 'str',   'value': '',          'desc': "IP used for LPOS's DHCP-Server in the Play-Network"},
         'play_gateway':          {'order': 22, 'type': 'str',   'value': '',
                                   'desc': 'IP of the Gateway/Router in Play-Network, that is promoted to the Participants'},

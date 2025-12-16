@@ -53,6 +53,7 @@ import { DevicesScreenComponent } from './components/devices-screen/devices-scre
 import { DevicesListComponent } from './components/devices-list/devices-list.component';
 import { SettingsScreenComponent } from './components/settings-screen/settings-screen.component';
 import { VlanConfigEditComponent } from './components/vlan-config-edit/vlan-config-edit.component';
+import { SettingIpFieldComponent } from './components/setting-ip-field/setting-ip-field.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { VlanConfigEditComponent } from './components/vlan-config-edit/vlan-conf
     DevicesScreenComponent,
     DevicesListComponent,
     SettingsScreenComponent,
-    VlanConfigEditComponent
+    VlanConfigEditComponent,
+    SettingIpFieldComponent
   ],
   imports: [
     BrowserModule,

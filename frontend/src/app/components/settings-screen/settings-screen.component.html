@@ -23,7 +23,8 @@
 
     <ng-container *ngIf="settingsPlayNw">
         <div class="field" *ngFor="let setting of settings_play_nw">
-            <span class="p-float-label">
+            <setting-ip-field [(ip)]="setting.value" [inputId]="setting.id" [label]="setting.id" *ngIf="setting.type == 'ip'"></setting-ip-field>
+            <span class="p-float-label" *ngIf="setting.type != 'ip'">
                 <input type="text" id="{{ setting.id }}" pInputText [(ngModel)]="setting.value" pTooltip="{{ setting.desc }}">
                 <label for="{{ setting.id }}">{{ setting.id }}</label>
             </span>

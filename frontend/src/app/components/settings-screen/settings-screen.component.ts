@@ -342,7 +342,7 @@ export class SettingsScreenComponent implements OnInit {
   }
 
   save_settingsPlayNw() {
-    if (this.settings) {
+    if (this.settings_play_nw) {
       for (let s of this.settings_play_nw) {
         this.settingService
           .updateSetting(s.id, s.value)

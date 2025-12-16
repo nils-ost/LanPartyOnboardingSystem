@@ -1,0 +1,9 @@
+<div class="flex-row">
+    <span class="p-float-label">
+        <p-inputNumber [(ngModel)]="oct1" [min]="1" [max]="255" (onBlur)="update_ip()" inputId="{{ inputId }}"></p-inputNumber>.
+        <p-inputNumber [(ngModel)]="oct2" [min]="0" [max]="255" (onBlur)="update_ip()"></p-inputNumber>.
+        <p-inputNumber [(ngModel)]="oct3" [min]="0" [max]="255" (onBlur)="update_ip()"></p-inputNumber>.
+        <p-inputNumber [(ngModel)]="oct4" [min]="0" [max]="255" (onBlur)="update_ip()"></p-inputNumber>
+        <label for="{{ inputId }}">{{ label }}</label>
+    </span>
+</div>

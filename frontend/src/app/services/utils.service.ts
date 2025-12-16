@@ -22,6 +22,8 @@ export class UtilsService {
   public ip_octetts_to_int(oct: number[]): number {
     let hex = '';
     for (let i = 0; i < oct.length; i++) {
+      if (oct[i] < 0) oct[i] = 0;
+      if (oct[i] > 255) oct[i] = 255;
       let ohex = oct[i].toString(16);
       if (ohex.length < 2) ohex = '0' + ohex;
       hex = hex + ohex;
