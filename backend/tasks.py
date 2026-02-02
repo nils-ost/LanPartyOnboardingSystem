@@ -198,13 +198,19 @@ def reset_switch(c):
     while True:
         switches = connect(config['switches'])
         selection = int(input('Select: ').strip())
-        if selection == len(switches):
+        if selection == len(switches):  # new switch
             addr, attr = add(config['defaults'])
             config['switches'][addr] = attr
             continue
-        if selection > len(switches) or selection < 0:
+        if selection > len(switches) or selection < 0:  # save and exit
             break
         reset(switches[selection])
         break
+
+    # sort the switches before saving
+    newswitches = dict()
+    for k in sorted(config['switches']):
+        newswitches[k] = config['switches'][k]
+    config['switches'] = newswitches
 
     open('switch_reset_config.json', 'w').write(json.dumps(config, indent=2))
