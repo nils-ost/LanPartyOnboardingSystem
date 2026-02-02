@@ -1,5 +1,6 @@
 from invoke import task
 import json
+import logging
 
 
 @task(name='coverage')
@@ -111,6 +112,7 @@ def create_nlpt_testdata(c):
 
 @task(name='reset-switch', aliases=['rs', ])
 def reset_switch(c):
+    logging.basicConfig(level='CRITICAL')
     from MTSwitch import MikroTikSwitch
 
     def connect(switches):
