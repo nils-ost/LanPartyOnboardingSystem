@@ -47,9 +47,6 @@
   * **33***(range_start|range_end)*: overlaps with existing IpPool
   * **34***(range_start|range_end)*: not a valid IP
   * **35***(vlan_id)*: There is no VLAN with id '<vlan_id\>'
-  * **36***(lpos)*: Only allowed once
-  * **37***(vlan_id)*: Purpose of VLAN needs to be 0 (play)
-  * **38***(range_start|range_end)*: range_start and range_end need to be equal
   * **39***(vlan_id)*: Only one IpPool for VLAN with purpose of '<purpose number\>' is allowed
 
 ## table
@@ -131,7 +128,6 @@
   * **10**: invalid hw-interface name '<name\>'
   * **11**: invalid path '<path\>'
   * **12**: play-VLAN is missing
-  * **13**: no IpPool is defined as LPOS
   * **14**: IpPool for onboarding VLAN '<number\>: <desc\>' is missing
   * **15**: no Seats present for Table '<number\>: <desc\>'
   * **16**: not enough IPs in play-IpPool '<desc\>' for Table '<number\>: <desc\>'

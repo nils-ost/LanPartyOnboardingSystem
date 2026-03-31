@@ -38,8 +38,8 @@ class SettingEndpoint(SettingEndpointBase):
     _session_cls = Session
     _setting_cls = Setting
     _all_readable = ['domain', 'subdomain', 'absolute_seatnumbers', 'nlpt_sso', 'sso_login_url']
-    _admin_writeable = ['os_nw_interface', 'play_dhcp', 'play_gateway', 'upstream_dns', 'domain', 'subdomain', 'absolute_seatnumbers', 'nlpt_sso',
-                        'sso_ip_overwrite', 'sso_login_url', 'sso_onboarding_url', 'server_port', 'metrics_enabled', 'metrics_port',
+    _admin_writeable = ['os_nw_interface', 'play_ip', 'play_dhcp', 'play_gateway', 'upstream_dns', 'domain', 'subdomain', 'absolute_seatnumbers',
+                        'nlpt_sso', 'sso_ip_overwrite', 'sso_login_url', 'sso_onboarding_url', 'server_port', 'metrics_enabled', 'metrics_port',
                         'haproxy_api_host', 'haproxy_api_port', 'haproxy_api_user', 'haproxy_api_pw',
                         'play_vlan_def_ip', 'play_vlan_def_mask', 'mgmt_vlan_def_ip', 'mgmt_vlan_def_mask', 'ob_vlan_def_ip', 'ob_vlan_def_mask']
 
@@ -98,7 +98,7 @@ if __name__ == '__main__':
     start_metrics_exporter()
 
     try:
-        from helpers.system import check_integrity, check_integrity_haproxy_commit
+        from helpers.system import check_integrity
         from helpers.vlanmgmt import vlan_os_interfaces_commit, vlan_dns_server_commit, vlan_dhcp_server_commit
         from helpers.haproxy import ssoHAproxy, lposHAproxy
         if not check_integrity().get('code', 1) == 0:
@@ -109,8 +109,6 @@ if __name__ == '__main__':
             raise Exception('vlan dns server commit failed')
         if not vlan_dhcp_server_commit().get('code', 1) == 0:
             raise Exception('vlan dhcp server commit failed')
-        if not check_integrity_haproxy_commit().get('code', 1) == 0:
-            raise Exception('haproxy integrity check failed')
         if Setting.value('nlpt_sso'):
             ssoHAproxy.start_container()
             ssoHAproxy.wait_for_running()

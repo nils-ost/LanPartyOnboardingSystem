@@ -200,6 +200,11 @@ def run():
                 os.remove('config.json')
             except Exception:
                 pass
+    if versions_lt(db_version, '0.9.0'):
+        from elements import IpPool
+        # attr 'lpos' got removed from IpPool, touch every IpPool instance to remove this attribute from DB
+        for p in IpPool.all():
+            p.save()
 
     db_defaults()
 

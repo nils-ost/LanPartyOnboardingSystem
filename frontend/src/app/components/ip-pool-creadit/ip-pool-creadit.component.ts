@@ -187,22 +187,16 @@ export class IpPoolCreaditComponent implements OnChanges {
       if (errors.range_start.code === 32) this.range_start_error = $localize `:@@ElementErrorCode32:range_start needs to be smaller than range_end`;
       if (errors.range_start.code === 33) this.range_start_error = $localize `:@@ElementErrorCode33:overlaps with existing IpPool`;
       if (errors.range_start.code === 34) this.range_start_error = $localize `:@@ElementErrorCode34:not a valid IP`;
-      if (errors.range_start.code === 38) this.range_start_error = $localize `:@@ElementErrorCode38:range_start and range_end need to be equal`;
     }
     if (errors.range_end) {
       if (errors.range_end.code === 32) this.range_end_error = $localize `:@@ElementErrorCode32:range_start needs to be smaller than range_end`;
       if (errors.range_end.code === 33) this.range_end_error = $localize `:@@ElementErrorCode33:overlaps with existing IpPool`;
       if (errors.range_end.code === 34) this.range_end_error = $localize `:@@ElementErrorCode34:not a valid IP`;
-      if (errors.range_end.code === 38) this.range_end_error = $localize `:@@ElementErrorCode38:range_start and range_end need to be equal`;
     }
     if (errors.vlan_id) {
       if (errors.vlan_id.code === 1) this.vlan_id_error = $localize `:@@ElementErrorCode1:can't be empty`;
       if (errors.vlan_id.code === 35) this.vlan_id_error = $localize `:@@ElementErrorCode35:there is no VLAN with this ID`;
-      if (errors.vlan_id.code === 37) this.vlan_id_error = $localize `:@@ElementErrorCode37:Purpose of VLAN needs to be 0 (play)`;
       if (errors.vlan_id.code === 39) this.vlan_id_error = $localize `:@@ElementErrorCode39:only one IpPool per VLAN with this purpose is allowed`;
-    }
-    if (errors.lpos) {
-      if (errors.lpos.code === 36) this.lpos_error = $localize `:@@ElementErrorCode36:Only allowed once, but there is already an IpPool set as LPOS`;
     }
   }
 
