@@ -21,12 +21,14 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class SettingsScreenComponent implements OnInit {
   switches: Switch[] = [];
   absolute_seatnumbers: boolean = false;
+  disable_auto_commits: boolean = false;
   nlpt_sso: boolean = false;
   pno_loading: boolean = false;
   rod_loading: boolean = false;
   pno: boolean = false;
   pcc: boolean = false;
   rod: boolean = false;
+  maintenance: boolean = false;
   settings: boolean = false;
   settingsPlayNw: boolean = false;
   pcc_total: number = 0;
@@ -92,6 +94,9 @@ export class SettingsScreenComponent implements OnInit {
             switch (s.id) {
               case "absolute_seatnumbers":
                 this.absolute_seatnumbers = s.value;
+                break;
+              case "disable_auto_commits":
+                this.disable_auto_commits = s.value;
                 break;
               case "nlpt_sso":
                 this.nlpt_sso = s.value;
@@ -324,6 +329,19 @@ export class SettingsScreenComponent implements OnInit {
           }
         })
     }
+  }
+
+  save_maintenance() {
+    this.settingService
+      .updateSetting("disable_auto_commits", this.disable_auto_commits)
+      .subscribe({
+        next: () => {
+          this.maintenance = false;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+        }
+      })
   }
 
   save_settings() {

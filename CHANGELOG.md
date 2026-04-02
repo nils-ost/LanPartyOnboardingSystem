@@ -9,6 +9,8 @@
   * added setting to overwrite SSO IP, to prevent system from doing a nslookup
   * optimized naming and sorting of Switches an IpPools on TablesScreen
   * smartified invoker for resetting switchtches
+  * moved LPOS server IP from special IpPool to it's own Setting
+  * in `Settings->Maintenance` is now an option to disable all automatic-commits from OnBoarding and port-changes
 
 ## v0.8.0
 

@@ -36,12 +36,14 @@ def device_scanner_start():
 
 
 def device_onboarding():
-    from elements import Device, VLAN, Port
+    from elements import Device, VLAN, Port, Setting
     import logging
     time.sleep(5)
     while True:
         try:
             job = json.loads(device_onboarding_queue.get())
+            if Setting.value('disable_auto_commits'):
+                continue
             if 'device' in job:
                 device = Device.get(job['device'])
                 port_number = device.port()['number']

@@ -28,6 +28,8 @@ class Setting(SettingBase):
         'metrics_enabled':       {'order': 11, 'type': 'bool',  'value': False,       'desc': 'Whether to start the Metrics-Endpoint or not'},
         'metrics_port':          {'order': 12, 'type': 'int',   'value': 8001,        'desc': 'Port that should be used for Metrics-Endpoint'},
         'absolute_seatnumbers':  {'order': 13, 'type': 'bool',  'value': False,       'desc': 'Whether to use absolute numbering for Seats'},
+        'disable_auto_commits':  {'order': 14, 'type': 'bool',  'value': False,
+                                  'desc': 'If set to True, no auto-commits are executed during onboarding or detected port changes'},
         'play_ip':               {'order': 20, 'type': 'ip',    'value': None,        'desc': 'IP in play network for http connections of LPOS'},
         'play_dhcp':             {'order': 21, 'type': 'str',   'value': '',          'desc': "IP used for LPOS's DHCP-Server in the Play-Network"},
         'play_gateway':          {'order': 22, 'type': 'str',   'value': '',
