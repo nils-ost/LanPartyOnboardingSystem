@@ -40,7 +40,7 @@ export class SettingsScreenComponent implements OnInit {
   rod_wodesc: number = 0;
   sso_login_url: string = "https://nlpt.online/app/event-login?redirect=";
   sso_onboarding_url: string = "https://nlpt.online/api/onboarding/2024";
-  sso_ip_overwrite: string | null = null;
+  sso_ip_overwrite: number | null = null;
   sso_ip_overwrite_enabled: boolean = false;
   settings_ro: Setting[] = [];
   settings_rw: Setting[] = [];
@@ -388,7 +388,7 @@ export class SettingsScreenComponent implements OnInit {
                     .updateSetting("sso_onboarding_url", this.sso_onboarding_url)
                     .subscribe({
                       next: () => {
-                        if (this.sso_ip_overwrite_enabled == false || this.sso_ip_overwrite == '') this.sso_ip_overwrite = null;
+                        if (this.sso_ip_overwrite_enabled == false || this.sso_ip_overwrite == 0) this.sso_ip_overwrite = null;
                         this.settingService
                           .updateSetting("sso_ip_overwrite", this.sso_ip_overwrite)
                           .subscribe({

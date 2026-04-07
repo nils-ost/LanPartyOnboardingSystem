@@ -231,12 +231,12 @@ class VLAN(ElementBase):
         if self['purpose'] == 0:
             # specialties for play vlan
             import re
-            dhcp_ip = Setting.value('play_dhcp')
+            dhcp_ip = IpPool.int_to_dotted(Setting.value('play_dhcp'))
             dhcp4_conf.update({'renew-timer': 1800, 'rebind-timer': 2700, 'valid-lifetime': 3600})
             dhcp4_conf['reservation-mode'] = 'global'
             dhcp4_conf['reservations'] = list()
-            dhcp4_conf['option-data'].append({'name': 'domain-name-servers', 'data': Setting.value('upstream_dns')})
-            dhcp4_conf['option-data'].append({'name': 'routers', 'data': Setting.value('play_gateway')})
+            dhcp4_conf['option-data'].append({'name': 'domain-name-servers', 'data': IpPool.int_to_dotted(Setting.value('upstream_dns'))})
+            dhcp4_conf['option-data'].append({'name': 'routers', 'data': IpPool.int_to_dotted(Setting.value('play_gateway'))})
             # iterate over all play-pools
             for pool in IpPool.get_by_vlan(self['_id']):
                 # if pool is additional-pool, add it to the available ranges

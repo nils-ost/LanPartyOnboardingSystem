@@ -244,6 +244,9 @@ class SSOHAproxy(_BaseHAproxy):
         domain_ip = Setting.value('sso_ip_overwrite')
         if domain_ip is None:
             domain_ip = nslookup(domain)
+        else:
+            from elements import IpPool
+            domain_ip = IpPool.int_to_dotted(domain_ip)
         self.logger.info(f"forwarding SSO logins to '{domain_ip}'")
         s, url = self._get_api_session()
 

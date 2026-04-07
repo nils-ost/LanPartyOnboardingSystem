@@ -198,14 +198,16 @@ def _check_interity_settings():
     else:
         return {'code': 10, 'desc': f"invalid hw-interface name '{iname}'"}
 
-    for setting in ['domain', 'subdomain', 'upstream_dns', 'play_gateway', 'play_dhcp']:
+    for setting in ['domain', 'subdomain']:
         if Setting.value(setting) == '':
             return {'code': 9, 'desc': f"setting '{setting}' is not defined, but it's needed"}
 
-    for setting in ['play_ip']:
+    for setting in ['play_ip', 'play_dhcp', 'play_gateway', 'upstream_dns']:
         s = Setting.value(setting)
         if s is None or s == 0:
             return {'code': 9, 'desc': f"setting '{setting}' is not defined, but it's needed"}
+        elif s < int('01000000', 16) or s > int('FFFFFFFE', 16):
+            return {'code': 21, 'desc': f"setting '{setting}' doesn't seem to be a valid IP (but should)"}
 
     for setting in ['domain', 'subdomain']:
         s = Setting.value(setting)
@@ -219,6 +221,9 @@ def _check_interity_settings():
             return {'code': 9, 'desc': "setting 'sso_login_url' is not defined, but it's needed"}
         if Setting.value('sso_onboarding_url') == '':
             return {'code': 9, 'desc': "setting 'sso_onboarding_url' is not defined, but it's needed"}
+        s = Setting.value('sso_ip_overwrite')
+        if s is not None and (s < int('01000000', 16) or s > int('FFFFFFFE', 16)):
+            return {'code': 21, 'desc': "setting 'sso_ip_overwrite' doesn't seem to be a valid IP (but should)"}
 
     Setting.set('integrity_settings', datetime.now().timestamp())
     return {'code': 0, 'desc': 'check ok'}

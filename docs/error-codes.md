@@ -135,6 +135,7 @@
   * **18**: Seat <number\> of Table '<number\>: <desc\>' is missing number_absolute
   * **19**: nlpt_sso is enabled but absolute_seatnumbers is disabled
   * **20**: setting '<name\>' is not allowed to start or end with . (dot)
+  * **21**: setting '<name\>' doesn't seem to be a valid IP (but should)
 
 # onboarding error-codes
 
