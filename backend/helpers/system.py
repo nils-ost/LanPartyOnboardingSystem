@@ -173,17 +173,17 @@ def _check_integrity_lpos():
             lpos_ip = IpPool.octetts_to_int(int(ip[0]), int(ip[1]), int(ip[2]), int(ip[3]))
             break
     if lpos_ip is None:
-        return {'code': 7, 'desc': 'IP of LPOS server could not be determined'}
+        return {'code': 7, 'desc': 'mgmt-IP of LPOS server could not be determined from reading hw-interfaces'}
     # expand the mask of mgmt_ippool to a usable format
     mask = int('1' * mgmt_ippool['mask'] + '0' * (32 - mgmt_ippool['mask']), 2)
     if not (lpos_ip & mask) == (mgmt_ippool['range_start'] & mask):
-        return {'code': 8, 'desc': 'IP of LPOS server is not in the same subnet as mgmt-IpPool'}
+        return {'code': 8, 'desc': 'mgmt-IP of LPOS server is not in the same subnet as mgmt-IpPool'}
 
     Setting.set('integrity_lpos', datetime.now().timestamp())
     return {'code': 0, 'desc': 'check ok'}
 
 
-def _check_interity_settings():
+def _check_integrity_settings():
     last_check = Setting.value('integrity_settings')
     if last_check is not None and (last_check + check_max_diff) >= datetime.now().timestamp():
         return {'code': 0, 'desc': 'check ok'}
@@ -239,7 +239,7 @@ def check_integrity():
             _check_integrity_ippools,
             _check_integrity_tables,
             _check_integrity_lpos,
-            _check_interity_settings]:
+            _check_integrity_settings]:
         r = check()
         if not r.get('code', 1) == 0:
             return r
@@ -261,7 +261,7 @@ def check_integrity_vlan_interface_commit():
     """
     do all integrity checks required for commiting vlan's os_interface
     """
-    for check in [_check_interity_settings, _check_integrity_ippools]:
+    for check in [_check_integrity_settings, _check_integrity_ippools]:
         r = check()
         if not r.get('code', 1) == 0:
             return r
@@ -272,7 +272,7 @@ def check_integrity_vlan_dns_commit():
     """
     do all integrity checks required for commiting vlan's dns server
     """
-    for check in [_check_interity_settings, _check_integrity_ippools]:
+    for check in [_check_integrity_settings, _check_integrity_ippools]:
         r = check()
         if not r.get('code', 1) == 0:
             return r
@@ -283,7 +283,7 @@ def check_integrity_vlan_dhcp_commit():
     """
     do all integrity checks required for commiting vlan's dhcp server
     """
-    for check in [_check_interity_settings, _check_integrity_ippools]:
+    for check in [_check_integrity_settings, _check_integrity_ippools]:
         r = check()
         if not r.get('code', 1) == 0:
             return r
@@ -294,7 +294,7 @@ def check_integrity_haproxy_commit():
     """
     do all integrity checks required for commiting haproxy settings
     """
-    for check in [_check_interity_settings]:
+    for check in [_check_integrity_settings]:
         r = check()
         if not r.get('code', 1) == 0:
             return r

@@ -11,6 +11,7 @@
   * smartified invoker for resetting switchtches
   * moved LPOS server IP from special IpPool to it's own Setting
   * in `Settings->Maintenance` is now an option to disable all automatic-commits from OnBoarding and port-changes
+  * detailed integrity check results are now available in `Settings->Maintenance`
 
 ## v0.8.0
 

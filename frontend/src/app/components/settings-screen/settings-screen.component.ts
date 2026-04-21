@@ -69,6 +69,12 @@ export class SettingsScreenComponent implements OnInit {
   mgmt_vlan_def_ip_saved: boolean = false;
   ob_vlan_def_ip_saved: boolean = false;
 
+  integrity_check = "fail";
+  integrity_error_msg = "";
+  integrity_check_specific: Map<string, string> = new Map<string, string>();
+  integrity_error_msg_specific: Map<string, string> = new Map<string, string>();
+  specific_integrity_checks: string[] = ['switchlinks', 'vlans', 'ippools', 'tables', 'lpos', 'settings'];
+
   constructor(
     private errorHandler: ErrorHandlerService,
     private settingService: SettingService,
@@ -245,6 +251,48 @@ export class SettingsScreenComponent implements OnInit {
         this.ob_vlan_def_ip_oct3 = octetts[2];
         this.ob_vlan_def_ip_oct4 = octetts[3];
       }
+    }
+  }
+
+  runIntegrityCheck() {
+    this.integrity_check = "run";
+    this.integrity_error_msg = "";
+    this.systemService.checkIntegrity().subscribe({
+      next: (response: any) =>  {
+        this.integrity_check = "success";
+      },
+      error: (err: HttpErrorResponse) =>  {
+        this.errorHandler.handleError(err);
+        this.integrity_check = "fail";
+        if (this.errorHandler.elementError) {
+          this.integrity_error_msg = this.errorHandler.elementErrors.desc;
+        }
+        else {
+          this.integrity_error_msg = 'unkonwn';
+        }
+        this.runIntegrityCheckSpecific();
+      }
+    });
+  }
+
+  runIntegrityCheckSpecific() {
+    for (let specific of this.specific_integrity_checks) {
+      this.integrity_check_specific.set(specific, 'run');
+      this.systemService.checkIntegrity(specific).subscribe({
+        next: (response: any) => {
+          this.integrity_check_specific.set(specific, 'success');
+        },
+        error: (err: HttpErrorResponse) =>  {
+          this.errorHandler.handleError(err);
+          if (this.errorHandler.elementError) {
+            this.integrity_error_msg_specific.set(specific, this.errorHandler.elementErrors.desc);
+          }
+          else {
+            this.integrity_error_msg_specific.set(specific, 'unkonwn');
+          }
+          this.integrity_check_specific.set(specific, 'fail');
+        }
+      });
     }
   }
 

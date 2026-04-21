@@ -14,8 +14,13 @@ export class SystemService {
     private http: HttpClient
   ) { }
 
-  public checkIntegrity(): Observable<any> {
-    return this.http.get<any>(this.systemUrl + 'integrity/', {withCredentials:true});
+  public checkIntegrity(specific_check: string | undefined = undefined): Observable<any> {
+    if (!specific_check || specific_check == 'system') {
+      return this.http.get<any>(this.systemUrl + 'integrity/', {withCredentials:true});
+    }
+    else {  // possible values: switchlinks, vlans, ippools, tables, lpos, settings
+      return this.http.get<any>(this.systemUrl + 'integrity/' + specific_check + '/', {withCredentials:true});
+    }
   }
 
   public execCommitInterfaces(): Observable<any> {

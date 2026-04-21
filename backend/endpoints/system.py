@@ -7,7 +7,7 @@ class SystemEndpoint():
     @cherrypy.expose()
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
-    def integrity(self):
+    def integrity(self, specific_check=None):
         if cherrypy.request.method == 'OPTIONS':
             cherrypy.response.headers['Allow'] = 'OPTIONS, GET'
             cherrypy_cors.preflight(allowed_methods=['GET'])
@@ -26,8 +26,22 @@ class SystemEndpoint():
             return {'error': 'access not allowed'}
 
         if cherrypy.request.method == 'GET':
-            from helpers.system import check_integrity
-            result = check_integrity()
+            from helpers.system import check_integrity, _check_integrity_switchlinks, _check_integrity_vlans, _check_integrity_ippools
+            from helpers.system import _check_integrity_tables, _check_integrity_lpos, _check_integrity_settings
+            if specific_check == 'switchlinks':
+                result = _check_integrity_switchlinks()
+            elif specific_check == 'vlans':
+                result = _check_integrity_vlans()
+            elif specific_check == 'ippools':
+                result = _check_integrity_ippools()
+            elif specific_check == 'tables':
+                result = _check_integrity_tables()
+            elif specific_check == 'lpos':
+                result = _check_integrity_lpos()
+            elif specific_check == 'settings':
+                result = _check_integrity_settings()
+            else:
+                result = check_integrity()
             if result.get('code', 1) == 0:
                 cherrypy.response.status = 201
                 return result

@@ -122,8 +122,8 @@
   * **4**: the following ports are not reflected by their switchlink targets: <list of Port-IDs\> *additional parameter `not_reflecting` with list of Port-IDs that are not reflected by their targets*
   * **5**: mgmt-VLAN is missing
   * **6**: IpPool for mgmt-VLAN is missing
-  * **7**: IP of LPOS server could not be determined
-  * **8**: IP of LPOS server is not in the same subnet as mgmt-IpPool
+  * **7**: mgmt-IP of LPOS server could not be determined from reading hw-interfaces
+  * **8**: mgmt-IP of LPOS server is not in the same subnet as mgmt-IpPool
   * **9**: setting '<name\>' is not defined, but it's needed
   * **10**: invalid hw-interface name '<name\>'
   * **11**: invalid path '<path\>'

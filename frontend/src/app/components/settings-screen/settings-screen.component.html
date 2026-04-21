@@ -1,12 +1,36 @@
 <p-panel header="Maintenance" i18n-header="@@settingsHeaderMaintenance">
     <ng-template pTemplate="icons">
-        <p-inputSwitch [(ngModel)]="maintenance" />&nbsp;
+        <p-inputSwitch [(ngModel)]="maintenance" (onChange)="runIntegrityCheck()" />&nbsp;
         <button pButton (click)="save_maintenance()" i18n="@@buttonSave" [disabled]="!maintenance">Save</button>
     </ng-template>
 
     <ng-container *ngIf="maintenance">
         <div class="field">
             <p-checkbox id="disableautocommits" [binary]="true" [(ngModel)]="disable_auto_commits" label="Disable Auto Commits during OnBoarding and discovered Port-Changes" i18n-label="@@elementFieldLabelSettingsDisabelAutoCommits" />
+        </div>
+
+        <div class="field">
+            <div>
+                <i class="pi pi-spin pi-spinner" style="color: 'var(--warning-color)'" *ngIf="integrity_check == 'run'"></i>
+                <i class="pi pi-check" style="color: 'var(--success-color)'" *ngIf="integrity_check == 'success'"></i>
+                <i class="pi pi-times" style="color: 'var(--danger-color)'" *ngIf="integrity_check == 'fail'"></i>
+                System Integrity
+            </div>
+            <div class="error-msg" style="color: 'var(--danger-color)'" *ngIf="integrity_check == 'fail'">
+                {{ integrity_error_msg }}
+            </div>
+
+            <div *ngFor="let specific of specific_integrity_checks">
+                <div>
+                    <i class="pi pi-spin pi-spinner" style="color: 'var(--warning-color)'" *ngIf="integrity_check_specific.get(specific) == 'run'"></i>
+                    <i class="pi pi-check" style="color: 'var(--success-color)'" *ngIf="integrity_check_specific.get(specific) == 'success'"></i>
+                    <i class="pi pi-times" style="color: 'var(--danger-color)'" *ngIf="integrity_check_specific.get(specific) == 'fail'"></i>
+                    Integrity: {{ specific }}
+                </div>
+                <div class="error-msg" style="color: 'var(--danger-color)'" *ngIf="integrity_check_specific.get(specific) == 'fail'">
+                    {{ integrity_error_msg_specific.get(specific) }}
+                </div>
+            </div>
         </div>
     </ng-container>
 </p-panel>
