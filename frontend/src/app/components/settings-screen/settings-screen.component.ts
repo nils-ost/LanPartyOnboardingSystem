@@ -257,12 +257,18 @@ export class SettingsScreenComponent implements OnInit {
     }
   }
 
+  openMaintenance() {
+    this.integrity_check_specific = new Map<string, string>();
+    this.commit_status = new Map<string, string>();
+    this.runIntegrityCheck();
+  }
+
   runIntegrityCheck() {
     this.integrity_check = "run";
     this.integrity_error_msg = "";
     this.systemService.checkIntegrity().subscribe({
       next: (response: any) =>  {
-        this.integrity_check = "success";
+        this.integrity_check = "pass";
       },
       error: (err: HttpErrorResponse) =>  {
         this.errorHandler.handleError(err);

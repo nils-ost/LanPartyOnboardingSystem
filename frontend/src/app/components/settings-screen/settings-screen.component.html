@@ -1,6 +1,6 @@
 <p-panel header="Maintenance" i18n-header="@@settingsHeaderMaintenance">
     <ng-template pTemplate="icons">
-        <p-inputSwitch [(ngModel)]="maintenance" (onChange)="runIntegrityCheck()" />&nbsp;
+        <p-inputSwitch [(ngModel)]="maintenance" (onChange)="openMaintenance()" />&nbsp;
         <button pButton (click)="save_maintenance()" i18n="@@buttonSave" [disabled]="!maintenance">Save</button>
     </ng-template>
 
@@ -20,7 +20,7 @@
                 {{ integrity_error_msg }}
             </div>
 
-            <div *ngFor="let specific of specific_integrity_checks">
+            <div *ngFor="let specific of integrity_check_specific.keys()">
                 <div>
                     <i class="pi pi-spin pi-spinner" style="color: 'var(--warning-color)'" *ngIf="integrity_check_specific.get(specific) == 'run'"></i>
                     <i class="pi pi-check" style="color: 'var(--success-color)'" *ngIf="integrity_check_specific.get(specific) == 'pass'"></i>
