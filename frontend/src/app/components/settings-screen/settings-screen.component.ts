@@ -10,7 +10,7 @@ import { PortConfigCache } from 'src/app/interfaces/port';
 import { SystemService } from 'src/app/services/system.service';
 import { DeviceService } from 'src/app/services/device.service';
 import { Device } from 'src/app/interfaces/device';
-import { timer } from 'rxjs';
+import { Observable, timer } from 'rxjs';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
@@ -69,11 +69,14 @@ export class SettingsScreenComponent implements OnInit {
   mgmt_vlan_def_ip_saved: boolean = false;
   ob_vlan_def_ip_saved: boolean = false;
 
-  integrity_check = "fail";
-  integrity_error_msg = "";
+  integrity_check: string = "fail";
+  integrity_error_msg: string = "";
   integrity_check_specific: Map<string, string> = new Map<string, string>();
   integrity_error_msg_specific: Map<string, string> = new Map<string, string>();
   specific_integrity_checks: string[] = ['switchlinks', 'vlans', 'ippools', 'tables', 'lpos', 'settings'];
+
+  commit_status: Map<string, string> = new Map<string, string>();
+  commit_error: string = '';
 
   constructor(
     private errorHandler: ErrorHandlerService,
@@ -280,7 +283,7 @@ export class SettingsScreenComponent implements OnInit {
       this.integrity_check_specific.set(specific, 'run');
       this.systemService.checkIntegrity(specific).subscribe({
         next: (response: any) => {
-          this.integrity_check_specific.set(specific, 'success');
+          this.integrity_check_specific.set(specific, 'pass');
         },
         error: (err: HttpErrorResponse) =>  {
           this.errorHandler.handleError(err);
@@ -291,6 +294,43 @@ export class SettingsScreenComponent implements OnInit {
             this.integrity_error_msg_specific.set(specific, 'unkonwn');
           }
           this.integrity_check_specific.set(specific, 'fail');
+        }
+      });
+    }
+  }
+
+  runCommit(step: string | undefined = undefined) {
+    const steps: string[] = ['haproxy', 'switches', 'interfaces', 'dns_server', 'dhcp_server'];
+    if (!step) {
+      this.commit_status = new Map<string, string>();
+      step = steps[0];
+    }
+    let exec_method: Observable<any> | undefined = undefined
+    if(step == 'haproxy') exec_method = this.systemService.execCommitHaproxy();
+    if(step == 'switches') exec_method = this.systemService.execCommitSwitches();
+    if(step == 'interfaces') exec_method = this.systemService.execCommitInterfaces();
+    if(step == 'dns_server') exec_method = this.systemService.execCommitDnsServers();
+    if(step == 'dhcp_server') exec_method = this.systemService.execCommitDhcpServers();
+
+    if (exec_method) {
+      this.commit_status.set(step!, 'run');
+      exec_method.subscribe({
+        next: (response: any) => {
+          this.commit_status.set(step!, 'pass');
+          let step_index: number = steps.indexOf(step!);
+          if (step_index >= 0 && step_index < steps.length - 1) {
+            this.runCommit(steps[step_index + 1]);
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          if (this.errorHandler.elementError) {
+            this.commit_error = this.errorHandler.elementErrors.desc;
+          }
+          else {
+            this.commit_error = 'unkonwn';
+          }
+          this.commit_status.set(step!, 'fail');
         }
       });
     }

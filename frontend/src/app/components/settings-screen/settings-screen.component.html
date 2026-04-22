@@ -12,7 +12,7 @@
         <div class="field">
             <div>
                 <i class="pi pi-spin pi-spinner" style="color: 'var(--warning-color)'" *ngIf="integrity_check == 'run'"></i>
-                <i class="pi pi-check" style="color: 'var(--success-color)'" *ngIf="integrity_check == 'success'"></i>
+                <i class="pi pi-check" style="color: 'var(--success-color)'" *ngIf="integrity_check == 'pass'"></i>
                 <i class="pi pi-times" style="color: 'var(--danger-color)'" *ngIf="integrity_check == 'fail'"></i>
                 System Integrity
             </div>
@@ -23,12 +23,30 @@
             <div *ngFor="let specific of specific_integrity_checks">
                 <div>
                     <i class="pi pi-spin pi-spinner" style="color: 'var(--warning-color)'" *ngIf="integrity_check_specific.get(specific) == 'run'"></i>
-                    <i class="pi pi-check" style="color: 'var(--success-color)'" *ngIf="integrity_check_specific.get(specific) == 'success'"></i>
+                    <i class="pi pi-check" style="color: 'var(--success-color)'" *ngIf="integrity_check_specific.get(specific) == 'pass'"></i>
                     <i class="pi pi-times" style="color: 'var(--danger-color)'" *ngIf="integrity_check_specific.get(specific) == 'fail'"></i>
                     Integrity: {{ specific }}
                 </div>
                 <div class="error-msg" style="color: 'var(--danger-color)'" *ngIf="integrity_check_specific.get(specific) == 'fail'">
                     {{ integrity_error_msg_specific.get(specific) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="field" *ngIf="integrity_check == 'pass'">
+            <button pButton (click)="runCommit()" i18n="@@buttonCommit">Commit</button>
+        </div>
+
+        <div class="field" *ngIf="integrity_check == 'pass'">
+            <div *ngFor="let step of commit_status.keys()">
+                <div>
+                    <i class="pi pi-spin pi-spinner" style="color: 'var(--warning-color)'" *ngIf="commit_status.get(step) == 'run'"></i>
+                    <i class="pi pi-check" style="color: 'var(--success-color)'" *ngIf="commit_status.get(step) == 'pass'"></i>
+                    <i class="pi pi-times" style="color: 'var(--danger-color)'" *ngIf="commit_status.get(step) == 'fail'"></i>
+                    Commit: {{ step }}
+                </div>
+                <div class="error-msg" style="color: 'var(--danger-color)'" *ngIf="commit_status.get(step) == 'fail'">
+                    {{ commit_error }}
                 </div>
             </div>
         </div>
