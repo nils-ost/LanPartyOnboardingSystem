@@ -12,6 +12,7 @@
   * moved LPOS server IP from special IpPool to it's own Setting
   * in `Settings->Maintenance` is now an option to disable all automatic-commits from OnBoarding and port-changes
   * detailed integrity check results are now available in `Settings->Maintenance`
+  * moved 'commit all' and 'retreat all' from `Network` to `Settings->Maintenance` (TBD: remove from `Network`)
 
 ## v0.8.0
 

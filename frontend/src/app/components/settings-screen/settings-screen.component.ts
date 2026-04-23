@@ -77,6 +77,8 @@ export class SettingsScreenComponent implements OnInit {
 
   commit_status: Map<string, string> = new Map<string, string>();
   commit_error: string = '';
+  retreat_status: Map<string, string> = new Map<string, string>();
+  retreat_error: string = '';
 
   constructor(
     private errorHandler: ErrorHandlerService,
@@ -337,6 +339,42 @@ export class SettingsScreenComponent implements OnInit {
             this.commit_error = 'unkonwn';
           }
           this.commit_status.set(step!, 'fail');
+        }
+      });
+    }
+  }
+
+  runRetreat(step: string | undefined = undefined) {
+    const steps: string[] = ['dhcp_server', 'dns_server', 'interfaces', 'switches'];
+    if (!step) {
+      this.retreat_status = new Map<string, string>();
+      step = steps[0];
+    }
+    let exec_method: Observable<any> | undefined = undefined;
+    if(step == 'dhcp_server') exec_method = this.systemService.execRetreatDhcpServers();
+    if(step == 'dns_server') exec_method = this.systemService.execRetreatDnsServers();
+    if(step == 'interfaces') exec_method = this.systemService.execRetreatInterfaces();
+    if(step == 'switches') exec_method = this.systemService.execRetreatSwitches();
+
+    if (exec_method) {
+      this.retreat_status.set(step!, 'run');
+      exec_method.subscribe({
+        next: (response: any) => {
+          this.retreat_status.set(step!, 'pass');
+          let step_index: number = steps.indexOf(step!);
+          if (step_index >= 0 && step_index < steps.length - 1) {
+            this.runCommit(steps[step_index + 1]);
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          if (this.errorHandler.elementError) {
+            this.retreat_error = this.errorHandler.elementErrors.desc;
+          }
+          else {
+            this.retreat_error = 'unkonwn';
+          }
+          this.retreat_status.set(step!, 'fail');
         }
       });
     }

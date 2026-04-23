@@ -34,10 +34,11 @@
         </div>
 
         <div class="field" *ngIf="integrity_check == 'pass'">
-            <button pButton (click)="runCommit()" i18n="@@buttonCommit">Commit</button>
+            <button pButton (click)="runCommit()" i18n="@@buttonCommit">Commit</button>&nbsp;
+            <button pButton (click)="runRetreat()" i18n="@@buttonRetreat">Retreat</button>
         </div>
 
-        <div class="field" *ngIf="integrity_check == 'pass'">
+        <div class="field" *ngIf="integrity_check == 'pass' && commit_status.size > 0">
             <div *ngFor="let step of commit_status.keys()">
                 <div>
                     <i class="pi pi-spin pi-spinner" style="color: 'var(--warning-color)'" *ngIf="commit_status.get(step) == 'run'"></i>
@@ -47,6 +48,20 @@
                 </div>
                 <div class="error-msg" style="color: 'var(--danger-color)'" *ngIf="commit_status.get(step) == 'fail'">
                     {{ commit_error }}
+                </div>
+            </div>
+        </div>
+
+        <div class="field" *ngIf="integrity_check == 'pass' && retreat_status.size > 0">
+            <div *ngFor="let step of retreat_status.keys()">
+                <div>
+                    <i class="pi pi-spin pi-spinner" style="color: 'var(--warning-color)'" *ngIf="retreat_status.get(step) == 'run'"></i>
+                    <i class="pi pi-check" style="color: 'var(--success-color)'" *ngIf="retreat_status.get(step) == 'pass'"></i>
+                    <i class="pi pi-times" style="color: 'var(--danger-color)'" *ngIf="retreat_status.get(step) == 'fail'"></i>
+                    Retreat: {{ step }}
+                </div>
+                <div class="error-msg" style="color: 'var(--danger-color)'" *ngIf="retreat_status.get(step) == 'fail'">
+                    {{ retreat_error }}
                 </div>
             </div>
         </div>
