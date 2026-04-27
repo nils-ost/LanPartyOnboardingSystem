@@ -1,5 +1,9 @@
 import json
-import subprocess
+import docker
+import tempfile
+import tarfile
+import pathlib
+import os
 from noapiframe import ElementBase, docDB
 
 
@@ -87,12 +91,15 @@ class VLAN(ElementBase):
         pool = pool[0]
 
         iname = Setting.value('os_nw_interface')
-        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+        dcli = docker.from_env()
 
-        if not 0 == subprocess.call(f'{dcmd} network ls | grep lpos-ipvlan{self["number"]}', shell=True):
+        try:
+            dcli.networks.get(f"lpos-ipvlan{self['number']}")
+        except docker.errors.NotFound:
             # vlan not yet defined, defining it
-            subnet = f'{pool.subnet_ip(dotted=True)}/{pool["mask"]}'
-            subprocess.call(f'{dcmd} network create -d ipvlan --subnet={subnet} -o parent={iname}.{self["number"]} lpos-ipvlan{self["number"]}', shell=True)
+            ipam_pool = docker.types.IPAMPool(subnet=f'{pool.subnet_ip(dotted=True)}/{pool["mask"]}')
+            ipam_config = docker.types.IPAMConfig(pool_configs=[ipam_pool])
+            dcli.networks.create(name=f"lpos-ipvlan{self['number']}", driver='ipvlan', ipam=ipam_config, options={'parent': f'{iname}.{self["number"]}'})
 
         # depending on the vlan-purpose configure haproxy(s)
         if self['purpose'] == 0:
@@ -110,23 +117,18 @@ class VLAN(ElementBase):
         if self['_id'] is None:
             return False  # not saved yet, therefor could be invalid
 
-        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
-        if not 0 == subprocess.call(f'{dcmd} network ls | grep lpos-ipvlan{self["number"]}', shell=True):
+        dcli = docker.from_env()
+
+        try:
+            dnet = dcli.networks.get(f"lpos-ipvlan{self['number']}")
+        except docker.errors.NotFound:
             return True  # allready removed
 
-        # unbind vlan from HAproxy
-        try:
-            format = '\u007b\u007b.ID\u007d\u007d|\u007b\u007b.Image\u007d\u007d|\u007b\u007b.Names\u007d\u007d'
-            hap_container = subprocess.check_output(f"sudo docker ps --format='{format}' | grep haproxy", shell=True).decode('utf-8').split('|')[0]
-            tmp_cmd = f'{dcmd} network inspect lpos-ipvlan{self["number"]}'
-            for k in json.loads(subprocess.check_output(tmp_cmd, shell=True).decode('utf-8').strip())[0]['Containers']:
-                if k.startswith(hap_container):
-                    # haproxy is connected to this vlan, disconnecting haproxy
-                    subprocess.call(f'{dcmd} network disconnect lpos-ipvlan{self["number"]} {hap_container}', shell=True)
-        except Exception:
-            pass  # haproxy container not started or can't be found, skipping this step
+        # unbind vlan from all containers
+        for dcon in dnet.containers:
+            dnet.disconnect(dcon.id)
 
-        subprocess.call(f'{dcmd} network rm lpos-ipvlan{self["number"]}', shell=True)
+        dnet.remove()
         return True
 
     def commit_dns_server(self):
@@ -146,38 +148,77 @@ class VLAN(ElementBase):
             return False  # no needed pool defined
         pool = pool[0]
 
-        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
-        if not 0 == subprocess.call(f'{dcmd} network ls | grep lpos-ipvlan{self["number"]}', shell=True):
+        dcli = docker.from_env()
+        try:
+            dnet = dcli.networks.get(f'lpos-ipvlan{self["number"]}')
+        except docker.errors.NotFound:
             return False  # VLAN not defined, can't start DNS-Server
 
-        if not 0 == subprocess.call(f'{dcmd} ps --format=\u007b\u007b.Names\u007d\u007d | grep lpos-ipvlan{self["number"]}-dns', shell=True):
+        create_con = False
+        dcon = dcli.containers.list(filters={'name': f'lpos-ipvlan{self["number"]}-dns'})
+        if len(dcon) == 0:
+            create_con = True
+        elif not dcon[0].status == 'running':
+            dcon[0].stop()
+            dcon[0].remove()
+            create_con = True
+        del dcon
+
+        if create_con:
             # DNS-Server not yet started, configuring and starting it
             lpos_domain = '.'.join([Setting.value('subdomain'), Setting.value('domain')])
             lpos_ip = IpPool.int_to_dotted(pool['range_start'] + 1)
             dns_ip = IpPool.int_to_dotted(pool['range_start'] + 2)
             ssoproxy_ip = IpPool.int_to_dotted(pool['range_start'] + 4)
 
-            open('/tmp/Corefile', 'w').write('. {\n    log\n    errors\n    auto\n    hosts /etc/coredns/hosts {\n        ttl 10\n    }\n}')
-            hosts = [
-                f'{lpos_ip}  {lpos_domain} www.{lpos_domain}',
-                f'{lpos_ip}  www.msftconnecttest.com',
-                '131.107.255.255  dns.msftncsi.com']
-            if Setting.value('nlpt_sso'):
-                from urllib.parse import urlparse
-                sso_domain = urlparse(Setting.value('sso_login_url')).netloc
-                hosts.append(f'{ssoproxy_ip} {sso_domain}')
-            open('/tmp/hosts', 'w').write('\n'.join(hosts))
+            # create a temporary container, to inject configuration to volume
+            copier_con = dcli.containers.run(
+                name=f'copier-dns-{self["number"]}',
+                image='alpine',
+                command='sleep 3',
+                volumes=[f'lpos-ipvlan{self["number"]}-dns:/app:rw'],
+                remove=True,
+                detach=True
+            )
 
-            subprocess.call(f'{dcmd} run --rm --name copier-dns-{self["number"]} -v lpos-ipvlan{self["number"]}-dns:/app -d alpine sleep 3', shell=True)
-            subprocess.call(f'{dcmd} cp /tmp/Corefile copier-dns-{self["number"]}:/app/', shell=True)
-            subprocess.call(f'{dcmd} cp /tmp/hosts copier-dns-{self["number"]}:/app/', shell=True)
-            start_cmd = list([
-                f'{dcmd} run --rm --name lpos-ipvlan{self["number"]}-dns',
-                f'--net=lpos-ipvlan{self["number"]} --ip={dns_ip}',
-                f'-v lpos-ipvlan{self["number"]}-dns:/etc/coredns',
-                '-d coredns/coredns:1.11.1 -conf /etc/coredns/Corefile'
-            ])
-            subprocess.call(' '.join(start_cmd), shell=True)
+            # place configuration into volume, using temporary container
+            with tempfile.TemporaryDirectory() as temp_dir:
+                temp_path = pathlib.Path(temp_dir)
+
+                with open(os.path.join(temp_path, 'Corefile'), 'w') as corefile:
+                    corefile.write('. {\n    log\n    errors\n    auto\n    hosts /etc/coredns/hosts {\n        ttl 10\n    }\n}')
+
+                with open(os.path.join(temp_path, 'hosts'), 'w') as hostsfile:
+                    hosts = [
+                        f'{lpos_ip}  {lpos_domain} www.{lpos_domain}',
+                        f'{lpos_ip}  www.msftconnecttest.com',
+                        '131.107.255.255  dns.msftncsi.com']
+                    if Setting.value('nlpt_sso'):
+                        from urllib.parse import urlparse
+                        sso_domain = urlparse(Setting.value('sso_login_url')).netloc
+                        hosts.append(f'{ssoproxy_ip} {sso_domain}')
+                    hostsfile.write('\n'.join(hosts))
+
+                with tempfile.TemporaryFile(suffix='.tar') as archive:
+                    with tarfile.open(fileobj=archive, mode='w') as tar:
+                        tar.add(os.path.join(temp_path, 'Corefile'), 'Corefile')
+                        tar.add(os.path.join(temp_path, 'hosts'), 'hosts')
+                    archive.flush()
+                    archive.seek(0)
+
+                    copier_con.put_archive('/app/', archive)
+
+            # create, connect to VLAN and start container
+            dcon = dcli.containers.create(
+                name=f'lpos-ipvlan{self["number"]}-dns',
+                image='coredns/coredns:1.11.1',
+                command='-conf /etc/coredns/Corefile',
+                volumes=[f'lpos-ipvlan{self["number"]}-dns:/etc/coredns:rw'],
+                restart_policy={'Name': 'always'},
+                detach=True
+            )
+            dnet.connect(dcon, ipv4_address=dns_ip)
+            dcon.start()
         return True
 
     def retreat_dns_server(self):
@@ -186,15 +227,18 @@ class VLAN(ElementBase):
         if self['_id'] is None:
             return False  # not saved yet, therefor could be invalid
 
-        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+        dcli = docker.from_env()
 
         try:
-            subprocess.call(f'{dcmd} stop lpos-ipvlan{self["number"]}-dns', shell=True)
+            dcon = dcli.containers.get(f'lpos-ipvlan{self["number"]}-dns')
+            dcon.stop()
+            dcon.remove()
         except Exception:
             pass
 
         try:
-            subprocess.call(f'{dcmd} volume rm lpos-ipvlan{self["number"]}-dns', shell=True)
+            dvol = dcli.volumes.get(f'lpos-ipvlan{self["number"]}-dns')
+            dvol.remove()
         except Exception:
             pass
 
@@ -212,17 +256,18 @@ class VLAN(ElementBase):
         if self['_id'] is None:
             return False  # not saved yet, therefor could be invalid
 
-        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
-        if not 0 == subprocess.call(f'{dcmd} network ls | grep lpos-ipvlan{self["number"]}', shell=True):
-            return False  # VLAN not defined, can't start DNS-Server
+        dcli = docker.from_env()
+        try:
+            dnet = dcli.networks.get(f'lpos-ipvlan{self["number"]}')
+        except docker.errors.NotFound:
+            return False  # VLAN not defined, can't start DHCP-Server
 
-        # create ctrl-agent conf
+        # build ctrl-agent conf
         ctrl_agent_conf = dict({'http-host': '127.0.0.1', 'http-port': 8000})
         ctrl_agent_conf['control-sockets'] = {'dhcp4': {'socket-type': 'unix', 'socket-name': '/dev/null'}}
         ctrl_agent_conf['loggers'] = [{'name': 'kea-ctrl-agent', 'output_options': [{'output': 'stdout'}], 'severity': 'INFO'}]
-        open('/tmp/kea-ctrl-agent.conf', 'w').write(json.dumps({'Control-agent': ctrl_agent_conf}, indent=4))
 
-        # create dhcp4 conf
+        # build dhcp4 conf
         dhcp4_conf = dict({'subnet4': list(), 'option-data': list()})
         dhcp4_conf['interfaces-config'] = {'interfaces': ['*'], 'service-sockets-max-retries': 5, 'service-sockets-require-all': True}
         dhcp4_conf['loggers'] = [{'name': 'kea-dhcp4', 'output_options': [{'output': 'stdout'}], 'severity': 'INFO'}]
@@ -271,29 +316,63 @@ class VLAN(ElementBase):
             dhcp4_conf['option-data'].append({'name': 'domain-name-servers', 'data': dns_ip})
             dhcp4_conf['option-data'].append({'name': 'routers', 'data': lpos_ip})
             dhcp4_conf['option-data'].append({'name': 'v4-captive-portal', 'data': f'http://{lpos_domain}/', 'always-send': True})
-        open('/tmp/kea-dhcp4.conf', 'w').write(json.dumps({'Dhcp4': dhcp4_conf}, indent=4))
+
+        # create a temporary container, to inject configuration to volume
+        copier_con = dcli.containers.run(
+            name=f'copier-dhcp-{self["number"]}',
+            image='alpine',
+            command='sleep 3',
+            volumes=[f'lpos-ipvlan{self["number"]}-dhcp:/app:rw'],
+            remove=True,
+            detach=True
+        )
+
+        # place configuration into volume, using temporary container
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = pathlib.Path(temp_dir)
+
+            with open(os.path.join(temp_path, 'kea-ctrl-agent.conf'), 'w') as ctrlfile:
+                ctrlfile.write(json.dumps({'Control-agent': ctrl_agent_conf}, indent=4))
+
+            with open(os.path.join(temp_path, 'kea-dhcp4.conf'), 'w') as dhcpfile:
+                dhcpfile.write(json.dumps({'Dhcp4': dhcp4_conf}, indent=4))
+
+            with tempfile.TemporaryFile(suffix='.tar') as archive:
+                with tarfile.open(fileobj=archive, mode='w') as tar:
+                    tar.add(os.path.join(temp_path, 'kea-ctrl-agent.conf'), 'kea-ctrl-agent.conf')
+                    tar.add(os.path.join(temp_path, 'kea-dhcp4.conf'), 'kea-dhcp4.conf')
+                archive.flush()
+                archive.seek(0)
+
+                copier_con.put_archive('/app/', archive)
 
         # decide wether to start or reload the server
-        if not 0 == subprocess.call(f'{dcmd} ps --format=\u007b\u007b.Names\u007d\u007d | grep lpos-ipvlan{self["number"]}-dhcp', shell=True):
-            # copy confs into volume
-            subprocess.call(f'{dcmd} run --rm --name copier-dhcp-{self["number"]} -v lpos-ipvlan{self["number"]}-dhcp:/app -d alpine sleep 3', shell=True)
-            subprocess.call(f'{dcmd} cp /tmp/kea-ctrl-agent.conf copier-dhcp-{self["number"]}:/app/', shell=True)
-            subprocess.call(f'{dcmd} cp /tmp/kea-dhcp4.conf copier-dhcp-{self["number"]}:/app/', shell=True)
-            # start container with volume
-            start_cmd = list([
-                f'{dcmd} run --rm --name lpos-ipvlan{self["number"]}-dhcp',
-                f'--net=lpos-ipvlan{self["number"]} --ip={dhcp_ip}',
-                f'-v lpos-ipvlan{self["number"]}-dhcp:/etc/kea',
-                '-d docker.cloudsmith.io/isc/docker/kea-dhcp4:2.5.7'
-            ])
-            subprocess.call(' '.join(start_cmd), shell=True)
+        start_con = False
+        dcon = dcli.containers.list(filters={'name': f'lpos-ipvlan{self["number"]}-dhcp'})
+        if len(dcon) == 0:
+            start_con = True
+        elif not dcon[0].status == 'running':
+            dcon[0].stop()
+            dcon[0].remove()
+            start_con = True
         else:
-            # copy confs into container (indirectly to the volume)
-            subprocess.call(f'{dcmd} cp /tmp/kea-ctrl-agent.conf lpos-ipvlan{self["number"]}-dhcp:/etc/kea/', shell=True)
-            subprocess.call(f'{dcmd} cp /tmp/kea-dhcp4.conf lpos-ipvlan{self["number"]}-dhcp:/etc/kea/', shell=True)
+            dcon = dcon[0]
+
+        if start_con:
+            # create, connect to VLAN and start container
+            dcon = dcli.containers.create(
+                name=f'lpos-ipvlan{self["number"]}-dhcp',
+                image='docker.cloudsmith.io/isc/docker/kea-dhcp4:2.5.7',
+                volumes=[f'lpos-ipvlan{self["number"]}-dhcp:/etc/kea:rw'],
+                restart_policy={'Name': 'always'},
+                detach=True
+            )
+            dnet.connect(dcon, ipv4_address=dhcp_ip)
+            dcon.start()
+        else:
             # let the server reload it's config
-            r = subprocess.check_output(f'{dcmd} exec lpos-ipvlan{self["number"]}-dhcp ps -a | grep dhcp4', shell=True).decode('utf-8').strip().split()[0]
-            subprocess.call(f'{dcmd} exec lpos-ipvlan{self["number"]}-dhcp kill -HUP {r}', shell=True)
+            r = dcon.exec_run('ps -a | grep dhcp4').output.decode('utf-8').strip().split()[0]
+            dcon.exec_run(f'kill -HUP {r}')
         return True
 
     def retreat_dhcp_server(self):
@@ -302,15 +381,18 @@ class VLAN(ElementBase):
         if self['_id'] is None:
             return False  # not saved yet, therefor could be invalid
 
-        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+        dcli = docker.from_env()
 
         try:
-            subprocess.call(f'{dcmd} stop lpos-ipvlan{self["number"]}-dhcp', shell=True)
+            dcon = dcli.containers.get(f'lpos-ipvlan{self["number"]}-dhcp')
+            dcon.stop()
+            dcon.remove()
         except Exception:
             pass
 
         try:
-            subprocess.call(f'{dcmd} volume rm lpos-ipvlan{self["number"]}-dhcp', shell=True)
+            dvol = dcli.volumes.get(f'lpos-ipvlan{self["number"]}-dhcp')
+            dvol.remove()
         except Exception:
             pass
 
