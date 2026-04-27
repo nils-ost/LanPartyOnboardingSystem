@@ -1,7 +1,7 @@
 import requests
 from requests.auth import HTTPDigestAuth
 import logging
-from .helpers import responseToJson, asciiToStr, jsonToRequest, strToAscii, translateKeys, jsonAllHexToInt
+from .helpers import responseToJson, asciiToStr, jsonToRequest, strToAscii, translateKeys
 from .parts import SwitchPort, SwitchVLAN
 
 
@@ -289,10 +289,6 @@ class MikroTikSwitch():
         self.reloadHosts()
         self.reloadVlans()
         self.reloadPortsVlan()
-
-    def loadStatsRaw(self):
-        j = self.getData('!stats.b')
-        return jsonAllHexToInt(j)
 
     def commitSystem(self, request=None):
         r = request if request else dict()

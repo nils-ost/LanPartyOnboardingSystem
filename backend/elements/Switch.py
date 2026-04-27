@@ -257,13 +257,6 @@ class Switch(ElementBase):
         swi.portEdit(port_number, enabled=True)
         swi.commitNeeded()
 
-    def metrics(self):
-        global switch_objects
-        if not self.connected():
-            return dict()
-        swi = switch_objects[self['_id']]
-        return swi.loadStatsRaw()
-
     def _retreat_vlans(self):
         """
         Removes all configured VLANs eventually made by LPOS from a (Hardware)Switch
