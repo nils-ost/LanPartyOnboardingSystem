@@ -363,7 +363,7 @@ export class SettingsScreenComponent implements OnInit {
           this.retreat_status.set(step!, 'pass');
           let step_index: number = steps.indexOf(step!);
           if (step_index >= 0 && step_index < steps.length - 1) {
-            this.runCommit(steps[step_index + 1]);
+            this.runRetreat(steps[step_index + 1]);
           }
         },
         error: (err: HttpErrorResponse) => {
