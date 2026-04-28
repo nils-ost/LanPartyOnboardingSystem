@@ -27,13 +27,16 @@ def get_client_mac(ip=None):
         pass
 
     if True:
+        import docker
         from elements import VLAN
-        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+        dcli = docker.from_env()
         for p in [2, 0]:
             for v in VLAN.get_by_purpose(p):
                 try:
-                    r = subprocess.check_output(f'{dcmd} exec lpos-ipvlan{v["number"]}-dhcp cat /tmp/kea-leases4.csv | grep {ip}', shell=True)
-                    return r.decode('utf-8').strip().split('\n')[-1].split(',', 3)[1].replace(':', '')
+                    dcon = dcli.containers.list(filters={'name': f'lpos-ipvlan{v["number"]}-dhcp'})[0]
+                    r = dcon.exec_run(f'cat /tmp/kea-leases4.csv | grep {ip}')
+                    if r.exit_code == 0:
+                        return r.output.decode('utf-8').strip().split('\n')[-1].split(',', 3)[1].replace(':', '')
                 except Exception:
                     pass
 
@@ -47,13 +50,11 @@ def get_client_mac(ip=None):
 
 
 def nslookup(domain):
+    from helpers.haproxy import lposHAproxy
     logger.info(f'executing nslookup of {domain}')
-    dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
     try:
-        format = '\u007b\u007b.ID\u007d\u007d|\u007b\u007b.Image\u007d\u007d|\u007b\u007b.Names\u007d\u007d'
-        hap_container = subprocess.check_output(f"{dcmd} ps --format='{format}' | grep haproxy", shell=True).decode('utf-8').split('|')[0]
         addr = False
-        for line in subprocess.check_output(f'{dcmd} exec {hap_container} nslookup -type=a {domain}', shell=True).decode('utf-8').strip().split('\n'):
+        for line in lposHAproxy.execute_command(f'nslookup -type=a {domain}').strip().split('\n'):
             if line.startswith('Name') and line.split(':')[-1].strip() == domain:
                 addr = True
             if line.startswith('Address') and addr:

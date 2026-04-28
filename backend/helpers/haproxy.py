@@ -158,12 +158,16 @@ class _BaseHAproxy():
         except docker.errors.NotFound:
             self.logger.error(f"can't find network with name: {name}")
 
-    def default_gateway(self, ip):
-        self.logger.info(f'setting default gateway to {ip}')
+    def execute_command(self, cmd):
+        self.logger.info(f"execute command '{cmd}'")
         if self.container_id is None and not self.container_running():
             self.logger.warning("container not started or can't be found")
-            return
-        self.dcli.containers.get(self.container_id).exec_run(f'ip route replace default via {ip}')
+            return ''
+        return self.dcli.containers.get(self.container_id).exec_run(cmd).output.decode('utf-8')
+
+    def default_gateway(self, ip):
+        self.logger.info(f'setting default gateway to {ip}')
+        self.execute_command(f'ip route replace default via {ip}')
 
 
 class LPOSHAproxy(_BaseHAproxy):
