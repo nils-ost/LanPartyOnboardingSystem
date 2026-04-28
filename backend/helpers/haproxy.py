@@ -2,7 +2,7 @@ import requests
 import json
 import time
 import logging
-import subprocess
+import docker
 from elements import Setting
 
 ssoproxycfg = """
@@ -88,7 +88,7 @@ class _BaseHAproxy():
             'api_user': 'admin',
             'api_pw': 'adminpwd'
         }
-        self.dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
+        self.dcli = docker.from_env()
         self.init()
 
     def init(self):
@@ -115,13 +115,12 @@ class _BaseHAproxy():
         Checks if the container, containing the HAproxy of search_name, is allready running
         """
         self.logger.info('checking if container is allready running')
-        try:
-            format = '\u007b\u007b.ID\u007d\u007d|\u007b\u007b.Names\u007d\u007d'
-            cmd = f"{self.dcmd} ps --format='{format}' | grep {self._container_search_name}"
-            self.container_id = subprocess.check_output(cmd, shell=True).decode('utf-8').split('|')[0]
+        dcon = self.dcli.containers.list(filters={'name': self._container_search_name})
+        if len(dcon) > 0:
+            self.container_id = dcon[0].id
             self.logger.info(f'container is running under id: {self.container_id}')
             return True
-        except Exception:
+        else:
             self.logger.info("container not started or can't be found")
             self.container_id = None
             return False
@@ -148,20 +147,23 @@ class _BaseHAproxy():
         if self.container_id is None and not self.container_running():
             self.logger.warning("container not started or can't be found")
             return
-        tmp_cmd = f'{self.dcmd} network inspect {name}'
-        for k in json.loads(subprocess.check_output(tmp_cmd, shell=True).decode('utf-8').strip())[0]['Containers']:
-            if k.startswith(self.container_id):
-                self.logger.info(f"allready connected to ipvlan '{name}'")
-                break  # haproxy allready connected to this vlan, for-else is not executed
-        else:
-            subprocess.call(f'{self.dcmd} network connect --ip={ip} {name} {self.container_id}', shell=True)
+
+        try:
+            dnet = self.dcli.networks.get(name)
+            for dcon in dnet.containers:
+                if dcon.id == self.container_id:
+                    break  # haproxy allready connected to this vlan, for-else is not executed
+            else:
+                dnet.connect(self.container_id, ipv4_address=ip)
+        except docker.errors.NotFound:
+            self.logger.error(f"can't find network with name: {name}")
 
     def default_gateway(self, ip):
         self.logger.info(f'setting default gateway to {ip}')
         if self.container_id is None and not self.container_running():
             self.logger.warning("container not started or can't be found")
             return
-        subprocess.call(f'{self.dcmd} exec {self.container_id} ip route replace default via {ip}', shell=True)
+        self.dcli.containers.get(self.container_id).exec_run(f'ip route replace default via {ip}')
 
 
 class LPOSHAproxy(_BaseHAproxy):
@@ -216,19 +218,54 @@ class SSOHAproxy(_BaseHAproxy):
         self.container_running()
 
     def start_container(self):
+        import tempfile
+        import tarfile
+        import os
+        import pathlib
         self.logger.info('starting container')
         if self.container_id is None and not self.container_running():
-            try:
-                open('/tmp/ssoproxy.cfg', 'w').write(ssoproxycfg)
-                subprocess.call(f'{self.dcmd} run --rm --name copier-ssoproxy -v lpos-ssoproxy:/app -d alpine sleep 3', shell=True)
-                subprocess.call(f'{self.dcmd} cp /tmp/ssoproxy.cfg copier-ssoproxy:/app/haproxy.cfg', shell=True)
-                cmd = [
-                    f'{self.dcmd} run --name lpos-ssoproxy --rm --cap-add=NET_ADMIN --sysctl net.ipv4.ip_unprivileged_port_start=0',
-                    '-v lpos-ssoproxy:/usr/local/etc/haproxy/ -p 8405:8404 -p 127.0.0.1:5556:5555 -d haproxytech/haproxy-alpine:latest'
-                ]
-                self.container_id = subprocess.check_output(' '.join(cmd), shell=True).decode('utf-8').strip()
-            except Exception as e:
-                self.logger.error(f'could not start container\n{repr(e)}')
+            # create a temporary container, to inject configuration to volume
+            copier_con = self.dcli.containers.run(
+                name='copier-ssoproxy',
+                image='alpine',
+                command='sleep 3',
+                volumes=['lpos-ssoproxy:/app:rw'],
+                remove=True,
+                detach=True
+            )
+
+            # place configuration into volume, using temporary container
+            with tempfile.TemporaryDirectory() as temp_dir:
+                temp_path = pathlib.Path(temp_dir)
+
+                with open(os.path.join(temp_path, 'haproxy.cfg'), 'w') as ssoproxyfile:
+                    ssoproxyfile.write(ssoproxycfg)
+
+                with tempfile.TemporaryFile(suffix='.tar') as archive:
+                    with tarfile.open(fileobj=archive, mode='w') as tar:
+                        tar.add(os.path.join(temp_path, 'haproxy.cfg'), 'haproxy.cfg')
+                    archive.flush()
+                    archive.seek(0)
+
+                    copier_con.put_archive('/app/', archive)
+
+            # create and start container
+            dcon = self.dcli.containers.run(
+                name='lpos-ssoproxy',
+                image='haproxytech/haproxy-alpine:latest',
+                volumes=['lpos-ssoproxy:/usr/local/etc/haproxy/:rw'],
+                cap_add=['NET_ADMIN'],
+                sysctls={'net.ipv4.ip_unprivileged_port_start': 0},
+                ports={
+                    '8404/tcp': '8405',
+                    '5555/tcp': '127.0.0.1:5556'
+                },
+                restart_policy={'Name': 'always'},
+                detach=True,
+                remove=True
+            )
+            self.container_id = dcon.id
+            self.logger.info(f'container started with id: {self.container_id}')
         else:
             self.logger.info(f'container is running under id: {self.container_id}')
 
