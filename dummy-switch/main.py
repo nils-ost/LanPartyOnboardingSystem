@@ -53,16 +53,16 @@ vlans = [
 ]
 
 ports_vlans = {
-    'idx0': {'mode': 'optional', 'reveive': 'only untagged', 'default': '1', 'force': False},
-    'idx1': {'mode': 'optional', 'reveive': 'only untagged', 'default': '1', 'force': False},
-    'idx2': {'mode': 'optional', 'reveive': 'only untagged', 'default': '1', 'force': False},
-    'idx3': {'mode': 'optional', 'reveive': 'only untagged', 'default': '1', 'force': False},
-    'idx4': {'mode': 'optional', 'reveive': 'only untagged', 'default': '1', 'force': False},
-    'idx5': {'mode': 'optional', 'reveive': 'only untagged', 'default': '1', 'force': False},
-    'idx6': {'mode': 'optional', 'reveive': 'only untagged', 'default': '1', 'force': False},
-    'idx7': {'mode': 'optional', 'reveive': 'only untagged', 'default': '1', 'force': False},
-    'idx8': {'mode': 'optional', 'reveive': 'only untagged', 'default': '1', 'force': False},
-    'idx9': {'mode': 'optional', 'reveive': 'only untagged', 'default': '1', 'force': False},
+    'idx0': {'mode': 'optional', 'receive': 'only untagged', 'default': '1', 'force': False},
+    'idx1': {'mode': 'optional', 'receive': 'only untagged', 'default': '1', 'force': False},
+    'idx2': {'mode': 'optional', 'receive': 'only untagged', 'default': '1', 'force': False},
+    'idx3': {'mode': 'optional', 'receive': 'only untagged', 'default': '1', 'force': False},
+    'idx4': {'mode': 'optional', 'receive': 'only untagged', 'default': '1', 'force': False},
+    'idx5': {'mode': 'optional', 'receive': 'only untagged', 'default': '1', 'force': False},
+    'idx6': {'mode': 'optional', 'receive': 'only untagged', 'default': '1', 'force': False},
+    'idx7': {'mode': 'optional', 'receive': 'only untagged', 'default': '1', 'force': False},
+    'idx8': {'mode': 'optional', 'receive': 'only untagged', 'default': '1', 'force': False},
+    'idx9': {'mode': 'optional', 'receive': 'only untagged', 'default': '1', 'force': False},
 }
 
 
@@ -116,6 +116,7 @@ class PortsEndpoint(object):
     @cherrypy.tools.json_out()
     def index(self):
         global ports
+        global hosts
         if cherrypy.request.method == 'OPTIONS':
             cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST'
             cherrypy_cors.preflight(allowed_methods=['GET', 'POST'])
@@ -123,7 +124,20 @@ class PortsEndpoint(object):
         elif cherrypy.request.method == 'GET':
             return ports
         elif cherrypy.request.method == 'POST':
-            ports['config'] = cherrypy.request.json
+            for p in cherrypy.request.json:
+                for port in ports['config']:
+                    if p.get('idx', 0) == port['idx']:
+                        port['en'] = p.get('en', True)
+                        port['name'] = p.get('name', '')
+                        if not port['en']:
+                            port['link'] = False  # disabled ports do not have link ...
+                            new_hosts = list()  # ... or hosts attached
+                            for host in hosts:
+                                if host['port'] == port['idx']:
+                                    continue
+                                new_hosts.append(host)
+                            hosts = new_hosts
+                        continue
 
 
 class PortsVlansEndpoint(object):
