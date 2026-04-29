@@ -113,14 +113,14 @@ def create_nlpt_testdata(c):
 @task(name='reset-switch', aliases=['rs', ])
 def reset_switch(c):
     logging.basicConfig(level='CRITICAL')
-    from MTSwitch import MikroTikSwitch
+    from HWSwitch import AutoDetectSwitch
 
     def connect(switches):
         result = list()
         idx = 0
         for addr, attr in switches.items():
             user, pw = attr
-            s = MikroTikSwitch(addr, user, pw)
+            s = AutoDetectSwitch(addr, user, pw)
             print(f'{idx} {addr} {s.connected}')
             result.append(s)
             idx += 1

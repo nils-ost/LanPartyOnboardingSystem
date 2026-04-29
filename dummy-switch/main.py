@@ -75,6 +75,15 @@ class API():
         self.isolation = IsolationEndpoint()
         self.hosts = HostsEndpoint()
 
+    @cherrypy.expose()
+    def index(self):
+        if cherrypy.request.method == 'OPTIONS':
+            cherrypy.response.headers['Allow'] = 'OPTIONS, GET'
+            cherrypy_cors.preflight(allowed_methods=['GET'])
+            return
+        elif cherrypy.request.method == 'GET':
+            return 'nils_ost - dummy switch'
+
 
 class SystemEndpoint(object):
     @cherrypy.expose()

@@ -9,10 +9,6 @@ from .parts import SwitchPort, SwitchVLAN
 model_mapping = dict()
 
 
-class AutoDetectSwitch(BaseSwitch):
-    pass
-
-
 class MikroTikSwitch(BaseSwitch):
     speed_mapping = {
         '0x00': '10M',
