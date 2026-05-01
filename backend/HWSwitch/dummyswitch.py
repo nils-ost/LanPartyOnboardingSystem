@@ -130,7 +130,7 @@ class DummySwitch(BaseSwitch):
         port_count = len(self.ports)
         for port in self.ports:
             fwd = r.get(f'from{port.idx}', '0b0').replace('0b', '')
-            fwd = fwd[::-1] + '0' * (port_count - len(fwd))
+            fwd = fwd + '0' * (port_count - len(fwd))
             for idx in range(port_count):
                 if fwd[idx] == '1':
                     port.fwdTo(idx)
@@ -170,12 +170,12 @@ class DummySwitch(BaseSwitch):
         for vlan in r:
             vlan_obj = SwitchVLAN()
             vlan_obj.id = int(vlan.get('id', 0))
-            vlan_obj.isolation = bool(vlan.get('piso', True))
+            vlan_obj.isolation = bool(vlan.get('isolation', True))
             vlan_obj.learning = bool(vlan.get('learning', True))
             vlan_obj.mirror = bool(vlan.get('mirror', False))
             vlan_obj.igmp = bool(vlan.get('igmp', False))
             mbr = vlan.get('member', '0b0').replace('0b', '')
-            mbr = mbr[::-1] + '0' * (len(self.ports) - len(mbr))
+            mbr = mbr + '0' * (len(self.ports) - len(mbr))
             for idx in range(len(mbr)):
                 if mbr[idx] == '1':
                     vlan_obj.memberAdd(idx)
@@ -241,7 +241,6 @@ class DummySwitch(BaseSwitch):
     def commitVlans(self, request=None):
         r = list()
         for vlan in self.vlans:
-            {'id': 1, 'isolation': True, 'learning': True, 'mirror': False, 'igmp': False, 'member': '0b1111111111'}
             mbr = ''
             for idx in range(len(self.ports)):
                 mbr += '1' if idx in vlan._member else '0'

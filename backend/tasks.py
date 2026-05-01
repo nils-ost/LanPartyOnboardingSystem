@@ -110,6 +110,12 @@ def create_nlpt_testdata(c):
         Device({'mac': 'localhost'}).save()
 
 
+@task(name='test-switch')
+def test_switch(c):
+    from HWSwitch.testimplementation import run
+    run()
+
+
 @task(name='reset-switch', aliases=['rs', ])
 def reset_switch(c):
     logging.basicConfig(level='CRITICAL')
@@ -178,8 +184,11 @@ def reset_switch(c):
                     continue
                 s.portEdit(port, fwdTo=p)
             s.vlanEdit(1, memberAdd=port)
-        for v in vlan_ids:
-            s.vlanRemove(v)
+        vids = list()
+        for v in vlan_ids:  # don't interate over a changeing list
+            vids.append(v.id)
+        for vid in vids:
+            s.vlanRemove(vid)
         s.commitAll()
 
     try:

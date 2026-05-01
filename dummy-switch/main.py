@@ -206,6 +206,4 @@ if __name__ == '__main__':
         'tools.response_headers.on': True,
         'tools.response_headers.headers': [('Access-Control-Allow-Origin', '*'), ('Access-Control-Allow-Credentials', 'true')]})
 
-    # TODO: init structure of dummy switch
-
     cherrypy.quickstart(API(), '/', conf)
