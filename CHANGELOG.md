@@ -8,9 +8,11 @@
     * also a option on settings screen exists, to modify those default_ips
   * added setting to overwrite SSO IP, to prevent system from doing a nslookup
   * optimized naming and sorting of Switches an IpPools on TablesScreen
-  * smartified invoker for resetting switchtches
+  * smartified invoker for resetting switches
   * moved LPOS server IP from special IpPool to it's own Setting
   * in `Settings->Maintenance` is now an option to disable all automatic-commits from OnBoarding and port-changes
+  * Created `DummySwitch` to be able to test Switch-Commit without a HardwareSwitch
+  * Backend now uses `AutoDetectSwitch` to enable the future use of other Switch brands without changeing any backend-code
 
 ## v0.8.0
 
