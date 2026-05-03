@@ -28,15 +28,16 @@ def start_development(c):
             '-v dev-haproxy:/usr/local/etc/haproxy/ -p 80:80 -p 8404:8404 -p 5555:5555 -d haproxytech/haproxy-alpine:2.9.6'
         ]
         c.run(' '.join(cmd))
-    r = c.run('sudo docker ps -f name=dev-dummyswitch', hide=True)
-    if 'dev-dummyswitch' not in r.stdout:
-        print('Starting dummy-switch')
-        cmd = [
-            'sudo docker run --name dev-dummyswitch --rm',
-            '-v ./backend/:/app:ro -p 1337:1337 -d python:3.10-alpine',
-            '/bin/sh -c "pip3 install CherryPy cherrypy-cors; python3 /app/dummyswitch.py"'
-        ]
-        c.run(' '.join(cmd))
+    for i in range(4):
+        r = c.run(f'sudo docker ps -f name=dev-dummyswitch-{i}', hide=True)
+        if f'dev-dummyswitch-{i}' not in r.stdout:
+            print(f'Starting dummy-switch-{i}')
+            cmd = [
+                f'sudo docker run --name dev-dummyswitch-{i} --rm',
+                f'-v ./backend/:/app:ro -p 13{37 + i}:1337 -d python:3.10-alpine',
+                '/bin/sh -c "pip3 install CherryPy cherrypy-cors; python3 /app/dummyswitch.py"'
+            ]
+            c.run(' '.join(cmd))
     if dummy_net_int not in psutil.net_if_addrs().keys():
         print('Configuring dummy network interface')
         c.run('sudo modprobe dummy')
@@ -49,7 +50,13 @@ def start_development(c):
 
 @task(name='dev-stop')
 def stop_development(c):
-    for name in ['dev-dummyswitch', 'dev-haproxy', 'dev-mongo']:
+    for i in range(4):
+        name = f'dev-dummyswitch-{i}'
+        r = c.run(f'sudo docker ps -f name={name}', hide=True)
+        if name in r.stdout:
+            print(f'Stopping {name}')
+            c.run(f'sudo docker stop {name}')
+    for name in ['dev-haproxy', 'dev-mongo']:
         r = c.run(f'sudo docker ps -f name={name}', hide=True)
         if name in r.stdout:
             print(f'Stopping {name}')
