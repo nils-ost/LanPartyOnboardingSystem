@@ -1,5 +1,10 @@
 import os
+import psutil
 from invoke import task
+
+dummy_net_int = 'lpos0'
+dummy_net_ip = '10.14.66.4/24'
+dummy_net_mac = '12:34:56:78:90:ab'
 
 
 @task(name='dev-start')
@@ -32,6 +37,14 @@ def start_development(c):
             '/bin/sh -c "pip3 install CherryPy cherrypy-cors; python3 /app/dummyswitch.py"'
         ]
         c.run(' '.join(cmd))
+    if dummy_net_int not in psutil.net_if_addrs().keys():
+        print('Configuring dummy network interface')
+        c.run('sudo modprobe dummy')
+        c.run(f'sudo ip link add {dummy_net_int} type dummy')
+        c.run(f'sudo ifconfig {dummy_net_int} hw ether {dummy_net_mac}')
+        c.run(f'sudo ip a add {dummy_net_ip} dev {dummy_net_int}')
+        c.run(f'sudo ip link set dev {dummy_net_int} up')
+        print(f"\nfor testing commits you can now use the interface '{dummy_net_int}' with IP '{dummy_net_ip}' and MAC '{dummy_net_mac}'")
 
 
 @task(name='dev-stop')
@@ -43,6 +56,11 @@ def stop_development(c):
             c.run(f'sudo docker stop {name}')
     print('Removing volumes:')
     c.run('sudo docker volume rm dev-haproxy')
+    if dummy_net_int in psutil.net_if_addrs().keys():
+        print('Removing dummy network interface')
+        c.run(f'sudo ip a del {dummy_net_ip} dev {dummy_net_int}')
+        c.run(f'sudo ip link delete {dummy_net_int} type dummy')
+        c.run('sudo rmmod dummy')
 
 
 @task(pre=[stop_development], post=[start_development], name='dev-clean')
