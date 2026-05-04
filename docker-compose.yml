@@ -1,0 +1,53 @@
+services:
+  backend:
+    image: nilsost/LanPartyOnboardingSystem-backend:${LPOS_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+      - MONGO_HOST=mongodb
+    ports:
+      - ${MONITORING_IP:-0.0.0.0}:8001:8001
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  scanner:
+    image: nilsost/LanPartyOnboardingSystem-backend:${LPOS_VERSION:-latest}
+    command: scanner.py
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+      - MONGO_HOST=mongodb
+
+  frontend:
+    image: nilsost/LanPartyOnboardingSystem-frontend:${LPOS_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+
+  haproxy:
+    image: nilsost/LanPartyOnboardingSystem-haproxy:${LPOS_VERSION:-latest}
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    depends_on:
+      - backend
+      - frontend
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+    ports:
+      - 80:80
+      - ${MONITORING_IP:-0.0.0.0}:8404:8404
+    sysctls:
+      - net.ipv4.ip_unprivileged_port_start=0
+
+  mongodb:
+    image: mongo:4.4
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+    volumes:
+      - ./mongo_data:/data/db:rw
