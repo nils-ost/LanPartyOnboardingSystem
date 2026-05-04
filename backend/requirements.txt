@@ -2,7 +2,6 @@ CherryPy
 cherrypy-cors
 docker
 noapiframe @ git+https://github.com/nils-ost/noAPIframe.git
-psutil
 pymongo
 requests
 six

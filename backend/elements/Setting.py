@@ -19,6 +19,7 @@ class Setting(SettingBase):
         'integrity_tables':      {'order': 0,  'type': 'float', 'value': 0.0,         'desc': 'Timestamp of last successful tables integrity-check'},
         'integrity_lpos':        {'order': 0,  'type': 'float', 'value': 0.0,         'desc': 'Timestamp of last successful lpos integrity-check'},
         'integrity_settings':    {'order': 0,  'type': 'float', 'value': 0.0,         'desc': 'Timestamp of last successful settings integrity-check'},
+        'lpos_mgmt_mac':         {'order': 0,  'type': 'str',   'value': None,        'desc': 'Cached MAC addr of LPOS interface to mgmt network'},
         'server_port':           {'order': 1,  'type': 'int',   'value': 8000,        'desc': 'Port the Backend should be listening on'},
         'haproxy_api_host':      {'order': 2,  'type': 'str',   'value': '127.0.0.1', 'desc': 'IP or DNS where inbound haproxy API can be reached'},
         'haproxy_api_port':      {'order': 3,  'type': 'int',   'value': 5555,        'desc': 'Port where inbound haproxy API can be reached'},
@@ -52,3 +53,7 @@ class Setting(SettingBase):
         'ob_vlan_def_ip':        {'order': 44, 'type': 'int',   'value': None,        'desc': 'default network IP used for new IpPools in onboarding VLANs'},
         'ob_vlan_def_mask':      {'order': 45, 'type': 'int',   'value': 24,          'desc': 'default network mask used for new IpPools in onboarding VLANs'}
     }
+
+    def save_post(self):
+        if self['_id'] == 'os_nw_interface':
+            Setting.set('lpos_mgmt_mac', None)

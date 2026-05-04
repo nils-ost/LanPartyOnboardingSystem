@@ -97,6 +97,9 @@ if __name__ == '__main__':
     device_onboarding_start()
     start_metrics_exporter()
 
+    # Clear cached mac addr, that was detected for the LPOS server in mgmt network. Required for hardware changes that might have happend in the meantime
+    Setting.set('lpos_mgmt_mac', None)
+
     try:
         from helpers.system import check_integrity
         from helpers.vlanmgmt import vlan_os_interfaces_commit, vlan_dns_server_commit, vlan_dhcp_server_commit

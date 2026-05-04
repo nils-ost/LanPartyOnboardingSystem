@@ -1,7 +1,6 @@
 from noapiframe import docDB
 from elements import Setting
 from datetime import datetime
-import psutil
 
 
 # time (in seconds) a previous integrity check is considered still as valid
@@ -147,6 +146,7 @@ def _check_integrity_tables():
 
 
 def _check_integrity_lpos():
+    from helpers.client import containerd_psutil
     last_check = Setting.value('integrity_lpos')
     if not last_check < 1 and (last_check + check_max_diff) >= datetime.now().timestamp():
         return {'code': 0, 'desc': 'check ok'}
@@ -160,18 +160,19 @@ def _check_integrity_lpos():
     mgmt_ippool = IpPool.get_by_vlan(mgmt_vlan['_id'])[0]
     # determine LPOS's IP
     lpos_ip = None
-    for iname, conf in psutil.net_if_addrs().items():
+    lpos_mgmt_if = Setting.value('os_nw_interface')
+    for iname, conf in containerd_psutil().items():
         if iname == 'lo' or 'vlan' in iname:
             continue
-        ip, mac = (None, None)
-        for e in conf:
-            if e.family.name == 'AF_PACKET':
-                mac = e.address.replace(':', '')
-            if e.family.name == 'AF_INET':
-                ip = e.address.split('.')
-        if Device.get_by_mac(mac) is not None:
-            lpos_ip = IpPool.octetts_to_int(int(ip[0]), int(ip[1]), int(ip[2]), int(ip[3]))
-            break
+        if iname == lpos_mgmt_if or lpos_mgmt_if == '':
+            ip, mac = (None, None)
+            if 'AF_PACKET' in conf:
+                mac = conf['AF_PACKET'].replace(':', '')
+            if 'AF_INET' in conf:
+                ip = conf['AF_INET'].split('.')
+            if mac is not None and ip is not None and Device.get_by_mac(mac) is not None:
+                lpos_ip = IpPool.octetts_to_int(int(ip[0]), int(ip[1]), int(ip[2]), int(ip[3]))
+                break
     if lpos_ip is None:
         return {'code': 7, 'desc': 'IP of LPOS server could not be determined'}
     # expand the mask of mgmt_ippool to a usable format
@@ -184,6 +185,7 @@ def _check_integrity_lpos():
 
 
 def _check_interity_settings():
+    from helpers.client import containerd_psutil
     last_check = Setting.value('integrity_settings')
     if last_check is not None and (last_check + check_max_diff) >= datetime.now().timestamp():
         return {'code': 0, 'desc': 'check ok'}
@@ -192,7 +194,7 @@ def _check_interity_settings():
     if iname == '':
         return {'code': 9, 'desc': "setting 'os_nw_interface' is not defined, but it's needed"}
     # check if it's a valid name and can be found in psutil
-    for name in psutil.net_if_addrs().keys():
+    for name in containerd_psutil.keys():
         if name == iname:
             break
     else:

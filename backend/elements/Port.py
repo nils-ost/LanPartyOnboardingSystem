@@ -30,16 +30,23 @@ class Port(ElementBase):
         """
         Returns the port LPOS is connected to (or None if not yet identified)
         """
-        import psutil
-        from elements import Device
-        my_macs = list()
-        for iname, conf in psutil.net_if_addrs().items():
-            if iname == 'lo':
-                continue
-            for e in conf:
-                if e.family.name == 'AF_PACKET':
-                    my_macs.append(e.address.replace(':', ''))
-        for mac in my_macs:
+        from helpers.client import containerd_psutil
+        from elements import Device, Setting
+        mac = Setting.value('lpos_mgmt_mac')
+        if mac is None:
+            my_macs = list()
+            mgmt_if = Setting.value('os_nw_interface')
+            for iname, conf in containerd_psutil().items():
+                if iname == 'lo':
+                    continue
+                if 'AF_PACKET' in conf and (iname == mgmt_if or mgmt_if == ''):
+                    my_macs.append(conf['AF_PACKET']).replace(':', '')
+            for mac in my_macs:
+                d = Device.get_by_mac(mac)
+                if d is not None and d['port_id'] is not None:
+                    Setting.set('lpos_mgmt_mac', mac)
+                    return d.port()
+        else:
             d = Device.get_by_mac(mac)
             if d is not None and d['port_id'] is not None:
                 return d.port()

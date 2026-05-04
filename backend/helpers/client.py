@@ -18,6 +18,16 @@ def get_client_mac(ip=None):
     if ip == '127.0.0.1':
         return 'localhost'
 
+    # in case LPOS runs in a docker-container, mount the hosts arp-table to /host-arp
+    try:
+        r = subprocess.check_output('cat /host-arp | grep ' + str(ip), shell=True).decode('utf-8')
+        r = r.strip().split()
+        if not r[2] == '0x0':
+            return r[3].replace(':', '')
+    except Exception:
+        pass
+
+    # checking the "own" arp-table
     try:
         r = subprocess.check_output('cat /proc/net/arp | grep ' + str(ip), shell=True).decode('utf-8')
         r = r.strip().split()
@@ -64,3 +74,20 @@ def nslookup(domain):
             return None
     except Exception:
         logger.warning("haproxy container not started or can't be found")
+
+
+def containerd_psutil():
+    """
+    executes psutil in a container with host-network,
+    to be able to retrive interface information from docker host,
+    which are in the bridged main container not available
+    """
+    import json
+    import docker
+    dcli = docker.from_env()
+    command = list([
+        'pip3 install psutil',
+        'python3 -c "import psutil, json; print(json.dumps({k: {e.family.name: e.address for e in i} for k, i in psutil.net_if_addrs().items()}))"'
+    ])
+    result = dcli.containers.run(network_mode='host', remove=True, image='python:3.10-alpine', command=f"/bin/sh -c '{';'.join(command)}'")
+    return json.dumps(result.decode('utf-8'))
