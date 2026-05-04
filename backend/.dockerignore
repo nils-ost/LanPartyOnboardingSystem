@@ -1,0 +1,7 @@
+**/__pycache__
+**/testcases
+*.json
+.coverage
+.coveragerc
+cli.py
+tasks.py

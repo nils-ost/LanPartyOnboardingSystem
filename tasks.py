@@ -73,3 +73,65 @@ def create_bundle(c):
     c.run('mv /tmp/lpos/ansible/bundle-installer.sh /tmp/lpos/installer.sh; chmod +x /tmp/lpos/installer.sh')
     c.run(f'makeself /tmp/lpos ./lpos-installer_v{version}.run "Installer for LPOS - LanPartyOnboardingSystem" ./installer.sh')
     c.run('rm -rf /tmp/lpos')
+
+
+@task(name='container-images-build', aliases=['cib', ])
+def build_container_images(c):
+    version = c.run('git describe', warn=True, hide=True)
+    version_arg = ''
+    if version.return_code > 0:
+        version = None
+    else:
+        version = version.stdout.strip().replace('v', '', 1)
+        if '-' in version:
+            version, build = version.rsplit('-', 1)[0].rsplit('-', 1)
+            major, minor, _ = version.split('.')
+            minor = int(minor) + 1
+            branch = c.run('git branch --show-current', warn=True, hide=True).stdout.strip()
+            if branch == 'main':
+                version = f'{major}.{minor}.0.{build}beta'
+                version_arg = f' --version {version} --beta'
+            else:
+                version = f'{major}.{minor}.0.{build}alpha'
+                version_arg = f' --version {version} --alpha'
+        else:
+            version_arg = f' --version {version}'
+
+    if version:
+        with open('backend/helpers/version.py', 'w') as f:
+            f.write(f"version = '{version}'")
+    c.run(f'cd backend; invoke container-image-build{version_arg}')
+    c.run('git restore backend/helpers/version.py')
+    c.run(f'cd frontend; invoke container-image-build{version_arg}')
+    c.run(f'cd haproxy; invoke container-image-build{version_arg}')
+
+
+@task(name='container-images-push', aliases=['cip', ])
+def push_container_images(c):
+    version = c.run('git describe', warn=True, hide=True)
+    version_arg = ''
+    if version.return_code > 0:
+        version = None
+    else:
+        version = version.stdout.strip().replace('v', '', 1)
+        if '-' in version:
+            version, build = version.rsplit('-', 1)[0].rsplit('-', 1)
+            major, minor, _ = version.split('.')
+            minor = int(minor) + 1
+            branch = c.run('git branch --show-current', warn=True, hide=True).stdout.strip()
+            if branch == 'main':
+                version = f'{major}.{minor}.0.{build}beta'
+                version_arg = f' --version {version} --beta'
+            else:
+                version = f'{major}.{minor}.0.{build}alpha'
+                version_arg = f' --version {version} --alpha'
+        else:
+            version_arg = f' --version {version}'
+
+    if version:
+        with open('backend/helpers/version.py', 'w') as f:
+            f.write(f"version = '{version}'")
+    c.run(f'cd backend; invoke container-image-push{version_arg}')
+    c.run('git restore backend/helpers/version.py')
+    c.run(f'cd frontend; invoke container-image-push{version_arg}')
+    c.run(f'cd haproxy; invoke container-image-push{version_arg}')
