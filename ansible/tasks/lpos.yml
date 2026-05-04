@@ -41,7 +41,7 @@
     - '../backend/elements'
     - '../backend/endpoints'
     - '../backend/helpers'
-    - '../backend/MTSwitch'
+    - '../backend/HWSwitch'
     - '../backend/static'
   register: project_files
 

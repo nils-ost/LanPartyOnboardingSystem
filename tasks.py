@@ -23,11 +23,20 @@ def start_development(c):
             '-v dev-haproxy:/usr/local/etc/haproxy/ -p 80:80 -p 8404:8404 -p 5555:5555 -d haproxytech/haproxy-alpine:2.9.6'
         ]
         c.run(' '.join(cmd))
+    r = c.run('sudo docker ps -f name=dev-dummyswitch', hide=True)
+    if 'dev-dummyswitch' not in r.stdout:
+        print('Starting dummy-switch')
+        cmd = [
+            'sudo docker run --name dev-dummyswitch --rm',
+            '-v ./backend/:/app:ro -p 1337:1337 -d python:3.10-alpine',
+            '/bin/sh -c "pip3 install CherryPy cherrypy-cors; python3 /app/dummyswitch.py"'
+        ]
+        c.run(' '.join(cmd))
 
 
 @task(name='dev-stop')
 def stop_development(c):
-    for name in ['dev-haproxy', 'dev-mongo']:
+    for name in ['dev-dummyswitch', 'dev-haproxy', 'dev-mongo']:
         r = c.run(f'sudo docker ps -f name={name}', hide=True)
         if name in r.stdout:
             print(f'Stopping {name}')
@@ -52,8 +61,8 @@ def ng_build(c):
 @task(pre=[ng_build], name='create-bundle')
 def create_bundle(c):
     c.run('rm -rf /tmp/lpos; mkdir -p /tmp/lpos/backend')
-    c.run('rm -rf backend/elements/__pycache__; rm -rf backend/endpoints/__pycache__; rm -rf backend/helpers/__pycache__; rm -rf backend/MTSwitch/__pycache__')
-    for item in ['main.py', 'scanner.py', 'cli.py', 'requirements.txt', 'elements', 'endpoints', 'helpers', 'MTSwitch', 'static']:
+    c.run('rm -rf backend/elements/__pycache__; rm -rf backend/endpoints/__pycache__; rm -rf backend/helpers/__pycache__; rm -rf backend/HWSwitch/__pycache__')
+    for item in ['main.py', 'scanner.py', 'cli.py', 'requirements.txt', 'elements', 'endpoints', 'helpers', 'HWSwitch', 'static']:
         c.run(f'cp -r backend/{item} /tmp/lpos/backend/')
     for item in ['ansible']:
         c.run(f'cp -r {item} /tmp/lpos/')
