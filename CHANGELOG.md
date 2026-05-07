@@ -13,6 +13,7 @@
   * in `Settings->Maintenance` is now an option to disable all automatic-commits from OnBoarding and port-changes
   * Created `DummySwitch` to be able to test Switch-Commit without a HardwareSwitch
   * Backend now uses `AutoDetectSwitch` to enable the future use of other Switch brands without changeing any backend-code
+  * added `commitSystem` UnitTest to validate the configuration of HWswitches and dynamic created services on future (core) changes
 
 ## v0.8.0
 
