@@ -222,4 +222,5 @@ def reset_switch(c):
         newswitches[k] = config['switches'][k]
     config['switches'] = newswitches
 
-    open('switch_reset_config.json', 'w').write(json.dumps(config, indent=2))
+    with open('switch_reset_config.json', 'w') as f:
+        f.write(json.dumps(config, indent=2))

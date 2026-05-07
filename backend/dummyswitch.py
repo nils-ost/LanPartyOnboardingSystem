@@ -74,6 +74,7 @@ class API():
         self.ports_vlans = PortsVlansEndpoint()
         self.isolation = IsolationEndpoint()
         self.hosts = HostsEndpoint()
+        self.config = ConfigEndpoint()
 
     @cherrypy.expose()
     def index(self):
@@ -193,6 +194,98 @@ class HostsEndpoint(object):
             return
         elif cherrypy.request.method == 'GET':
             return hosts
+
+
+class ConfigEndpoint(object):
+    @cherrypy.expose()
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
+    def index(self):
+        global hosts, system, ports, forward, vlans, ports_vlans
+        if cherrypy.request.method == 'OPTIONS':
+            cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST'
+            cherrypy_cors.preflight(allowed_methods=['GET', 'POST'])
+            return
+        elif cherrypy.request.method == 'GET':
+            # returns the full (running) configuration
+            return dict(
+                hosts=hosts,
+                system=system,
+                ports=ports,
+                forward=forward,
+                vlans=vlans,
+                ports_vlans=ports_vlans
+            )
+        elif cherrypy.request.method == 'POST':
+            # allows changing the switch hardware
+            attr = cherrypy.request.json
+            if 'system' in attr:
+                system['model'] = attr['system'].get('model', system['model'])
+                system['identity'] = attr['system'].get('identity', system['identity'])
+                system['mac_addr'] = attr['system'].get('mac_addr', system['mac_addr'])
+                system['mgmt_vlan'] = int(attr['system'].get('mgmt_vlan', system['mgmt_vlan']))
+            if 'ports' in attr:
+                gbe = int(attr['ports'].get('gbe-count', ports['gbe-count']))
+                sfp = int(attr['ports'].get('sfp-count', ports['sfp-count']))
+                ports = dict({
+                    'gbe-count': gbe,
+                    'sfp-count': sfp,
+                    'total-count': gbe + sfp,
+                    'config': list()
+                })
+                idx = 0
+                # rebuild ports['config]
+                for i in range(gbe):
+                    ports['config'].append(dict(
+                        idx=idx,
+                        en=True,
+                        link=False,
+                        name=f'Port{i+1}',
+                        spd='1G'
+                    ))
+                    idx += 1
+                for i in range(sfp):
+                    ports['config'].append(dict(
+                        idx=idx,
+                        en=True,
+                        link=False,
+                        name=f'SFP+{i+1}',
+                        spd='10G'
+                    ))
+                    idx += 1
+                # rebuild forward
+                forward = dict()
+                for i in range(ports['total-count']):
+                    forward[f'from{i}'] = f"0b{'1' * i}0{'1' * (ports['total-count'] - 1 - i)}"
+                # rebuild ports_vlans
+                ports_vlans = dict()
+                for i in range(ports['total-count']):
+                    ports_vlans[f'idx{i}'] = dict(
+                        mode='optional',
+                        receive='only untagged',
+                        default='1',
+                        force=False
+                    )
+                # clear vlans
+                vlans = list()
+            if 'hosts' in attr:
+                hosts = list()
+                for h in attr['hosts']:
+                    if h.get('port', -1) in range(ports['total-count']):
+                        hosts.append(h)
+            # recalc link state
+            new_hosts = list()
+            for p in ports['config']:
+                p['link'] = False
+            for h in hosts:
+                for p in ports['config']:
+                    if h['port'] == p['idx']:
+                        if p['en']:
+                            new_hosts.append(h)
+                            p['link'] = True
+                        break
+            hosts = new_hosts
+            return {'code': 0, 'msg': 'ok'}
 
 
 if __name__ == '__main__':
