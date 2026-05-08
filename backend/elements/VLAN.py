@@ -67,7 +67,7 @@ class VLAN(ElementBase):
                     port['retreat_config']['vlans'].remove(self['_id'])
                 port.save()
 
-    def delete_post():
+    def delete_post(self):
         from elements import Port, PortConfigCache
         for p in Port.all():
             PortConfigCache.delete_by_port(p['_id'])

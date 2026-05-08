@@ -105,7 +105,7 @@ class ApiTestBase(ApiBase):
         self.assertIn('GET', result.headers['Allow'])
         self.assertIn('POST', result.headers['Allow'])
         self.assertNotIn('PATCH', result.headers['Allow'])
-        self.assertNotIn('DELETE', result.headers['Allow'])
+        self.assertIn('DELETE', result.headers['Allow'])
         self.assertNotIn('PUT', result.headers['Allow'])
 
     def test_options_single(self):
@@ -186,7 +186,7 @@ class ApiTestBase(ApiBase):
             self.assertTrue(result.status.startswith('403'), msg=f'should start with 403 but is {result.status}')
             self.login_admin()
         result = self.webapp_request(path=f'/{self._path}/', method='DELETE')
-        self.assertTrue(result.status.startswith('405'), msg=f'should start with 405 but is {result.status}')
+        self.assertTrue(result.status.startswith('200'), msg=f'should start with 200 but is {result.status}')
 
     def test_delete_single(self):
         self.login_user()

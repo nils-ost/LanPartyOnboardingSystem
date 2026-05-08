@@ -22,7 +22,6 @@ export class IpPoolCreaditComponent implements OnChanges {
   range_start: number = 3232235521;
   range_end: number = 3232235774;
   vlan_id: string = "";
-  lpos: boolean = false;
   vlansOptions: any[] = [];
   vlansToPurpose: Map<string, VlanPurposeType> = new Map<string, VlanPurposeType>;
   defaultVlanIp: Map<VlanPurposeType, number|null> = new Map<VlanPurposeType, number|null>;
@@ -41,7 +40,6 @@ export class IpPoolCreaditComponent implements OnChanges {
   range_start_error?: string;
   range_end_error?: string;
   vlan_id_error?: string;
-  lpos_error?: string;
 
   constructor(
     private errorHandler: ErrorHandlerService,
@@ -128,13 +126,14 @@ export class IpPoolCreaditComponent implements OnChanges {
     if (this.ippool) this.editIpPool();
     else {
       let purpose: VlanPurposeType | undefined = this.vlansToPurpose.get(this.vlan_id);
-      if (purpose && !this.defaultVlanIp.get(purpose)) {
+      if (purpose !== undefined && !this.defaultVlanIp.get(purpose)) {
+        console.log('saving default');
         let setting: string = '';
         if (purpose.valueOf() == VlanPurposeType.play.valueOf()) setting = 'play_vlan_def_';
         if (purpose.valueOf() == VlanPurposeType.mgmt.valueOf()) setting = 'mgmt_vlan_def_';
         if (purpose.valueOf() == VlanPurposeType.onboarding.valueOf()) setting = 'ob_vlan_def_';
-        this.settingService.updateSetting(setting + 'ip', this.utils.ip_apply_mask(this.range_start, this.mask)).subscribe();
-        this.settingService.updateSetting(setting + 'mask', this.mask).subscribe();
+        this.settingService.updateSetting(setting + 'ip', this.utils.ip_apply_mask(this.range_start, this.mask)).subscribe({});
+        this.settingService.updateSetting(setting + 'mask', this.mask).subscribe({});
       }
       this.createIpPool()
     };
@@ -143,7 +142,7 @@ export class IpPoolCreaditComponent implements OnChanges {
   createIpPool() {
     this.clearErrors();
     this.ippoolService
-      .createIpPool(this.desc, this.mask, this.range_start, this.range_end, this.vlan_id, this.lpos)
+      .createIpPool(this.desc, this.mask, this.range_start, this.range_end, this.vlan_id)
       .subscribe({
         next: (response: any) => {
           this.dialogEndEvent.emit(null);
@@ -158,7 +157,7 @@ export class IpPoolCreaditComponent implements OnChanges {
   editIpPool() {
     this.clearErrors();
     this.ippoolService
-      .updateIpPool(this.ippool!.id, this.desc, this.mask, this.range_start, this.range_end, this.vlan_id, this.lpos)
+      .updateIpPool(this.ippool!.id, this.desc, this.mask, this.range_start, this.range_end, this.vlan_id)
       .subscribe({
         next: (response: any) => {
           this.dialogEndEvent.emit(null);
@@ -175,7 +174,6 @@ export class IpPoolCreaditComponent implements OnChanges {
     this.range_start_error = undefined;
     this.range_end_error = undefined;
     this.vlan_id_error = undefined;
-    this.lpos_error = undefined;
   }
 
   fillErrors(errors: any) {

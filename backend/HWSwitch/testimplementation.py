@@ -73,7 +73,8 @@ def run():
         user = settings.get('user', '')
     if pw == '':
         pw = settings.get('pw', '')
-    open('switch_test_config.json', 'w').write(json.dumps(dict(host=host, user=user, pw=pw)))
+    with open('switch_test_config.json', 'w') as f:
+        f.write(json.dumps(dict(host=host, user=user, pw=pw)))
 
     # === Test1
     logger.info('=== Test1: connection')
