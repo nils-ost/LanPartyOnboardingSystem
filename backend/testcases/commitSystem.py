@@ -573,4 +573,4 @@ class TestCommitSystem(unittest.TestCase):
         # TODO: change all compares to 0 after haproxy retreat is implemented
         self.assertEqual(len(dcli.containers.list(filters={'name': 'lpos-'})), 1)
         self.assertEqual(len(dcli.volumes.list(filters={'name': 'lpos-'})), 1)
-        self.assertEqual(len(dcli.networks.list(filters={'name': 'lpos-'})), 3)
+        self.assertEqual(len(dcli.networks.list(filters={'name': 'lpos-'})), 0)

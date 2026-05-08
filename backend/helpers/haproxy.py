@@ -264,9 +264,8 @@ class SSOHAproxy(_BaseHAproxy):
                 sysctls={'net.ipv4.ip_unprivileged_port_start': 0},
                 ports={
                     '8404/tcp': '8405',
-                    '5555/tcp': '127.0.0.1:5556'
+                    '5555/tcp': ('127.0.0.1', '5556')
                 },
-                restart_policy={'Name': 'always'},
                 detach=True,
                 remove=True
             )

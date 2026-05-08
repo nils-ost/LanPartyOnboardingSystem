@@ -40,7 +40,7 @@ class Port(ElementBase):
                 if iname == 'lo':
                     continue
                 if 'AF_PACKET' in conf and (iname == mgmt_if or mgmt_if == ''):
-                    my_macs.append(conf['AF_PACKET']).replace(':', '')
+                    my_macs.append(conf['AF_PACKET'].replace(':', ''))
             for mac in my_macs:
                 d = Device.get_by_mac(mac)
                 if d is not None and d['port_id'] is not None:

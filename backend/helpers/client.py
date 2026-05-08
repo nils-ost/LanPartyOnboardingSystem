@@ -90,4 +90,4 @@ def containerd_psutil():
         'python3 -c "import psutil, json; print(json.dumps({k: {e.family.name: e.address for e in i} for k, i in psutil.net_if_addrs().items()}))"'
     ])
     result = dcli.containers.run(network_mode='host', remove=True, image='python:3.10-alpine', command=f"/bin/sh -c '{';'.join(command)}'")
-    return json.dumps(result.decode('utf-8'))
+    return json.loads(result.decode('utf-8').strip().split('\n')[-1])

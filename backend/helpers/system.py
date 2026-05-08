@@ -194,7 +194,7 @@ def _check_interity_settings():
     if iname == '':
         return {'code': 9, 'desc': "setting 'os_nw_interface' is not defined, but it's needed"}
     # check if it's a valid name and can be found in psutil
-    for name in containerd_psutil.keys():
+    for name in containerd_psutil().keys():
         if name == iname:
             break
     else:

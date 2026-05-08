@@ -4,6 +4,7 @@ import tempfile
 import tarfile
 import pathlib
 import os
+import time
 from noapiframe import ElementBase, docDB
 
 
@@ -209,16 +210,17 @@ class VLAN(ElementBase):
                     copier_con.put_archive('/app/', archive)
 
             # create, connect to VLAN and start container
-            dcon = dcli.containers.create(
+            dcon = dcli.containers.run(
                 name=f'lpos-ipvlan{self["number"]}-dns',
                 image='coredns/coredns:1.11.1',
                 command='-conf /etc/coredns/Corefile',
                 volumes=[f'lpos-ipvlan{self["number"]}-dns:/etc/coredns:rw'],
-                restart_policy={'Name': 'always'},
+                network=dnet.name,
+                remove=True,
                 detach=True
             )
+            dnet.disconnect(dcon)
             dnet.connect(dcon, ipv4_address=dns_ip)
-            dcon.start()
         return True
 
     def retreat_dns_server(self):
@@ -232,15 +234,17 @@ class VLAN(ElementBase):
         try:
             dcon = dcli.containers.get(f'lpos-ipvlan{self["number"]}-dns')
             dcon.stop()
-            dcon.remove()
         except Exception:
             pass
 
-        try:
-            dvol = dcli.volumes.get(f'lpos-ipvlan{self["number"]}-dns')
-            dvol.remove()
-        except Exception:
-            pass
+        dvol = dcli.volumes.get(f'lpos-ipvlan{self["number"]}-dns')
+        for i in range(5):
+            try:
+                dvol.remove()
+                break
+            except Exception:
+                pass
+            time.sleep(1)
 
         return True
 
@@ -360,15 +364,16 @@ class VLAN(ElementBase):
 
         if start_con:
             # create, connect to VLAN and start container
-            dcon = dcli.containers.create(
+            dcon = dcli.containers.run(
                 name=f'lpos-ipvlan{self["number"]}-dhcp',
                 image='docker.cloudsmith.io/isc/docker/kea-dhcp4:2.5.7',
                 volumes=[f'lpos-ipvlan{self["number"]}-dhcp:/etc/kea:rw'],
-                restart_policy={'Name': 'always'},
+                network=dnet.name,
+                remove=True,
                 detach=True
             )
+            dnet.disconnect(dcon)
             dnet.connect(dcon, ipv4_address=dhcp_ip)
-            dcon.start()
         else:
             # let the server reload it's config
             r = dcon.exec_run('ps -a | grep dhcp4').output.decode('utf-8').strip().split()[0]
@@ -386,14 +391,16 @@ class VLAN(ElementBase):
         try:
             dcon = dcli.containers.get(f'lpos-ipvlan{self["number"]}-dhcp')
             dcon.stop()
-            dcon.remove()
         except Exception:
             pass
 
-        try:
-            dvol = dcli.volumes.get(f'lpos-ipvlan{self["number"]}-dhcp')
-            dvol.remove()
-        except Exception:
-            pass
+        dvol = dcli.volumes.get(f'lpos-ipvlan{self["number"]}-dhcp')
+        for i in range(5):
+            try:
+                dvol.remove()
+                break
+            except Exception:
+                pass
+            time.sleep(1)
 
         return True
