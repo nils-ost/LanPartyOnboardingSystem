@@ -23,13 +23,30 @@ export class SwitchService {
     return this.http.get<Switch[]>(this.switchUrl, {withCredentials:true});
   }
 
-  public createSwitch(desc: string, addr: string, user: string, pw: string, purpose: number, onboarding_vlan_id: string | null): Observable<any> {
-    let sw = {'desc': desc, 'addr': addr, 'user': user, 'pw': pw, 'purpose': purpose, 'onboarding_vlan_id': onboarding_vlan_id};
+  public createSwitch(desc: string, addr: string, user: string, pw: string, purpose: number, onboarding_vlan_id: string | null, pno: number = 0): Observable<any> {
+    let sw = {
+      'desc': desc,
+      'addr': addr,
+      'user': user,
+      'pw': pw,
+      'purpose': purpose,
+      'onboarding_vlan_id': onboarding_vlan_id,
+      'port_numbering_offset': pno
+    };
     return this.http.post<any>(this.switchUrl, sw, {withCredentials:true});
   }
 
-  public updateSwitch(id: string, desc: string, addr: string, user: string, pw: string, purpose: number, onboarding_vlan_id: string | null): Observable<any> {
-    let sw = {'id': id, 'desc': desc, 'addr': addr, 'user': user, 'pw': pw, 'purpose': purpose, 'onboarding_vlan_id': onboarding_vlan_id};
+  public updateSwitch(id: string, desc: string, addr: string, user: string, pw: string, purpose: number, onboarding_vlan_id: string | null, pno: number = 0): Observable<any> {
+    let sw = {
+      'id': id,
+      'desc': desc,
+      'addr': addr,
+      'user': user,
+      'pw': pw,
+      'purpose': purpose,
+      'onboarding_vlan_id': onboarding_vlan_id,
+      'port_numbering_offset': pno
+    };
     return this.http.patch<any>(this.switchUrl + id + '/', sw, {withCredentials:true});
   }
 

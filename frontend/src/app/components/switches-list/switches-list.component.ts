@@ -16,7 +16,7 @@ import { SystemService } from 'src/app/services/system.service';
 export class SwitchesListComponent implements OnChanges {
   switchPurposeType = SwitchPurposeType;
   @Input() switches!: Switch[];
-  @Input() vlans!: Vlan[];
+  @Input() vlans: Vlan[] = [];
   @Input() ports: Port[] = [];
   @Output() editedSwitchEvent = new EventEmitter<null>();
   vlansNames: Map<string, string> = new Map<string, string>;

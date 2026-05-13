@@ -29,7 +29,7 @@
                 <ng-container i18n="@@elementFieldLabelSwitchKnownVlans">Configured VLANs</ng-container>
             </th>
             <th>
-                Ports/Part
+                Ports/Part/PNO
             </th>
             <th></th>
         </tr>
@@ -39,7 +39,7 @@
             <td>{{ sw.desc }}</td>
             <td>{{ sw.addr }}</td>
             <td>{{ switchPurposeType[sw.purpose] }}</td>
-            <td>{{ vlansNames.get(sw.onboarding_vlan_id) }}</td>
+            <td>{{ vlansNames.get(sw.onboarding_vlan_id) || '' }}</td>
             <td>{{ sw.connected }}</td>
             <td>{{ sw.commited }}</td>
             <td>{{ sw.mac }}</td>
@@ -47,7 +47,7 @@
                 <li *ngFor="let vlan_id of sw.known_vlans">{{ vlansNames.get(vlan_id) }}</li>
             </td>
             <td>
-                {{ portCount(sw.id) }}/{{ portCount(sw.id, true) }}
+                {{ portCount(sw.id) }}/{{ portCount(sw.id, true) }}/{{ sw.port_numbering_offset }}
             </td>
             <td>
                 <button pButton type="button" class="p-button-outlined p-button-primary" icon="pi pi-eye" (click)="showPortsList(sw)" i18n-pTooltip="@@tooltipShowPorts" pTooltip="Show Ports"></button>
@@ -64,6 +64,6 @@
     <app-switch-creadit [sw]="selectedSwitch" [vlans]="vlans" (dialogEndEvent)="editedSwitch()"></app-switch-creadit>
 </p-dialog>
 
-<p-dialog [(visible)]="portsListDialog" header="Ports List" [modal]="true" [dismissableMask]="true">
-    <app-ports-list [selectedSwitch]="selectedSwitch" [ports]="ports" [vlans]="vlans" [switches]="switches" (editedPortEvent)="editedSwitch()"></app-ports-list>
+<p-dialog [(visible)]="portsListDialog" header="Switch Detail" [modal]="true" [dismissableMask]="true" *ngIf="selectedSwitch">
+    <app-switch-detail [selectedSwitch]="selectedSwitch" [ports]="ports" [vlans]="vlans" [switches]="switches" [vlansNames]="vlansNames" (editedSwitchEvent)="editedSwitch()"></app-switch-detail>
 </p-dialog>

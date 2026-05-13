@@ -3,9 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { SettingService } from 'src/app/services/setting.service';
 import { Setting } from 'src/app/interfaces/setting';
-import { Switch } from 'src/app/interfaces/switch';
 import { PortService } from 'src/app/services/port.service';
-import { SwitchService } from 'src/app/services/switch.service';
 import { PortConfigCache } from 'src/app/interfaces/port';
 import { SystemService } from 'src/app/services/system.service';
 import { DeviceService } from 'src/app/services/device.service';
@@ -19,13 +17,10 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./settings-screen.component.scss']
 })
 export class SettingsScreenComponent implements OnInit {
-  switches: Switch[] = [];
   absolute_seatnumbers: boolean = false;
   disable_auto_commits: boolean = false;
   nlpt_sso: boolean = false;
-  pno_loading: boolean = false;
   rod_loading: boolean = false;
-  pno: boolean = false;
   pcc: boolean = false;
   rod: boolean = false;
   maintenance: boolean = false;
@@ -74,7 +69,6 @@ export class SettingsScreenComponent implements OnInit {
     private settingService: SettingService,
     private systemService: SystemService,
     private portService: PortService,
-    private switchService: SwitchService,
     private deviceService: DeviceService,
     private utils: UtilsService
   ) {}
@@ -185,23 +179,6 @@ export class SettingsScreenComponent implements OnInit {
               if (device.desc == '') this.rod_wodesc++;
             }
             this.rod_loading = false;
-          },
-          error: (err: HttpErrorResponse) => {
-            this.errorHandler.handleError(err);
-          }
-        })
-    }
-  }
-
-  refreshSwitches() {
-    this.pno_loading = true;
-    if (this.pno) {
-      this.switchService
-        .getSwitches()
-        .subscribe({
-          next: (switches: Switch[]) => {
-            this.switches = switches;
-            this.pno_loading = false;
           },
           error: (err: HttpErrorResponse) => {
             this.errorHandler.handleError(err);
@@ -429,18 +406,6 @@ export class SettingsScreenComponent implements OnInit {
           this.errorHandler.handleError(err);
         }
       })
-  }
-
-  save_pno() {
-    for (let i = 0; i < this.switches.length; i++) {
-      this.switchService
-        .updatePortNumberingOffset(this.switches[i].id, this.switches[i].port_numbering_offset)
-        .subscribe({
-          error: (err: HttpErrorResponse) => {
-            this.errorHandler.handleError(err);
-          }
-        });
-    }
   }
 
   save_vlan_def_ips() {

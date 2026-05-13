@@ -173,29 +173,6 @@
     </ng-container>
 </p-panel>
 
-<p-panel header="Port Numbering Offset" i18n-header="@@settingsHeaderPortNumberingOffset">
-    <ng-template pTemplate="icons">
-        <p-inputSwitch [(ngModel)]="pno" (onChange)="refreshSwitches()" />&nbsp;
-        <button pButton (click)="save_pno()" i18n="@@buttonSave" [disabled]="!pno">Save</button>
-    </ng-template>
-
-    <ng-container *ngIf="pno">
-        <ng-container *ngIf="pno_loading">
-            <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
-        </ng-container>
-        <ng-container *ngIf="!pno_loading">
-            <ng-template ngFor let-switch [ngForOf]="switches">
-                <div class="field">
-                    <span class="p-float-label">
-                        <p-inputNumber inputId="pno_{{ switch.id }}" [(ngModel)]="switch.port_numbering_offset" [showButtons]="true"></p-inputNumber>
-                        <label for="pno_{{ switch.id }}">{{ switch.desc }}</label>
-                    </span>
-                </div>
-            </ng-template>
-        </ng-container>
-    </ng-container>
-</p-panel>
-
 <p-panel header="Devices" i18n-header="@@settingsHeaderRemoveOfflineDevices">
     <ng-template pTemplate="icons">
         <p-inputSwitch [(ngModel)]="rod" (onChange)="refreshDevices()" />&nbsp;
