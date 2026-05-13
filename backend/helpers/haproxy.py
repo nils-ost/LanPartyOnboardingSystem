@@ -181,14 +181,14 @@ class LPOSHAproxy(_BaseHAproxy):
         from elements import Setting
         if self.container_id is None and not self.container_running():
             self.logger.warning("container not started or can't be found")
-            return
+            return False
         s, url = self._get_api_session()
         lpos_domain = 'http://' + '.'.join([Setting.value('subdomain'), Setting.value('domain')])
         self.logger.info(f'setting ms_redirect_url to {lpos_domain}')
         r = s.get(f'{url}/v2/services/haproxy/configuration/http_request_rules?parent_type=frontend&parent_name=fe_lpos')
         if r.status_code > 300:
             self.logger.error(f'requesting fe_lpos did not work:\n{r.text}')
-            return
+            return False
         o = r.json()
 
         data = dict()
@@ -201,6 +201,8 @@ class LPOSHAproxy(_BaseHAproxy):
         r = s.put(cmd, data=json.dumps(data))
         if r.status_code > 300:
             self.logger.error(f'changing http_request_rule did not work:\n{r.text}')
+            return False
+        return True
 
 
 class SSOHAproxy(_BaseHAproxy):
@@ -219,7 +221,8 @@ class SSOHAproxy(_BaseHAproxy):
         self.logger.info('starting container')
         if self.container_id is None and not self.container_running():
             try:
-                open('/tmp/ssoproxy.cfg', 'w').write(ssoproxycfg)
+                with open('/tmp/ssoproxy.cfg', 'w') as f:
+                    f.write(ssoproxycfg)
                 subprocess.call(f'{self.dcmd} run --rm --name copier-ssoproxy -v lpos-ssoproxy:/app -d alpine sleep 3', shell=True)
                 subprocess.call(f'{self.dcmd} cp /tmp/ssoproxy.cfg copier-ssoproxy:/app/haproxy.cfg', shell=True)
                 cmd = [
@@ -229,8 +232,10 @@ class SSOHAproxy(_BaseHAproxy):
                 self.container_id = subprocess.check_output(' '.join(cmd), shell=True).decode('utf-8').strip()
             except Exception as e:
                 self.logger.error(f'could not start container\n{repr(e)}')
+                return False
         else:
             self.logger.info(f'container is running under id: {self.container_id}')
+        return True
 
     def setup_sso_ip(self):
         from urllib.parse import urlparse
@@ -238,7 +243,7 @@ class SSOHAproxy(_BaseHAproxy):
         from elements import Setting
         if self.container_id is None and not self.container_running():
             self.logger.warning("container not started or can't be found")
-            return
+            return False
         domain = urlparse(Setting.value('sso_login_url')).netloc
         self.logger.info(f"adding configuration to proxy SSO logins on '{domain}' from onboarding networks to the internet")
         domain_ip = Setting.value('sso_ip_overwrite')
@@ -257,7 +262,9 @@ class SSOHAproxy(_BaseHAproxy):
                     r = s.put(f'{url}/v2/services/haproxy/configuration/servers/online_sso?backend={backend}&version={version}', data=json.dumps(server))
                     if r.status_code > 300:
                         self.logger.error(f"updating server 'online_sso' on backend '{backend}' failed:\n{r.text}")
+                        return False
                     break
+        return True
 
 
 lposHAproxy = LPOSHAproxy()

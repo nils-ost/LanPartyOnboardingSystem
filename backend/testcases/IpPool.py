@@ -158,13 +158,7 @@ class TestIpPool(unittest.TestCase):
         self.assertEqual(len(IpPool.all()), 3)
 
     def test_valid_range(self):
-        # range_start < range_end
-        self.assertEqual(len(IpPool.all()), 0)
-        # range start and end can't be equal
-        el = IpPool({'range_start': int('C0A80009', 16), 'range_end': int('C0A80009', 16), 'vlan_id': self.v1_id})
-        result = el.save()
-        self.assertIn('range_start', result['errors'])
-        self.assertIn('range_end', result['errors'])
+        # range_start <= range_end
         self.assertEqual(len(IpPool.all()), 0)
         # range end can't be lower than range start
         el = IpPool({'range_start': int('C0A80009', 16), 'range_end': int('C0A80008', 16), 'vlan_id': self.v1_id})
@@ -177,6 +171,11 @@ class TestIpPool(unittest.TestCase):
         result = el.save()
         self.assertNotIn('errors', result)
         self.assertEqual(len(IpPool.all()), 1)
+        # range start and end can be equal
+        el = IpPool({'range_start': int('C0A8000A', 16), 'range_end': int('C0A8000A', 16), 'vlan_id': self.v1_id})
+        result = el.save()
+        self.assertNotIn('errors', result)
+        self.assertEqual(len(IpPool.all()), 2)
 
 
 setup_module = setUpModule
