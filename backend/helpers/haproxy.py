@@ -172,7 +172,6 @@ class _BaseHAproxy():
 
 class LPOSHAproxy(_BaseHAproxy):
     def init(self):
-        global config
         self.logger = logging.getLogger('LPOS - HAproxy')
         self._container_search_name = 'haproxy'
         self.config = {
@@ -213,10 +212,11 @@ class LPOSHAproxy(_BaseHAproxy):
 
 class SSOHAproxy(_BaseHAproxy):
     def init(self):
+        from helpers.client import get_mgmt_ip
         self.logger = logging.getLogger('SSO - HAproxy')
         self._container_search_name = 'lpos-ssoproxy'
         self.config = {
-            'host': '127.0.0.1',
+            'host': get_mgmt_ip(),
             'api_port': 5556,
             'api_user': 'admin',
             'api_pw': 'adminpwd'
@@ -256,19 +256,23 @@ class SSOHAproxy(_BaseHAproxy):
                     copier_con.put_archive('/app/', archive)
 
             # create and start container
-            dcon = self.dcli.containers.run(
-                name='lpos-ssoproxy',
-                image='haproxytech/haproxy-alpine:latest',
-                volumes=['lpos-ssoproxy:/usr/local/etc/haproxy/:rw'],
-                cap_add=['NET_ADMIN'],
-                sysctls={'net.ipv4.ip_unprivileged_port_start': 0},
-                ports={
-                    '8404/tcp': '8405',
-                    '5555/tcp': ('127.0.0.1', '5556')
-                },
-                detach=True,
-                remove=True
-            )
+            try:
+                dcon = self.dcli.containers.run(
+                    name='lpos-ssoproxy',
+                    image='haproxytech/haproxy-alpine:latest',
+                    volumes=['lpos-ssoproxy:/usr/local/etc/haproxy/:rw'],
+                    cap_add=['NET_ADMIN'],
+                    sysctls={'net.ipv4.ip_unprivileged_port_start': 0},
+                    ports={
+                        '8404/tcp': '8405',
+                        '5555/tcp': (self.config['host'], '5556')
+                    },
+                    detach=True,
+                    remove=True
+                )
+            except Exception as e:
+                self.logger.error(f'container could not be started: {e}')
+                return False
             self.container_id = dcon.id
             self.logger.info(f'container started with id: {self.container_id}')
         else:

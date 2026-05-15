@@ -62,7 +62,10 @@ def stop_development(c):
             print(f'Stopping {name}')
             c.run(f'sudo docker stop {name}')
     print('Removing volumes:')
-    c.run('sudo docker volume rm dev-haproxy')
+    try:
+        c.run('sudo docker volume rm dev-haproxy')
+    except Exception:
+        pass
     if dummy_net_int in psutil.net_if_addrs().keys():
         print('Removing dummy network interface')
         c.run(f'sudo ip a del {dummy_net_ip} dev {dummy_net_int}')

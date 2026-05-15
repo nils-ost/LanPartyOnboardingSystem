@@ -59,6 +59,58 @@ def get_client_mac(ip=None):
     return 'unknown_device'
 
 
+def _determine_mgmt_mac_and_ip(return_ip=False, return_mac=False):
+    from elements import Setting, Device
+    if not return_ip and not return_mac:
+        return_ip = True
+    if return_ip and return_mac:
+        return_mac = False
+    mgmt_if = Setting.value('os_nw_interface')
+    if mgmt_if == '':
+        return None
+    for iname, conf in containerd_psutil().items():
+        if iname == 'lo' or 'vlan' in iname:
+            continue
+        if iname == mgmt_if:
+            ip, mac = (None, None)
+            if 'AF_PACKET' in conf:
+                mac = conf['AF_PACKET'].replace(':', '')
+            if 'AF_INET' in conf:
+                ip = conf['AF_INET'].strip()
+            if mac is not None and ip is not None and Device.get_by_mac(mac) is not None:
+                Setting.set('lpos_mgmt_mac', mac)
+                Setting.set('lpos_mgmt_ip', ip)
+                if return_ip:
+                    return ip
+                else:
+                    return mac
+    return None
+
+
+def get_mgmt_mac():
+    """
+    returns MAC addr of LPOS interface to mgmt network (as string without colons)
+    returnvalue can be None, if MAC could not be determined
+    """
+    from elements import Setting
+    mgmt_mac = Setting.value('lpos_mgmt_mac')
+    if mgmt_mac is None:
+        return _determine_mgmt_mac_and_ip(return_mac=True)
+    return mgmt_mac
+
+
+def get_mgmt_ip():
+    """
+    returns IP addr of LPOS interface to mgmt network (as string in dotted notation)
+    returnvalue can be None, if IP could not be determined
+    """
+    from elements import Setting
+    mgmt_ip = Setting.value('lpos_mgmt_ip')
+    if mgmt_ip is None:
+        return _determine_mgmt_mac_and_ip(return_ip=True)
+    return mgmt_ip
+
+
 def nslookup(domain):
     from helpers.haproxy import lposHAproxy
     logger.info(f'executing nslookup of {domain}')

@@ -228,7 +228,7 @@ def reset_switch(c):
 
 @task(name='container-image-build')
 def build_container_image(c, version=None, beta=False, alpha=False):
-    image = 'nilsost/LanPartyOnboardingSystem-backend'
+    image = 'nilsost/lpos-backend'
     tags = ''
     if version is not None:
         tags += f' -t {image}:{version}'
@@ -243,7 +243,7 @@ def build_container_image(c, version=None, beta=False, alpha=False):
 
 @task(name='container-image-push')
 def push_container_image(c, version=None, beta=False, alpha=False):
-    image = 'nilsost/LanPartyOnboardingSystem-backend'
+    image = 'nilsost/lpos-backend'
     tags = ''
     if version is not None:
         tags += f' -t {image}:{version}'

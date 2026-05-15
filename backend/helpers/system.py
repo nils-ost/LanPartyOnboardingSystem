@@ -146,7 +146,6 @@ def _check_integrity_tables():
 
 
 def _check_integrity_lpos():
-    from helpers.client import containerd_psutil
     last_check = Setting.value('integrity_lpos')
     if not last_check < 1 and (last_check + check_max_diff) >= datetime.now().timestamp():
         return {'code': 0, 'desc': 'check ok'}
@@ -154,28 +153,17 @@ def _check_integrity_lpos():
     if not required_integrity.get('code', 1) == 0:
         return required_integrity
 
-    from elements import VLAN, IpPool, Device
+    from elements import VLAN, IpPool
+    from helpers.client import get_mgmt_ip
     # check LPOS's server network ip for mgmt VLAN is part of the same subnet as mgmt-IpPool
     mgmt_vlan = VLAN.get_by_purpose(1)[0]
     mgmt_ippool = IpPool.get_by_vlan(mgmt_vlan['_id'])[0]
     # determine LPOS's IP
-    lpos_ip = None
-    lpos_mgmt_if = Setting.value('os_nw_interface')
-    for iname, conf in containerd_psutil().items():
-        if iname == 'lo' or 'vlan' in iname:
-            continue
-        if iname == lpos_mgmt_if or lpos_mgmt_if == '':
-            ip, mac = (None, None)
-            if 'AF_PACKET' in conf:
-                mac = conf['AF_PACKET'].replace(':', '')
-            if 'AF_INET' in conf:
-                ip = conf['AF_INET'].split('.')
-            if mac is not None and ip is not None and Device.get_by_mac(mac) is not None:
-                lpos_ip = IpPool.octetts_to_int(int(ip[0]), int(ip[1]), int(ip[2]), int(ip[3]))
-                break
+    lpos_ip = get_mgmt_ip()
     if lpos_ip is None:
         return {'code': 7, 'desc': 'IP of LPOS server could not be determined'}
     # expand the mask of mgmt_ippool to a usable format
+    lpos_ip = IpPool.dotted_to_int(lpos_ip)
     mask = int('1' * mgmt_ippool['mask'] + '0' * (32 - mgmt_ippool['mask']), 2)
     if not (lpos_ip & mask) == (mgmt_ippool['range_start'] & mask):
         return {'code': 8, 'desc': 'IP of LPOS server is not in the same subnet as mgmt-IpPool'}

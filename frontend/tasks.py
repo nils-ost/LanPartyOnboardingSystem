@@ -3,7 +3,7 @@ from invoke import task
 
 @task(name='container-image-build')
 def build_container_image(c, version=None, beta=False, alpha=False):
-    image = 'nilsost/LanPartyOnboardingSystem-frontend'
+    image = 'nilsost/lpos-frontend'
     tags = ''
     if version is not None:
         tags += f' -t {image}:{version}'
@@ -18,7 +18,7 @@ def build_container_image(c, version=None, beta=False, alpha=False):
 
 @task(name='container-image-push')
 def push_container_image(c, version=None, beta=False, alpha=False):
-    image = 'nilsost/LanPartyOnboardingSystem-frontend'
+    image = 'nilsost/lpos-frontend'
     tags = ''
     if version is not None:
         tags += f' -t {image}:{version}'

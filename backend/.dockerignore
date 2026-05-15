@@ -3,5 +3,7 @@
 *.json
 .coverage
 .coveragerc
+coverage_html_report
 cli.py
 tasks.py
+Dockerfile

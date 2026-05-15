@@ -94,31 +94,36 @@ if __name__ == '__main__':
 
     docDB.wait_for_connection()
     versioning_run()
+
+    # Clear cached mac and ip addr, that was detected for the LPOS server in mgmt network. Required for changes that might have happend in the meantime
+    Setting.set('lpos_mgmt_mac', None)
+    Setting.set('lpos_mgmt_ip', None)
+
     device_onboarding_start()
     start_metrics_exporter()
 
-    # Clear cached mac addr, that was detected for the LPOS server in mgmt network. Required for hardware changes that might have happend in the meantime
-    Setting.set('lpos_mgmt_mac', None)
-
-    try:
-        from helpers.system import check_integrity
-        from helpers.vlanmgmt import vlan_os_interfaces_commit, vlan_dns_server_commit, vlan_dhcp_server_commit
-        from helpers.haproxy import ssoHAproxy, lposHAproxy
-        if not check_integrity().get('code', 1) == 0:
-            raise Exception('integrity check failed')
-        if not vlan_os_interfaces_commit().get('code', 1) == 0:
-            raise Exception('vlan os interfaces commit failed')
-        if not vlan_dns_server_commit().get('code', 1) == 0:
-            raise Exception('vlan dns server commit failed')
-        if not vlan_dhcp_server_commit().get('code', 1) == 0:
-            raise Exception('vlan dhcp server commit failed')
-        if Setting.value('nlpt_sso'):
-            ssoHAproxy.start_container()
-            ssoHAproxy.wait_for_running()
-            ssoHAproxy.setup_sso_ip()
-        lposHAproxy.set_ms_redirect_url()
-        logger.info('StartUp auto commit: finished')
-    except Exception as e:
-        logger.info(f'StartUp auto commit: {e}')
+    if not Setting.value('disable_auto_commits'):
+        try:
+            from helpers.system import check_integrity
+            from helpers.vlanmgmt import vlan_os_interfaces_commit, vlan_dns_server_commit, vlan_dhcp_server_commit
+            from helpers.haproxy import ssoHAproxy, lposHAproxy
+            if not check_integrity().get('code', 1) == 0:
+                raise Exception('integrity check failed')
+            if Setting.value('nlpt_sso'):
+                ssoHAproxy.start_container()
+                ssoHAproxy.wait_for_running()
+                ssoHAproxy.setup_sso_ip()
+            lposHAproxy.set_ms_redirect_url()
+            if not vlan_os_interfaces_commit().get('code', 1) == 0:
+                raise Exception('vlan os interfaces commit failed')
+            if not vlan_dns_server_commit().get('code', 1) == 0:
+                raise Exception('vlan dns server commit failed')
+            if not vlan_dhcp_server_commit().get('code', 1) == 0:
+                raise Exception('vlan dhcp server commit failed')
+            logger.info('StartUp auto commit: finished')
+        except Exception as e:
+            logger.info(f'StartUp auto commit: {e}')
+    else:
+        logger.info('StartUp auto commit: disabled')
 
     cherrypy.quickstart(API(), '/', conf)
