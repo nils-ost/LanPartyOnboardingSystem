@@ -25,6 +25,17 @@ services:
     volumes:
       - /proc/net/arp:/host-arp:ro
 
+  prefetcher:
+    image: nilsost/lpos-backend:${LPOS_VERSION:-latest}
+    command: prefetcher.py
+    restart: no
+    depends_on:
+      - backend
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   frontend:
     image: nilsost/lpos-frontend:${LPOS_VERSION:-latest}
     restart: unless-stopped

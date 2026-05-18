@@ -135,6 +135,7 @@ class VLAN(ElementBase):
     def commit_dns_server(self):
         from elements import Setting, IpPool
         from helpers.system import check_integrity_vlan_dns_commit
+        from prefetcher import docker_images as dima
         integrity = check_integrity_vlan_dns_commit()
         if not integrity.get('code', 1) == 0:
             return False  # integrity check failed, can't continue
@@ -175,7 +176,7 @@ class VLAN(ElementBase):
             # create a temporary container, to inject configuration to volume
             copier_con = dcli.containers.run(
                 name=f'copier-dns-{self["number"]}',
-                image='alpine',
+                image=dima['alpine'],
                 command='sleep 3',
                 volumes=[f'lpos-ipvlan{self["number"]}-dns:/app:rw'],
                 remove=True,
@@ -212,7 +213,7 @@ class VLAN(ElementBase):
             # create, connect to VLAN and start container
             dcon = dcli.containers.run(
                 name=f'lpos-ipvlan{self["number"]}-dns',
-                image='coredns/coredns:1.11.1',
+                image=dima['coredns'],
                 command='-conf /etc/coredns/Corefile',
                 volumes=[f'lpos-ipvlan{self["number"]}-dns:/etc/coredns:rw'],
                 network=dnet.name,
@@ -251,6 +252,7 @@ class VLAN(ElementBase):
     def commit_dhcp_server(self):
         from elements import Setting, IpPool
         from helpers.system import check_integrity_vlan_dhcp_commit
+        from prefetcher import docker_images as dima
         integrity = check_integrity_vlan_dhcp_commit()
         if not integrity.get('code', 1) == 0:
             return False  # integrity check failed, can't continue
@@ -324,7 +326,7 @@ class VLAN(ElementBase):
         # create a temporary container, to inject configuration to volume
         copier_con = dcli.containers.run(
             name=f'copier-dhcp-{self["number"]}',
-            image='alpine',
+            image=dima['alpine'],
             command='sleep 3',
             volumes=[f'lpos-ipvlan{self["number"]}-dhcp:/app:rw'],
             remove=True,
@@ -366,7 +368,7 @@ class VLAN(ElementBase):
             # create, connect to VLAN and start container
             dcon = dcli.containers.run(
                 name=f'lpos-ipvlan{self["number"]}-dhcp',
-                image='docker.cloudsmith.io/isc/docker/kea-dhcp4:2.5.7',
+                image=dima['kea-dhcp4'],
                 volumes=[f'lpos-ipvlan{self["number"]}-dhcp:/etc/kea:rw'],
                 network=dnet.name,
                 remove=True,

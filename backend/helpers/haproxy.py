@@ -228,12 +228,13 @@ class SSOHAproxy(_BaseHAproxy):
         import tarfile
         import os
         import pathlib
+        from prefetcher import docker_images as dima
         self.logger.info('starting container')
         if self.container_id is None and not self.container_running():
             # create a temporary container, to inject configuration to volume
             copier_con = self.dcli.containers.run(
                 name='copier-ssoproxy',
-                image='alpine',
+                image=dima['alpine'],
                 command='sleep 3',
                 volumes=['lpos-ssoproxy:/app:rw'],
                 remove=True,
@@ -259,7 +260,7 @@ class SSOHAproxy(_BaseHAproxy):
             try:
                 dcon = self.dcli.containers.run(
                     name='lpos-ssoproxy',
-                    image='haproxytech/haproxy-alpine:latest',
+                    image=dima['haproxy'],
                     volumes=['lpos-ssoproxy:/usr/local/etc/haproxy/:rw'],
                     cap_add=['NET_ADMIN'],
                     sysctls={'net.ipv4.ip_unprivileged_port_start': 0},

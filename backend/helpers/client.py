@@ -136,10 +136,11 @@ def containerd_psutil():
     """
     import json
     import docker
+    from prefetcher import docker_images as dima
     dcli = docker.from_env()
     command = list([
         'pip3 install psutil',
         'python3 -c "import psutil, json; print(json.dumps({k: {e.family.name: e.address for e in i} for k, i in psutil.net_if_addrs().items()}))"'
     ])
-    result = dcli.containers.run(network_mode='host', remove=True, image='python:3.10-alpine', command=f"/bin/sh -c '{';'.join(command)}'")
+    result = dcli.containers.run(network_mode='host', remove=True, image=dima['python'], command=f"/bin/sh -c '{';'.join(command)}'")
     return json.loads(result.decode('utf-8').strip().split('\n')[-1])
