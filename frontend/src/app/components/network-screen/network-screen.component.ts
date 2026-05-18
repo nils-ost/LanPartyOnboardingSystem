@@ -148,7 +148,7 @@ export class NetworkScreenComponent implements OnInit, OnDestroy {
             life: 6000
           });
           if (this.commit_all) this.doHaproxyCommit();
-          if (this.retreat_all) this.doDhcpServersRetreat();
+          if (this.retreat_all) this.doHaproxyRetreat();
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);
@@ -486,6 +486,42 @@ export class NetworkScreenComponent implements OnInit, OnDestroy {
             life: 6000
           });
           if (this.retreat_all) this.doDnsServersRetreat();
+        },
+        error: (err: HttpErrorResponse) => {
+          this.errorHandler.handleError(err);
+          let detail: string = 'unknown';
+          if (this.errorHandler.elementError) {
+            if (this.errorHandler.elementErrors.code == 1) detail = this.errorHandler.elementErrors.desc + ' ' + this.errorHandler.elementErrors.integrity.desc;
+            else detail = this.errorHandler.elementErrors.desc;
+          }
+          this.messageService.add({
+            severity: 'error',
+            summary: $localize `:@@SystemExecRetreatErrorSummary:Error`,
+            detail: detail,
+            life: 6000
+          });
+        }
+      })
+  }
+
+  doHaproxyRetreat() {
+    this.messageService.add({
+      severity: 'info',
+      summary: $localize `:@@SystemExecRetreatStartedSummary:Retreating`,
+      detail: $localize `:@@SystemExecRetreatHaproxyStartedDetail:retreating HAproxys started`,
+      life: 6000
+    });
+    this.systemService
+      .execRetreatHaproxy()
+      .subscribe({
+        next: (response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: $localize `:@@SystemExecRetreatSuccessSummary:Done`,
+            detail: $localize `:@@SystemExecRetreatHaproxySuccessDetail:all HAproxys successful retreated`,
+            life: 6000
+          });
+          if (this.retreat_all) this.doDhcpServersRetreat();
         },
         error: (err: HttpErrorResponse) => {
           this.errorHandler.handleError(err);

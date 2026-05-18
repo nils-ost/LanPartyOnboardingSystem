@@ -503,7 +503,7 @@ class TestCommitSystem(unittest.TestCase):
         self.assertEqual(len(dcon), 1, 'docker container haproxy not found')
         dcon = dcon[0]
         self.assertEqual(dcon.status, 'running')
-        self.assertEqual(dcon.attrs['HostConfig']['NetworkMode'], 'bridge')
+        self.assertEqual(dcon.attrs['HostConfig']['NetworkMode'], 'lpos-internal')
         self.assertEqual(len(dcon.attrs['Mounts']), 1)
         self.assertEqual(dcon.attrs['Mounts'][0]['Destination'], '/usr/local/etc/haproxy')
         for p in [5555, 80, 8404]:
@@ -512,7 +512,7 @@ class TestCommitSystem(unittest.TestCase):
             self.assertIn('0.0.0.0', binds)
             self.assertEqual(int(binds['0.0.0.0']), p)
         self.assertNotIn('lpos-ipvlan113', dcon.attrs['NetworkSettings']['Networks'])
-        self.assertIn('bridge', dcon.attrs['NetworkSettings']['Networks'])
+        self.assertIn('lpos-internal', dcon.attrs['NetworkSettings']['Networks'])
         self.assertIn('lpos-ipvlan112', dcon.attrs['NetworkSettings']['Networks'])
         self.assertEqual(dcon.attrs['NetworkSettings']['Networks']['lpos-ipvlan112']['IPAddress'], '192.168.123.4')
         self.assertIn('lpos-ipvlan121', dcon.attrs['NetworkSettings']['Networks'])
@@ -524,12 +524,12 @@ class TestCommitSystem(unittest.TestCase):
         self.assertEqual(len(dcon), 1, 'docker container ssoproxy not found')
         dcon = dcon[0]
         self.assertEqual(dcon.status, 'running')
-        self.assertEqual(dcon.attrs['HostConfig']['NetworkMode'], 'bridge')
+        self.assertEqual(dcon.attrs['HostConfig']['NetworkMode'], 'lpos-internal')
         self.assertEqual(len(dcon.attrs['Mounts']), 1)
         self.assertEqual(dcon.attrs['Mounts'][0]['Destination'], '/usr/local/etc/haproxy')
         self.assertNotIn('lpos-ipvlan112', dcon.attrs['NetworkSettings']['Networks'])
         self.assertNotIn('lpos-ipvlan113', dcon.attrs['NetworkSettings']['Networks'])
-        self.assertIn('bridge', dcon.attrs['NetworkSettings']['Networks'])
+        self.assertIn('lpos-internal', dcon.attrs['NetworkSettings']['Networks'])
         self.assertIn('lpos-ipvlan121', dcon.attrs['NetworkSettings']['Networks'])
         self.assertEqual(dcon.attrs['NetworkSettings']['Networks']['lpos-ipvlan121']['IPAddress'], '172.16.1.14')
         self.assertIn('lpos-ipvlan122', dcon.attrs['NetworkSettings']['Networks'])
@@ -551,11 +551,16 @@ class TestCommitSystem(unittest.TestCase):
     def test_100_retreat_everyting(self):
         from helpers.switchmgmt import switches_retreat
         from helpers.vlanmgmt import vlan_os_interfaces_retreat, vlan_dns_server_retreat, vlan_dhcp_server_retreat
+        from helpers.haproxy import ssoHAproxy, lposHAproxy
         # first retreat everything, then do the checks, to have retreated as much as possible
+        r_ssop = ssoHAproxy.stop_container()
+        r_hap = lposHAproxy.detach_all_ipvlans()
         r_dhcp = vlan_dhcp_server_retreat()
         r_dns = vlan_dns_server_retreat()
         r_int = vlan_os_interfaces_retreat()
         r_swi = switches_retreat()
+        self.assertTrue(r_ssop)
+        self.assertTrue(r_hap)
         self.assertIn('code', r_dhcp)
         self.assertEqual(r_dhcp['code'], 0, r_dhcp['desc'])
         self.assertIn('code', r_dns)
@@ -571,6 +576,8 @@ class TestCommitSystem(unittest.TestCase):
         """
         dcli = docker.from_env()
         # TODO: change all compares to 0 after haproxy retreat is implemented
-        self.assertEqual(len(dcli.containers.list(filters={'name': 'lpos-'})), 1)
-        self.assertEqual(len(dcli.volumes.list(filters={'name': 'lpos-'})), 1)
-        self.assertEqual(len(dcli.networks.list(filters={'name': 'lpos-'})), 0)
+        self.assertEqual(len(dcli.containers.list(filters={'name': 'lpos-'})), 0)
+        self.assertEqual(len(dcli.volumes.list(filters={'name': 'lpos-'})), 0)
+        networks = dcli.networks.list(filters={'name': 'lpos-'})
+        self.assertEqual(len(networks), 1)  # only lpos-internal is still left
+        self.assertEqual(networks[0].name, 'lpos-internal')  # check that it realy is lpos-internal

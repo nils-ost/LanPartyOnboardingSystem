@@ -9,10 +9,17 @@ dummy_net_mac = '12:34:56:78:90:ab'
 
 @task(name='dev-start')
 def start_development(c):
+    # Network
+    r = c.run('sudo docker network ls', hide=True)
+    if 'lpos-internal' not in r.stdout:
+        print('Creating network: lpos-internal')
+        c.run('sudo docker network create -d bridge lpos-internal')
+    # mongodb
     r = c.run('sudo docker ps -f name=dev-mongo', hide=True)
     if 'dev-mongo' not in r.stdout:
         print('Starting mongoDB')
-        c.run('sudo docker run --name dev-mongo --rm -p 27017:27017 -d mongo:4.4')
+        c.run('sudo docker run --name dev-mongo --rm -p 27017:27017 --network lpos-internal -d mongo:4.4')
+    # haproxy
     r = c.run('sudo docker ps -f name=dev-haproxy', hide=True)
     if 'dev-haproxy' not in r.stdout:
         print('Starting HAproxy')
@@ -23,21 +30,23 @@ def start_development(c):
         c.run('sudo docker run --rm --name copier-haproxy -v dev-haproxy:/app -d alpine sleep 3')
         c.run('sudo docker cp /tmp/haproxy.cfg copier-haproxy:/app/haproxy.cfg')
         cmd = [
-            'sudo docker run --name dev-haproxy --rm --cap-add=NET_ADMIN',
+            'sudo docker run --name dev-haproxy --rm --cap-add=NET_ADMIN --network lpos-internal',
             '--add-host=host.docker.internal:host-gateway --sysctl net.ipv4.ip_unprivileged_port_start=0',
             '-v dev-haproxy:/usr/local/etc/haproxy/ -p 80:80 -p 8404:8404 -p 5555:5555 -d haproxytech/haproxy-alpine:2.9.6'
         ]
         c.run(' '.join(cmd))
+    # dummyswitches
     for i in range(4):
         r = c.run(f'sudo docker ps -f name=dev-dummyswitch-{i}', hide=True)
         if f'dev-dummyswitch-{i}' not in r.stdout:
             print(f'Starting dummy-switch-{i}')
             cmd = [
-                f'sudo docker run --name dev-dummyswitch-{i} --rm',
+                f'sudo docker run --name dev-dummyswitch-{i} --rm --network lpos-internal',
                 f'-v ./backend/:/app:ro -p 13{37 + i}:1337 -d python:3.10-alpine',
                 '/bin/sh -c "pip3 install CherryPy cherrypy-cors; python3 /app/dummyswitch.py"'
             ]
             c.run(' '.join(cmd))
+    # dummy-interface
     if dummy_net_int not in psutil.net_if_addrs().keys():
         print('Configuring dummy network interface')
         c.run('sudo modprobe dummy')
@@ -60,17 +69,23 @@ def stop_development(c):
         r = c.run(f'sudo docker ps -f name={name}', hide=True)
         if name in r.stdout:
             print(f'Stopping {name}')
-            c.run(f'sudo docker stop {name}')
-    print('Removing volumes:')
-    try:
+            t = ''
+            if 'haproxy' in name:
+                t = '--timeout 2 '
+            c.run(f'sudo docker stop {t}{name}')
+    r = c.run('sudo docker volume ls', hide=True)
+    if 'dev-haproxy' in r.stdout:
+        print('Removing volume: dev-haproxy')
         c.run('sudo docker volume rm dev-haproxy')
-    except Exception:
-        pass
     if dummy_net_int in psutil.net_if_addrs().keys():
         print('Removing dummy network interface')
         c.run(f'sudo ip a del {dummy_net_ip} dev {dummy_net_int}')
         c.run(f'sudo ip link delete {dummy_net_int} type dummy')
         c.run('sudo rmmod dummy')
+    r = c.run('sudo docker network ls', hide=True)
+    if 'lpos-internal' in r.stdout:
+        print('Removing network: lpos-internal')
+        c.run('sudo docker network rm lpos-internal')
 
 
 @task(pre=[stop_development], post=[start_development], name='dev-clean')

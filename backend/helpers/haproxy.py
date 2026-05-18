@@ -158,6 +158,33 @@ class _BaseHAproxy():
         except docker.errors.NotFound:
             self.logger.error(f"can't find network with name: {name}")
 
+    def detach_ipvlan(self, name):
+        self.logger.info(f"detaching ipvlan '{name}'")
+        if self.container_id is None and not self.container_running():
+            self.logger.warning("container not started or can't be found")
+            return False
+
+        try:
+            dnet = self.dcli.networks.get(name)
+            for dcon in dnet.containers:
+                if dcon.id == self.container_id:
+                    try:
+                        dnet.disconnect(dcon)
+                    except Exception as e:
+                        self.logger.error(f"unable to detach '{name}': {e}")
+                        return False
+        except docker.errors.NotFound:
+            self.logger.error(f"can't find network with name: {name}")
+            return False
+        return True
+
+    def detach_all_ipvlans(self):
+        result = True
+        for dnet in self.dcli.networks.list(filters={'name': 'lpos-ipvlan'}):
+            if not self.detach_ipvlan(dnet.name):
+                result = False
+        return result
+
     def execute_command(self, cmd):
         self.logger.info(f"execute command '{cmd}'")
         if self.container_id is None and not self.container_running():
@@ -262,6 +289,7 @@ class SSOHAproxy(_BaseHAproxy):
                     name='lpos-ssoproxy',
                     image=dima['haproxy'],
                     volumes=['lpos-ssoproxy:/usr/local/etc/haproxy/:rw'],
+                    network='lpos-internal',
                     cap_add=['NET_ADMIN'],
                     sysctls={'net.ipv4.ip_unprivileged_port_start': 0},
                     ports={
@@ -278,6 +306,31 @@ class SSOHAproxy(_BaseHAproxy):
             self.logger.info(f'container started with id: {self.container_id}')
         else:
             self.logger.info(f'container is running under id: {self.container_id}')
+        return True
+
+    def stop_container(self):
+        self.logger.info('stopping container')
+        if self.container_id is None:
+            self.logger.info('container already stopped')
+        else:
+            try:
+                dcon = self.dcli.containers.get(self.container_id)
+                dcon.stop(timeout=2)
+                self.container_id = None
+                self.logger.info(f'stopped container: {dcon.id}')
+            except Exception as e:
+                self.logger.error(f'error stopping container "{self.container_id}": {e}')
+                return False
+        self.logger.info('deleting volume')
+        try:
+            dvol = self.dcli.volumes.get('lpos-ssoproxy')
+            dvol.remove()
+            self.logger.info('deleted volume: lpos-ssoproxy')
+        except docker.errors.NotFound:
+            self.logger.info('volume "lpos-ssoproxy" already deleted')
+        except Exception as e:
+            self.logger.error(f'error deleting volume "lpos-ssoproxy": {e}')
+            return False
         return True
 
     def setup_sso_ip(self):
