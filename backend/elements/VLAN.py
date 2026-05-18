@@ -63,7 +63,7 @@ class VLAN(ElementBase):
                     port['retreat_config']['vlans'].remove(self['_id'])
                 port.save()
 
-    def delete_post():
+    def delete_post(self):
         from elements import Port, PortConfigCache
         for p in Port.all():
             PortConfigCache.delete_by_port(p['_id'])
@@ -157,7 +157,8 @@ class VLAN(ElementBase):
             dns_ip = IpPool.int_to_dotted(pool['range_start'] + 2)
             ssoproxy_ip = IpPool.int_to_dotted(pool['range_start'] + 4)
 
-            open('/tmp/Corefile', 'w').write('. {\n    log\n    errors\n    auto\n    hosts /etc/coredns/hosts {\n        ttl 10\n    }\n}')
+            with open('/tmp/Corefile', 'w') as f:
+                f.write('. {\n    log\n    errors\n    auto\n    hosts /etc/coredns/hosts {\n        ttl 10\n    }\n}')
             hosts = [
                 f'{lpos_ip}  {lpos_domain} www.{lpos_domain}',
                 f'{lpos_ip}  www.msftconnecttest.com',
@@ -166,7 +167,8 @@ class VLAN(ElementBase):
                 from urllib.parse import urlparse
                 sso_domain = urlparse(Setting.value('sso_login_url')).netloc
                 hosts.append(f'{ssoproxy_ip} {sso_domain}')
-            open('/tmp/hosts', 'w').write('\n'.join(hosts))
+            with open('/tmp/hosts', 'w') as f:
+                f.write('\n'.join(hosts))
 
             subprocess.call(f'{dcmd} run --rm --name copier-dns-{self["number"]} -v lpos-ipvlan{self["number"]}-dns:/app -d alpine sleep 3', shell=True)
             subprocess.call(f'{dcmd} cp /tmp/Corefile copier-dns-{self["number"]}:/app/', shell=True)
@@ -220,7 +222,8 @@ class VLAN(ElementBase):
         ctrl_agent_conf = dict({'http-host': '127.0.0.1', 'http-port': 8000})
         ctrl_agent_conf['control-sockets'] = {'dhcp4': {'socket-type': 'unix', 'socket-name': '/dev/null'}}
         ctrl_agent_conf['loggers'] = [{'name': 'kea-ctrl-agent', 'output_options': [{'output': 'stdout'}], 'severity': 'INFO'}]
-        open('/tmp/kea-ctrl-agent.conf', 'w').write(json.dumps({'Control-agent': ctrl_agent_conf}, indent=4))
+        with open('/tmp/kea-ctrl-agent.conf', 'w') as f:
+            f.write(json.dumps({'Control-agent': ctrl_agent_conf}, indent=4))
 
         # create dhcp4 conf
         dhcp4_conf = dict({'subnet4': list(), 'option-data': list()})
@@ -271,7 +274,8 @@ class VLAN(ElementBase):
             dhcp4_conf['option-data'].append({'name': 'domain-name-servers', 'data': dns_ip})
             dhcp4_conf['option-data'].append({'name': 'routers', 'data': lpos_ip})
             dhcp4_conf['option-data'].append({'name': 'v4-captive-portal', 'data': f'http://{lpos_domain}/', 'always-send': True})
-        open('/tmp/kea-dhcp4.conf', 'w').write(json.dumps({'Dhcp4': dhcp4_conf}, indent=4))
+        with open('/tmp/kea-dhcp4.conf', 'w') as f:
+            f.write(json.dumps({'Dhcp4': dhcp4_conf}, indent=4))
 
         # decide wether to start or reload the server
         if not 0 == subprocess.call(f'{dcmd} ps --format=\u007b\u007b.Names\u007d\u007d | grep lpos-ipvlan{self["number"]}-dhcp', shell=True):

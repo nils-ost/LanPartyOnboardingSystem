@@ -9,20 +9,25 @@ device_onboarding_thread = None
 device_onboarding_queue = Queue()
 
 
-def device_scanner():
+def device_scanner_scan_once():
     from elements import Switch
+    new_count = 0
+    connected = dict()
+    for switch in Switch.all():
+        connected[switch['_id']] = switch.connected()
+        if connected[switch['_id']]:
+            switch.scan_ports()
+            switch.scan_devices()
+    for switch in Switch.all():
+        if connected[switch['_id']]:
+            new_count += switch.map_devices()
+    return new_count
+
+
+def device_scanner():
     time.sleep(3)
     while True:
-        new_count = 0
-        connected = dict()
-        for switch in Switch.all():
-            connected[switch['_id']] = switch.connected()
-            if connected[switch['_id']]:
-                switch.scan_ports()
-                switch.scan_devices()
-        for switch in Switch.all():
-            if connected[switch['_id']]:
-                new_count += switch.map_devices()
+        new_count = device_scanner_scan_once()
         if new_count > 0:
             print(f'Found {new_count} new Devices')
         time.sleep(15)

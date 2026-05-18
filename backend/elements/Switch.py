@@ -2,7 +2,7 @@ import logging
 import cherrypy
 from datetime import datetime
 from noapiframe import ElementBase, docDB
-from MTSwitch import MikroTikSwitch
+from HWSwitch import AutoDetectSwitch
 
 switch_objects = dict()
 switch_macs = list()
@@ -48,7 +48,7 @@ class Switch(ElementBase):
         global switch_objects
         test_suite = 'environment' in cherrypy.config and cherrypy.config['environment'] == 'test_suite'
         if not test_suite:
-            switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
+            switch_objects[self['_id']] = AutoDetectSwitch(self['addr'], self['user'], self['pw'])
         if self.connected():
             self.scan_vlans()
             self.scan_ports()
@@ -75,9 +75,9 @@ class Switch(ElementBase):
         if not self['_id']:
             return False
         if self['_id'] not in switch_objects:
-            switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
+            switch_objects[self['_id']] = AutoDetectSwitch(self['addr'], self['user'], self['pw'])
         if not switch_objects[self['_id']].connected:
-            switch_objects[self['_id']] = MikroTikSwitch(self['addr'], self['user'], self['pw'])
+            switch_objects[self['_id']] = AutoDetectSwitch(self['addr'], self['user'], self['pw'])
         swi = switch_objects[self['_id']]
         if swi.connected and swi.mac_addr not in switch_macs:
             switch_macs.append(swi.mac_addr)
@@ -256,13 +256,6 @@ class Switch(ElementBase):
         swi = switch_objects[self['_id']]
         swi.portEdit(port_number, enabled=True)
         swi.commitNeeded()
-
-    def metrics(self):
-        global switch_objects
-        if not self.connected():
-            return dict()
-        swi = switch_objects[self['_id']]
-        return swi.loadStatsRaw()
 
     def _retreat_vlans(self):
         """

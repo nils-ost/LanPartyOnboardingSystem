@@ -1,4 +1,5 @@
 import logging
+import json
 
 
 class SwitchPort():
@@ -17,6 +18,9 @@ class SwitchPort():
         self.vlan_receive = ''
         self.vlan_default = 0
         self.vlan_force = False
+
+    def __str__(self):
+        return json.dumps(self.json())
 
     def fwdTo(self, port):
         if isinstance(port, self.__class__):
@@ -44,6 +48,22 @@ class SwitchPort():
             return True
         return False
 
+    def json(self):
+        return dict(
+            idx=self.idx,
+            name=self.name,
+            type=self.type,
+            enabled=self.enabled,
+            link=self.link,
+            speed=self.speed,
+            hosts=self.hosts,
+            fwd=self._fwd,
+            vlan_mode=self.vlan_mode,
+            vlan_receive=self.vlan_receive,
+            vlan_default=self.vlan_default,
+            vlan_force=self.vlan_force
+        )
+
 
 class SwitchVLAN():
     logger = logging.getLogger('SwitchVLAN')
@@ -55,6 +75,9 @@ class SwitchVLAN():
         self.mirror = False
         self.igmp = False
         self._member = list()
+
+    def __str__(self):
+        return json.dumps(self.json())
 
     def memberAdd(self, port):
         if isinstance(port, SwitchPort):
@@ -79,3 +102,13 @@ class SwitchVLAN():
             self._member.remove(port)
             return True
         return False
+
+    def json(self):
+        return dict(
+            id=self.id,
+            isolation=self.isolation,
+            learning=self.learning,
+            mirror=self.mirror,
+            igmp=self.igmp,
+            member=self._member
+        )

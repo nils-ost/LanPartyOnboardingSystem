@@ -19,6 +19,7 @@ export class SwitchCreaditComponent implements OnChanges {
   user: string = "";
   pw: string = "";
   purpose: number = 1;
+  pno: number = 0;
   onboarding_vlan_id: string | null = null;
   addr_error?: string;
   purpose_error?: string;
@@ -46,6 +47,7 @@ export class SwitchCreaditComponent implements OnChanges {
       this.pw = this.sw.pw;
       this.purpose = this.sw.purpose;
       this.onboarding_vlan_id = this.sw.onboarding_vlan_id;
+      this.pno = this.sw.port_numbering_offset;
     }
     this.clearErrors();
     this.refreshVlansOptions();
@@ -74,7 +76,7 @@ export class SwitchCreaditComponent implements OnChanges {
   createSwitch() {
     this.clearErrors();
     this.switchService
-      .createSwitch(this.desc, this.addr, this.user, this.pw, this.purpose, this.onboarding_vlan_id)
+      .createSwitch(this.desc, this.addr, this.user, this.pw, this.purpose, this.onboarding_vlan_id, this.pno)
       .subscribe({
         next: (response: any) => {
           this.dialogEndEvent.emit(null);
@@ -89,7 +91,7 @@ export class SwitchCreaditComponent implements OnChanges {
   editSwitch() {
     this.clearErrors();
     this.switchService
-      .updateSwitch(this.sw!.id, this.desc, this.addr, this.user, this.pw, this.purpose, this.onboarding_vlan_id)
+      .updateSwitch(this.sw!.id, this.desc, this.addr, this.user, this.pw, this.purpose, this.onboarding_vlan_id, this.pno)
       .subscribe({
         next: (response: any) => {
           this.dialogEndEvent.emit(null);

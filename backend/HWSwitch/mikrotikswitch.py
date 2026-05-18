@@ -1,14 +1,15 @@
 import requests
 from requests.auth import HTTPDigestAuth
 import logging
-from .helpers import responseToJson, asciiToStr, jsonToRequest, strToAscii, translateKeys, jsonAllHexToInt
+from .baseswitch import BaseSwitch
+from .helpers import responseToJson, asciiToStr, jsonToRequest, strToAscii, translateKeys
 from .parts import SwitchPort, SwitchVLAN
 
 
 model_mapping = dict()
 
 
-class MikroTikSwitch():
+class MikroTikSwitch(BaseSwitch):
     speed_mapping = {
         '0x00': '10M',
         '0x01': '100M',
@@ -22,45 +23,28 @@ class MikroTikSwitch():
         '0x02': 'enabled',
         '0x03': 'strict'
     }
-    vlan_mode_mapping_reverse = dict([(v, k) for k, v in vlan_mode_mapping.items()])
     vlan_receive_mapping = {
         '0x00': 'any',
         '0x01': 'only tagged',
         '0x02': 'only untagged'
     }
-    vlan_receive_mapping_reverse = dict([(v, k) for k, v in vlan_receive_mapping.items()])
-
-    logger = logging.getLogger('MikroTikSwitch')
 
     def __init__(self, host, user, password):
+        super().__init__(host, user, password)
+        self.logger = logging.getLogger('MikroTikSwitch')
+        self.vendor = 'MikroTik'
         self.model = 'generic'
-        self.identity = ''
-        self.mac_addr = ''
-        self.mgmt_vlan = None
-        self.ports = list()
-        self.vlans = list()
-        self._host = host
         self._conn = requests.session()
         self._conn.auth = HTTPDigestAuth(user, password)
-        self._pending_commits = list()
-        self.connected = False
         self.loadModel()
 
-    def _commitRegister(self, component):
-        if component not in self._pending_commits:
-            self._pending_commits.append(component)
-
-    def _commitUnregister(self, component):
-        if component in self._pending_commits:
-            self._pending_commits.remove(component)
-
-    def getData(self, doc, toJson=True):
-        self.connected = True
+    def _getData(self, doc, toJson=True):
         try:
             url = f'http://{self._host}/{doc}'
             self.logger.debug(f'getData:{url}')
             r = self._conn.get(url, timeout=0.1)
             self.logger.debug(f'getData:{r.text}')
+            self.connected = True
             if toJson:
                 return responseToJson(r.text)
             return r.text
@@ -71,8 +55,7 @@ class MikroTikSwitch():
                 return dict()
             return ''
 
-    def postData(self, doc, data):
-        self.connected = True
+    def _postData(self, doc, data):
         try:
             url = f'http://{self._host}/{doc}'
             data = jsonToRequest(data)
@@ -80,12 +63,13 @@ class MikroTikSwitch():
             self.logger.debug(f'postData:{data}')
             r = self._conn.post(url, data=data, timeout=0.2)
             self.logger.debug(f'postData:status_code:{r.status_code}')
+            self.connected = True
         except Exception as e:
             self.logger.debug(f'postData:exception:{repr(e)}')
             self.connected = False
 
     def loadModel(self):
-        r = self.getData('sys.b')
+        r = self._getData('sys.b')
         if len(r) == 0:
             self.logger.error(f"loadModel ({self._host}): Couldn't fetch data")
             return
@@ -103,19 +87,14 @@ class MikroTikSwitch():
         if not model == self.model and model in model_mapping:
             self.model = model
             self.__class__ = model_mapping[model]
-        self.loadSystem()
-        self.loadPorts()
-        self.loadIsolation()
-        self.loadHosts()
-        self.loadVlans()
-        self.loadPortsVlan()
+        self.loadAll()
 
     def loadSystem(self, response=None):
         """
         reads: id, mac, avln
         """
         if response is None:
-            r = self.getData('sys.b')
+            r = self._getData('sys.b')
             if len(r) == 0:
                 self.logger.error(f"loadSystem ({self._host}): Couldn't fetch data")
                 return
@@ -128,17 +107,13 @@ class MikroTikSwitch():
             self.mgmt_vlan = None
         self._commitUnregister('system')
 
-    def reloadSystem(self, response=None):
-        self.loadSystem(response)
-        self._commitUnregister('system')
-
     def loadPorts(self, response=None):
         """
         reads: sfpo, prt
         """
         if response is None:
             self.ports = list()
-            r = self.getData('link.b')
+            r = self._getData('link.b')
             for t in ['gbe'] * int(r.get('sfpo', '0'), 16):
                 p = SwitchPort()
                 p.type = t
@@ -156,7 +131,7 @@ class MikroTikSwitch():
         reads: lnk, en, nm, spd
         """
         if response is None:
-            r = self.getData('link.b')
+            r = self._getData('link.b')
         else:
             r = response
         port_count = len(self.ports)
@@ -183,7 +158,7 @@ class MikroTikSwitch():
         reads: fp*
         """
         if response is None:
-            r = self.getData('fwd.b')
+            r = self._getData('fwd.b')
         else:
             r = response
         port_count = len(self.ports)
@@ -198,16 +173,12 @@ class MikroTikSwitch():
                     port.fwdNotTo(idx)
         self._commitUnregister('isolation')
 
-    def reloadIsolation(self, response=None):
-        self.loadIsolation(response)
-        self._commitUnregister('isolation')
-
     def loadHosts(self, response=None):
         """
-        reads: prt, adr
+        reads: *(prt, adr)
         """
         if response is None:
-            r = self.getData('!dhost.b')
+            r = self._getData('!dhost.b')
         else:
             r = response
         hosts = dict()
@@ -222,15 +193,12 @@ class MikroTikSwitch():
             else:
                 self.ports[idx].hosts = list()
 
-    def reloadHosts(self, response=None):
-        self.loadHosts(response)
-
     def loadVlans(self, response=None):
         """
-        reads: vid, piso, lrn, mrr, igmp, mbr
+        reads: *(vid, piso, lrn, mrr, igmp, mbr)
         """
         if response is None:
-            r = self.getData('vlan.b')
+            r = self._getData('vlan.b')
         else:
             r = response
         self.vlans = list()
@@ -249,16 +217,12 @@ class MikroTikSwitch():
             self.vlans.append(vlan_obj)
         self._commitUnregister('vlans')
 
-    def reloadVlans(self, response=None):
-        self.loadVlans(response)
-        self._commitUnregister('vlans')
-
     def loadPortsVlan(self, response=None):
         """
         reads: fvid, vlan, vlni, dvid
         """
         if response is None:
-            r = self.getData('fwd.b')
+            r = self._getData('fwd.b')
         else:
             r = response
         fvid = bin(int(r.get('fvid', '0'), 16)).replace('0b', '')
@@ -278,22 +242,6 @@ class MikroTikSwitch():
             self.ports[idx].vlan_force = fvid[idx] == '1'
         self._commitUnregister('portsvlan')
 
-    def reloadPortsVlan(self, response=None):
-        self.loadPortsVlan(response)
-        self._commitUnregister('portsvlan')
-
-    def reloadAll(self):
-        self.reloadSystem()
-        self.reloadPorts()
-        self.reloadIsolation()
-        self.reloadHosts()
-        self.reloadVlans()
-        self.reloadPortsVlan()
-
-    def loadStatsRaw(self):
-        j = self.getData('!stats.b')
-        return jsonAllHexToInt(j)
-
     def commitSystem(self, request=None):
         r = request if request else dict()
         if self.mgmt_vlan is None:
@@ -302,7 +250,7 @@ class MikroTikSwitch():
             avln = hex(self.mgmt_vlan).replace('0x', '')
             avln = '0x' + '0' * (len(avln) % 2) + avln
             r['avln'] = avln
-        self.postData('sys.b', r)
+        self._postData('sys.b', r)
         self._commitUnregister('system')
 
     def commitPorts(self, request=None):
@@ -316,7 +264,7 @@ class MikroTikSwitch():
         en = hex(int(en, 2)).replace('0x', '')
         en = '0x' + '0' * (len(en) % 2) + en
         r['en'] = en
-        self.postData('link.b', r)
+        self._postData('link.b', r)
         self._commitUnregister('ports')
 
     def commitIsolation(self, request=None):
@@ -328,7 +276,7 @@ class MikroTikSwitch():
             fwd = hex(int(fwd[::-1], 2)).replace('0x', '')
             fwd = '0x' + '0' * (len(fwd) % 2) + fwd
             r[f'fp{port.idx + 1}'] = fwd
-        self.postData('fwd.b', r)
+        self._postData('fwd.b', r)
         self._commitUnregister('isolation')
 
     def commitVlans(self, request=None):
@@ -347,7 +295,7 @@ class MikroTikSwitch():
             mbr = hex(int(mbr[::-1], 2)).replace('0x', '')
             v['mbr'] = '0x' + '0' * (len(mbr) % 2) + mbr
             r.append(v)
-        self.postData('vlan.b', r)
+        self._postData('vlan.b', r)
         self._commitUnregister('vlans')
 
     def commitPortsVlan(self, request=None):
@@ -376,225 +324,8 @@ class MikroTikSwitch():
             fvid += '1' if port.vlan_force else '0'
         fvid = hex(int(fvid[::-1], 2)).replace('0x', '')
         r['fvid'] = '0x' + '0' * (len(fvid) % 2) + fvid
-        self.postData('fwd.b', r)
+        self._postData('fwd.b', r)
         self._commitUnregister('portsvlan')
-
-    def commitAll(self):
-        self.commitPorts()
-        self.commitVlans()
-        self.commitIsolation()
-        self.commitPortsVlan()
-        self.commitSystem()
-
-    def commitNeeded(self):
-        while len(self._pending_commits) > 0:
-            pending = self._pending_commits[0]
-            if pending == 'ports':
-                self.commitPorts()
-            elif pending == 'vlans':
-                self.commitVlans()
-            elif pending == 'isolation':
-                self.commitIsolation()
-            elif pending == 'portsvlan':
-                self.commitPortsVlan()
-            elif pending == 'system':
-                self.commitSystem()
-
-    def portEdit(self, port, enabled=None, fwdTo=None, fwdNotTo=None, vmode=None, vreceive=None, vdefault=None, vforce=None):
-        if isinstance(port, SwitchPort):
-            port = port.idx
-        elif not isinstance(port, int):
-            self.logger.error(f'portEdit ({self._host}): port needs to be an instance of int or SwitchPort')
-            return
-        if port not in range(len(self.ports)):
-            self.logger.error(f'portEdit ({self._host}): index {port} not in range of available ports')
-            return
-        if enabled is not None:
-            if isinstance(enabled, bool):
-                if not enabled == self.ports[port].enabled:
-                    self.ports[port].enabled = enabled
-                    self._commitRegister('ports')
-            else:
-                self.logger.error(f'portEdit ({self._host}): enabled needs to be instance of bool')
-        if fwdTo is not None:
-            if self.ports[port].fwdTo(fwdTo):
-                self._commitRegister('isolation')
-        if fwdNotTo is not None:
-            if self.ports[port].fwdNotTo(fwdNotTo):
-                self._commitRegister('isolation')
-        if vmode is not None:
-            if vmode in self.vlan_mode_mapping:
-                vmode = self.vlan_mode_mapping[vmode]
-            if vmode in self.vlan_mode_mapping_reverse:
-                if not vmode == self.ports[port].vlan_mode:
-                    self.ports[port].vlan_mode = vmode
-                    self._commitRegister('portsvlan')
-            else:
-                self.logger.error(f'portEdit ({self._host}): unknown vmode {vmode}')
-        if vreceive is not None:
-            if vreceive in self.vlan_receive_mapping:
-                vreceive = self.vlan_receive_mapping[vreceive]
-            if vreceive in self.vlan_receive_mapping_reverse:
-                if not vreceive == self.ports[port].vlan_receive:
-                    self.ports[port].vlan_receive = vreceive
-                    self._commitRegister('portsvlan')
-            else:
-                self.logger.error(f'portEdit ({self._host}): unknown vreceive {vreceive}')
-        if vdefault is not None:
-            if vdefault == 1:
-                if not self.ports[port].vlan_default == 1:
-                    self.ports[port].vlan_default = 1
-                    self._commitRegister('portsvlan')
-            else:
-                for vlan in self.vlans:
-                    if vlan.id == vdefault:
-                        if not self.ports[port].vlan_default == vdefault:
-                            self.ports[port].vlan_default = vdefault
-                            self._commitRegister('portsvlan')
-                        break
-                else:
-                    self.logger.error(f'portEdit ({self._host}): unknown vdefault {vdefault}')
-        if vforce is not None:
-            if isinstance(vforce, bool):
-                if not vforce == self.ports[port].vlan_force:
-                    self.ports[port].vlan_force = vforce
-                    self._commitRegister('portsvlan')
-            else:
-                self.logger.error(f'portEdit ({self._host}): vforce needs to instance of bool')
-
-    def portVLANs(self, port):
-        if isinstance(port, SwitchPort):
-            port = port.idx
-        elif not isinstance(port, int):
-            self.logger.error(f'portVLANs ({self._host}): port needs to be an instance of int or SwitchPort')
-            return
-        if port not in range(len(self.ports)):
-            self.logger.error(f'portVLANs ({self._host}): index {port} not in range of available ports')
-            return
-
-        result = list()
-        for vlan in self.vlans:
-            if port in vlan._member:
-                result.append(vlan)
-        return result
-
-    def vlanEdit(self, vlan, isolation=None, learning=None, mirror=None, igmp=None, memberAdd=None, memberRemove=None):
-        if isinstance(vlan, SwitchVLAN):
-            vlan = vlan.id
-        elif not isinstance(vlan, int):
-            self.logger.error(f'vlanEdit ({self._host}): vlan needs to be an instance of int or SwitchVLAN')
-            return
-        for idx in range(len(self.vlans)):
-            if vlan == self.vlans[idx].id:
-                break
-        else:
-            self.logger.error(f'vlanEdit ({self._host}): unknown vlan {vlan}')
-            return
-        if isolation is not None:
-            if isinstance(isolation, bool):
-                if not isolation == self.vlans[idx].isolation:
-                    self.vlans[idx].isolation = isolation
-                    self._commitRegister('vlans')
-            else:
-                self.logger.error(f'vlanEdit ({self._host}): isolation needs to be an instance bool')
-        if learning is not None:
-            if isinstance(learning, bool):
-                if not learning == self.vlans[idx].learning:
-                    self.vlans[idx].learning = learning
-                    self._commitRegister('vlans')
-            else:
-                self.logger.error(f'vlanEdit ({self._host}): learning needs to be an instance bool')
-        if mirror is not None:
-            if isinstance(mirror, bool):
-                if not mirror == self.vlans[idx].mirror:
-                    self.vlans[idx].mirror = mirror
-                    self._commitRegister('vlans')
-            else:
-                self.logger.error(f'vlanEdit ({self._host}): mirror needs to be an instance bool')
-        if igmp is not None:
-            if isinstance(igmp, bool):
-                if not igmp == self.vlans[idx].igmp:
-                    self.vlans[idx].igmp = igmp
-                    self._commitRegister('vlans')
-            else:
-                self.logger.error(f'vlanEdit ({self._host}): igmp needs to be an instance bool')
-        if memberAdd is not None:
-            if self.vlans[idx].memberAdd(memberAdd):
-                self._commitRegister('vlans')
-        if memberRemove is not None:
-            if self.vlans[idx].memberRemove(memberRemove):
-                self._commitRegister('vlans')
-
-    def vlanAdd(self, vlan, isolation=None, learning=None, mirror=None, igmp=None, memberAdd=None, memberRemove=None):
-        if isinstance(vlan, SwitchVLAN):
-            for v in self.vlans:
-                if v.id == vlan.id:
-                    self.logger.error(f'vlanAdd ({self._host}): vlan with id {vlan.id} allready present')
-                    break
-            else:
-                self.vlans.append(vlan)
-                self._commitRegister('vlans')
-        elif isinstance(vlan, int):
-            for v in self.vlans:
-                if v.id == vlan:
-                    self.logger.error(f'vlanAdd ({self._host}): vlan with id {vlan} allready present')
-                    break
-            else:
-                v = SwitchVLAN()
-                v.id = vlan
-                self.vlans.append(v)
-                self._commitRegister('vlans')
-                self.vlanEdit(vlan, isolation=isolation, learning=learning, mirror=mirror, igmp=igmp, memberAdd=memberAdd, memberRemove=memberRemove)
-        else:
-            self.logger.error(f'vlanAdd ({self._host}): vlan needs to be an instance of int or SwitchVLAN')
-
-    def vlanAddit(self, vlan, isolation=None, learning=None, mirror=None, igmp=None, memberAdd=None, memberRemove=None):
-        """
-        Add or Edit a VLAN
-        """
-        if isinstance(vlan, SwitchVLAN):
-            vlan = vlan.id
-        elif not isinstance(vlan, int):
-            self.logger.error(f'vlanAddit ({self._host}): vlan needs to be an instance of int or SwitchVLAN')
-            return
-        for idx in range(len(self.vlans)):
-            if vlan == self.vlans[idx].id:
-                self.vlanEdit(vlan=vlan, isolation=isolation, learning=learning, mirror=mirror, igmp=igmp, memberAdd=memberAdd, memberRemove=memberRemove)
-                break
-        else:
-            self.vlanAdd(vlan=vlan, isolation=isolation, learning=learning, mirror=mirror, igmp=igmp, memberAdd=memberAdd, memberRemove=memberRemove)
-
-    def vlanRemove(self, vlan):
-        if isinstance(vlan, SwitchVLAN):
-            vlan = vlan.id
-        elif not isinstance(vlan, int):
-            self.logger.error(f'vlanRemove ({self._host}): vlan needs to be an instance of int or SwitchVLAN')
-            return
-        for idx in range(len(self.vlans)):
-            if self.vlans[idx].id == vlan:
-                self.vlans.pop(idx)
-                self._commitRegister('vlans')
-                break
-        else:
-            self.logger.warning(f'vlanRemove: vlan with id {vlan} was not present')
-
-    def setMgmtVlan(self, vlan=None):
-        if vlan is None:
-            self.mgmt_vlan = None
-            self._commitRegister('system')
-            return
-        elif isinstance(vlan, SwitchVLAN):
-            vlan = vlan.id
-        elif not isinstance(vlan, int):
-            self.logger.error(f'setMgmtVlan ({self._host}): vlan needs to be an instance of int, SwitchVLAN or None')
-            return
-        for idx in range(len(self.vlans)):
-            if self.vlans[idx].id == vlan:
-                self.mgmt_vlan = vlan
-                self._commitRegister('system')
-                break
-        else:
-            self.logger.error(f'setMgmtVlan ({self._host}): vlan with id {vlan} is not present')
 
 
 class MikroTikSwitchCRS309(MikroTikSwitch):
@@ -615,7 +346,7 @@ class MikroTikSwitchCRS309(MikroTikSwitch):
 
     def loadPorts(self):
         self.ports = list()
-        r = self.getData('link.b')
+        r = self._getData('link.b')
         for t in ['sfp+'] * int(r.get('sfp', '0'), 16) + ['gbe']:
             p = SwitchPort()
             p.type = t
@@ -627,7 +358,7 @@ class MikroTikSwitchCRS309(MikroTikSwitch):
 class MikroTikSwitchCRS328(MikroTikSwitch):
     def loadPorts(self):
         self.ports = list()
-        r = self.getData('link.b')
+        r = self._getData('link.b')
         for t in ['gbe'] * int(r.get('sfpo', '0'), 16) + ['sfp+'] * int(r.get('sfp', '0'), 16):
             p = SwitchPort()
             p.type = t
@@ -639,7 +370,7 @@ class MikroTikSwitchCRS328(MikroTikSwitch):
 class MikroTikSwitchCSS318(MikroTikSwitch):
     def loadPorts(self):
         self.ports = list()
-        r = self.getData('link.b')
+        r = self._getData('link.b')
         for t in ['gbe'] * int(r.get('sfpo', '0'), 16) + ['sfp+'] * int(r.get('sfp', '0'), 16):
             p = SwitchPort()
             p.type = t
@@ -651,7 +382,7 @@ class MikroTikSwitchCSS318(MikroTikSwitch):
 class MikroTikSwitchCSS326(MikroTikSwitch):
     def loadPorts(self):
         self.ports = list()
-        r = self.getData('link.b')
+        r = self._getData('link.b')
         for t in ['gbe'] * int(r.get('sfpo', '0'), 16) + ['sfp+'] * int(r.get('sfp', '0'), 16):
             p = SwitchPort()
             p.type = t
@@ -682,8 +413,8 @@ class MikroTikSwitchCSS610(MikroTikSwitch):
             'i11': 'tup', 'i13': 'tmp', 'i14': 'tbp', 'i23': 'rtp', 'i24': 'ttp'}
     }
 
-    def getData(self, doc, toJson=True):
-        r = super().getData(doc, toJson)
+    def _getData(self, doc, toJson=True):
+        r = super()._getData(doc, toJson)
         if not toJson:
             return r
         elif doc in self._translations:
@@ -691,14 +422,14 @@ class MikroTikSwitchCSS610(MikroTikSwitch):
         else:
             return r
 
-    def postData(self, doc, data):
+    def _postData(self, doc, data):
         if doc in self._translations:
             data = translateKeys(data, dict([(v, k) for k, v in self._translations[doc].items()]), ommit_surplus=True)
-        super().postData(doc=doc, data=data)
+        super()._postData(doc=doc, data=data)
 
     def loadPorts(self):
         self.ports = list()
-        r = self.getData('link.b')
+        r = self._getData('link.b')
         r['prt'] = '0x0a'  # hardcoded as this value seems not to come from switch
         r['sfpo'] = '0x08'  # hardcoded as this value seems not to come from switch
         r['sfp'] = '0x02'  # hardcoded as this value seems not to come from switch
