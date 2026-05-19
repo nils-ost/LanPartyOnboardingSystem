@@ -54,10 +54,10 @@ switch_hw_config = {
 
 def setUpModule():
     # "programming" switch hardware
-    requests.post('http://localhost:1337/config/', json=switch_hw_config['c1'])
-    requests.post('http://localhost:1338/config/', json=switch_hw_config['c2'])
-    requests.post('http://localhost:1339/config/', json=switch_hw_config['p1'])
-    requests.post('http://localhost:1340/config/', json=switch_hw_config['p2'])
+    requests.post('http://dev-dummyswitch-0:1337/config/', json=switch_hw_config['c1'])
+    requests.post('http://dev-dummyswitch-1:1337/config/', json=switch_hw_config['c2'])
+    requests.post('http://dev-dummyswitch-2:1337/config/', json=switch_hw_config['p1'])
+    requests.post('http://dev-dummyswitch-3:1337/config/', json=switch_hw_config['p2'])
     # resetting DB for a clean run
     docDB.clear()
     # configuring global settings
@@ -80,10 +80,10 @@ def setUpModule():
     t1_ob_vlan_id = VLAN({'desc': 't1 ob', 'number': 121, 'purpose': 2}).save()['created']
     t2_ob_vlan_id = VLAN({'desc': 't2 ob', 'number': 122, 'purpose': 2}).save()['created']
     # creating Switches
-    c1_switch_id = Switch({'desc': 'C1', 'addr': 'localhost:1337', 'purpose': 0}).save()['created']
-    c2_switch_id = Switch({'desc': 'C2', 'addr': 'localhost:1338', 'purpose': 0}).save()['created']
-    p1_switch_id = Switch({'desc': 'P1', 'addr': 'localhost:1339', 'purpose': 1, 'onboarding_vlan_id': t1_ob_vlan_id}).save()['created']
-    p2_switch_id = Switch({'desc': 'P2', 'addr': 'localhost:1340', 'purpose': 1, 'onboarding_vlan_id': t2_ob_vlan_id}).save()['created']
+    c1_switch_id = Switch({'desc': 'C1', 'addr': 'dev-dummyswitch-0:1337', 'purpose': 0}).save()['created']
+    c2_switch_id = Switch({'desc': 'C2', 'addr': 'dev-dummyswitch-1:1337', 'purpose': 0}).save()['created']
+    p1_switch_id = Switch({'desc': 'P1', 'addr': 'dev-dummyswitch-2:1337', 'purpose': 1, 'onboarding_vlan_id': t1_ob_vlan_id}).save()['created']
+    p2_switch_id = Switch({'desc': 'P2', 'addr': 'dev-dummyswitch-3:1337', 'purpose': 1, 'onboarding_vlan_id': t2_ob_vlan_id}).save()['created']
     # creating required IpPools
     IpPool({
         'desc': 'mgmt', 'vlan_id': mgmt_vlan_id, 'mask': 24,
@@ -199,7 +199,7 @@ class TestCommitSystem(unittest.TestCase):
         tests if Switch(hardware) is configured as planned
         """
         # C1
-        sw = requests.get('http://localhost:1337/config/').json()
+        sw = requests.get('http://dev-dummyswitch-0:1337/config/').json()
         self.assertEqual(len(sw['vlans']), 4)
         sw_vlans = {s['id']: s for s in sw['vlans']}
         for i in [113, 112, 121, 122]:
@@ -220,7 +220,7 @@ class TestCommitSystem(unittest.TestCase):
             f = '0b' + '1' * i + '0' + '1' * (9 - i - 1)
             self.assertEqual(sw['forward'][f'from{i}'], f)
         # C2
-        sw = requests.get('http://localhost:1338/config/').json()
+        sw = requests.get('http://dev-dummyswitch-1:1337/config/').json()
         self.assertEqual(len(sw['vlans']), 4)
         sw_vlans = {s['id']: s for s in sw['vlans']}
         for i in [113, 112, 121, 122]:
@@ -245,7 +245,7 @@ class TestCommitSystem(unittest.TestCase):
             f = '0b' + '1' * i + '0' + '1' * (10 - i - 1)
             self.assertEqual(sw['forward'][f'from{i}'], f)
         # P1
-        sw = requests.get('http://localhost:1339/config/').json()
+        sw = requests.get('http://dev-dummyswitch-2:1337/config/').json()
         self.assertEqual(len(sw['vlans']), 3)
         sw_vlans = {s['id']: s for s in sw['vlans']}
         for i in [113, 112, 121]:
@@ -268,7 +268,7 @@ class TestCommitSystem(unittest.TestCase):
             f = '0b000000000000000010'
             self.assertEqual(sw['forward'][f'from{i}'], f)
         # P2
-        sw = requests.get('http://localhost:1340/config/').json()
+        sw = requests.get('http://dev-dummyswitch-3:1337/config/').json()
         self.assertEqual(len(sw['vlans']), 3)
         sw_vlans = {s['id']: s for s in sw['vlans']}
         for i in [113, 112, 122]:

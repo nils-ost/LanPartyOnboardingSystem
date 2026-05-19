@@ -2,11 +2,11 @@
 
 ## v0.9.0
 
-  * frontend is now delivered through an nginx instance, whith makes the stack more versatile regarding dependencies
+  * frontend is now delivered through an nginx instance, which makes the stack more versatile regarding dependencies
   * migrated elements and endpoints to use noAPIframe library, as this enables some nice features on API with future-proof development
   * the first IP-Range, that is created for a VLAN-purpose, is saved as default for this purpose. If another IpPool for this VLAN-purpose is created, this default range is prefilled in the interface.
     * also a option on settings screen exists, to modify those default_ips
-  * added setting to overwrite SSO IP, to prevent system from doing a nslookup
+  * added Setting to overwrite SSO IP, to prevent system from doing a nslookup
   * optimized naming and sorting of Switches an IpPools on TablesScreen
   * smartified invoker for resetting switches
   * moved LPOS server IP from special IpPool to it's own Setting
@@ -15,6 +15,8 @@
   * Backend now uses `AutoDetectSwitch` to enable the future use of other Switch brands without changeing any backend-code
   * added `commitSystem` UnitTest to validate the configuration of HWswitches and dynamic created services on future (core) changes
   * added prefetcher to download docker images, used by dynaimc created containers, in the backgroud before they are needed
+  * the whole application is now build to work within docker containers, which is now the recommended way for deployments
+  * removed Settings for HAproxy connection, as HAproxy is now mandatory to be used within stack
 
 ## v0.8.0
 

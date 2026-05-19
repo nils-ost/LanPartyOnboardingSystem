@@ -5,7 +5,15 @@ import logging
 
 @task(name='coverage')
 def coverage(c):
-    c.run('coverage erase && coverage run --concurrency=multiprocessing -m unittest discover; coverage combine && coverage html && coverage report')
+    cmd = [
+        'docker run --name coverage-runner --rm --network lpos-internal -e MONGO_HOST=dev-mongo',
+        '-v $(pwd):/app -v /var/run/docker.sock:/var/run/docker.sock python:3.10-alpine',
+        '/bin/sh -c "cd /app; apk add git; pip3 install -r requirements.txt coverage;',
+        'coverage erase && coverage run --concurrency=multiprocessing -m unittest discover;',
+        'coverage combine && coverage html && coverage report"'
+    ]
+    c.run(' '.join(cmd))
+    c.run('sudo chown -R $(id -u):$(id -g) .')
 
 
 @task(name='create-admin')

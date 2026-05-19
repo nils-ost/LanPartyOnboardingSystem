@@ -157,7 +157,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/participants-list/participants-list.component.html</context>
@@ -201,23 +201,31 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">4</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
@@ -255,7 +263,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pools-list/ip-pools-list.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelIpPoolMask" datatype="html">
@@ -277,7 +285,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pools-list/ip-pools-list.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelIpPoolRangeEnd" datatype="html">
@@ -288,83 +296,61 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pools-list/ip-pools-list.component.html</context>
-          <context context-type="linenumber">19</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="elementFieldLabelIpPoolLpos" datatype="html">
-        <source>LPOS IP</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.html</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/ip-pools-list/ip-pools-list.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode30" datatype="html">
         <source>value needs to be between 8 and 30</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">181</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode31" datatype="html">
         <source>does not fit to the IP range</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">182</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode32" datatype="html">
         <source>range_start needs to be smaller than range_end</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">187</context>
+          <context context-type="linenumber">185</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">193</context>
+          <context context-type="linenumber">190</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode33" datatype="html">
         <source>overlaps with existing IpPool</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">188</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">191</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode34" datatype="html">
         <source>not a valid IP</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">187</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">195</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ElementErrorCode38" datatype="html">
-        <source>range_start and range_end need to be equal</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">190</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">192</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode1" datatype="html">
         <source>can&apos;t be empty</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">195</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
@@ -403,28 +389,14 @@
         <source>there is no VLAN with this ID</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">200</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ElementErrorCode37" datatype="html">
-        <source>Purpose of VLAN needs to be 0 (play)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">201</context>
+          <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode39" datatype="html">
         <source>only one IpPool per VLAN with this purpose is allowed</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">202</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ElementErrorCode36" datatype="html">
-        <source>Only allowed once, but there is already an IpPool set as LPOS</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/ip-pool-creadit/ip-pool-creadit.component.ts</context>
-          <context context-type="linenumber">205</context>
+          <context context-type="linenumber">197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="DeleteErrorGeneric" datatype="html">
@@ -757,6 +729,10 @@
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
           <context context-type="linenumber">474</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">510</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatSwitchesStartedDetail" datatype="html">
         <source>retreating of all Switches started</source>
@@ -783,6 +759,10 @@
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
           <context context-type="linenumber">484</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">520</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatSwitchesSuccessDetail" datatype="html">
         <source>all Switches successful retreated</source>
@@ -808,6 +788,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
           <context context-type="linenumber">499</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">535</context>
         </context-group>
       </trans-unit>
       <trans-unit id="SystemExecRetreatInterfacesStartedDetail" datatype="html">
@@ -850,6 +834,20 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
           <context context-type="linenumber">485</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecRetreatHaproxyStartedDetail" datatype="html">
+        <source>retreating HAproxys started</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">511</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="SystemExecRetreatHaproxySuccessDetail" datatype="html">
+        <source>all HAproxys successful retreated</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
+          <context context-type="linenumber">521</context>
         </context-group>
       </trans-unit>
       <trans-unit id="onboardingIpHeader" datatype="html">
@@ -1436,193 +1434,214 @@
           <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="settingsHeaderMaintenance" datatype="html">
+        <source>Maintenance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelSettingsDisabelAutoCommits" datatype="html">
+        <source>Disable Auto Commits during StartUp, OnBoarding and discovered Port-Changes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="settingsHeaderSettings" datatype="html">
         <source>Settings</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settingsHeaderPlayNetworkSettings" datatype="html">
+        <source>Play Network Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settingsHeaderAbsoluteSeatNumbers" datatype="html">
         <source>Absolute Seat Numbers</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settingsDescriptionForDisabledASN" datatype="html">
         <source> Currently absolut seatnumbering is disabled. The pariticipants need to provide a tablenumber and a seatnumber (on this table) while onboarding. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">24,26</context>
+          <context context-type="linenumber">53,55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settingsDescriptionForEnabledASN" datatype="html">
         <source> The absolute seatnumbering is now enabled. Apply a individual seatnumber for every seat to satisfy integrity checks. Participants then use this number during onbording. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">28,30</context>
+          <context context-type="linenumber">57,59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSettingSsologinurl" datatype="html">
         <source>SSO Login URL</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">72</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSettingsSoonboardingurl" datatype="html">
         <source>SSO Onboarding URL</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSettingsSooIpOverwriteEnabled" datatype="html">
         <source>SSO IP Overwrite</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">83</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSettingsSooIpOverwrite" datatype="html">
         <source>SSO IP</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelObVlanDefIp" datatype="html">
         <source>Onboarding VLAN default IP</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">107</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelObVlanDefMask" datatype="html">
         <source>Onboarding VLAN default Mask</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPlayVlanDefIp" datatype="html">
         <source>Play VLAN default IP</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">121</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPlayVlanDefMask" datatype="html">
         <source>Play VLAN default Mask</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">125</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelMgmtVlanDefIp" datatype="html">
         <source>Mgmt VLAN default IP</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">135</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelMgmtVlanDefMask" datatype="html">
         <source>Mgmt VLAN default Mask</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">139</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonClear" datatype="html">
         <source>Delete All</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">149</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPccCountTotal" datatype="html">
         <source>Total</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">156</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPccCountCommit" datatype="html">
         <source>Commit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">163</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPccCountRetreat" datatype="html">
         <source>Retreat</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">170</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settingsHeaderPortNumberingOffset" datatype="html">
         <source>Port Numbering Offset</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">176</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settingsHeaderRemoveOfflineDevices" datatype="html">
         <source>Devices</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">199</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelRodTotal" datatype="html">
         <source>Devices Count</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">212</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelRodOffline" datatype="html">
         <source>Offline Devices</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">190</context>
+          <context context-type="linenumber">219</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonClearROD" datatype="html">
         <source>Remove All Offline</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">221</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelRodPort" datatype="html">
         <source>Devices with Port</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">198</context>
+          <context context-type="linenumber">227</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonClearDevicesPorts" datatype="html">
         <source>Remove Ports</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">229</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelRodWoDesc" datatype="html">
         <source>Devices without Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">206</context>
+          <context context-type="linenumber">235</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonClearRODwoDesc" datatype="html">
         <source>Remove without Description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">208</context>
+          <context context-type="linenumber">237</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSwitchDesc" datatype="html">

@@ -9,7 +9,7 @@ services:
       - TZ=${TZ:-Europe/Berlin}
       - MONGO_HOST=mongodb
     ports:
-      - ${MONITORING_IP:-0.0.0.0}:8001:8001
+      - ${MONITORING_IP:-0.0.0.0}:8001:8001  # lpos metrics
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /proc/net/arp:/host-arp:ro
@@ -69,7 +69,7 @@ services:
       - TZ=${TZ:-Europe/Berlin}
     ports:
       - 80:80
-      - ${MONITORING_IP:-0.0.0.0}:8404:8404
+      - ${MONITORING_IP:-0.0.0.0}:8404:8404  # haproxy metrics
     sysctls:
       - net.ipv4.ip_unprivileged_port_start=0
     networks:

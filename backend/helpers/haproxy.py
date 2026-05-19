@@ -3,7 +3,6 @@ import json
 import time
 import logging
 import docker
-from elements import Setting
 
 ssoproxycfg = """
 global
@@ -118,6 +117,7 @@ class _BaseHAproxy():
         dcon = self.dcli.containers.list(filters={'name': self._container_search_name})
         if len(dcon) > 0:
             self.container_id = dcon[0].id
+            self.config['host'] = dcon[0].name
             self.logger.info(f'container is running under id: {self.container_id}')
             return True
         else:
@@ -201,12 +201,6 @@ class LPOSHAproxy(_BaseHAproxy):
     def init(self):
         self.logger = logging.getLogger('LPOS - HAproxy')
         self._container_search_name = 'haproxy'
-        self.config = {
-            'host': Setting.value('haproxy_api_host'),
-            'api_port': Setting.value('haproxy_api_port'),
-            'api_user': Setting.value('haproxy_api_user'),
-            'api_pw': Setting.value('haproxy_api_pw')
-        }
         self.container_running()
 
     def set_ms_redirect_url(self):
@@ -239,15 +233,8 @@ class LPOSHAproxy(_BaseHAproxy):
 
 class SSOHAproxy(_BaseHAproxy):
     def init(self):
-        from helpers.client import get_mgmt_ip
         self.logger = logging.getLogger('SSO - HAproxy')
         self._container_search_name = 'lpos-ssoproxy'
-        self.config = {
-            'host': get_mgmt_ip(),
-            'api_port': 5556,
-            'api_user': 'admin',
-            'api_pw': 'adminpwd'
-        }
         self.container_running()
 
     def start_container(self):
@@ -293,8 +280,7 @@ class SSOHAproxy(_BaseHAproxy):
                     cap_add=['NET_ADMIN'],
                     sysctls={'net.ipv4.ip_unprivileged_port_start': 0},
                     ports={
-                        '8404/tcp': '8405',
-                        '5555/tcp': (self.config['host'], '5556')
+                        '8404/tcp': '8405'
                     },
                     detach=True,
                     remove=True
@@ -303,6 +289,7 @@ class SSOHAproxy(_BaseHAproxy):
                 self.logger.error(f'container could not be started: {e}')
                 return False
             self.container_id = dcon.id
+            self.config['host'] = dcon.name
             self.logger.info(f'container started with id: {self.container_id}')
         else:
             self.logger.info(f'container is running under id: {self.container_id}')
