@@ -13,17 +13,35 @@ def get_client_ip():
 
 
 def get_client_mac(ip=None):
+    import docker
+    dcli = docker.from_env()
+
     if ip is None:
         ip = get_client_ip()
     if ip == '127.0.0.1':
         return 'localhost'
 
-    # in case LPOS runs in a docker-container, mount the hosts arp-table to /host-arp
+    # check dhcp-servers for leases
+    if True:
+        from elements import VLAN
+        for p in [2, 0]:
+            for v in VLAN.get_by_purpose(p):
+                try:
+                    dcon = dcli.containers.get(f'lpos-ipvlan{v["number"]}-dhcp')
+                    for line in dcon.exec_run('cat /tmp/kea-leases4.csv').output.decode('utf-8').strip().split('\n'):
+                        if ip in line:
+                            return line.split(',', 3)[1].replace(':', '')
+                except Exception:
+                    pass
+
+    # check hosts arp-table, if available (in case this instance is running in a container)
     try:
-        r = subprocess.check_output('cat /host-arp | grep ' + str(ip), shell=True).decode('utf-8')
-        r = r.strip().split()
-        if not r[2] == '0x0':
-            return r[3].replace(':', '')
+        dcon = dcli.containers.get('lpos-hostarp')
+        for line in dcon.exec_run('cat /proc/net/arp').output.decode('utf-8').strip().split('\n'):
+            if str(ip) in line:
+                line = line.strip().split()
+                if not line[2] == '0x0':
+                    return line[3].replace(':', '')
     except Exception:
         pass
 
@@ -36,21 +54,8 @@ def get_client_mac(ip=None):
     except Exception:
         pass
 
+    # last resort, just in case a registered Device is not present in any leases-database
     if True:
-        import docker
-        from elements import VLAN
-        dcli = docker.from_env()
-        for p in [2, 0]:
-            for v in VLAN.get_by_purpose(p):
-                try:
-                    dcon = dcli.containers.list(filters={'name': f'lpos-ipvlan{v["number"]}-dhcp'})[0]
-                    r = dcon.exec_run(f'cat /tmp/kea-leases4.csv | grep {ip}')
-                    if r.exit_code == 0:
-                        return r.output.decode('utf-8').strip().split('\n')[-1].split(',', 3)[1].replace(':', '')
-                except Exception:
-                    pass
-
-    if True:  # last resort, just in case a registered Device is not present in any leases-database
         from elements import Device, IpPool
         d = Device.get_by_ip(IpPool.dotted_to_int(ip))
         if d is not None:
@@ -142,5 +147,8 @@ def containerd_psutil():
         'pip3 install psutil',
         'python3 -c "import psutil, json; print(json.dumps({k: {e.family.name: e.address for e in i} for k, i in psutil.net_if_addrs().items()}))"'
     ])
-    result = dcli.containers.run(network_mode='host', remove=True, image=dima['python'], command=f"/bin/sh -c '{';'.join(command)}'")
+    dcli.containers.run(network_mode='host', name='lpos-psutil', image=dima['python'], command=f"/bin/sh -c '{';'.join(command)}'")
+    dcon = dcli.containers.get('lpos-psutil')
+    result = dcon.logs()
+    dcon.remove()
     return json.loads(result.decode('utf-8').strip().split('\n')[-1])

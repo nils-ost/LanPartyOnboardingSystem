@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     depends_on:
       - mongodb
+      - hostarp
     environment:
       - TZ=${TZ:-Europe/Berlin}
       - MONGO_HOST=mongodb
@@ -85,6 +86,16 @@ services:
       - ./mongo_data:/data/db:rw
     networks:
       - lpos_internal
+
+  hostarp:
+    container_name: lpos-hostarp
+    image: alpine
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+    command: sleep 3600
+    stop_grace_period: 1s
 
 networks:
   lpos_internal:
