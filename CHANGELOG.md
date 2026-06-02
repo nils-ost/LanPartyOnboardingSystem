@@ -17,6 +17,7 @@
   * added prefetcher to download docker images, used by dynaimc created containers, in the backgroud before they are needed
   * the whole application is now build to work within docker containers, which is now the recommended way for deployments
   * removed Settings for HAproxy connection, as HAproxy is now mandatory to be used within stack
+  * new environment variable `INIT_ADMIN_PW` to set the initial admin password during first startup to a custom value
 
 ## v0.8.0
 
