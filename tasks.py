@@ -23,12 +23,13 @@ def start_development(c):
     r = c.run('sudo docker ps -f name=dev-haproxy', hide=True)
     if 'dev-haproxy' not in r.stdout:
         print('Starting HAproxy')
-        haproxycfg = os.path.join(os.path.abspath('.'), 'ansible/templates/haproxy.cfg.j2')
+        haproxycfg = os.path.join(os.path.abspath('.'), 'haproxy/haproxy.cfg')
         with open('/tmp/haproxy.cfg', 'w') as f:
-            content = open(haproxycfg, 'r').read().replace('{{ lpos_port.stdout }}', '8000')
+            content = open(haproxycfg, 'r').read().replace('backend:8000', 'host.docker.internal:8000').replace('frontend:80', 'host.docker.internal:4200')
             f.write(content)
         c.run('sudo docker run --rm --name copier-haproxy -v dev-haproxy:/app -d alpine sleep 3')
         c.run('sudo docker cp /tmp/haproxy.cfg copier-haproxy:/app/haproxy.cfg')
+        c.run(f'sudo docker cp {os.path.join(os.path.abspath("."), "haproxy/services.lua")} copier-haproxy:/app/services.lua')
         cmd = [
             'sudo docker run --name dev-haproxy --rm --cap-add=NET_ADMIN --network lpos-internal',
             '--add-host=host.docker.internal:host-gateway --sysctl net.ipv4.ip_unprivileged_port_start=0',
@@ -91,31 +92,6 @@ def stop_development(c):
 @task(pre=[stop_development], post=[start_development], name='dev-clean')
 def cleanup_development(c):
     pass
-
-
-@task(name='ng-build')
-def ng_build(c):
-    c.run('rm -rf backend/static/ang')
-    c.run('cd frontend; ng build --output-path ../backend/static/ang')
-    c.run('cp backend/static/connecttest.txt backend/static/ang/en')
-    c.run('cp backend/static/connecttest.txt backend/static/ang/de')
-
-
-@task(pre=[ng_build], name='create-bundle')
-def create_bundle(c):
-    c.run('rm -rf /tmp/lpos; mkdir -p /tmp/lpos/backend')
-    c.run('rm -rf backend/elements/__pycache__; rm -rf backend/endpoints/__pycache__; rm -rf backend/helpers/__pycache__; rm -rf backend/HWSwitch/__pycache__')
-    for item in ['main.py', 'scanner.py', 'cli.py', 'requirements.txt', 'elements', 'endpoints', 'helpers', 'HWSwitch', 'static']:
-        c.run(f'cp -r backend/{item} /tmp/lpos/backend/')
-    for item in ['ansible']:
-        c.run(f'cp -r {item} /tmp/lpos/')
-    version = c.run('git describe')
-    version = version.stdout.strip().replace('v', '', 1).rsplit('-', 1)[0].replace('-', '.')
-    with open('/tmp/lpos/backend/helpers/version.py', 'w') as f:
-        f.write(f"version = '{version}'")
-    c.run('mv /tmp/lpos/ansible/bundle-installer.sh /tmp/lpos/installer.sh; chmod +x /tmp/lpos/installer.sh')
-    c.run(f'makeself /tmp/lpos ./lpos-installer_v{version}.run "Installer for LPOS - LanPartyOnboardingSystem" ./installer.sh')
-    c.run('rm -rf /tmp/lpos')
 
 
 @task(name='container-images-build', aliases=['cib', ])
