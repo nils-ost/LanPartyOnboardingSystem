@@ -24,7 +24,7 @@
   * new environment variable `INIT_ADMIN_PW` to set the initial admin password during first startup to a custom value
   * added `commitSystem` UnitTest to validate the configuration of HWswitches and dynamic created services on future (core) changes
   * detailed integrity check results are now available in `Settings->Maintenance`
-  * moved 'commit all' and 'retreat all' from `Network` to `Settings->Maintenance` (TBD: remove from `Network`)
+  * moved 'commit all' and 'retreat all' from `Network` to `Settings->Maintenance`
 
 ## v0.8.0
 
