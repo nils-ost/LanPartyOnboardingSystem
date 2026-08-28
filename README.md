@@ -14,3 +14,11 @@ A Participant arrives at the LanParty locations, sets up it's PC on a defined Se
   * managed switches are required, it's not possible to have a single unmanaged switch on the network
   * as we are using MikroTik Switches on our LanPartys the application is currently designed around those and not compatible with other vendors
   * currently the development is in the design-pahse, it's going to take at least until May 2023 till there is some kind of working system
+
+## Setup Build-Environment
+
+```bash
+sudo docker buildx create --name multi-arch --platform "linux/arm64,linux/amd64,linux/arm/v7" --driver "docker-container"
+sudo docker buildx use multi-arch
+sudo docker buildx inspect --bootstrap
+```

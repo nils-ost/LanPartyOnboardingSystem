@@ -54,10 +54,10 @@ switch_hw_config = {
 
 def setUpModule():
     # "programming" switch hardware
-    requests.post('http://localhost:1337/config/', json=switch_hw_config['c1'])
-    requests.post('http://localhost:1338/config/', json=switch_hw_config['c2'])
-    requests.post('http://localhost:1339/config/', json=switch_hw_config['p1'])
-    requests.post('http://localhost:1340/config/', json=switch_hw_config['p2'])
+    requests.post('http://dev-dummyswitch-0:1337/config/', json=switch_hw_config['c1'])
+    requests.post('http://dev-dummyswitch-1:1337/config/', json=switch_hw_config['c2'])
+    requests.post('http://dev-dummyswitch-2:1337/config/', json=switch_hw_config['p1'])
+    requests.post('http://dev-dummyswitch-3:1337/config/', json=switch_hw_config['p2'])
     # resetting DB for a clean run
     docDB.clear()
     # configuring global settings
@@ -80,10 +80,10 @@ def setUpModule():
     t1_ob_vlan_id = VLAN({'desc': 't1 ob', 'number': 121, 'purpose': 2}).save()['created']
     t2_ob_vlan_id = VLAN({'desc': 't2 ob', 'number': 122, 'purpose': 2}).save()['created']
     # creating Switches
-    c1_switch_id = Switch({'desc': 'C1', 'addr': 'localhost:1337', 'purpose': 0}).save()['created']
-    c2_switch_id = Switch({'desc': 'C2', 'addr': 'localhost:1338', 'purpose': 0}).save()['created']
-    p1_switch_id = Switch({'desc': 'P1', 'addr': 'localhost:1339', 'purpose': 1, 'onboarding_vlan_id': t1_ob_vlan_id}).save()['created']
-    p2_switch_id = Switch({'desc': 'P2', 'addr': 'localhost:1340', 'purpose': 1, 'onboarding_vlan_id': t2_ob_vlan_id}).save()['created']
+    c1_switch_id = Switch({'desc': 'C1', 'addr': 'dev-dummyswitch-0:1337', 'purpose': 0}).save()['created']
+    c2_switch_id = Switch({'desc': 'C2', 'addr': 'dev-dummyswitch-1:1337', 'purpose': 0}).save()['created']
+    p1_switch_id = Switch({'desc': 'P1', 'addr': 'dev-dummyswitch-2:1337', 'purpose': 1, 'onboarding_vlan_id': t1_ob_vlan_id}).save()['created']
+    p2_switch_id = Switch({'desc': 'P2', 'addr': 'dev-dummyswitch-3:1337', 'purpose': 1, 'onboarding_vlan_id': t2_ob_vlan_id}).save()['created']
     # creating required IpPools
     IpPool({
         'desc': 'mgmt', 'vlan_id': mgmt_vlan_id, 'mask': 24,
@@ -199,7 +199,7 @@ class TestCommitSystem(unittest.TestCase):
         tests if Switch(hardware) is configured as planned
         """
         # C1
-        sw = requests.get('http://localhost:1337/config/').json()
+        sw = requests.get('http://dev-dummyswitch-0:1337/config/').json()
         self.assertEqual(len(sw['vlans']), 4)
         sw_vlans = {s['id']: s for s in sw['vlans']}
         for i in [113, 112, 121, 122]:
@@ -220,7 +220,7 @@ class TestCommitSystem(unittest.TestCase):
             f = '0b' + '1' * i + '0' + '1' * (9 - i - 1)
             self.assertEqual(sw['forward'][f'from{i}'], f)
         # C2
-        sw = requests.get('http://localhost:1338/config/').json()
+        sw = requests.get('http://dev-dummyswitch-1:1337/config/').json()
         self.assertEqual(len(sw['vlans']), 4)
         sw_vlans = {s['id']: s for s in sw['vlans']}
         for i in [113, 112, 121, 122]:
@@ -245,7 +245,7 @@ class TestCommitSystem(unittest.TestCase):
             f = '0b' + '1' * i + '0' + '1' * (10 - i - 1)
             self.assertEqual(sw['forward'][f'from{i}'], f)
         # P1
-        sw = requests.get('http://localhost:1339/config/').json()
+        sw = requests.get('http://dev-dummyswitch-2:1337/config/').json()
         self.assertEqual(len(sw['vlans']), 3)
         sw_vlans = {s['id']: s for s in sw['vlans']}
         for i in [113, 112, 121]:
@@ -268,7 +268,7 @@ class TestCommitSystem(unittest.TestCase):
             f = '0b000000000000000010'
             self.assertEqual(sw['forward'][f'from{i}'], f)
         # P2
-        sw = requests.get('http://localhost:1340/config/').json()
+        sw = requests.get('http://dev-dummyswitch-3:1337/config/').json()
         self.assertEqual(len(sw['vlans']), 3)
         sw_vlans = {s['id']: s for s in sw['vlans']}
         for i in [113, 112, 122]:
@@ -503,7 +503,7 @@ class TestCommitSystem(unittest.TestCase):
         self.assertEqual(len(dcon), 1, 'docker container haproxy not found')
         dcon = dcon[0]
         self.assertEqual(dcon.status, 'running')
-        self.assertEqual(dcon.attrs['HostConfig']['NetworkMode'], 'bridge')
+        self.assertEqual(dcon.attrs['HostConfig']['NetworkMode'], 'lpos-internal')
         self.assertEqual(len(dcon.attrs['Mounts']), 1)
         self.assertEqual(dcon.attrs['Mounts'][0]['Destination'], '/usr/local/etc/haproxy')
         for p in [5555, 80, 8404]:
@@ -512,7 +512,7 @@ class TestCommitSystem(unittest.TestCase):
             self.assertIn('0.0.0.0', binds)
             self.assertEqual(int(binds['0.0.0.0']), p)
         self.assertNotIn('lpos-ipvlan113', dcon.attrs['NetworkSettings']['Networks'])
-        self.assertIn('bridge', dcon.attrs['NetworkSettings']['Networks'])
+        self.assertIn('lpos-internal', dcon.attrs['NetworkSettings']['Networks'])
         self.assertIn('lpos-ipvlan112', dcon.attrs['NetworkSettings']['Networks'])
         self.assertEqual(dcon.attrs['NetworkSettings']['Networks']['lpos-ipvlan112']['IPAddress'], '192.168.123.4')
         self.assertIn('lpos-ipvlan121', dcon.attrs['NetworkSettings']['Networks'])
@@ -524,12 +524,12 @@ class TestCommitSystem(unittest.TestCase):
         self.assertEqual(len(dcon), 1, 'docker container ssoproxy not found')
         dcon = dcon[0]
         self.assertEqual(dcon.status, 'running')
-        self.assertEqual(dcon.attrs['HostConfig']['NetworkMode'], 'bridge')
+        self.assertEqual(dcon.attrs['HostConfig']['NetworkMode'], 'lpos-internal')
         self.assertEqual(len(dcon.attrs['Mounts']), 1)
         self.assertEqual(dcon.attrs['Mounts'][0]['Destination'], '/usr/local/etc/haproxy')
         self.assertNotIn('lpos-ipvlan112', dcon.attrs['NetworkSettings']['Networks'])
         self.assertNotIn('lpos-ipvlan113', dcon.attrs['NetworkSettings']['Networks'])
-        self.assertIn('bridge', dcon.attrs['NetworkSettings']['Networks'])
+        self.assertIn('lpos-internal', dcon.attrs['NetworkSettings']['Networks'])
         self.assertIn('lpos-ipvlan121', dcon.attrs['NetworkSettings']['Networks'])
         self.assertEqual(dcon.attrs['NetworkSettings']['Networks']['lpos-ipvlan121']['IPAddress'], '172.16.1.14')
         self.assertIn('lpos-ipvlan122', dcon.attrs['NetworkSettings']['Networks'])
@@ -551,11 +551,16 @@ class TestCommitSystem(unittest.TestCase):
     def test_100_retreat_everyting(self):
         from helpers.switchmgmt import switches_retreat
         from helpers.vlanmgmt import vlan_os_interfaces_retreat, vlan_dns_server_retreat, vlan_dhcp_server_retreat
+        from helpers.haproxy import ssoHAproxy, lposHAproxy
         # first retreat everything, then do the checks, to have retreated as much as possible
+        r_ssop = ssoHAproxy.stop_container()
+        r_hap = lposHAproxy.detach_all_ipvlans()
         r_dhcp = vlan_dhcp_server_retreat()
         r_dns = vlan_dns_server_retreat()
         r_int = vlan_os_interfaces_retreat()
         r_swi = switches_retreat()
+        self.assertTrue(r_ssop)
+        self.assertTrue(r_hap)
         self.assertIn('code', r_dhcp)
         self.assertEqual(r_dhcp['code'], 0, r_dhcp['desc'])
         self.assertIn('code', r_dns)
@@ -571,6 +576,8 @@ class TestCommitSystem(unittest.TestCase):
         """
         dcli = docker.from_env()
         # TODO: change all compares to 0 after haproxy retreat is implemented
-        self.assertEqual(len(dcli.containers.list(filters={'name': 'lpos-'})), 1)
-        self.assertEqual(len(dcli.volumes.list(filters={'name': 'lpos-'})), 1)
-        self.assertEqual(len(dcli.networks.list(filters={'name': 'lpos-'})), 3)
+        self.assertEqual(len(dcli.containers.list(filters={'name': 'lpos-'})), 0)
+        self.assertEqual(len(dcli.volumes.list(filters={'name': 'lpos-'})), 0)
+        networks = dcli.networks.list(filters={'name': 'lpos-'})
+        self.assertEqual(len(networks), 1)  # only lpos-internal is still left
+        self.assertEqual(networks[0].name, 'lpos-internal')  # check that it realy is lpos-internal

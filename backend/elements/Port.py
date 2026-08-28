@@ -30,16 +30,10 @@ class Port(ElementBase):
         """
         Returns the port LPOS is connected to (or None if not yet identified)
         """
-        import psutil
         from elements import Device
-        my_macs = list()
-        for iname, conf in psutil.net_if_addrs().items():
-            if iname == 'lo':
-                continue
-            for e in conf:
-                if e.family.name == 'AF_PACKET':
-                    my_macs.append(e.address.replace(':', ''))
-        for mac in my_macs:
+        from helpers.client import get_mgmt_mac
+        mac = get_mgmt_mac()
+        if mac is not None:
             d = Device.get_by_mac(mac)
             if d is not None and d['port_id'] is not None:
                 return d.port()

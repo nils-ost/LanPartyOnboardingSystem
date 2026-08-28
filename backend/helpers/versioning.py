@@ -1,3 +1,8 @@
+import os
+import sys
+import logging
+
+logger = logging.getLogger('versioning')
 
 
 def versions_eq(left, right):
@@ -126,7 +131,6 @@ def test_compares():
 
 
 def run():
-    import sys
     from noapiframe import docDB
     from helpers.version import version as current_version
     from elements import Setting
@@ -135,33 +139,33 @@ def run():
         db_version = docDB.search_one('settings', 'version').get('value', '0.0.0')
     if db_version is None:
         # new install nothing todo
-        print('Versioning detected a new install!')
+        logger.info('detected a new install!')
         db_defaults()
         Setting.set('version', current_version)
         return
     if versions_eq(db_version, current_version):
         # nothing todo allready the desired version
-        print(f'Versioning detected the DB matches the current version {current_version}')
+        logger.info(f'detected the DB matches the current version {current_version}')
         return
     if versions_gt(db_version, current_version):
         # error DB is on a newer version that software, better just terminate
-        print('Versioning detected the Database is on a newer Version than the software provides! Exiting...')
+        logger.critical('detected the Database is on a newer Version than the software provides! Exiting...')
         sys.exit(0)
 
-    print(f'Versioning performing upgrade from v{db_version} to v{current_version}')
+    logger.warning(f'performing upgrade from v{db_version} to v{current_version}')
 
     if versions_lt(db_version, '0.2'):
-        print("  Adding 'desc' attribute to Switches")
+        logger.info("Adding 'desc' attribute to Switches")
         for s in docDB.search_many('Switch', {'desc': None}):
             s['desc'] = ''
             docDB.replace('Switch', s)
-        print("  Adding 'commit_config' attribute to Ports")
+        logger.info("Adding 'commit_config' attribute to Ports")
         for p in docDB.search_many('Port', {'commit_config': None}):
             p['commit_config'] = None
             docDB.replace('Port', p)
     if versions_lt(db_version, '0.5.1'):
         from elements import Switch
-        print("  Adding 'port_numbering_offset' attribute to Switches")
+        logger.info("Adding 'port_numbering_offset' attribute to Switches")
         for s in docDB.search_many('Switch', {'port_numbering_offset': None}):
             s = Switch(s)
             s['port_numbering_offset'] = 0
@@ -169,7 +173,7 @@ def run():
     if versions_lt(db_version, '0.6.1'):
         import os
         from elements import Setting
-        print('  Migrating settings to Setting-Element')
+        logger.info('Migrating settings to Setting-Element')
         for s in docDB.search_many('settings', {}):
             k = s.get('_id')
             v = s.get('value')
@@ -178,7 +182,7 @@ def run():
         docDB.clear('settings')
         if os.path.isfile('config.json'):
             import json
-            print('  Migrating configs to Setting-Element')
+            logger.info('Migrating configs to Setting-Element')
             config = json.load(open('config.json', 'r'))
             if 'port' in config.get('server', dict()):
                 Setting.set('server_port', config['server']['port'])
@@ -214,6 +218,6 @@ def run():
 def db_defaults():
     from elements import Participant
     if Participant.count() == 0:
-        p = Participant({'login': 'admin', 'pw': 'password', 'admin': True})
+        p = Participant({'login': 'admin', 'pw': os.environ.get('INIT_ADMIN_PW', 'password'), 'admin': True})
         p.save()
-        print('Versioning detected no user, therefore created a default admin user')
+        logger.warning('detected no user, therefore created a default admin user')

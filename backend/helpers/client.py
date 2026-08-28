@@ -13,11 +13,39 @@ def get_client_ip():
 
 
 def get_client_mac(ip=None):
+    import docker
+    dcli = docker.from_env()
+
     if ip is None:
         ip = get_client_ip()
     if ip == '127.0.0.1':
         return 'localhost'
 
+    # check dhcp-servers for leases
+    if True:
+        from elements import VLAN
+        for p in [2, 0]:
+            for v in VLAN.get_by_purpose(p):
+                try:
+                    dcon = dcli.containers.get(f'lpos-ipvlan{v["number"]}-dhcp')
+                    for line in dcon.exec_run('cat /tmp/kea-leases4.csv').output.decode('utf-8').strip().split('\n'):
+                        if ip in line:
+                            return line.split(',', 3)[1].replace(':', '')
+                except Exception:
+                    pass
+
+    # check hosts arp-table, if available (in case this instance is running in a container)
+    try:
+        dcon = dcli.containers.get('lpos-hostarp')
+        for line in dcon.exec_run('cat /proc/net/arp').output.decode('utf-8').strip().split('\n'):
+            if str(ip) in line:
+                line = line.strip().split()
+                if not line[2] == '0x0':
+                    return line[3].replace(':', '')
+    except Exception:
+        pass
+
+    # checking the "own" arp-table
     try:
         r = subprocess.check_output('cat /proc/net/arp | grep ' + str(ip), shell=True).decode('utf-8')
         r = r.strip().split()
@@ -26,18 +54,8 @@ def get_client_mac(ip=None):
     except Exception:
         pass
 
+    # last resort, just in case a registered Device is not present in any leases-database
     if True:
-        from elements import VLAN
-        dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
-        for p in [2, 0]:
-            for v in VLAN.get_by_purpose(p):
-                try:
-                    r = subprocess.check_output(f'{dcmd} exec lpos-ipvlan{v["number"]}-dhcp cat /tmp/kea-leases4.csv | grep {ip}', shell=True)
-                    return r.decode('utf-8').strip().split('\n')[-1].split(',', 3)[1].replace(':', '')
-                except Exception:
-                    pass
-
-    if True:  # last resort, just in case a registered Device is not present in any leases-database
         from elements import Device, IpPool
         d = Device.get_by_ip(IpPool.dotted_to_int(ip))
         if d is not None:
@@ -46,14 +64,64 @@ def get_client_mac(ip=None):
     return 'unknown_device'
 
 
+def _determine_mgmt_mac_and_ip(return_ip=False, return_mac=False):
+    from elements import Setting, Device
+    if not return_ip and not return_mac:
+        return_ip = True
+    if return_ip and return_mac:
+        return_mac = False
+    mgmt_if = Setting.value('os_nw_interface')
+    if mgmt_if == '':
+        return None
+    for iname, conf in containerd_psutil().items():
+        if iname == 'lo' or 'vlan' in iname:
+            continue
+        if iname == mgmt_if:
+            ip, mac = (None, None)
+            if 'AF_PACKET' in conf:
+                mac = conf['AF_PACKET'].replace(':', '')
+            if 'AF_INET' in conf:
+                ip = conf['AF_INET'].strip()
+            if mac is not None and ip is not None and Device.get_by_mac(mac) is not None:
+                Setting.set('lpos_mgmt_mac', mac)
+                Setting.set('lpos_mgmt_ip', ip)
+                if return_ip:
+                    return ip
+                else:
+                    return mac
+    return None
+
+
+def get_mgmt_mac():
+    """
+    returns MAC addr of LPOS interface to mgmt network (as string without colons)
+    returnvalue can be None, if MAC could not be determined
+    """
+    from elements import Setting
+    mgmt_mac = Setting.value('lpos_mgmt_mac')
+    if mgmt_mac is None:
+        return _determine_mgmt_mac_and_ip(return_mac=True)
+    return mgmt_mac
+
+
+def get_mgmt_ip():
+    """
+    returns IP addr of LPOS interface to mgmt network (as string in dotted notation)
+    returnvalue can be None, if IP could not be determined
+    """
+    from elements import Setting
+    mgmt_ip = Setting.value('lpos_mgmt_ip')
+    if mgmt_ip is None:
+        return _determine_mgmt_mac_and_ip(return_ip=True)
+    return mgmt_ip
+
+
 def nslookup(domain):
+    from helpers.haproxy import lposHAproxy
     logger.info(f'executing nslookup of {domain}')
-    dcmd = 'docker' if int(subprocess.check_output('id -u', shell=True).decode('utf-8').strip()) == 0 else 'sudo docker'
     try:
-        format = '\u007b\u007b.ID\u007d\u007d|\u007b\u007b.Image\u007d\u007d|\u007b\u007b.Names\u007d\u007d'
-        hap_container = subprocess.check_output(f"{dcmd} ps --format='{format}' | grep haproxy", shell=True).decode('utf-8').split('|')[0]
         addr = False
-        for line in subprocess.check_output(f'{dcmd} exec {hap_container} nslookup -type=a {domain}', shell=True).decode('utf-8').strip().split('\n'):
+        for line in lposHAproxy.execute_command(f'nslookup -type=a {domain}').strip().split('\n'):
             if line.startswith('Name') and line.split(':')[-1].strip() == domain:
                 addr = True
             if line.startswith('Address') and addr:
@@ -63,3 +131,24 @@ def nslookup(domain):
             return None
     except Exception:
         logger.warning("haproxy container not started or can't be found")
+
+
+def containerd_psutil():
+    """
+    executes psutil in a container with host-network,
+    to be able to retrive interface information from docker host,
+    which are in the bridged main container not available
+    """
+    import json
+    import docker
+    from prefetcher import docker_images as dima
+    dcli = docker.from_env()
+    command = list([
+        'pip3 install psutil',
+        'python3 -c "import psutil, json; print(json.dumps({k: {e.family.name: e.address for e in i} for k, i in psutil.net_if_addrs().items()}))"'
+    ])
+    dcli.containers.run(network_mode='host', name='lpos-psutil', image=dima['python'], command=f"/bin/sh -c '{';'.join(command)}'")
+    dcon = dcli.containers.get('lpos-psutil')
+    result = dcon.logs()
+    dcon.remove()
+    return json.loads(result.decode('utf-8').strip().split('\n')[-1])

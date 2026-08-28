@@ -1,7 +1,6 @@
 from noapiframe import docDB
 from elements import Setting
 from datetime import datetime
-import psutil
 
 
 # time (in seconds) a previous integrity check is considered still as valid
@@ -154,27 +153,17 @@ def _check_integrity_lpos():
     if not required_integrity.get('code', 1) == 0:
         return required_integrity
 
-    from elements import VLAN, IpPool, Device
+    from elements import VLAN, IpPool
+    from helpers.client import get_mgmt_ip
     # check LPOS's server network ip for mgmt VLAN is part of the same subnet as mgmt-IpPool
     mgmt_vlan = VLAN.get_by_purpose(1)[0]
     mgmt_ippool = IpPool.get_by_vlan(mgmt_vlan['_id'])[0]
     # determine LPOS's IP
-    lpos_ip = None
-    for iname, conf in psutil.net_if_addrs().items():
-        if iname == 'lo' or 'vlan' in iname:
-            continue
-        ip, mac = (None, None)
-        for e in conf:
-            if e.family.name == 'AF_PACKET':
-                mac = e.address.replace(':', '')
-            if e.family.name == 'AF_INET':
-                ip = e.address.split('.')
-        if Device.get_by_mac(mac) is not None:
-            lpos_ip = IpPool.octetts_to_int(int(ip[0]), int(ip[1]), int(ip[2]), int(ip[3]))
-            break
+    lpos_ip = get_mgmt_ip()
     if lpos_ip is None:
         return {'code': 7, 'desc': 'mgmt-IP of LPOS server could not be determined from reading hw-interfaces'}
     # expand the mask of mgmt_ippool to a usable format
+    lpos_ip = IpPool.dotted_to_int(lpos_ip)
     mask = int('1' * mgmt_ippool['mask'] + '0' * (32 - mgmt_ippool['mask']), 2)
     if not (lpos_ip & mask) == (mgmt_ippool['range_start'] & mask):
         return {'code': 8, 'desc': 'mgmt-IP of LPOS server is not in the same subnet as mgmt-IpPool'}
@@ -184,6 +173,7 @@ def _check_integrity_lpos():
 
 
 def _check_integrity_settings():
+    from helpers.client import containerd_psutil
     last_check = Setting.value('integrity_settings')
     if last_check is not None and (last_check + check_max_diff) >= datetime.now().timestamp():
         return {'code': 0, 'desc': 'check ok'}
@@ -192,7 +182,7 @@ def _check_integrity_settings():
     if iname == '':
         return {'code': 9, 'desc': "setting 'os_nw_interface' is not defined, but it's needed"}
     # check if it's a valid name and can be found in psutil
-    for name in psutil.net_if_addrs().keys():
+    for name in containerd_psutil().keys():
         if name == iname:
             break
     else:

@@ -377,6 +377,43 @@ class SystemEndpoint():
     @cherrypy.expose()
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
+    def retreat_haproxy(self):
+        if cherrypy.request.method == 'OPTIONS':
+            cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
+            cherrypy_cors.preflight(allowed_methods=['POST'])
+            return
+
+        cookie = cherrypy.request.cookie.get(Session.cookie_name)
+        if cookie:
+            session = Session.get(cookie.value)
+        else:
+            session = Session.get(None)
+        if len(session.validate_base()) > 0:
+            cherrypy.response.status = 401
+            return {'error': 'not authorized'}
+        elif not session.admin():
+            cherrypy.response.status = 403
+            return {'error': 'access not allowed'}
+
+        if cherrypy.request.method == 'POST':
+            from helpers.haproxy import ssoHAproxy, lposHAproxy
+            if Setting.value('nlpt_sso'):
+                if not ssoHAproxy.stop_container():
+                    cherrypy.response.status = 400
+                    return {'error': 'ssoHAproxy could not be stopped, see log for more info'}
+            if not lposHAproxy.detach_all_ipvlans():
+                cherrypy.response.status = 400
+                return {'error': 'lposHAproxy could not detach all ipvlans, see log for more info'}
+            cherrypy.response.status = 201
+            return {'code': 0, 'desc': 'done'}
+        else:
+            cherrypy.response.headers['Allow'] = 'OPTIONS, POST'
+            cherrypy.response.status = 405
+            return {'error': 'method not allowed'}
+
+    @cherrypy.expose()
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
     def remove_offline_devices(self):
         if cherrypy.request.method == 'OPTIONS':
             cherrypy.response.headers['Allow'] = 'OPTIONS, POST'

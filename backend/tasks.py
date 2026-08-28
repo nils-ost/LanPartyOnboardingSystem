@@ -5,7 +5,15 @@ import logging
 
 @task(name='coverage')
 def coverage(c):
-    c.run('coverage erase && coverage run --concurrency=multiprocessing -m unittest discover; coverage combine && coverage html && coverage report')
+    cmd = [
+        'docker run --name coverage-runner --rm --network lpos-internal -e MONGO_HOST=dev-mongo',
+        '-v $(pwd):/app -v /var/run/docker.sock:/var/run/docker.sock python:3.10-alpine',
+        '/bin/sh -c "cd /app; apk add git; pip3 install -r requirements.txt coverage;',
+        'coverage erase && coverage run --concurrency=multiprocessing -m unittest discover;',
+        'coverage combine && coverage html && coverage report"'
+    ]
+    c.run(' '.join(cmd))
+    c.run('sudo chown -R $(id -u):$(id -g) .')
 
 
 @task(name='create-admin')
@@ -224,3 +232,33 @@ def reset_switch(c):
 
     with open('switch_reset_config.json', 'w') as f:
         f.write(json.dumps(config, indent=2))
+
+
+@task(name='container-image-build')
+def build_container_image(c, version=None, beta=False, alpha=False):
+    image = 'nilsost/lpos-backend'
+    tags = ''
+    if version is not None:
+        tags += f' -t {image}:{version}'
+    if alpha:
+        tags += f' -t {image}:alpha'
+    elif beta:
+        tags += f' -t {image}:beta'
+    else:
+        tags += f' -t {image}:latest'
+    c.run(f'sudo docker buildx build --platform linux/amd64{tags} --load .')
+
+
+@task(name='container-image-push')
+def push_container_image(c, version=None, beta=False, alpha=False):
+    image = 'nilsost/lpos-backend'
+    tags = ''
+    if version is not None:
+        tags += f' -t {image}:{version}'
+    if alpha:
+        tags += f' -t {image}:alpha'
+    elif beta:
+        tags += f' -t {image}:beta'
+    else:
+        tags += f' -t {image}:latest'
+    c.run(f'sudo docker buildx build --platform linux/amd64,linux/arm64{tags} --push .')

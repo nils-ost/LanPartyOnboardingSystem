@@ -19,17 +19,15 @@ class Setting(SettingBase):
         'integrity_tables':      {'order': 0,  'type': 'float', 'value': 0.0,         'desc': 'Timestamp of last successful tables integrity-check'},
         'integrity_lpos':        {'order': 0,  'type': 'float', 'value': 0.0,         'desc': 'Timestamp of last successful lpos integrity-check'},
         'integrity_settings':    {'order': 0,  'type': 'float', 'value': 0.0,         'desc': 'Timestamp of last successful settings integrity-check'},
+        'lpos_mgmt_mac':         {'order': 0,  'type': 'str',   'value': None,        'desc': 'Cached MAC addr of LPOS interface to mgmt network'},
+        'lpos_mgmt_ip':          {'order': 0,  'type': 'str',   'value': None,        'desc': 'Cached IP addr of LPOS interface to mgmt network'},
         'server_port':           {'order': 1,  'type': 'int',   'value': 8000,        'desc': 'Port the Backend should be listening on'},
-        'haproxy_api_host':      {'order': 2,  'type': 'str',   'value': '127.0.0.1', 'desc': 'IP or DNS where inbound haproxy API can be reached'},
-        'haproxy_api_port':      {'order': 3,  'type': 'int',   'value': 5555,        'desc': 'Port where inbound haproxy API can be reached'},
-        'haproxy_api_user':      {'order': 4,  'type': 'str',   'value': 'admin',     'desc': 'Username used to login to haproxy API'},
-        'haproxy_api_pw':        {'order': 5,  'type': 'str',   'value': 'adminpwd',  'desc': 'Password used to login to haproxy API'},
         'os_nw_interface':       {'order': 10, 'type': 'str',   'value': '',          'desc': 'Identifier of Network-Interface to attach LPOS-VLANs to'},
         'metrics_enabled':       {'order': 11, 'type': 'bool',  'value': False,       'desc': 'Whether to start the Metrics-Endpoint or not'},
         'metrics_port':          {'order': 12, 'type': 'int',   'value': 8001,        'desc': 'Port that should be used for Metrics-Endpoint'},
         'absolute_seatnumbers':  {'order': 13, 'type': 'bool',  'value': False,       'desc': 'Whether to use absolute numbering for Seats'},
         'disable_auto_commits':  {'order': 14, 'type': 'bool',  'value': False,
-                                  'desc': 'If set to True, no auto-commits are executed during onboarding or detected port changes'},
+                                  'desc': 'If set to True, no auto-commits are executed during startup, onboarding or detected port changes'},
         'play_ip':               {'order': 20, 'type': 'ip',    'value': None,        'desc': 'IP in play network for http connections of LPOS'},
         'play_dhcp':             {'order': 21, 'type': 'ip',    'value': None,        'desc': "IP used for LPOS's DHCP-Server in the Play-Network"},
         'play_gateway':          {'order': 22, 'type': 'ip',    'value': None,
@@ -52,3 +50,8 @@ class Setting(SettingBase):
         'ob_vlan_def_ip':        {'order': 44, 'type': 'ip',    'value': None,        'desc': 'default network IP used for new IpPools in onboarding VLANs'},
         'ob_vlan_def_mask':      {'order': 45, 'type': 'int',   'value': 24,          'desc': 'default network mask used for new IpPools in onboarding VLANs'}
     }
+
+    def save_post(self):
+        if self['_id'] == 'os_nw_interface':
+            Setting.set('lpos_mgmt_mac', None)
+            Setting.set('lpos_mgmt_ip', None)

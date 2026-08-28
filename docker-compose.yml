@@ -1,0 +1,105 @@
+services:
+  backend:
+    container_name: lpos-backend
+    image: nilsost/lpos-backend:${LPOS_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - hostarp
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+      - MONGO_HOST=mongodb
+      - INIT_ADMIN_PW=password
+    ports:
+      - ${MONITORING_IP:-0.0.0.0}:8001:8001  # lpos metrics
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc/net/arp:/host-arp:ro
+    networks:
+      - lpos_internal
+
+  scanner:
+    container_name: lpos-scanner
+    image: nilsost/lpos-backend:${LPOS_VERSION:-latest}
+    command: scanner.py
+    restart: unless-stopped
+    stop_grace_period: 2s
+    depends_on:
+      - mongodb
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+      - MONGO_HOST=mongodb
+    volumes:
+      - /proc/net/arp:/host-arp:ro
+    networks:
+      - lpos_internal
+
+  prefetcher:
+    container_name: lpos-prefetcher
+    image: nilsost/lpos-backend:${LPOS_VERSION:-latest}
+    command: prefetcher.py
+    restart: no
+    depends_on:
+      - backend
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - lpos_internal
+
+  frontend:
+    container_name: lpos-frontend
+    image: nilsost/lpos-frontend:${LPOS_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+    networks:
+      - lpos_internal
+
+  haproxy:
+    container_name: lpos-haproxy
+    image: nilsost/lpos-haproxy:${LPOS_VERSION:-latest}
+    restart: unless-stopped
+    stop_grace_period: 2s
+    cap_add:
+      - NET_ADMIN
+    depends_on:
+      - backend
+      - frontend
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+    ports:
+      - 80:80
+      - ${MONITORING_IP:-0.0.0.0}:8404:8404  # haproxy metrics
+    sysctls:
+      - net.ipv4.ip_unprivileged_port_start=0
+    networks:
+      - lpos_internal
+
+  mongodb:
+    container_name: lpos-mongodb
+    image: mongo:4.4
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+    volumes:
+      - ./mongo_data:/data/db:rw
+    networks:
+      - lpos_internal
+
+  hostarp:
+    container_name: lpos-hostarp
+    image: alpine
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+    command: sleep 3600
+    stop_grace_period: 1s
+
+networks:
+  lpos_internal:
+    name: lpos-internal
+    driver: bridge
+    attachable: true
