@@ -2,6 +2,7 @@ venv/
 *.pyc
 .envrc
 .env
+.vscode
 __pycache__
 *.drawio.bkp
 *.drawio.dtmp

@@ -2,22 +2,27 @@
 
 ## v0.9.0
 
+### New Features
   * frontend is now delivered through an nginx instance, which makes the stack more versatile regarding dependencies
   * migrated elements and endpoints to use noAPIframe library, as this enables some nice features on API with future-proof development
-  * the first IP-Range, that is created for a VLAN-purpose, is saved as default for this purpose. If another IpPool for this VLAN-purpose is created, this default range is prefilled in the interface.
-    * also a option on settings screen exists, to modify those default_ips
-  * added Setting to overwrite SSO IP, to prevent system from doing a nslookup
-  * optimized naming and sorting of Switches an IpPools on TablesScreen
-  * smartified invoker for resetting switches
-  * moved LPOS server IP from special IpPool to it's own Setting
+  * the first IP-Range, that is created for a VLAN-purpose, is saved as default for this purpose. If another IpPool for this VLAN-purpose is created, this default range is prefilled in the interface. also a option on settings screen exists, to modify those default_ips
   * in `Settings->Maintenance` is now an option to disable all automatic-commits from OnBoarding and port-changes
   * Created `DummySwitch` to be able to test Switch-Commit without a HardwareSwitch
-  * Backend now uses `AutoDetectSwitch` to enable the future use of other Switch brands without changeing any backend-code
-  * added `commitSystem` UnitTest to validate the configuration of HWswitches and dynamic created services on future (core) changes
-  * added prefetcher to download docker images, used by dynaimc created containers, in the backgroud before they are needed
+  * Backend now uses `AutoDetectSwitch` to enable the future use of other Switch brands without changing any backend-code
+  * added prefetcher to download docker images, used by dynamic created containers, in the background before they are needed
+  * added `hostarp` container for sharing ARP tables between LPOS and host while running within Docker containers
   * the whole application is now build to work within docker containers, which is now the recommended way for deployments
+
+### Fixes/Improvements
+  * optimized naming and sorting of Switches and IpPools on TablesScreen
+  * smartified invoker for resetting switches
+  * moved LPOS server IP from special IpPool to it's own Setting
+  * added Setting to overwrite SSO IP, to prevent system from doing a nslookup
+
+### Minor Changes
   * removed Settings for HAproxy connection, as HAproxy is now mandatory to be used within stack
   * new environment variable `INIT_ADMIN_PW` to set the initial admin password during first startup to a custom value
+  * added `commitSystem` UnitTest to validate the configuration of HWswitches and dynamic created services on future (core) changes
 
 ## v0.8.0
 
