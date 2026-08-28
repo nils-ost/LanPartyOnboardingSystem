@@ -43,4 +43,11 @@
     <small *ngIf="onboarding_vlan_id_error" class="p-error block">{{ onboarding_vlan_id_error }}</small>
 </div>
 
+<div class="field">
+    <span class="p-float-label">
+        <p-inputNumber inputId="switchpno" [(ngModel)]="pno" [showButtons]="true"></p-inputNumber>
+        <label for="switchpno" i18n="@@elementFieldLabelSwitchPortNumberingOffset">Port Numbering Offset</label>
+    </span>
+</div>
+
 <button pButton (click)="commitSwitch()" i18n="@@buttonSave">Save</button>

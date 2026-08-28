@@ -1,0 +1,22 @@
+<table>
+    <tr>
+        <td>
+            <div><label i18n="@@elementFieldLabelSwitchDesc">Description</label>: {{ selectedSwitch.desc }}</div>
+            <div><label i18n="@@elementFieldLabelSwitchAddr">Address</label>: {{ selectedSwitch.addr }}</div>
+            <div><label i18n="@@elementFieldLabelSwitchMac">HWaddr</label>: {{ selectedSwitch.mac || '---' }}</div>
+            <div><label i18n="@@elementFieldLabelSwitchPurpose">Purpose</label>: {{ selectedSwitch.purpose }} - {{ switchPurposeType[selectedSwitch.purpose] }}</div>
+        </td>
+        <td>
+            <div><label i18n="@@elementFieldLabelSwitchConnected">Connected</label>: {{ selectedSwitch.connected }}</div>
+            <div><label i18n="@@elementFieldLabelSwitchCommited">Commited</label>: {{ selectedSwitch.commited }}</div>
+            <div><label i18n="@@elementFieldLabelPortNumberingOffset">Port Numbering Offset</label>: {{ selectedSwitch.port_numbering_offset }}</div>
+            <div><label i18n="@@elementFieldLabelSwitchOnboardingVlanId">Onboarding VLAN</label>: {{ vlansNames.get(selectedSwitch.onboarding_vlan_id || '') || '---' }}</div>
+        </td>
+        <td>
+            <div><label i18n="@@elementFieldLabelSwitchKnownVlans">Configured VLANs</label>: <li *ngFor="let vlan_id of selectedSwitch.known_vlans">{{ vlansNames.get(vlan_id) }}</li></div>
+        </td>
+    </tr>
+</table>
+
+<h3>Ports List</h3>
+<app-ports-list [selectedSwitch]="selectedSwitch" [ports]="ports" [vlans]="vlans" [switches]="switches" (editedPortEvent)="editedSwitch()"></app-ports-list>
