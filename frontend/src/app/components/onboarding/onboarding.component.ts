@@ -21,6 +21,8 @@ export class OnboardingComponent implements OnInit, OnDestroy {
   refreshOnboardingTimerSubscription: Subscription | undefined;
   onlineCheckTimer = timer(2000, 1000);
   onlineCheckTimerSubscription: Subscription | undefined;
+  onlineCheckFallbackTimer = timer(120000); // 2 minutes fallback
+  onlineCheckFallbackTimerSubscription: Subscription | undefined;
 
   onboarding?: Onboarding;
   absolute_seatnumbers: boolean = false;
@@ -54,6 +56,7 @@ export class OnboardingComponent implements OnInit, OnDestroy {
   disableAutoRefresh() {
     this.refreshOnboardingTimerSubscription?.unsubscribe();
     this.onlineCheckTimerSubscription?.unsubscribe();
+    this.onlineCheckFallbackTimerSubscription?.unsubscribe();
   }
 
   refreshOnboarding() {
@@ -146,6 +149,13 @@ export class OnboardingComponent implements OnInit, OnDestroy {
   onlineCheck() {
     if (this.onlineCheckTimerSubscription == undefined) {
       this.doneOnline = false;
+      // Start the 2-minute fallback timer from first call
+      this.onlineCheckFallbackTimerSubscription = this.onlineCheckFallbackTimer.subscribe(() => {
+        this.onlineCheckTimerSubscription?.unsubscribe();
+        this.onlineCheckFallbackTimerSubscription?.unsubscribe();
+        this.doneOnline = true;
+        console.log('online check fallback triggered after 2 minutes');
+      });
       this.onlineCheckTimerSubscription = this.onlineCheckTimer.subscribe(() => this.onlineCheck());
       console.log('activated online check')
       return;
@@ -156,6 +166,7 @@ export class OnboardingComponent implements OnInit, OnDestroy {
         next: (onboarding: Onboarding) => {
             if(onboarding.online == true) {
                 this.onlineCheckTimerSubscription?.unsubscribe();
+                this.onlineCheckFallbackTimerSubscription?.unsubscribe();
                 this.doneOnline = true;
             }
         },

@@ -24,6 +24,11 @@ class OnboardingEndpoint():
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
     def index(self):
+        # Prevent any intermediate caching (HAProxy, CDNs, browsers)
+        cherrypy.response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        cherrypy.response.headers['Pragma'] = 'no-cache'
+        cherrypy.response.headers['Expires'] = '0'
+
         if cherrypy.request.method == 'OPTIONS':
             cherrypy.response.headers['Allow'] = 'OPTIONS, GET, POST, PUT'
             cherrypy_cors.preflight(allowed_methods=['GET', 'POST', 'PUT'])
