@@ -11,11 +11,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">122</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
@@ -55,7 +55,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">114</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
@@ -75,11 +75,11 @@
         <target state="signed-off">ungültiger Typ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">118</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">123</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.ts</context>
@@ -175,15 +175,15 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">107</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">122</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
@@ -191,19 +191,15 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">65</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/table-creadit/table-creadit.component.html</context>
@@ -223,15 +219,15 @@
         <target state="signed-off">Erstellen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">19</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">3</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-screen/tables-screen.component.html</context>
@@ -462,26 +458,6 @@
         <source>Commiting</source>
         <target state="signed-off">Konfiguriere</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">177</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">213</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">251</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">287</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">323</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.ts</context>
           <context context-type="linenumber">133</context>
         </context-group>
@@ -506,26 +482,6 @@
         <source>Done</source>
         <target state="signed-off">Abgeschlossen</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">187</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">223</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">261</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">297</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">333</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.ts</context>
           <context context-type="linenumber">107</context>
         </context-group>
@@ -549,26 +505,6 @@
       <trans-unit id="SystemExecCommitErrorSummary" datatype="html">
         <source>Error</source>
         <target state="signed-off">Fehler</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">202</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">240</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">276</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">312</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">348</context>
-        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.ts</context>
           <context context-type="linenumber">122</context>
@@ -699,7 +635,7 @@
         <target state="signed-off">Dein Gerät ist noch nicht bereit für das Onboarding. Bitte warten bis es vom System registriert wurde. Diese Seite lädt automatisch neu, sobald es weitergehen kann.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">182</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode7" datatype="html">
@@ -707,7 +643,7 @@
         <target state="signed-off">Deinem Gerät ist es verboten das Onboarding durchzuführen. Bitte kontaktiere einen Admin.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">183</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode8" datatype="html">
@@ -715,7 +651,7 @@
         <target state="signed-off">Ungültige Tisch Nummer. Bitte erneut versuchen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode9" datatype="html">
@@ -723,7 +659,7 @@
         <target state="signed-off">Ungültige Sitzplatz Nummer. Bitte erneut versuchen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">185</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode10" datatype="html">
@@ -731,7 +667,7 @@
         <target state="signed-off">Dieser Sitzplatz ist bereits vergeben. Bitte erneut versuchen oder einen Admin kontaktieren.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">186</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode11" datatype="html">
@@ -739,7 +675,7 @@
         <target state="signed-off">Passwort falsch. Bitte erneut versuchen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">187</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode12" datatype="html">
@@ -747,7 +683,7 @@
         <target state="signed-off">DIeser Sitzplatz ist keinem Teilnehmer zugewiesen. Bitte kontaktiere einen Admin.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">188</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode13" datatype="html">
@@ -755,7 +691,7 @@
         <target state="signed-off">Es ist etwas schief gelaufen. Bitte erneut versuchen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">189</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode14" datatype="html">
@@ -763,7 +699,7 @@
         <target state="signed-off">Bitte kontaktiere einen Admin.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">190</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCodeFallback" datatype="html">
@@ -771,7 +707,7 @@
         <target state="signed-off">Unbekannter Fehler. Bitte kontaktiere einen Admin.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">194</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelParticipantName" datatype="html">
@@ -1014,6 +950,10 @@
           <context context-type="linenumber">11</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switch-detail/switch-detail.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
@@ -1042,6 +982,10 @@
           <context context-type="linenumber">33</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switch-detail/switch-detail.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
@@ -1054,6 +998,10 @@
           <context context-type="linenumber">41</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switch-detail/switch-detail.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
@@ -1063,7 +1011,7 @@
         <target state="signed-off">ungültiger Zweck</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">119</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode21" datatype="html">
@@ -1071,7 +1019,7 @@
         <target state="signed-off">darf beim gewählten Zweck nicht leer sein</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode22" datatype="html">
@@ -1079,7 +1027,7 @@
         <target state="signed-off">VLAN mit dieser ID nicht gefunden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">125</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode23" datatype="html">
@@ -1087,7 +1035,7 @@
         <target state="signed-off">dieses VLAN hat nicht den Zweck Onboarding</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">126</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ElementErrorCode24" datatype="html">
@@ -1095,12 +1043,16 @@
         <target state="signed-off">dieses VLAN wird bereits von einem anderen Switch verwendet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.ts</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSwitchConnected" datatype="html">
         <source>Connected</source>
         <target state="signed-off">Verbunden</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switch-detail/switch-detail.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
           <context context-type="linenumber">20</context>
@@ -1110,6 +1062,10 @@
         <source>Commited</source>
         <target state="signed-off">Konfiguriert</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switch-detail/switch-detail.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
@@ -1118,6 +1074,10 @@
         <source>HWaddr</source>
         <target state="signed-off">HWaddr</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switch-detail/switch-detail.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
@@ -1125,6 +1085,10 @@
       <trans-unit id="elementFieldLabelSwitchKnownVlans" datatype="html">
         <source>Configured VLANs</source>
         <target state="signed-off">konfigurierte VLANs</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switch-detail/switch-detail.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.html</context>
           <context context-type="linenumber">29</context>
@@ -1370,6 +1334,10 @@
         <source>Commit</source>
         <target state="signed-off">abschicken</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/tables-list/tables-list.component.html</context>
           <context context-type="linenumber">100</context>
         </context-group>
@@ -1586,10 +1554,6 @@
         <source>commiting of all OS-VLAN-Interfaces started</source>
         <target state="signed-off">Konfiguration aller Betriebssystem-VLANs gestartet</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">252</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.ts</context>
           <context context-type="linenumber">98</context>
         </context-group>
@@ -1597,10 +1561,6 @@
       <trans-unit id="SystemExecCommitInterfacesSuccessDetail" datatype="html">
         <source>all OS-VLAN-Interfaces successful commited</source>
         <target state="signed-off">alle Betriebssystem-VLANs erfolgreich konfiguriert</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">262</context>
-        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.ts</context>
           <context context-type="linenumber">108</context>
@@ -1691,6 +1651,10 @@
         <target state="signed-off">Beschreibung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switch-detail/switch-detail.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
         <context-group purpose="location">
@@ -1846,10 +1810,6 @@
         <source>commiting of all DNS servers started</source>
         <target state="signed-off">Konfiguration aller DNS-Server gestartet</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">288</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.ts</context>
           <context context-type="linenumber">134</context>
         </context-group>
@@ -1857,10 +1817,6 @@
       <trans-unit id="SystemExecCommitDhcpServersStartedDetail" datatype="html">
         <source>commiting of all DHCP servers started</source>
         <target state="signed-off">Konfiguration aller DHCP-Server gestartet</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">324</context>
-        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.ts</context>
           <context context-type="linenumber">170</context>
@@ -1878,10 +1834,6 @@
         <source>all DNS servers successful commited</source>
         <target state="signed-off">alle DNS-Server erfolgreich konfiguriert</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">298</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.ts</context>
           <context context-type="linenumber">144</context>
         </context-group>
@@ -1889,10 +1841,6 @@
       <trans-unit id="SystemExecCommitDhcpServersSuccessDetail" datatype="html">
         <source>all DHCP servers successful commited</source>
         <target state="signed-off">alle DHCP-Server erfolgreich konfiguriert</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
-          <context context-type="linenumber">334</context>
-        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/switches-list/switches-list.component.ts</context>
           <context context-type="linenumber">180</context>
@@ -1975,7 +1923,7 @@
         <target state="signed-off">Anmeldung beim zentralen Login fehlgeschlagen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">191</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSettingSsologinurl" datatype="html">
@@ -1983,7 +1931,7 @@
         <target state="signed-off">SSO Anmelde URL</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">129</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSettingsSoonboardingurl" datatype="html">
@@ -1991,7 +1939,7 @@
         <target state="signed-off">SSO Onboarding URL</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPortManualConfig" datatype="html">
@@ -2447,7 +2395,7 @@
         <target state="signed-off">Alle löschen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">203</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPccCountTotal" datatype="html">
@@ -2455,7 +2403,7 @@
         <target state="signed-off">Gesamt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">210</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPccCountCommit" datatype="html">
@@ -2463,7 +2411,7 @@
         <target state="signed-off">Aufbauen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">217</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPccCountRetreat" datatype="html">
@@ -2471,7 +2419,7 @@
         <target state="signed-off">Zurücksetzen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tooltipShowPorts" datatype="html">
@@ -2519,7 +2467,7 @@
         <target state="signed-off">Absolute Sitzplatz Nummerierung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settingsDescriptionForDisabledASN" datatype="html">
@@ -2527,7 +2475,7 @@
         <target state="signed-off">Derzeit is die absolute Sitzplatznummerierung deaktiviert. Teilnehmer müssen, beim Onboarding, die Tischnummer und Platznummer am Tisch angeben.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">110</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settingsDescriptionForEnabledASN" datatype="html">
@@ -2535,7 +2483,7 @@
         <target state="signed-off">Die absolute Sitzplatzummerierung ist aktiv. Jedem Sitzplatz muss eine individuelle Platznummer zugeordnet werden, um die Integritätsprüfung zu bestehen. Die Teilnehmer müssen dann diese Platznummer, während des Onboarding, verwenden.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">114</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settingsHeaderPortNumberingOffset" datatype="html">
@@ -2559,7 +2507,7 @@
         <target state="signed-off">Geräte</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">230</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonClearROD" datatype="html">
@@ -2567,7 +2515,7 @@
         <target state="signed-off">Alle offline entfernen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">252</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelRodTotal" datatype="html">
@@ -2575,7 +2523,7 @@
         <target state="signed-off">Geräte Anzahl</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">243</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelRodOffline" datatype="html">
@@ -2583,7 +2531,7 @@
         <target state="signed-off">Geräte die offline sind</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">219</context>
+          <context context-type="linenumber">250</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelRodPort" datatype="html">
@@ -2591,7 +2539,7 @@
         <target state="signed-off">Geräte mit Port verknüpft</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">227</context>
+          <context context-type="linenumber">258</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonClearDevicesPorts" datatype="html">
@@ -2599,7 +2547,7 @@
         <target state="signed-off">Verknüpfung lösen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">229</context>
+          <context context-type="linenumber">260</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settingsHeaderSettings" datatype="html">
@@ -2607,7 +2555,7 @@
         <target state="signed-off">Einstellungen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="OnboardingErrorCode16" datatype="html">
@@ -2615,7 +2563,7 @@
         <target state="signed-off">Du sitzt an dem falschen Tisch. Bitte kontaktiere einen Admin.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/onboarding/onboarding.component.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">192</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tooltipParticipantDelete" datatype="html">
@@ -2639,7 +2587,7 @@
         <target state="signed-off">Geräte ohne Beschreibung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">235</context>
+          <context context-type="linenumber">266</context>
         </context-group>
       </trans-unit>
       <trans-unit id="buttonClearRODwoDesc" datatype="html">
@@ -2647,7 +2595,7 @@
         <target state="signed-off">ohne Beschreibung entfernen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">237</context>
+          <context context-type="linenumber">268</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSettingsSooIpOverwrite" datatype="html">
@@ -2663,7 +2611,7 @@
         <target state="signed-off">SSO IP überschreiben</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">140</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelObVlanDefIp" datatype="html">
@@ -2671,7 +2619,7 @@
         <target state="signed-off">vorbefüllte IP für Onboarding VLANs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">161</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelObVlanDefMask" datatype="html">
@@ -2679,7 +2627,7 @@
         <target state="signed-off">vorbefüllte Maske für Onboarding VLANs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">165</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPlayVlanDefIp" datatype="html">
@@ -2687,7 +2635,7 @@
         <target state="signed-off">vorbefüllte IP für Play VLANs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelPlayVlanDefMask" datatype="html">
@@ -2695,7 +2643,7 @@
         <target state="signed-off">vorbefüllte Maske für Play VLANs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">179</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelMgmtVlanDefIp" datatype="html">
@@ -2703,7 +2651,7 @@
         <target state="signed-off">vorbefüllte IP für Mgmt VLANs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">189</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelMgmtVlanDefMask" datatype="html">
@@ -2711,7 +2659,7 @@
         <target state="signed-off">vorbefüllte Maske für Mgmt VLANs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">193</context>
         </context-group>
       </trans-unit>
       <trans-unit id="settingsHeaderPlayNetworkSettings" datatype="html">
@@ -2719,7 +2667,7 @@
         <target state="signed-off">Einstellungen für Play Netzwerk</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="elementFieldLabelSettingsDisabelAutoCommits" datatype="html">
@@ -2752,6 +2700,30 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/network-screen/network-screen.component.ts</context>
           <context context-type="linenumber">511</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="buttonRetreat" datatype="html">
+        <source>Retreat</source>
+        <target state="signed-off">zurückbauen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/settings-screen/settings-screen.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelSwitchPortNumberingOffset" datatype="html">
+        <source>Port Numbering Offset</source>
+        <target state="signed-off">Port Nummerierungs Versatz</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switch-creadit/switch-creadit.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="elementFieldLabelPortNumberingOffset" datatype="html">
+        <source>Port Numbering Offset</source>
+        <target state="signed-off">Port Nummerierungs Versatz</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/switch-detail/switch-detail.component.html</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
     </body>

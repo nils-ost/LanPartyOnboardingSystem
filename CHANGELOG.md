@@ -18,6 +18,8 @@
   * smartified invoker for resetting switches
   * moved LPOS server IP from special IpPool to it's own Setting
   * added Setting to overwrite SSO IP, to prevent system from doing a nslookup
+  * onboarding online check is now more robust with a frontend fallback so participants are not stuck waiting indefinitely
+  * HAProxy containers are now properly retreated during system retreat operations
 
 ### Minor Changes
   * removed Settings for HAproxy connection, as HAproxy is now mandatory to be used within stack

@@ -332,20 +332,20 @@ Extends `SettingBase` from noAPIframe.
 | `absolute_seatnumbers` | bool | False | Use absolute seat numbering |
 | `disable_auto_commits` | bool | False | Disable automatic config commits |
 | `play_ip` | ip (int) | None | LPOS IP in play network |
-| `play_dhcp` | str | '' | DHCP server IP in play network |
-| `play_gateway` | str | '' | Gateway/Router IP in play network |
-| `upstream_dns` | str | '' | Upstream DNS server IP |
+| `play_dhcp` | ip (int) | None | DHCP server IP in play network |
+| `play_gateway` | ip (int) | None | Gateway/Router IP in play network |
+| `upstream_dns` | ip (int) | None | Upstream DNS server IP |
 | `domain` | str | '' | Search domain for play network |
 | `subdomain` | str | '' | Subdomain for LPOS web interface |
 | `nlpt_sso` | bool | False | Enable NLPT SSO login |
 | `sso_login_url` | str | '' | URL to get SSO auth token |
 | `sso_onboarding_url` | str | '' | URL to get SSO onboarding data |
-| `sso_ip_overwrite` | str\|None | None | Skip nslookup for SSO IP |
-| `play_vlan_def_ip` | int | None | Default IP for new play VLAN IpPools |
+| `sso_ip_overwrite` | ip (int)\|None | None | Skip nslookup for SSO IP
+| `play_vlan_def_ip` | ip (int) | None | Default IP for new play VLAN IpPools |
 | `play_vlan_def_mask` | int | 24 | Default mask for new play VLAN IpPools |
-| `mgmt_vlan_def_ip` | int | None | Default IP for new mgmt VLAN IpPools |
+| `mgmt_vlan_def_ip` | ip (int) | None | Default IP for new mgmt VLAN IpPools |
 | `mgmt_vlan_def_mask` | int | 24 | Default mask for new mgmt VLAN IpPools |
-| `ob_vlan_def_ip` | int | None | Default IP for new onboarding VLAN IpPools |
+| `ob_vlan_def_ip` | ip (int) | None | Default IP for new onboarding VLAN IpPools |
 | `ob_vlan_def_mask` | int | 24 | Default mask for new onboarding VLAN IpPools |
 
 **Admin-writable settings** (from SettingEndpoint `_admin_writeable`):
@@ -419,7 +419,7 @@ Custom endpoint for system administration.
 
 | Route | Method | Auth | Description |
 |-------|--------|------|-------------|
-| `/system/integrity` | GET | Admin | Runs all integrity checks |
+| `/system/integrity?specific_check={key}` | GET | Admin | Runs all integrity checks (optional: `switchlinks`, `vlans`, `ippools`, `tables`, `lpos`, `settings`) |
 | `/system/commit_interfaces` | POST | Admin | Commits VLAN OS interfaces (Docker ipvlan) |
 | `/system/retreat_interfaces` | POST | Admin | Retreats VLAN OS interfaces |
 | `/system/commit_dns_servers` | POST | Admin | Commits DNS servers (CoreDNS containers) |
@@ -428,6 +428,9 @@ Custom endpoint for system administration.
 | `/system/retreat_dhcp_servers` | POST | Admin | Retreats DHCP servers |
 | `/system/commit_switches` | POST | Admin | Commits all switches in restart order |
 | `/system/retreat_switches` | POST | Admin | Retreats all switches in reverse order |
+| `/system/commit_haproxy` | POST | Admin | Commits HAProxy config |
+| `/system/retreat_haproxy` | POST | Admin | Retreats HAProxy config |
+| `/system/remove_offline_devices` | POST | Admin | Removes offline devices without config/description (60s threshold) |
 
 ---
 
@@ -531,7 +534,7 @@ Runs as separate CherryPy process on `metrics_port`. Prometheus format.
 | `_check_integrity_ippools()` | Checks IpPools for mgmt, onboarding VLANs |
 | `_check_integrity_tables()` | Validates seats per table, IP pool sizes |
 | `_check_integrity_lpos()` | Validates LPOS IP is in mgmt subnet |
-| `_check_interity_settings()` | Validates os_nw_interface, required settings, SSO config |
+| `_check_integrity_settings()` | Validates os_nw_interface, required settings (play_ip, play_dhcp, play_gateway, upstream_dns must be non-None), domain/subdomain not empty |
 | `check_integrity()` | Runs all checks |
 | `check_integrity_switch_commit()` | VLANs + IpPools + LPOS checks |
 | `check_integrity_vlan_interface_commit()` | Settings + IpPools checks |
@@ -601,14 +604,14 @@ Runs as separate CherryPy process on `metrics_port`. Prometheus format.
 | `login/` | `components/login/` | Login screen component |
 | `logout/` | `components/logout/` | Logout button/component |
 | `menu/` | `components/menu/` | Navigation menu sidebar |
-| `network-screen/` | `components/network-screen/` | Network overview (VLANs, switches, ports) |
-| `onboarding/` | `components/onboarding/` | Participant onboarding flow UI |
+| `network-screen/` | `components/network-screen/` | Network overview (VLANs, switches, ports) — commit all and retreat all buttons removed
+| `onboarding/` | `components/onboarding/` | Participant onboarding flow UI with 2-minute fallback timer for online check
 | `participants-list/` | `components/participants-list/` | Table of all participants |
 | `participants-screen/` | `components/participants-screen/` | Participant detail/edit screen |
 | `ports-list/` | `components/ports-list/` | Port configuration table |
 | `seats-list/` | `components/seats-list/` | Seat management table |
 | `setting-ip-field/` | `components/setting-ip-field/` | IP address input component |
-| `settings-screen/` | `components/settings-screen/` | System settings screen |
+| `settings-screen/` | `components/settings-screen/` | System settings screen with maintenance mode: integrity check display (overall + per-check), commit/retreat step-by-step status, offline device cleanup, port config cache monitoring |
 | `switch-creadit/` | `components/switch-creadit/` | Create/edit switch form (note: "creadit" typo) |
 | `switch-detail/` | `components/switch-detail/` | Switch detail view with ports |
 | `switches-list/` | `components/switches-list/` | Table of all switches |
@@ -637,7 +640,7 @@ All services are `@Injectable({ providedIn: 'root' })` and use `HttpClient` with
 | `SeatService` | `apiUrl + '/seat/'` | `getSeats()`, `getSeat(id)`, `create(...)`, `update(id, ...)`, `delete(id)` |
 | `SettingService` | `apiUrl + '/setting/'` | `getSettings()`, `getSetting(id)`, `update(id, data)` |
 | `SwitchService` | `apiUrl + '/switch/'` | `getSwitches()`, `getSwitch(id)`, `create(...)`, `update(id, ...)`, `delete(id)`, `execCommit(id)`, `execRetreat(id)`, `updatePortNumberingOffset(id, pno)` |
-| `SystemService` | `apiUrl + '/system/'` | `integrity()`, `commitInterfaces()`, `retreatInterfaces()`, `commitDnsServers()`, `retreatDnsServers()`, `commitDhcpServers()`, `retreatDhcpServers()`, `commitSwitches()`, `retreatSwitches()` |
+| `SystemService` | `apiUrl + '/system/'` | `checkIntegrity(specific_check?)`, `execCommitInterfaces()`, `execRetreatInterfaces()`, `execCommitDnsServers()`, `execRetreatDnsServers()`, `execCommitDhcpServers()`, `execRetreatDhcpServers()`, `execCommitSwitches()`, `execRetreatSwitches()`, `execCommitHaproxy()`, `execRetreatHaproxy()`, `execRemoveOfflineDevices()` |
 | `TableService` | `apiUrl + '/table/'` | `getTables()`, `getTable(id)`, `create(...)`, `update(id, ...)`, `delete(id)` |
 | `VlanService` | `apiUrl + '/vlan/'` | `getVlans()`, `getVlan(id)`, `create(...)`, `update(id, ...)`, `delete(id)` |
 | `UtilsService` | — | Utility/helper functions (no API calls) |

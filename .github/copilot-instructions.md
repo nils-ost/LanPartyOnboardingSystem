@@ -112,7 +112,7 @@ Device ─┬─ mac (unique), ip (int), last_scan_ts
 | `/port/` | CRUD | Port config (noAPIframe base) | Admin |
 | `/switch/` | CRUD + `commit()`, `retreat()` | Switch mgmt | Admin for commit/retreat |
 | `/onboarding/` | GET/POST/PUT | Participant onboarding flow | No (MAC-based) |
-| `/system/integrity` | GET | System integrity check | Admin |
+| `/system/integrity?specific_check={key}` | GET | System integrity check (optional: `switchlinks`, `vlans`, `ippools`, `tables`, `lpos`, `settings`) | Admin |
 | `/system/commit_interfaces` | POST | Commit VLAN OS interfaces | Admin |
 | `/system/retreat_interfaces` | POST | Retreat VLAN OS interfaces | Admin |
 | `/system/commit_dns_servers` | POST | Commit DNS servers | Admin |
@@ -121,6 +121,9 @@ Device ─┬─ mac (unique), ip (int), last_scan_ts
 | `/system/retreat_dhcp_servers` | POST | Retreat DHCP servers | Admin |
 | `/system/commit_switches` | POST | Commit all switches | Admin |
 | `/system/retreat_switches` | POST | Retreat all switches | Admin |
+| `/system/commit_haproxy` | POST | Commit HAProxy config | Admin |
+| `/system/retreat_haproxy` | POST | Retreat HAProxy config | Admin |
+| `/system/remove_offline_devices` | POST | Remove offline devices without config/description (60s threshold) | Admin |
 | `/metrics` | GET | Prometheus metrics | No |
 
 ## Important Gotchas / Anti-Patterns
