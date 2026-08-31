@@ -65,15 +65,15 @@ def setUpModule():
     Setting.set('absolute_seatnumbers', True)
     Setting.set('os_nw_interface', 'lpos0')
     Setting.set('play_ip', IpPool.octetts_to_int(192, 168, 123, 4))
-    Setting.set('play_dhcp', '192.168.123.3')
-    Setting.set('play_gateway', '192.168.123.1')
-    Setting.set('upstream_dns', '192.168.123.2')
+    Setting.set('play_dhcp', IpPool.octetts_to_int(192, 168, 123, 3))
+    Setting.set('play_gateway', IpPool.octetts_to_int(192, 168, 123, 1))
+    Setting.set('upstream_dns', IpPool.octetts_to_int(192, 168, 123, 2))
     Setting.set('domain', 'nlpt.network')
     Setting.set('subdomain', 'onboarding')
     Setting.set('nlpt_sso', True)
     Setting.set('sso_login_url', 'https://nlpt.online/login')
     Setting.set('sso_onboarding_url', 'https://nlpt.online/onboard')
-    Setting.set('sso_ip_overwrite', '1.2.3.4')
+    Setting.set('sso_ip_overwrite', IpPool.octetts_to_int(1, 2, 3, 4))
     # creating VLANs
     mgmt_vlan_id = VLAN({'desc': 'mgmt', 'number': 113, 'purpose': 1}).save()['created']
     play_vlan_id = VLAN({'desc': 'play', 'number': 112, 'purpose': 0}).save()['created']
