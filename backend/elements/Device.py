@@ -186,7 +186,7 @@ class Device(ElementBase):
                 errors['retreat_config.mode'] = {'code': 65, 'desc': f"needs to be one of {valid_values} but is {self['retreat_config']['mode']}"}
             # receive
             if 'receive' not in self['retreat_config'] or self['retreat_config']['receive'] is None:
-                self['retreat_config']['receive'] = '0x00'
+                self['retreat_config']['receive'] = 'any'
             if not isinstance(self['retreat_config']['receive'], str):
                 errors['retreat_config.receive'] = {'code': 3, 'desc': 'needs to be of type str'}
             elif self['retreat_config']['receive'] not in ['any', 'only tagged', 'only untagged']:
