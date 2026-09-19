@@ -10,7 +10,7 @@ class AutoDetectSwitch(BaseSwitch):
         self.logger = logging.getLogger('AutoDetectSwitch')
         r = ''
         try:
-            r = requests.get(f'http://{host}').text
+            r = requests.get(f'http://{host}', timeout=1).text
         except Exception:
             pass
 

@@ -5,6 +5,7 @@ from noapiframe import ElementBase, docDB
 from HWSwitch import AutoDetectSwitch
 
 switch_objects = dict()
+switch_connections = dict()
 switch_macs = list()
 
 
@@ -68,19 +69,23 @@ class Switch(ElementBase):
 
     def connected(self):
         global switch_objects
+        global switch_connections
         global switch_macs
         test_suite = 'environment' in cherrypy.config and cherrypy.config['environment'] == 'test_suite'
         if test_suite:
             return False
         if not self['_id']:
             return False
+        if self['_id'] in switch_connections and switch_connections[self['_id']]['last_scan'] > (int(datetime.now().timestamp()) - 60):
+            return switch_connections[self['_id']]['state']
         if self['_id'] not in switch_objects:
             switch_objects[self['_id']] = AutoDetectSwitch(self['addr'], self['user'], self['pw'])
-        if not switch_objects[self['_id']].connected:
+        elif not switch_objects[self['_id']].connected:
             switch_objects[self['_id']] = AutoDetectSwitch(self['addr'], self['user'], self['pw'])
         swi = switch_objects[self['_id']]
         if swi.connected and swi.mac_addr not in switch_macs:
             switch_macs.append(swi.mac_addr)
+        switch_connections[self['_id']] = {'state': swi.connected, 'last_scan': int(datetime.now().timestamp())}
         return swi.connected
 
     def mac_addr(self):
