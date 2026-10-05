@@ -141,10 +141,10 @@ def containerd_psutil():
     """
     import json
     import docker
-    from prefetcher import docker_images as dima
+    from prefetcher import docker_build_images as dbima
     dcli = docker.from_env()
     command = 'python3 -c "import psutil, json; print(json.dumps({k: {e.family.name: e.address for e in i} for k, i in psutil.net_if_addrs().items()}))"'
-    dcli.containers.run(network_mode='host', name='lpos-psutil', image=dima['psutil'], command=f"/bin/sh -c '{command}'")
+    dcli.containers.run(network_mode='host', name='lpos-psutil', image=dbima['psutil']['tag'], command=f"/bin/sh -c '{command}'")
     dcon = dcli.containers.get('lpos-psutil')
     result = dcon.logs()
     dcon.remove()

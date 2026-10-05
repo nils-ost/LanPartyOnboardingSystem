@@ -43,33 +43,33 @@ if __name__ == '__main__':
                 logger.error(f'Error pulling image "{image}": {e}')
                 error_pull = True
 
+    if error_pull:
+        logger.warning('=== Prefetch finished with errors!')
+    else:
+        logger.info('=== Prefetch finished.')
+
     error_build = False
     for shortname, image in docker_build_images.items():
+        logger.info(f'Building docker image: {image["tag"]}')
         if len(dcli.images.list(name=image['tag'])) == 1:
-            logger.info(f'Image already build: {image["tag"]}')
+            logger.info(f'Image already present: {image["tag"]}')
             docker_build_images[shortname] = image['tag']
             continue
         try:
             with tempfile.TemporaryFile() as dockerfile:
-                dockerfile.write(image['dockerfile'])
+                dockerfile.write(image['dockerfile'].encode('UTF-8'))
                 dockerfile.flush()
                 dockerfile.seek(0)
-                dcli.images.build(fileobj=dockerfile, tag=image['tag'])
-                docker_build_images[shortname] = image['tag']
-                logger.info(f'Build image. {image["tag"]}')
+                dcli.images.build(fileobj=dockerfile, tag=image['tag'], rm=True)
+                logger.info(f'Completed build of: {image["tag"]}')
         except Exception as e:
             logger.error(f'Error building image "{image["tag"]}": {e}')
             error_build = True
 
-    if error_pull:
-        logger.warning('Prefetch finished with errors!')
-    else:
-        logger.info('Prefetch finished.')
-
     if error_build:
-        logger.warning('Build finished with errors!')
+        logger.warning('=== Build finished with errors!')
     else:
-        logger.info('Build finished.')
+        logger.info('=== Build finished.')
 
     if error_pull or error_build:
         sys.exit(1)
