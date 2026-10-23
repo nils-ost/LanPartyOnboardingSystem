@@ -35,7 +35,8 @@
 
         <div class="field" *ngIf="integrity_check == 'pass'">
             <button pButton (click)="runCommit()" i18n="@@buttonCommit">Commit</button>&nbsp;
-            <button pButton (click)="runRetreat()" i18n="@@buttonRetreat">Retreat</button>
+            <button pButton (click)="runRetreat()" i18n="@@buttonRetreat">Retreat</button>&nbsp;
+            <button pButton (click)="runRetreatWithoutSwitches()" i18n="@@buttonRetreatNoSwitches" class="p-button-secondary">Retreat w/o Switches</button>
         </div>
 
         <div class="field" *ngIf="integrity_check == 'pass' && commit_status.size > 0">

@@ -20,6 +20,7 @@
   * added Setting to overwrite SSO IP, to prevent system from doing a nslookup
   * onboarding online check is now more robust with a frontend fallback so participants are not stuck waiting indefinitely
   * HAProxy containers are now properly retreated during system retreat operations
+  * added "Retreat w/o Switches" button in Settings->Maintenance for partial retreat operations
 
 ### Minor Changes
   * removed Settings for HAproxy connection, as HAproxy is now mandatory to be used within stack

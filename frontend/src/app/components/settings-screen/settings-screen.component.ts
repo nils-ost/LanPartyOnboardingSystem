@@ -321,8 +321,11 @@ export class SettingsScreenComponent implements OnInit {
     }
   }
 
-  runRetreat(step: string | undefined = undefined) {
-    const steps: string[] = ['dhcp_server', 'dns_server', 'interfaces', 'switches'];
+  runRetreat(step: string | undefined = undefined, skipSwitches: boolean = false) {
+    const steps: string[] = ['dhcp_server', 'dns_server', 'interfaces', 'switches', 'haproxy'];
+    if (skipSwitches) {
+      steps.splice(steps.indexOf('switches'), 1);
+    }
     if (!step) {
       this.retreat_status = new Map<string, string>();
       step = steps[0];
@@ -331,7 +334,8 @@ export class SettingsScreenComponent implements OnInit {
     if(step == 'dhcp_server') exec_method = this.systemService.execRetreatDhcpServers();
     if(step == 'dns_server') exec_method = this.systemService.execRetreatDnsServers();
     if(step == 'interfaces') exec_method = this.systemService.execRetreatInterfaces();
-    if(step == 'switches') exec_method = this.systemService.execRetreatSwitches();
+    if(step == 'switches' && !skipSwitches) exec_method = this.systemService.execRetreatSwitches();
+    if(step == 'haproxy') exec_method = this.systemService.execRetreatHaproxy();
 
     if (exec_method) {
       this.retreat_status.set(step!, 'run');
@@ -340,7 +344,7 @@ export class SettingsScreenComponent implements OnInit {
           this.retreat_status.set(step!, 'pass');
           let step_index: number = steps.indexOf(step!);
           if (step_index >= 0 && step_index < steps.length - 1) {
-            this.runRetreat(steps[step_index + 1]);
+            this.runRetreat(steps[step_index + 1], skipSwitches);
           }
         },
         error: (err: HttpErrorResponse) => {
@@ -355,6 +359,10 @@ export class SettingsScreenComponent implements OnInit {
         }
       });
     }
+  }
+
+  runRetreatWithoutSwitches() {
+    this.runRetreat(undefined, true);
   }
 
   clearPortConfigCaches() {
