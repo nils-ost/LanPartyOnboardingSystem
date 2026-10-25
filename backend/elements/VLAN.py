@@ -378,7 +378,10 @@ class VLAN(ElementBase):
             dnet.connect(dcon, ipv4_address=dhcp_ip)
         else:
             # let the server reload it's config
-            r = dcon.exec_run('ps -a | grep dhcp4').output.decode('utf-8').strip().split()[0]
+            for line in dcon.exec_run('ps -a').output.decode('utf-8').strip().split('\n'):  # grep does not work in this command...
+                if 'dhcp4' in line:
+                    r = line.strip().split()[0]
+                    break
             dcon.exec_run(f'kill -HUP {r}')
         return True
 
