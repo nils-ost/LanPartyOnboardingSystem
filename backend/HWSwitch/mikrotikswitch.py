@@ -87,6 +87,8 @@ class MikroTikSwitch(BaseSwitch):
         if not model == self.model and model in model_mapping:
             self.model = model
             self.__class__ = model_mapping[model]
+            self.vlan_mode_mapping_reverse = dict([(v, k) for k, v in self.vlan_mode_mapping.items()])
+            self.vlan_receive_mapping_reverse = dict([(v, k) for k, v in self.vlan_receive_mapping.items()])
         self.loadAll()
 
     def loadSystem(self, response=None):
@@ -334,7 +336,6 @@ class MikroTikSwitchCRS309(MikroTikSwitch):
         '0x01': 'optional',
         '0x02': 'enabled'
     }
-    vlan_mode_mapping_reverse = dict([(v, k) for k, v in vlan_mode_mapping.items()])
 
     speed_mapping = {
         '0x00': '10M',
@@ -395,9 +396,8 @@ class MikroTikSwitchCSS610(MikroTikSwitch):
     vlan_mode_mapping = {
         '0x00': 'disabled',
         '0x01': 'optional',
-        '0x02': 'strict'
+        '0x02': 'enabled'
     }
-    vlan_mode_mapping_reverse = dict([(v, k) for k, v in vlan_mode_mapping.items()])
 
     _translations = {
         'sys.b': {'i07': 'brd', 'i05': 'id', 'i03': 'mac', 'i1b': 'avln'},

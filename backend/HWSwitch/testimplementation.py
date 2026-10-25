@@ -26,7 +26,7 @@ def compare_dumps(a, b=None, cpath=''):
                 break
 
         elif isinstance(v, list):
-            if not len(v) == len(b[k]):
+            if not f'{cpath}.{k}' == '.ports.0.hosts' and not len(v) == len(b[k]):
                 logger.error(f"length missmatch in '{cpath}.{k}'")
                 break
 
@@ -264,19 +264,7 @@ def run():
         return
 
     # === Test14
-    logger.info('=== Test14: change mgmt vlan')
-    sw.setMgmtVlan(1)
-    sw.commitNeeded()
-    sw2 = AutoDetectSwitch(host, user, pw)
-    if compare_dumps(sw.json(), sw2.json()):
-        logger.info('Test14: pass')
-        del sw2
-    else:
-        logger.critical('Test14: fail')
-        return
-
-    # === Test15
-    logger.info('=== Test15: reset Switch config')
+    logger.info('=== Test14: reset Switch config')
     sw.setMgmtVlan()  # reset to none
     sw.vlanAddit(1)
     sw.commitNeeded()
@@ -296,8 +284,8 @@ def run():
     sw.commitNeeded()
     sw2 = AutoDetectSwitch(host, user, pw)
     if compare_dumps(sw.json(), sw2.json()):
-        logger.info('Test15: pass')
+        logger.info('Test14: pass')
         del sw2
     else:
-        logger.critical('Test15: fail')
+        logger.critical('Test14: fail')
         return

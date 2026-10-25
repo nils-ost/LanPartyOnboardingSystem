@@ -193,8 +193,8 @@ def reset_switch(c):
                 s.portEdit(port, fwdTo=p)
             s.vlanEdit(1, memberAdd=port)
         vids = list()
-        for v in vlan_ids:  # don't interate over a changeing list
-            vids.append(v.id)
+        for vid in vlan_ids:  # don't interate over a changeing list
+            vids.append(vid)
         for vid in vids:
             s.vlanRemove(vid)
         s.commitAll()

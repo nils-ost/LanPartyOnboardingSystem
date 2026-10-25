@@ -1,10 +1,10 @@
 import cherrypy
 import cherrypy_cors
-from noapiframe import ElementEndpointBase
+from noapiframe.endpoints import UserEndpointBase
 from elements import Participant, Session
 
 
-class ParticipantEndpoint(ElementEndpointBase):
+class ParticipantEndpoint(UserEndpointBase):
     _element = Participant
     _session_cls = Session
 

@@ -174,6 +174,11 @@ class BaseSwitch(object):
                 if not vmode == self.ports[port].vlan_mode:
                     self.ports[port].vlan_mode = vmode
                     self._commitRegister('portsvlan')
+            elif vmode == 'strict' and 'enabled' in self.vlan_mode_mapping_reverse:
+                self.logger.warning(f'portEdit ({self._host}): rewriting requested vmode "strict" to "enabled" for port {port}')
+                if not 'enabled' == self.ports[port].vlan_mode:
+                    self.ports[port].vlan_mode = 'enabled'
+                    self._commitRegister('portsvlan')
             else:
                 self.logger.error(f'portEdit ({self._host}): unknown vmode {vmode}')
         if vreceive is not None:
