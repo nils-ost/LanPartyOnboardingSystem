@@ -3,31 +3,34 @@
 ## v0.9.0
 
 ### New Features
-  * frontend is now delivered through an nginx instance, which makes the stack more versatile regarding dependencies
-  * migrated elements and endpoints to use noAPIframe library, as this enables some nice features on API with future-proof development
-  * the first IP-Range, that is created for a VLAN-purpose, is saved as default for this purpose. If another IpPool for this VLAN-purpose is created, this default range is prefilled in the interface. also a option on settings screen exists, to modify those default_ips
-  * in `Settings->Maintenance` is now an option to disable all automatic-commits from OnBoarding and port-changes
-  * Created `DummySwitch` to be able to test Switch-Commit without a HardwareSwitch
-  * Backend now uses `AutoDetectSwitch` to enable the future use of other Switch brands without changing any backend-code
-  * added prefetcher to download docker images, used by dynamic created containers, in the background before they are needed
-  * added `hostarp` container for sharing ARP tables between LPOS and host while running within Docker containers
-  * the whole application is now build to work within docker containers, which is now the recommended way for deployments
+  * Frontend is now delivered through an nginx instance, which makes the stack more versatile regarding dependencies
+  * Migrated Elements and endpoints to use noAPIframe library, as this enables some nice features on API with future-proof development
+  * The first IP range that is created for a VLAN purpose is saved as default for this purpose. If another IpPool for this VLAN purpose is created, this default range is prefilled in the interface. An option also exists on the Settings screen to modify those default IPs.
+  * In `Settings>Maintenance` there is now an option to disable all automatic commits from OnBoarding and port changes
+  * Created `DummySwitch` to be able to test switch commit without a HardwareSwitch
+  * Backend now uses `AutoDetectSwitch` to enable the future use of other Switch brands without changing any backend code
+  * Added prefetcher to download Docker images used by dynamically created containers in the background before they are needed
+  * Added `hostarp` container for sharing ARP tables between LPOS and host while running within Docker containers
+  * The whole application is now built to work within Docker containers, which is now the recommended way for deployments
 
 ### Fixes/Improvements
-  * optimized naming and sorting of Switches and IpPools on TablesScreen
-  * smartified invoker for resetting switches
-  * moved LPOS server IP from special IpPool to it's own Setting
-  * added Setting to overwrite SSO IP, to prevent system from doing a nslookup
-  * onboarding online check is now more robust with a frontend fallback so participants are not stuck waiting indefinitely
+  * Optimized naming and sorting of Switches and IpPools on TablesScreen
+  * Moved LPOS server IP from special IpPool to its own Setting
+  * Added Setting to overwrite SSO IP, to prevent system from doing a nslookup
+  * Onboarding online check is now more robust with a frontend fallback so participants are not stuck waiting indefinitely
   * HAProxy containers are now properly retreated during system retreat operations
-  * added "Retreat w/o Switches" button in Settings->Maintenance for partial retreat operations
+  * Added "Retreat w/o Switches" button in `Settings>Maintenance` for partial retreat operations
+  * VLAN mode mapping fallback (`strict` -> `enabled`) added in HWSwitches to support additional Switch models (without vmode `strict`)
+  * Unavailable Switches no longer lock the system — proper timeout handling added
+  * Prefetcher prebuilds psutil container so first start (on event) works without internet connection
+  * Improved invoker for resetting switches
 
 ### Minor Changes
-  * removed Settings for HAproxy connection, as HAproxy is now mandatory to be used within stack
-  * new environment variable `INIT_ADMIN_PW` to set the initial admin password during first startup to a custom value
-  * added `commitSystem` UnitTest to validate the configuration of HWswitches and dynamic created services on future (core) changes
-  * detailed integrity check results are now available in `Settings->Maintenance`
-  * moved 'commit all' and 'retreat all' from `Network` to `Settings->Maintenance`
+  * Removed Settings for HAproxy connection, as HAProxy is now mandatory to be used within stack
+  * New environment variable `INIT_ADMIN_PW` to set the initial admin password during first startup to a custom value
+  * Added `commitSystem` unit test to validate the configuration of HWswitches and dynamically created services on future (core) changes
+  * Detailed integrity check results are now available in `Settings>Maintenance`
+  * Moved 'commit all' and 'retreat all' from `Network` to `Settings>Maintenance`
 
 ## v0.8.0
 
