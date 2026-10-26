@@ -21,7 +21,7 @@ export class OnboardingComponent implements OnInit, OnDestroy {
   refreshOnboardingTimerSubscription: Subscription | undefined;
   onlineCheckTimer = timer(2000, 1000);
   onlineCheckTimerSubscription: Subscription | undefined;
-  onlineCheckFallbackTimer = timer(120000); // 2 minutes fallback
+  onlineCheckFallbackTimer = timer(60000); // 1 minute fallback
   onlineCheckFallbackTimerSubscription: Subscription | undefined;
 
   onboarding?: Onboarding;
